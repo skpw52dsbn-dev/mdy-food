@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>我的订单 - MDY FOOD</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #ff5a1f;
+            color: white;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 25px auto;
+            padding: 0 20px;
+        }
+
+        .back {
+            display: block;
+            margin-bottom: 15px;
+            color: #ff5a1f;
+            text-decoration: none;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .order-number {
+            color: #ff5a1f;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .status {
+            margin: 15px 0;
+            padding: 15px;
+            background: #fff3ed;
+            color: #ff5a1f;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .info {
+            background: #f7f7f7;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .empty {
+            background: white;
+            text-align: center;
+            padding: 50px 20px;
+            border-radius: 12px;
+            color: #777;
+        }
+
+        .home-button {
+            display: block;
+            margin-top: 20px;
+            padding: 14px;
+            background: #ff5a1f;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .order-title {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+    📦 我的订单
+</header>
+
+<div class="container">
+
+    <a class="back" href="index.html">
+        ← 返回首页
+    </a>
+
+    <div id="orders"></div>
+
+</div>
+
+
+<script>
+
+function showOrders() {
+
+    const container =
+        document.getElementById("orders");
+
+
+    let orders =
+        JSON.parse(
+            localStorage.getItem("orders")
+        ) || [];
+
+
+    /*
+        如果以前只有 lastOrder，
+        自动把它加入订单列表
+    */
+
+    if (
+        orders.length === 0 &&
+        localStorage.getItem("lastOrder")
+    ) {
+
+        const oldOrder =
+            JSON.parse(
+                localStorage.getItem("lastOrder")
+            );
+
+        orders.push(oldOrder);
+
+        localStorage.setItem(
+            "orders",
+            JSON.stringify(orders)
+        );
+
+    }
+
+
+    if (orders.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div style="font-size:50px;">
+                    📦
+                </div>
+
+                <h2>
+                    暂时没有订单
+                </h2>
+
+                <p>
+                    你还没有提交订单
+                </p>
+
+                <a
+                    class="home-button"
+                    href="index.html"
+                >
+                    去点餐
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    /*
+        最新订单显示在最上面
+    */
+
+    orders
+        .slice()
+        .reverse()
+        .forEach(function(order) {
+
+
+        let itemsHTML = "";
+
+
+        order.items.forEach(function(item) {
+
+            itemsHTML += `
+
+                <div class="item">
+
+                    <span>
+                        ${item.name} × ${item.quantity}
+                    </span>
+
+                    <span>
+                        ${(item.price * item.quantity)
+                            .toLocaleString()} Ks
+                    </span>
+
+                </div>
+
+            `;
+
+        });
+
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "order-card";
+
+
+        div.innerHTML = `
+
+            <div class="order-number">
+                订单号：${order.orderNumber}
+            </div>
+
+
+            <div class="status">
+                🚚 ${order.status}
+            </div>
+
+
+            <div class="info">
+
+                👤 姓名：${order.name}<br>
+
+                📱 电话：${order.phone}<br>
+
+                📍 地址：${order.address}<br>
+
+                💳 付款：${order.payment}<br>
+
+                🕐 下单时间：${order.createdAt}
+
+            </div>
+
+
+            <h3 class="order-title">
+                🍜 订单内容
+            </h3>
+
+
+            ${itemsHTML}
+
+
+            <div class="total">
+
+                <span>
+                    总计
+                </span>
+
+                <span>
+                    ${order.total.toLocaleString()} Ks
+                </span>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+/* 第一次显示 */
+
+showOrders();
+
+
+/* 每 2 秒检查订单状态 */
+
+setInterval(function() {
+
+    showOrders();
+
+}, 2000);
+
+</script>
+
+</body>
+
+</html>
