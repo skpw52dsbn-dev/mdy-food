@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -8,6 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>确认订单 - MDY FOOD</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
 
@@ -100,6 +104,11 @@
             border-radius: 8px;
             font-size: 17px;
             cursor: pointer;
+        }
+
+        button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
         }
 
         .empty {
@@ -228,7 +237,7 @@
 
         </div>
 
-        <button onclick="submitOrder()">
+        <button id="submitButton" onclick="submitOrder()">
             提交订单
         </button>
 
@@ -239,216 +248,323 @@
 
 <script>
 
-let cart =
-    JSON.parse(
-        localStorage.getItem("cart")
-    ) || [];
+    /* =========================
+       Supabase 配置
+    ========================= */
 
+    const SUPABASE_URL =
+        "https://vdhbrwybjnyxrwlchajf.supabase.co";
 
-function showOrder() {
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_2o23JP3qtW0zJn8MgIgywQ_qSwfRXzU";
 
-    const container =
-        document.getElementById("orderItems");
 
-    if (cart.length === 0) {
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
 
-        container.innerHTML = `
-            <div class="empty">
-                购物车是空的
-            </div>
-        `;
 
-        return;
-    }
+    /* =========================
+       获取购物车
+    ========================= */
 
-
-    let subtotal = 0;
-
-    container.innerHTML = "";
-
-
-    cart.forEach(function(item) {
-
-        subtotal +=
-            item.price * item.quantity;
-
-
-        const div =
-            document.createElement("div");
-
-        div.className = "item";
-
-
-        div.innerHTML = `
-
-            <span>
-                ${item.name} × ${item.quantity}
-            </span>
-
-            <span>
-                ${(item.price * item.quantity)
-                    .toLocaleString()} Ks
-            </span>
-
-        `;
-
-
-        container.appendChild(div);
-
-    });
-
-
-    document.getElementById("subtotal")
-        .innerText =
-        subtotal.toLocaleString() + " Ks";
-
-
-    document.getElementById("total")
-        .innerText =
-        (subtotal + 2000)
-            .toLocaleString() + " Ks";
-
-}
-
-
-function submitOrder() {
-
-    if (cart.length === 0) {
-
-        alert("购物车是空的");
-
-        return;
-    }
-
-
-    const name =
-        document.getElementById("name")
-            .value.trim();
-
-
-    const phone =
-        document.getElementById("phone")
-            .value.trim();
-
-
-    const address =
-        document.getElementById("address")
-            .value.trim();
-
-
-    const payment =
-        document.querySelector(
-            'input[name="payment"]:checked'
-        ).value;
-
-
-    if (!name) {
-
-        alert("请输入姓名");
-
-        return;
-    }
-
-
-    if (!phone) {
-
-        alert("请输入电话号码");
-
-        return;
-    }
-
-
-    if (!address) {
-
-        alert("请输入配送地址");
-
-        return;
-    }
-
-
-    const orderNumber =
-        "MDY" + Date.now();
-
-
-    const total =
-        cart.reduce(
-            function(sum, item) {
-
-                return sum +
-                    item.price *
-                    item.quantity;
-
-            },
-            0
-        ) + 2000;
-
-
-    const order = {
-
-        orderNumber: orderNumber,
-
-        name: name,
-
-        phone: phone,
-
-        address: address,
-
-        payment: payment,
-
-        items: cart,
-
-        total: total,
-
-        status: "待接单",
-
-        createdAt:
-            new Date().toLocaleString()
-
-    };
-
-
-    /* 保存到全部订单 */
-
-    let orders =
+    let cart =
         JSON.parse(
-            localStorage.getItem("orders")
+            localStorage.getItem("cart")
         ) || [];
 
 
-    orders.push(order);
+    /* =========================
+       显示订单
+    ========================= */
+
+    function showOrder() {
+
+        const container =
+            document.getElementById("orderItems");
 
 
-    localStorage.setItem(
-        "orders",
-        JSON.stringify(orders)
-    );
+        if (cart.length === 0) {
+
+            container.innerHTML = `
+                <div class="empty">
+                    购物车是空的
+                </div>
+            `;
+
+            return;
+        }
 
 
-    /* 保留最后一单，兼容现在的商家后台 */
+        let subtotal = 0;
 
-    localStorage.setItem(
-        "lastOrder",
-        JSON.stringify(order)
-    );
+        container.innerHTML = "";
 
 
-    /* 清空购物车 */
+        cart.forEach(function(item) {
 
-    localStorage.removeItem("cart");
-
-
-    /* 跳转成功页面 */
-
-    window.location.href =
-        "success.html";
-
-}
+            subtotal +=
+                item.price *
+                item.quantity;
 
 
-showOrder();
+            const div =
+                document.createElement("div");
+
+            div.className = "item";
+
+
+            div.innerHTML = `
+
+                <span>
+                    ${item.name} × ${item.quantity}
+                </span>
+
+                <span>
+                    ${(item.price * item.quantity)
+                        .toLocaleString()} Ks
+                </span>
+
+            `;
+
+
+            container.appendChild(div);
+
+        });
+
+
+        document.getElementById("subtotal")
+            .innerText =
+            subtotal.toLocaleString() + " Ks";
+
+
+        document.getElementById("total")
+            .innerText =
+            (subtotal + 2000)
+                .toLocaleString() + " Ks";
+
+    }
+
+
+    /* =========================
+       提交订单
+    ========================= */
+
+    async function submitOrder() {
+
+        if (cart.length === 0) {
+
+            alert("购物车是空的");
+
+            return;
+        }
+
+
+        const name =
+            document.getElementById("name")
+                .value.trim();
+
+
+        const phone =
+            document.getElementById("phone")
+                .value.trim();
+
+
+        const address =
+            document.getElementById("address")
+                .value.trim();
+
+
+        const payment =
+            document.querySelector(
+                'input[name="payment"]:checked'
+            ).value;
+
+
+        if (!name) {
+
+            alert("请输入姓名");
+
+            return;
+        }
+
+
+        if (!phone) {
+
+            alert("请输入电话号码");
+
+            return;
+        }
+
+
+        if (!address) {
+
+            alert("请输入配送地址");
+
+            return;
+        }
+
+
+        /* 防止用户重复点击 */
+
+        const submitButton =
+            document.getElementById("submitButton");
+
+        submitButton.disabled = true;
+
+        submitButton.innerText =
+            "正在提交订单...";
+
+
+        /* 订单号 */
+
+        const orderNumber =
+            "MDY" + Date.now();
+
+
+        /* 总金额 */
+
+        const total =
+            cart.reduce(
+                function(sum, item) {
+
+                    return sum +
+                        item.price *
+                        item.quantity;
+
+                },
+                0
+            ) + 2000;
+
+
+        /* =========================
+           上传到 Supabase
+        ========================= */
+
+        const { data, error } =
+            await supabaseClient
+                .from("orders")
+                .insert([
+                    {
+                        order_number: orderNumber,
+
+                        customername: name,
+
+                        phone: phone,
+
+                        adress: address,
+
+                        total: total,
+
+                        status: "待接单",
+
+                        payment: payment,
+
+                        method: "网站",
+
+                        items: cart,
+
+                        created_at:
+                            new Date().toISOString()
+                    }
+                ])
+                .select();
+
+
+        /* =========================
+           Supabase 错误
+        ========================= */
+
+        if (error) {
+
+            console.error(
+                "Supabase订单错误：",
+                error
+            );
+
+            alert(
+                "订单提交失败：\n" +
+                error.message
+            );
+
+            submitButton.disabled = false;
+
+            submitButton.innerText =
+                "提交订单";
+
+            return;
+        }
+
+
+        /* =========================
+           本地也保存一份
+        ========================= */
+
+        const order = {
+
+            orderNumber: orderNumber,
+
+            name: name,
+
+            phone: phone,
+
+            address: address,
+
+            payment: payment,
+
+            items: cart,
+
+            total: total,
+
+            status: "待接单",
+
+            createdAt:
+                new Date().toLocaleString()
+
+        };
+
+
+        let orders =
+            JSON.parse(
+                localStorage.getItem("orders")
+            ) || [];
+
+
+        orders.push(order);
+
+
+        localStorage.setItem(
+            "orders",
+            JSON.stringify(orders)
+        );
+
+
+        localStorage.setItem(
+            "lastOrder",
+            JSON.stringify(order)
+        );
+
+
+        /* 清空购物车 */
+
+        localStorage.removeItem("cart");
+
+
+        /* 跳转成功页面 */
+
+        window.location.href =
+            "success.html";
+
+    }
+
+
+    showOrder();
 
 </script>
 
 </body>
 
 </html>
+```
