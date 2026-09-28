@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>商家登录 - MDY FOOD</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #ff5a1f;
+            color: white;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #ff5a1f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e94d17;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        🏪 MDY FOOD 商家端
+    </header>
+
+    <div class="container">
+
+        <div class="login-box">
+
+            <h1>商家登录</h1>
+
+            <div class="subtitle">
+                MDY FOOD Merchant
+            </div>
+
+            <input
+                id="username"
+                type="text"
+                placeholder="商家账号"
+            >
+
+            <input
+                id="password"
+                type="password"
+                placeholder="密码"
+            >
+
+            <button onclick="login()">
+                登录
+            </button>
+
+            <div
+                id="error"
+                class="error"
+            ></div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function login() {
+
+            const username =
+                document.getElementById("username").value;
+
+            const password =
+                document.getElementById("password").value;
+
+            if (
+                username === "admin" &&
+                password === "123456"
+            ) {
+
+                localStorage.setItem(
+                    "merchantLogin",
+                    "true"
+                );
+
+                window.location.href =
+                    "admin.html";
+
+            } else {
+
+                document.getElementById("error").innerText =
+                    "账号或密码错误";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

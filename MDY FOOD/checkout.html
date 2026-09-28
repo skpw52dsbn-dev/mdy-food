@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>确认订单 - MDY FOOD</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #ff5a1f;
+            color: white;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 25px auto;
+            padding: 0 20px;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary {
+            line-height: 2;
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .payment {
+            margin-bottom: 15px;
+        }
+
+        .payment label {
+            display: block;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #ff5a1f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+    🛒 确认订单
+</header>
+
+<div class="container">
+
+    <div class="box">
+
+        <h2>🍜 订单内容</h2>
+
+        <div id="orderItems"></div>
+
+        <div class="summary">
+
+            <div>
+                小计：
+                <span id="subtotal">0 Ks</span>
+            </div>
+
+            <div>
+                配送费：
+                <span>2,000 Ks</span>
+            </div>
+
+        </div>
+
+        <div class="total">
+
+            <span>
+                总计
+            </span>
+
+            <span id="total">
+                2,000 Ks
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>📍 配送信息</h2>
+
+        <label>
+            姓名
+        </label>
+
+        <input
+            id="name"
+            type="text"
+            placeholder="请输入姓名"
+        >
+
+
+        <label>
+            电话
+        </label>
+
+        <input
+            id="phone"
+            type="tel"
+            placeholder="请输入电话号码"
+        >
+
+
+        <label>
+            地址
+        </label>
+
+        <textarea
+            id="address"
+            placeholder="请输入详细配送地址"
+        ></textarea>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>💳 付款方式</h2>
+
+        <div class="payment">
+
+            <label>
+                <input
+                    type="radio"
+                    name="payment"
+                    value="现金"
+                    checked
+                >
+                💵 现金
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="payment"
+                    value="KBZPay"
+                >
+                📱 KBZPay
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="payment"
+                    value="Wave Money"
+                >
+                📱 Wave Money
+            </label>
+
+        </div>
+
+        <button onclick="submitOrder()">
+            提交订单
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let cart =
+    JSON.parse(
+        localStorage.getItem("cart")
+    ) || [];
+
+
+function showOrder() {
+
+    const container =
+        document.getElementById("orderItems");
+
+    if (cart.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+                购物车是空的
+            </div>
+        `;
+
+        return;
+    }
+
+
+    let subtotal = 0;
+
+    container.innerHTML = "";
+
+
+    cart.forEach(function(item) {
+
+        subtotal +=
+            item.price * item.quantity;
+
+
+        const div =
+            document.createElement("div");
+
+        div.className = "item";
+
+
+        div.innerHTML = `
+
+            <span>
+                ${item.name} × ${item.quantity}
+            </span>
+
+            <span>
+                ${(item.price * item.quantity)
+                    .toLocaleString()} Ks
+            </span>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+
+    document.getElementById("subtotal")
+        .innerText =
+        subtotal.toLocaleString() + " Ks";
+
+
+    document.getElementById("total")
+        .innerText =
+        (subtotal + 2000)
+            .toLocaleString() + " Ks";
+
+}
+
+
+function submitOrder() {
+
+    if (cart.length === 0) {
+
+        alert("购物车是空的");
+
+        return;
+    }
+
+
+    const name =
+        document.getElementById("name")
+            .value.trim();
+
+
+    const phone =
+        document.getElementById("phone")
+            .value.trim();
+
+
+    const address =
+        document.getElementById("address")
+            .value.trim();
+
+
+    const payment =
+        document.querySelector(
+            'input[name="payment"]:checked'
+        ).value;
+
+
+    if (!name) {
+
+        alert("请输入姓名");
+
+        return;
+    }
+
+
+    if (!phone) {
+
+        alert("请输入电话号码");
+
+        return;
+    }
+
+
+    if (!address) {
+
+        alert("请输入配送地址");
+
+        return;
+    }
+
+
+    const orderNumber =
+        "MDY" + Date.now();
+
+
+    const total =
+        cart.reduce(
+            function(sum, item) {
+
+                return sum +
+                    item.price *
+                    item.quantity;
+
+            },
+            0
+        ) + 2000;
+
+
+    const order = {
+
+        orderNumber: orderNumber,
+
+        name: name,
+
+        phone: phone,
+
+        address: address,
+
+        payment: payment,
+
+        items: cart,
+
+        total: total,
+
+        status: "待接单",
+
+        createdAt:
+            new Date().toLocaleString()
+
+    };
+
+
+    /* 保存到全部订单 */
+
+    let orders =
+        JSON.parse(
+            localStorage.getItem("orders")
+        ) || [];
+
+
+    orders.push(order);
+
+
+    localStorage.setItem(
+        "orders",
+        JSON.stringify(orders)
+    );
+
+
+    /* 保留最后一单，兼容现在的商家后台 */
+
+    localStorage.setItem(
+        "lastOrder",
+        JSON.stringify(order)
+    );
+
+
+    /* 清空购物车 */
+
+    localStorage.removeItem("cart");
+
+
+    /* 跳转成功页面 */
+
+    window.location.href =
+        "success.html";
+
+}
+
+
+showOrder();
+
+</script>
+
+</body>
+
+</html>

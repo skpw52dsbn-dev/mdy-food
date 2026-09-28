@@ -1,0 +1,167 @@
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>订单成功 - Mandalay Food</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #ff5a1f;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .box {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 60px;
+        }
+
+        h1 {
+            margin: 15px 0;
+            color: #333;
+        }
+
+        .message {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .order-number {
+            margin: 25px 0;
+            padding: 18px;
+            background: #fff3ed;
+            border-radius: 10px;
+        }
+
+        .order-number span {
+            display: block;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .order-number strong {
+            font-size: 22px;
+            color: #ff5a1f;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #ff5a1f;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button.secondary {
+            background: #eee;
+            color: #333;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <header>
+        <strong>🍜 Mandalay Food</strong>
+    </header>
+
+
+    <div class="container">
+
+        <div class="box">
+
+            <div class="success-icon">
+                ✅
+            </div>
+
+            <h1>
+                订单提交成功！
+            </h1>
+
+            <p class="message">
+                感谢你的订单！<br>
+                商家收到订单后会尽快准备。
+            </p>
+
+
+            <div class="order-number">
+
+                <span>
+                    订单号
+                </span>
+
+                <strong id="orderNumber">
+                    --
+                </strong>
+
+            </div>
+
+
+            <a class="button" href="index.html">
+                返回首页
+            </a>
+
+
+            <a class="button secondary" href="menu.html">
+                继续点餐
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const order =
+            JSON.parse(
+                localStorage.getItem("lastOrder")
+            );
+
+
+        if (order) {
+
+            document.getElementById("orderNumber").innerText =
+                order.orderNumber;
+
+        }
+
+    </script>
+
+</body>
+
+</html>
+```
