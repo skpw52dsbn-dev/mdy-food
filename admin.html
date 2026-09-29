@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 
 <head>
@@ -10,6 +11,7 @@
 <title>商家后台 - MDY FOOD</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <style>
@@ -132,10 +134,12 @@ header {
     height: 90px;
     object-fit: cover;
     border-radius: 8px;
+    flex-shrink: 0;
 }
 
 .food-info {
     flex: 1;
+    min-width: 0;
 }
 
 .food-name {
@@ -180,8 +184,20 @@ header {
     background: #555;
 }
 
+.edit-btn {
+    background: #1677ff;
+}
+
 .delete-btn {
     background: #d33;
+}
+
+.cancel-btn {
+    background: #777;
+}
+
+.save-edit-btn {
+    background: #2e8b57;
 }
 
 .order {
@@ -325,6 +341,45 @@ header {
     color: #d33;
 }
 
+/* 编辑菜品区域 */
+
+.edit-box {
+    background: #f7f7f7;
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 10px;
+}
+
+.edit-box input,
+.edit-box textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.edit-box textarea {
+    min-height: 65px;
+    resize: vertical;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.edit-buttons button {
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 </style>
 
 </head>
@@ -337,211 +392,212 @@ header {
 
 <div class="container">
 
-    <div class="top">
+```
+<div class="top">
 
-        <div>
+    <div>
 
-            <div class="title">
-                👨‍🍳 商家管理
-            </div>
-
-            <div id="restaurantName" class="restaurant-name">
-                正在读取餐厅...
-            </div>
-
+        <div class="title">
+            👨‍🍳 商家管理
         </div>
 
-        <button class="logout" onclick="logout()">
-            退出登录
-        </button>
+        <div id="restaurantName" class="restaurant-name">
+            正在读取餐厅...
+        </div>
 
     </div>
 
+    <button class="logout" onclick="logout()">
+        退出登录
+    </button>
 
-    <!-- 添加菜品 -->
+</div>
 
-    <div class="section">
 
-        <div class="section-title">
-            ➕ 添加菜品
-        </div>
+<!-- 添加菜品 -->
 
-        <div id="successMessage" class="success">
-            菜品添加成功！
-        </div>
+<div class="section">
 
-        <div class="form-group">
-
-            <label>菜品名称</label>
-
-            <input
-                id="foodName"
-                type="text"
-                placeholder="例如：宫保鸡丁"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>价格（Ks）</label>
-
-            <input
-                id="foodPrice"
-                type="number"
-                placeholder="例如：8000"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>菜品描述</label>
-
-            <textarea
-                id="foodDescription"
-                placeholder="例如：香辣可口，适合下饭"
-            ></textarea>
-
-        </div>
-
-        <div class="form-group">
-
-            <label>图片地址</label>
-
-            <input
-                id="foodImage"
-                type="text"
-                placeholder="粘贴图片 URL（可留空）"
-            >
-
-        </div>
-
-        <button class="add-food-btn" onclick="addFood()">
-            🍜 添加菜品
-        </button>
-
+    <div class="section-title">
+        ➕ 添加菜品
     </div>
 
+    <div id="successMessage" class="success">
+        菜品添加成功！
+    </div>
 
-    <!-- 餐厅营业状态 -->
+    <div class="form-group">
 
-    <div class="section">
+        <label>菜品名称</label>
 
-        <div class="section-title">
-            🏪 餐厅营业状态
-        </div>
-
-        <div
-            id="restaurantStatus"
-            class="restaurant-status"
+        <input
+            id="foodName"
+            type="text"
+            placeholder="例如：宫保鸡丁"
         >
-            正在读取...
-        </div>
-
-        <button
-            id="restaurantStatusBtn"
-            class="add-food-btn"
-            onclick="toggleRestaurantStatus()"
-        >
-            正在读取...
-        </button>
 
     </div>
 
+    <div class="form-group">
 
-    <!-- 餐厅资料 -->
+        <label>价格（Ks）</label>
 
-    <div class="section">
-
-        <div class="section-title">
-            🏪 餐厅资料
-        </div>
-
-        <div class="form-group">
-
-            <label>餐厅名称</label>
-
-            <input
-                id="editRestaurantName"
-                type="text"
-                placeholder="例如：四川味道"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>餐厅分类</label>
-
-            <input
-                id="editRestaurantCategory"
-                type="text"
-                placeholder="例如：川菜 · 中餐"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>餐厅介绍</label>
-
-            <textarea
-                id="editRestaurantDescription"
-                placeholder="介绍一下你的餐厅"
-            ></textarea>
-
-        </div>
-
-        <button
-            class="add-food-btn"
-            onclick="saveRestaurantInfo()"
+        <input
+            id="foodPrice"
+            type="number"
+            placeholder="例如：8000"
         >
-            💾 保存餐厅资料
-        </button>
-
-        <div
-            id="restaurantSaveMessage"
-            class="success"
-            style="margin-top:12px;"
-        >
-            餐厅资料保存成功！
-        </div>
 
     </div>
 
+    <div class="form-group">
 
-    <!-- 我的菜品 -->
+        <label>菜品描述</label>
 
-    <div class="section">
-
-        <div class="section-title">
-            🍽️ 我的菜品
-        </div>
-
-        <div id="foods">
-            正在加载菜品...
-        </div>
+        <textarea
+            id="foodDescription"
+            placeholder="例如：香辣可口，适合下饭"
+        ></textarea>
 
     </div>
 
+    <div class="form-group">
 
-    <!-- 我的订单 -->
+        <label>图片地址</label>
 
-    <div class="section">
+        <input
+            id="foodImage"
+            type="text"
+            placeholder="粘贴图片 URL（可留空）"
+        >
 
-        <div class="section-title">
-            📦 我的订单
-        </div>
+    </div>
 
-        <div id="orders">
-            正在加载订单...
-        </div>
+    <button class="add-food-btn" onclick="addFood()">
+        🍜 添加菜品
+    </button>
 
+</div>
+
+
+<!-- 餐厅营业状态 -->
+
+<div class="section">
+
+    <div class="section-title">
+        🏪 餐厅营业状态
+    </div>
+
+    <div
+        id="restaurantStatus"
+        class="restaurant-status"
+    >
+        正在读取...
+    </div>
+
+    <button
+        id="restaurantStatusBtn"
+        class="add-food-btn"
+        onclick="toggleRestaurantStatus()"
+    >
+        正在读取...
+    </button>
+
+</div>
+
+
+<!-- 餐厅资料 -->
+
+<div class="section">
+
+    <div class="section-title">
+        🏪 餐厅资料
+    </div>
+
+    <div class="form-group">
+
+        <label>餐厅名称</label>
+
+        <input
+            id="editRestaurantName"
+            type="text"
+            placeholder="例如：四川味道"
+        >
+
+    </div>
+
+    <div class="form-group">
+
+        <label>餐厅分类</label>
+
+        <input
+            id="editRestaurantCategory"
+            type="text"
+            placeholder="例如：川菜 · 中餐"
+        >
+
+    </div>
+
+    <div class="form-group">
+
+        <label>餐厅介绍</label>
+
+        <textarea
+            id="editRestaurantDescription"
+            placeholder="介绍一下你的餐厅"
+        ></textarea>
+
+    </div>
+
+    <button
+        class="add-food-btn"
+        onclick="saveRestaurantInfo()"
+    >
+        💾 保存餐厅资料
+    </button>
+
+    <div
+        id="restaurantSaveMessage"
+        class="success"
+        style="margin-top:12px;"
+    >
+        餐厅资料保存成功！
     </div>
 
 </div>
 
+
+<!-- 我的菜品 -->
+
+<div class="section">
+
+    <div class="section-title">
+        🍽️ 我的菜品
+    </div>
+
+    <div id="foods">
+        正在加载菜品...
+    </div>
+
+</div>
+
+
+<!-- 我的订单 -->
+
+<div class="section">
+
+    <div class="section-title">
+        📦 我的订单
+    </div>
+
+    <div id="orders">
+        正在加载订单...
+    </div>
+
+</div>
+```
+
+</div>
 
 <script>
 
@@ -1054,17 +1110,19 @@ async function loadFoods() {
                     ? "🟢 营业中"
                     : "🔴 已下架";
 
+
             div.innerHTML = `
 
                 <img
-                    src="${image}"
-                    alt="${food.name || ""}"
+                    src="${escapeHtml(food.image || "")}"
+                    alt="${escapeHtml(food.name || "")}"
+                    onerror="this.src='https://via.placeholder.com/90'"
                 >
 
                 <div class="food-info">
 
                     <div class="food-name">
-                        ${food.name || ""}
+                        ${escapeHtml(food.name || "")}
                     </div>
 
                     <div class="food-price">
@@ -1078,7 +1136,7 @@ async function loadFoods() {
                     </div>
 
                     <div class="food-description">
-                        ${food.description || ""}
+                        ${escapeHtml(food.description || "")}
                     </div>
 
                     <div class="food-status">
@@ -1088,10 +1146,21 @@ async function loadFoods() {
                     <div class="food-buttons">
 
                         <button
+                            class="edit-btn"
+                            onclick="showEditFood(
+                                '${doc.id}'
+                            )"
+                        >
+
+                            ✏️ 编辑
+
+                        </button>
+
+                        <button
                             class="status-btn"
                             onclick="toggleFoodStatus(
                                 '${doc.id}',
-                                '${food.status}'
+                                '${food.status || "营业中"}'
                             )"
                         >
 
@@ -1110,7 +1179,72 @@ async function loadFoods() {
                             )"
                         >
 
-                            删除
+                            🗑️ 删除
+
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="edit-${doc.id}"
+                        style="display:none;"
+                        class="edit-box"
+                    >
+
+                        <strong>
+                            ✏️ 编辑菜品
+                        </strong>
+
+                        <br><br>
+
+                        <input
+                            id="edit-name-${doc.id}"
+                            type="text"
+                            value="${escapeHtml(food.name || "")}"
+                            placeholder="菜品名称"
+                        >
+
+                        <input
+                            id="edit-price-${doc.id}"
+                            type="number"
+                            value="${Number(food.price || 0)}"
+                            placeholder="价格"
+                        >
+
+                        <textarea
+                            id="edit-description-${doc.id}"
+                            placeholder="菜品描述"
+                        >${escapeHtml(food.description || "")}</textarea>
+
+```
+                    <input
+                        id="edit-image-${doc.id}"
+                        type="text"
+                        value="${escapeHtml(food.image || "")}"
+                        placeholder="图片 URL"
+                    >
+
+                    <div class="edit-buttons">
+
+                        <button
+                            class="save-edit-btn"
+                            onclick="saveFoodEdit(
+                                '${doc.id}'
+                            )"
+                        >
+
+                            💾 保存
+
+                        </button>
+
+                        <button
+                            class="cancel-btn"
+                            onclick="cancelFoodEdit(
+                                '${doc.id}'
+                            )"
+                        >
+
+                            取消
 
                         </button>
 
@@ -1118,104 +1252,274 @@ async function loadFoods() {
 
                 </div>
 
-            `;
-
-            container.appendChild(div);
-
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        document.getElementById(
-            "foods"
-        ).innerHTML = `
-
-            <div class="error">
-
-                ❌ 读取菜品失败
-
-                <br><br>
-
-                ${error.message}
-
             </div>
 
         `;
 
-    }
+        container.appendChild(div);
+
+    });
+
+} catch (error) {
+
+    console.error(error);
+
+    document.getElementById(
+        "foods"
+    ).innerHTML = `
+
+        <div class="error">
+
+            ❌ 读取菜品失败
+
+            <br><br>
+
+            ${escapeHtml(error.message)}
+
+        </div>
+
+    `;
+
+}
+```
 
 }
 
+// ========================================
+// 防止特殊字符破坏页面
+// ========================================
+
+function escapeHtml(value) {
+
+```
+return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+```
+
+}
+
+// ========================================
+// 打开编辑
+// ========================================
+
+function showEditFood(documentId) {
+
+```
+const box =
+    document.getElementById(
+        "edit-" + documentId
+    );
+
+if (!box) {
+    return;
+}
+
+box.style.display =
+    box.style.display === "none"
+        ? "block"
+        : "none";
+```
+
+}
+
+// ========================================
+// 取消编辑
+// ========================================
+
+function cancelFoodEdit(documentId) {
+
+```
+const box =
+    document.getElementById(
+        "edit-" + documentId
+    );
+
+if (box) {
+
+    box.style.display = "none";
+
+}
+```
+
+}
+
+// ========================================
+// 保存菜品编辑
+// ========================================
+
+async function saveFoodEdit(documentId) {
+
+```
+const name =
+    document
+        .getElementById(
+            "edit-name-" + documentId
+        )
+        .value
+        .trim();
+
+const price =
+    Number(
+        document
+            .getElementById(
+                "edit-price-" + documentId
+            )
+            .value
+    );
+
+const description =
+    document
+        .getElementById(
+            "edit-description-" + documentId
+        )
+        .value
+        .trim();
+
+const image =
+    document
+        .getElementById(
+            "edit-image-" + documentId
+        )
+        .value
+        .trim();
+
+
+if (!name) {
+
+    alert("请输入菜品名称");
+
+    return;
+
+}
+
+
+if (!price || price <= 0) {
+
+    alert("请输入正确的价格");
+
+    return;
+
+}
+
+
+try {
+
+    await db
+        .collection("foods")
+        .doc(documentId)
+        .update({
+
+            name: name,
+
+            price: price,
+
+            description: description,
+
+            image: image
+
+        });
+
+
+    alert("菜品修改成功！");
+
+    loadFoods();
+
+
+} catch (error) {
+
+    alert(
+        "修改菜品失败：" +
+        error.message
+    );
+
+    console.error(error);
+
+}
+```
+
+}
+
+// ========================================
+// 上架 / 下架
+// ========================================
 
 async function toggleFoodStatus(
-    documentId,
-    currentStatus
+documentId,
+currentStatus
 ) {
 
-    const newStatus =
-        currentStatus === "营业中"
-            ? "已下架"
-            : "营业中";
+```
+const newStatus =
+    currentStatus === "营业中"
+        ? "已下架"
+        : "营业中";
 
-    try {
+try {
 
-        await db
-            .collection("foods")
-            .doc(documentId)
-            .update({
+    await db
+        .collection("foods")
+        .doc(documentId)
+        .update({
 
-                status: newStatus
+            status: newStatus
 
-            });
+        });
 
-        loadFoods();
+    loadFoods();
 
-    } catch (error) {
+} catch (error) {
 
-        alert(
-            "修改菜品状态失败：" +
-            error.message
-        );
+    alert(
+        "修改菜品状态失败：" +
+        error.message
+    );
 
-    }
+}
+```
 
 }
 
+// ========================================
+// 删除菜品
+// ========================================
 
 async function deleteFood(documentId) {
 
-    if (
-        !confirm(
-            "确定要删除这道菜吗？"
-        )
-    ) {
+```
+if (
+    !confirm(
+        "确定要删除这道菜吗？删除后不能恢复。"
+    )
+) {
 
-        return;
-
-    }
-
-    try {
-
-        await db
-            .collection("foods")
-            .doc(documentId)
-            .delete();
-
-        loadFoods();
-
-    } catch (error) {
-
-        alert(
-            "删除菜品失败：" +
-            error.message
-        );
-
-    }
+    return;
 
 }
 
+try {
+
+    await db
+        .collection("foods")
+        .doc(documentId)
+        .delete();
+
+    loadFoods();
+
+} catch (error) {
+
+    alert(
+        "删除菜品失败：" +
+        error.message
+    );
+
+}
+```
+
+}
 
 // ========================================
 // 订单
@@ -1223,671 +1527,677 @@ async function deleteFood(documentId) {
 
 async function loadOrders() {
 
-    try {
+```
+try {
 
-        const snapshot =
-            await db
-                .collection("orders")
-                .where(
-                    "restaurantId",
-                    "==",
-                    restaurantId
-                )
-                .get();
+    const snapshot =
+        await db
+            .collection("orders")
+            .where(
+                "restaurantId",
+                "==",
+                restaurantId
+            )
+            .get();
 
-        let orders = [];
+    let orders = [];
 
-        snapshot.forEach(function(doc) {
+    snapshot.forEach(function(doc) {
 
-            orders.push({
+        orders.push({
 
-                id: doc.id,
+            id: doc.id,
 
-                data: doc.data()
-
-            });
-
-        });
-
-
-        orders.sort(function(a, b) {
-
-            const timeA =
-                a.data.created_at &&
-                a.data.created_at.toMillis
-                    ? a.data.created_at.toMillis()
-                    : 0;
-
-            const timeB =
-                b.data.created_at &&
-                b.data.created_at.toMillis
-                    ? b.data.created_at.toMillis()
-                    : 0;
-
-            return timeB - timeA;
+            data: doc.data()
 
         });
 
+    });
 
-        const container =
-            document.getElementById("orders");
 
+    orders.sort(function(a, b) {
 
-        if (orders.length === 0) {
+        const timeA =
+            a.data.created_at &&
+            a.data.created_at.toMillis
+                ? a.data.created_at.toMillis()
+                : 0;
 
-            container.innerHTML = `
+        const timeB =
+            b.data.created_at &&
+            b.data.created_at.toMillis
+                ? b.data.created_at.toMillis()
+                : 0;
 
-                <div class="empty">
+        return timeB - timeA;
 
-                    目前没有属于本餐厅的订单
+    });
 
-                </div>
 
-            `;
+    const container =
+        document.getElementById("orders");
 
-            return;
 
-        }
+    if (orders.length === 0) {
 
+        container.innerHTML = `
 
-        container.innerHTML = "";
+            <div class="empty">
 
-
-        orders.forEach(function(orderObject) {
-
-            const order =
-                orderObject.data;
-
-            const documentId =
-                orderObject.id;
-
-
-            let createdTime =
-                "暂无";
-
-
-            if (
-                order.created_at &&
-                order.created_at.toDate
-            ) {
-
-                createdTime =
-                    order.created_at
-                        .toDate()
-                        .toLocaleString();
-
-            }
-
-
-            let itemsHTML = "";
-
-
-            if (
-                order.items &&
-                Array.isArray(order.items)
-            ) {
-
-                order.items.forEach(function(item) {
-
-                    itemsHTML += `
-
-                        <div class="item">
-
-                            <span>
-
-                                ${item.name}
-
-                                ×
-
-                                ${item.quantity}
-
-                            </span>
-
-                            <span>
-
-                                ${
-                                    (
-                                        Number(item.price || 0) *
-                                        Number(item.quantity || 0)
-                                    ).toLocaleString()
-                                }
-
-                                Ks
-
-                            </span>
-
-                        </div>
-
-                    `;
-
-                });
-
-            }
-
-
-            let buttonHTML = "";
-
-
-            // ====================================
-            // 待接单
-            // ====================================
-
-            if (
-                order.status === "待接单"
-            ) {
-
-                buttonHTML = `
-
-                    <button
-                        onclick="changeStatus(
-                            '${documentId}',
-                            '商家已接单'
-                        )"
-                    >
-
-                        接受订单
-
-                    </button>
-
-                `;
-
-            }
-
-
-            // ====================================
-            // 商家已接单
-            // ====================================
-
-            else if (
-                order.status === "商家已接单"
-            ) {
-
-                buttonHTML = `
-
-                    <button
-                        class="ready-button"
-                        onclick="changeStatus(
-                            '${documentId}',
-                            '外卖好了'
-                        )"
-                    >
-
-                        🍱 外卖好了
-
-                    </button>
-
-                `;
-
-            }
-
-
-            // ====================================
-            // 骑手已接单
-            //
-            // 重点修复：
-            // 骑手抢单后必须显示外卖好了
-            // ====================================
-
-            else if (
-                order.status === "骑手已接单" ||
-                (
-                    order.deliveryId &&
-                    order.status !== "外卖好了" &&
-                    order.status !== "配送中" &&
-                    order.status !== "已完成"
-                )
-            ) {
-
-                buttonHTML = `
-
-                    <div class="delivery-info">
-
-                        🛵
-                        <strong>
-                            骑手已接单
-                        </strong>
-
-                        <br>
-
-                        👨‍🍳
-                        骑手正在等待外卖做好
-
-                        <br>
-
-                        ${
-                            order.deliveryUsername
-                                ? "配送员：" +
-                                  order.deliveryUsername
-                                : "配送员：已接单"
-                        }
-
-                    </div>
-
-                    <button
-                        class="ready-button"
-                        style="margin-top:10px;"
-                        onclick="changeStatus(
-                            '${documentId}',
-                            '外卖好了'
-                        )"
-                    >
-
-                        🍱 外卖好了
-
-                    </button>
-
-                `;
-
-            }
-
-
-            // ====================================
-            // 外卖好了
-            // ====================================
-
-            else if (
-                order.status === "外卖好了"
-            ) {
-
-                buttonHTML = `
-
-                    <div class="delivery-info">
-
-                        🍱
-                        <strong>
-                            外卖已经做好
-                        </strong>
-
-                        <br>
-
-                        ${
-                            order.deliveryUsername
-                                ? "🛵 配送员：" +
-                                  order.deliveryUsername
-                                : "🛵 正在等待骑手接单"
-                        }
-
-                        ${
-                            order.deliveryUsername
-                                ? "<br>骑手可以来取餐"
-                                : ""
-                        }
-
-                    </div>
-
-                `;
-
-            }
-
-
-            // ====================================
-            // 配送中
-            // ====================================
-
-            else if (
-                order.status === "配送中"
-            ) {
-
-                buttonHTML = `
-
-                    <div class="delivery-info">
-
-                        🛵
-                        <strong>
-                            骑手正在配送
-                        </strong>
-
-                        <br>
-
-                        ${
-                            order.deliveryUsername
-                                ? "配送员：" +
-                                  order.deliveryUsername
-                                : "骑手信息读取中"
-                        }
-
-                    </div>
-
-                `;
-
-            }
-
-
-            // ====================================
-            // 已完成
-            // ====================================
-
-            else if (
-                order.status === "已完成"
-            ) {
-
-                buttonHTML = `
-
-                    <div class="completed">
-
-                        ✅ 订单已完成
-
-                    </div>
-
-                `;
-
-            }
-
-
-            // ====================================
-            // 保险：
-            // 有骑手但状态异常
-            // 仍然显示外卖好了
-            // ====================================
-
-            else if (
-                order.deliveryId
-            ) {
-
-                buttonHTML = `
-
-                    <div class="delivery-info">
-
-                        🛵
-                        <strong>
-                            骑手已接单
-                        </strong>
-
-                        <br>
-
-                        配送员：
-                        ${
-                            order.deliveryUsername ||
-                            "配送员"
-                        }
-
-                    </div>
-
-                    <button
-                        class="ready-button"
-                        style="margin-top:10px;"
-                        onclick="changeStatus(
-                            '${documentId}',
-                            '外卖好了'
-                        )"
-                    >
-
-                        🍱 外卖好了
-
-                    </button>
-
-                `;
-
-            }
-
-
-            const div =
-                document.createElement("div");
-
-
-            div.className = "order";
-
-
-            div.innerHTML = `
-
-                <div class="order-number">
-
-                    订单号：
-
-                    ${order.order_number || "暂无"}
-
-                </div>
-
-
-                <div class="order-restaurant">
-
-                    🏪
-
-                    ${order.restaurantName || "本餐厅"}
-
-                </div>
-
-
-                <div class="status">
-
-                    ${order.status || "待接单"}
-
-                </div>
-
-
-                <div class="info">
-
-                    👤 顾客：
-
-                    ${order.customername || ""}
-
-                    <br>
-
-                    📞 电话：
-
-                    ${order.phone || ""}
-
-                    <br>
-
-                    📍 地址：
-
-                    ${order.adress || order.address || ""}
-
-                    <br>
-
-                    💳 支付：
-
-                    ${order.payment || ""}
-
-                    <br>
-
-                    🕒 时间：
-
-                    ${createdTime}
-
-                </div>
-
-
-                <div class="items">
-
-                    <strong>
-                        🍜 订单内容
-                    </strong>
-
-                    ${itemsHTML}
-
-                </div>
-
-
-                <div class="total">
-
-                    总计：
-
-                    ${
-                        Number(
-                            order.total || 0
-                        ).toLocaleString()
-                    }
-
-                    Ks
-
-                </div>
-
-
-                <div class="buttons">
-
-                    ${buttonHTML}
-
-                </div>
-
-            `;
-
-
-            container.appendChild(div);
-
-        });
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        document.getElementById(
-            "orders"
-        ).innerHTML = `
-
-            <div class="error">
-
-                ❌ 读取订单失败
-
-                <br><br>
-
-                ${error.message}
+                目前没有属于本餐厅的订单
 
             </div>
 
         `;
-
-    }
-
-}
-
-
-// ========================================
-// 修改订单状态
-// ========================================
-
-async function changeStatus(
-    documentId,
-    newStatus
-) {
-
-    // 商家只允许这两个状态
-
-    const allowedStatuses = [
-
-        "商家已接单",
-
-        "外卖好了"
-
-    ];
-
-
-    if (
-        !allowedStatuses.includes(newStatus)
-    ) {
-
-        alert(
-            "商家不能直接修改为这个状态"
-        );
 
         return;
 
     }
 
 
-    try {
-
-        const orderRef =
-            db
-                .collection("orders")
-                .doc(documentId);
+    container.innerHTML = "";
 
 
-        const orderSnap =
-            await orderRef.get();
+    orders.forEach(function(orderObject) {
+
+        const order =
+            orderObject.data;
+
+        const documentId =
+            orderObject.id;
 
 
-        if (!orderSnap.exists) {
+        let createdTime =
+            "暂无";
 
-            alert("订单不存在");
 
-            return;
+        if (
+            order.created_at &&
+            order.created_at.toDate
+        ) {
+
+            createdTime =
+                order.created_at
+                    .toDate()
+                    .toLocaleString();
 
         }
 
 
-        const order =
-            orderSnap.data();
+        let itemsHTML = "";
+
+
+        if (
+            order.items &&
+            Array.isArray(order.items)
+        ) {
+
+            order.items.forEach(function(item) {
+
+                itemsHTML += `
+
+                    <div class="item">
+
+                        <span>
+
+                            ${escapeHtml(item.name || "")}
+
+                            ×
+
+                            ${Number(item.quantity || 0)}
+
+                        </span>
+
+                        <span>
+
+                            ${
+                                (
+                                    Number(item.price || 0) *
+                                    Number(item.quantity || 0)
+                                ).toLocaleString()
+                            }
+
+                            Ks
+
+                        </span>
+
+                    </div>
+
+                `;
+
+            });
+
+        }
+
+
+        let buttonHTML = "";
 
 
         // ====================================
-        // 接受订单
+        // 待接单
         // ====================================
 
         if (
-            newStatus === "商家已接单"
+            order.status === "待接单"
         ) {
 
-            if (
-                order.status !== "待接单"
-            ) {
+            buttonHTML = `
 
-                alert(
-                    "这个订单当前不能接受"
-                );
+                <button
+                    onclick="changeStatus(
+                        '${documentId}',
+                        '商家已接单'
+                    )"
+                >
 
-                return;
+                    接受订单
 
-            }
+                </button>
+
+            `;
+
+        }
+
+
+        // ====================================
+        // 商家已接单
+        // ====================================
+
+        else if (
+            order.status === "商家已接单"
+        ) {
+
+            buttonHTML = `
+
+                <button
+                    class="ready-button"
+                    onclick="changeStatus(
+                        '${documentId}',
+                        '外卖好了'
+                    )"
+                >
+
+                    🍱 外卖好了
+
+                </button>
+
+            `;
+
+        }
+
+
+        // ====================================
+        // 骑手已接单
+        // ====================================
+
+        else if (
+            order.status === "骑手已接单" ||
+            (
+                order.deliveryId &&
+                order.status !== "外卖好了" &&
+                order.status !== "配送中" &&
+                order.status !== "已完成"
+            )
+        ) {
+
+            buttonHTML = `
+
+                <div class="delivery-info">
+
+                    🛵
+                    <strong>
+                        骑手已接单
+                    </strong>
+
+                    <br>
+
+                    👨‍🍳
+                    骑手正在等待外卖做好
+
+                    <br>
+
+                    ${
+                        order.deliveryUsername
+                            ? "配送员：" +
+                              escapeHtml(order.deliveryUsername)
+                            : "配送员：已接单"
+                    }
+
+                </div>
+
+                <button
+                    class="ready-button"
+                    style="margin-top:10px;"
+                    onclick="changeStatus(
+                        '${documentId}',
+                        '外卖好了'
+                    )"
+                >
+
+                    🍱 外卖好了
+
+                </button>
+
+            `;
 
         }
 
 
         // ====================================
         // 外卖好了
-        //
-        // 允许：
-        //
-        // 商家已接单
-        // 骑手已接单
         // ====================================
 
-        if (
-            newStatus === "外卖好了"
+        else if (
+            order.status === "外卖好了"
         ) {
 
-            if (
-                order.status !== "商家已接单" &&
-                order.status !== "骑手已接单"
-            ) {
+            buttonHTML = `
 
-                alert(
-                    "这个订单当前不能标记为外卖好了"
-                );
+                <div class="delivery-info">
 
-                return;
+                    🍱
+                    <strong>
+                        外卖已经做好
+                    </strong>
 
-            }
+                    <br>
+
+                    ${
+                        order.deliveryUsername
+                            ? "🛵 配送员：" +
+                              escapeHtml(order.deliveryUsername)
+                            : "🛵 正在等待骑手接单"
+                    }
+
+                    ${
+                        order.deliveryUsername
+                            ? "<br>骑手可以来取餐"
+                            : ""
+                    }
+
+                </div>
+
+            `;
 
         }
 
 
-        await orderRef.update({
+        // ====================================
+        // 配送中
+        // ====================================
 
-            status: newStatus
+        else if (
+            order.status === "配送中"
+        ) {
 
-        });
+            buttonHTML = `
+
+                <div class="delivery-info">
+
+                    🛵
+                    <strong>
+                        骑手正在配送
+                    </strong>
+
+                    <br>
+
+                    ${
+                        order.deliveryUsername
+                            ? "配送员：" +
+                              escapeHtml(order.deliveryUsername)
+                            : "骑手信息读取中"
+                    }
+
+                </div>
+
+            `;
+
+        }
 
 
-        // 立即重新读取订单
+        // ====================================
+        // 已完成
+        // ====================================
 
-        await loadOrders();
+        else if (
+            order.status === "已完成"
+        ) {
+
+            buttonHTML = `
+
+                <div class="completed">
+
+                    ✅ 订单已完成
+
+                </div>
+
+            `;
+
+        }
 
 
-    } catch (error) {
+        // ====================================
+        // 保险
+        // ====================================
 
-        alert(
-            "修改订单状态失败：" +
-            error.message
-        );
+        else if (
+            order.deliveryId
+        ) {
 
-        console.error(error);
+            buttonHTML = `
 
-    }
+                <div class="delivery-info">
+
+                    🛵
+                    <strong>
+                        骑手已接单
+                    </strong>
+
+                    <br>
+
+                    配送员：
+                    ${
+                        escapeHtml(
+                            order.deliveryUsername ||
+                            "配送员"
+                        )
+                    }
+
+                </div>
+
+                <button
+                    class="ready-button"
+                    style="margin-top:10px;"
+                    onclick="changeStatus(
+                        '${documentId}',
+                        '外卖好了'
+                    )"
+                >
+
+                    🍱 外卖好了
+
+                </button>
+
+            `;
+
+        }
+
+
+        const div =
+            document.createElement("div");
+
+
+        div.className = "order";
+
+
+        div.innerHTML = `
+
+            <div class="order-number">
+
+                订单号：
+
+                ${escapeHtml(
+                    order.order_number || "暂无"
+                )}
+
+            </div>
+
+
+            <div class="order-restaurant">
+
+                🏪
+
+                ${escapeHtml(
+                    order.restaurantName || "本餐厅"
+                )}
+
+            </div>
+
+
+            <div class="status">
+
+                ${escapeHtml(
+                    order.status || "待接单"
+                )}
+
+            </div>
+
+
+            <div class="info">
+
+                👤 顾客：
+
+                ${escapeHtml(
+                    order.customername || ""
+                )}
+
+                <br>
+
+                📞 电话：
+
+                ${escapeHtml(
+                    order.phone || ""
+                )}
+
+                <br>
+
+                📍 地址：
+
+                ${escapeHtml(
+                    order.adress ||
+                    order.address ||
+                    ""
+                )}
+
+                <br>
+
+                💳 支付：
+
+                ${escapeHtml(
+                    order.payment || ""
+                )}
+
+                <br>
+
+                🕒 时间：
+
+                ${escapeHtml(createdTime)}
+
+            </div>
+
+
+            <div class="items">
+
+                <strong>
+                    🍜 订单内容
+                </strong>
+
+                ${itemsHTML}
+
+            </div>
+
+
+            <div class="total">
+
+                总计：
+
+                ${
+                    Number(
+                        order.total || 0
+                    ).toLocaleString()
+                }
+
+                Ks
+
+            </div>
+
+
+            <div class="buttons">
+
+                ${buttonHTML}
+
+            </div>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+
+} catch (error) {
+
+    console.error(error);
+
+    document.getElementById(
+        "orders"
+    ).innerHTML = `
+
+        <div class="error">
+
+            ❌ 读取订单失败
+
+            <br><br>
+
+            ${escapeHtml(error.message)}
+
+        </div>
+
+    `;
+
+}
+```
 
 }
 
+// ========================================
+// 修改订单状态
+// ========================================
+
+async function changeStatus(
+documentId,
+newStatus
+) {
+
+```
+const allowedStatuses = [
+
+    "商家已接单",
+
+    "外卖好了"
+
+];
+
+
+if (
+    !allowedStatuses.includes(newStatus)
+) {
+
+    alert(
+        "商家不能直接修改为这个状态"
+    );
+
+    return;
+
+}
+
+
+try {
+
+    const orderRef =
+        db
+            .collection("orders")
+            .doc(documentId);
+
+
+    const orderSnap =
+        await orderRef.get();
+
+
+    if (!orderSnap.exists) {
+
+        alert("订单不存在");
+
+        return;
+
+    }
+
+
+    const order =
+        orderSnap.data();
+
+
+    // ====================================
+    // 接受订单
+    // ====================================
+
+    if (
+        newStatus === "商家已接单"
+    ) {
+
+        if (
+            order.status !== "待接单"
+        ) {
+
+            alert(
+                "这个订单当前不能接受"
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    // ====================================
+    // 外卖好了
+    // ====================================
+
+    if (
+        newStatus === "外卖好了"
+    ) {
+
+        if (
+            order.status !== "商家已接单" &&
+            order.status !== "骑手已接单"
+        ) {
+
+            alert(
+                "这个订单当前不能标记为外卖好了"
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    await orderRef.update({
+
+        status: newStatus
+
+    });
+
+
+    await loadOrders();
+
+
+} catch (error) {
+
+    alert(
+        "修改订单状态失败：" +
+        error.message
+    );
+
+    console.error(error);
+
+}
+```
+
+}
 
 // ========================================
 // 退出登录
@@ -1895,23 +2205,24 @@ async function changeStatus(
 
 function logout() {
 
-    localStorage.removeItem(
-        "merchantLogin"
-    );
+```
+localStorage.removeItem(
+    "merchantLogin"
+);
 
-    localStorage.removeItem(
-        "merchantUsername"
-    );
+localStorage.removeItem(
+    "merchantUsername"
+);
 
-    localStorage.removeItem(
-        "merchantRestaurantId"
-    );
+localStorage.removeItem(
+    "merchantRestaurantId"
+);
 
-    window.location.href =
-        "admin-login.html";
+window.location.href =
+    "admin-login.html";
+```
 
 }
-
 
 // ========================================
 // 启动
@@ -1927,12 +2238,11 @@ loadFoods();
 
 loadOrders();
 
-
 // 每 3 秒刷新订单
 
 setInterval(
-    loadOrders,
-    3000
+loadOrders,
+3000
 );
 
 </script>
