@@ -341,7 +341,7 @@ function loadFoods() {
                 div.innerHTML = `
 
                     <img
-                        src="${food.image}"
+                        src="${food.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'}"
                         alt="${food.name}"
                     >
 
@@ -390,13 +390,15 @@ function loadFoods() {
 
 
 // 加入购物车
+// 这里会把当前餐厅 ID 一起保存
 
 function addFood(name, price) {
 
     let existingFood =
         cart.find(function(item) {
 
-            return item.name === name;
+            return item.name === name &&
+                   item.restaurantId === restaurantId;
 
         });
 
@@ -413,7 +415,9 @@ function addFood(name, price) {
 
             price: Number(price),
 
-            quantity: 1
+            quantity: 1,
+
+            restaurantId: restaurantId
 
         });
 
@@ -486,4 +490,3 @@ updateCart();
 </body>
 
 </html>
-
