@@ -10,8 +10,9 @@
 
     <title>确认订单 - MDY FOOD</title>
 
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <style>
 
@@ -150,9 +151,7 @@
 
         <div class="total">
 
-            <span>
-                总计
-            </span>
+            <span>总计</span>
 
             <span id="total">
                 2,000 Ks
@@ -167,9 +166,7 @@
 
         <h2>📍 配送信息</h2>
 
-        <label>
-            姓名
-        </label>
+        <label>姓名</label>
 
         <input
             id="name"
@@ -177,10 +174,7 @@
             placeholder="请输入姓名"
         >
 
-
-        <label>
-            电话
-        </label>
+        <label>电话</label>
 
         <input
             id="phone"
@@ -188,10 +182,7 @@
             placeholder="请输入电话号码"
         >
 
-
-        <label>
-            地址
-        </label>
+        <label>地址</label>
 
         <textarea
             id="address"
@@ -249,21 +240,37 @@
 <script>
 
     /* =========================
-       Supabase 配置
+       Firebase 配置
     ========================= */
 
-    const SUPABASE_URL =
-        "https://vdhbrwybjnyxrwlchajf.supabase.co";
+    const firebaseConfig = {
 
-    const SUPABASE_PUBLISHABLE_KEY =
-        "sb_publishable_2o23JP3qtW0zJn8MgIgywQ_qSwfRXzU";
+        apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+
+        authDomain: "mdy-food.firebaseapp.com",
+
+        projectId: "mdy-food",
+
+        storageBucket: "mdy-food.firebasestorage.app",
+
+        messagingSenderId: "498327590625",
+
+        appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+
+        measurementId: "G-6Q5G2862XQ"
+
+    };
 
 
-    const supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+    /* 初始化 Firebase */
+
+    firebase.initializeApp(firebaseConfig);
+
+
+    /* 初始化 Firestore */
+
+    const db =
+        firebase.firestore();
 
 
     /* =========================
@@ -306,8 +313,8 @@
         cart.forEach(function(item) {
 
             subtotal +=
-                item.price *
-                item.quantity;
+                Number(item.price) *
+                Number(item.quantity);
 
 
             const div =
@@ -323,8 +330,9 @@
                 </span>
 
                 <span>
-                    ${(item.price * item.quantity)
-                        .toLocaleString()} Ks
+                    ${(Number(item.price) *
+                      Number(item.quantity))
+                      .toLocaleString()} Ks
                 </span>
 
             `;
@@ -343,7 +351,7 @@
         document.getElementById("total")
             .innerText =
             (subtotal + 2000)
-                .toLocaleString() + " Ks";
+            .toLocaleString() + " Ks";
 
     }
 
@@ -364,23 +372,29 @@
 
         const name =
             document.getElementById("name")
-                .value.trim();
+            .value.trim();
 
 
         const phone =
             document.getElementById("phone")
-                .value.trim();
+            .value.trim();
 
 
         const address =
             document.getElementById("address")
-                .value.trim();
+            .value.trim();
+
+
+        const paymentElement =
+            document.querySelector(
+                'input[name="payment"]:checked'
+            );
 
 
         const payment =
-            document.querySelector(
-                'input[name="payment"]:checked'
-            ).value;
+            paymentElement
+            ? paymentElement.value
+            : "现金";
 
 
         if (!name) {
@@ -407,15 +421,37 @@
         }
 
 
-        /* 防止用户重复点击 */
-
         const submitButton =
-            document.getElementById("submitButton");
+            document.getElementById(
+                "submitButton"
+            );
+
 
         submitButton.disabled = true;
 
         submitButton.innerText =
             "正在提交订单...";
+
+
+        /* =========================
+           计算总金额
+        ========================= */
+
+        const subtotal =
+            cart.reduce(
+                function(sum, item) {
+
+                    return sum +
+                        Number(item.price) *
+                        Number(item.quantity);
+
+                },
+                0
+            );
+
+
+        const total =
+            subtotal + 2000;
 
 
         /* 订单号 */
@@ -424,138 +460,143 @@
             "MDY" + Date.now();
 
 
-        /* 总金额 */
+        try {
 
-        const total =
-            cart.reduce(
-                function(sum, item) {
+            /* =========================
+               写入 Firebase
+            ========================= */
 
-                    return sum +
-                        item.price *
-                        item.quantity;
+            await db
+                .collection("orders")
+                .add({
 
-                },
-                0
-            ) + 2000;
+                    order_number:
+                        orderNumber,
 
+                    customername:
+                        name,
 
-        /* =========================
-           上传到 Supabase
-        ========================= */
+                    phone:
+                        phone,
 
-        const { data, error } =
-            await supabaseClient
-                .from("orders")
-                .insert([
-                    {
-                        order_number: orderNumber,
+                    adress:
+                        address,
 
-                        customername: name,
+                    total:
+                        total,
 
-                        phone: phone,
+                    status:
+                        "待接单",
 
-                        adress: address,
+                    payment:
+                        payment,
 
-                        total: total,
+                    method:
+                        "网站",
 
-                        status: "待接单",
+                    items:
+                        cart,
 
-                        payment: payment,
+                    created_at:
+                        firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
 
-                        method: "网站",
-
-                        items: cart,
-
-                        created_at:
-                            new Date().toISOString()
-                    }
-                ])
-                .select();
+                });
 
 
-        /* =========================
-           Supabase 错误
-        ========================= */
+            /* =========================
+               本地也保存
+               防止影响现有后台
+            ========================= */
 
-        if (error) {
+            const order = {
+
+                orderNumber:
+                    orderNumber,
+
+                name:
+                    name,
+
+                phone:
+                    phone,
+
+                address:
+                    address,
+
+                payment:
+                    payment,
+
+                items:
+                    cart,
+
+                total:
+                    total,
+
+                status:
+                    "待接单",
+
+                createdAt:
+                    new Date()
+                    .toLocaleString()
+
+            };
+
+
+            let orders =
+                JSON.parse(
+                    localStorage.getItem("orders")
+                ) || [];
+
+
+            orders.push(order);
+
+
+            localStorage.setItem(
+                "orders",
+                JSON.stringify(orders)
+            );
+
+
+            localStorage.setItem(
+                "lastOrder",
+                JSON.stringify(order)
+            );
+
+
+            /* 清空购物车 */
+
+            localStorage.removeItem("cart");
+
+
+            /* 成功 */
+
+            window.location.href =
+                "success.html";
+
+
+        } catch (error) {
 
             console.error(
-                "Supabase订单错误：",
+                "Firebase 订单错误:",
                 error
             );
+
 
             alert(
                 "订单提交失败：\n" +
                 error.message
             );
 
-            submitButton.disabled = false;
+
+            submitButton.disabled =
+                false;
+
 
             submitButton.innerText =
                 "提交订单";
 
-            return;
         }
-
-
-        /* =========================
-           本地也保存一份
-        ========================= */
-
-        const order = {
-
-            orderNumber: orderNumber,
-
-            name: name,
-
-            phone: phone,
-
-            address: address,
-
-            payment: payment,
-
-            items: cart,
-
-            total: total,
-
-            status: "待接单",
-
-            createdAt:
-                new Date().toLocaleString()
-
-        };
-
-
-        let orders =
-            JSON.parse(
-                localStorage.getItem("orders")
-            ) || [];
-
-
-        orders.push(order);
-
-
-        localStorage.setItem(
-            "orders",
-            JSON.stringify(orders)
-        );
-
-
-        localStorage.setItem(
-            "lastOrder",
-            JSON.stringify(order)
-        );
-
-
-        /* 清空购物车 */
-
-        localStorage.removeItem("cart");
-
-
-        /* 跳转成功页面 */
-
-        window.location.href =
-            "success.html";
 
     }
 
