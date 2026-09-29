@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -10,7 +9,6 @@
 
     <title>确认订单 - MDY FOOD</title>
 
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
@@ -45,6 +43,13 @@
 
         h2 {
             margin-top: 0;
+        }
+
+        .restaurant-name {
+            color: #ff5a1f;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
         .item {
@@ -117,6 +122,14 @@
             padding: 50px 20px;
         }
 
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
     </style>
 
 </head>
@@ -132,6 +145,10 @@
     <div class="box">
 
         <h2>🍜 订单内容</h2>
+
+        <div id="restaurantName" class="restaurant-name">
+            正在确认餐厅...
+        </div>
 
         <div id="orderItems"></div>
 
@@ -239,296 +256,351 @@
 
 <script>
 
-    /* =========================
-       Firebase 配置
-    ========================= */
+const firebaseConfig = {
 
-    const firebaseConfig = {
+    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
 
-        apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+    authDomain: "mdy-food.firebaseapp.com",
 
-        authDomain: "mdy-food.firebaseapp.com",
+    projectId: "mdy-food",
 
-        projectId: "mdy-food",
+    storageBucket: "mdy-food.firebasestorage.app",
 
-        storageBucket: "mdy-food.firebasestorage.app",
+    messagingSenderId: "498327590625",
 
-        messagingSenderId: "498327590625",
+    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
 
-        appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+    measurementId: "G-6Q5G2862XQ"
 
-        measurementId: "G-6Q5G2862XQ"
-
-    };
+};
 
 
-    /* 初始化 Firebase */
-
-    firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 
-    /* 初始化 Firestore */
-
-    const db =
-        firebase.firestore();
+const db = firebase.firestore();
 
 
-    /* =========================
-       获取购物车
-    ========================= */
+/* =========================
+   获取购物车
+========================= */
 
-    let cart =
-        JSON.parse(
-            localStorage.getItem("cart")
-        ) || [];
-
-
-    /* =========================
-       显示订单
-    ========================= */
-
-    function showOrder() {
-
-        const container =
-            document.getElementById("orderItems");
+let cart =
+    JSON.parse(
+        localStorage.getItem("cart")
+    ) || [];
 
 
-        if (cart.length === 0) {
+/* =========================
+   获取餐厅 ID
+========================= */
 
-            container.innerHTML = `
-                <div class="empty">
-                    购物车是空的
-                </div>
-            `;
+let restaurantId = null;
 
-            return;
-        }
+let restaurantName = "未知餐厅";
 
 
-        let subtotal = 0;
+/*
+   从购物车里的菜品获取餐厅 ID
+*/
 
-        container.innerHTML = "";
+if (cart.length > 0) {
 
+    restaurantId =
+        cart[0].restaurantId || null;
 
-        cart.forEach(function(item) {
-
-            subtotal +=
-                Number(item.price) *
-                Number(item.quantity);
-
-
-            const div =
-                document.createElement("div");
-
-            div.className = "item";
+}
 
 
-            div.innerHTML = `
+/* =========================
+   获取餐厅名称
+========================= */
 
-                <span>
-                    ${item.name} × ${item.quantity}
-                </span>
+async function loadRestaurant() {
 
-                <span>
-                    ${(Number(item.price) *
-                      Number(item.quantity))
-                      .toLocaleString()} Ks
-                </span>
-
-            `;
+    const nameElement =
+        document.getElementById("restaurantName");
 
 
-            container.appendChild(div);
+    if (!restaurantId) {
 
-        });
+        nameElement.innerText =
+            "⚠️ 无法识别餐厅";
 
-
-        document.getElementById("subtotal")
-            .innerText =
-            subtotal.toLocaleString() + " Ks";
-
-
-        document.getElementById("total")
-            .innerText =
-            (subtotal + 2000)
-            .toLocaleString() + " Ks";
+        return;
 
     }
 
 
+    try {
+
+        const doc =
+            await db
+                .collection("restaurants")
+                .doc(restaurantId)
+                .get();
+
+
+        if (doc.exists) {
+
+            const data =
+                doc.data();
+
+
+            restaurantName =
+                data.name || "未知餐厅";
+
+
+            nameElement.innerText =
+                "🏪 " + restaurantName;
+
+        } else {
+
+            nameElement.innerText =
+                "⚠️ 餐厅不存在";
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        nameElement.innerText =
+            "⚠️ 餐厅信息加载失败";
+
+    }
+
+}
+
+
+/* =========================
+   显示订单
+========================= */
+
+function showOrder() {
+
+    const container =
+        document.getElementById("orderItems");
+
+
+    if (cart.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+                购物车是空的
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    let subtotal = 0;
+
+
+    container.innerHTML = "";
+
+
+    cart.forEach(function(item) {
+
+        subtotal +=
+            Number(item.price) *
+            Number(item.quantity);
+
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "item";
+
+
+        div.innerHTML = `
+
+            <span>
+                ${item.name} × ${item.quantity}
+            </span>
+
+            <span>
+                ${(Number(item.price) *
+                  Number(item.quantity))
+                  .toLocaleString()} Ks
+            </span>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+
+    document.getElementById("subtotal")
+        .innerText =
+        subtotal.toLocaleString() + " Ks";
+
+
+    document.getElementById("total")
+        .innerText =
+        (subtotal + 2000)
+        .toLocaleString() + " Ks";
+
+}
+
+
+/* =========================
+   提交订单
+========================= */
+
+async function submitOrder() {
+
+    if (cart.length === 0) {
+
+        alert("购物车是空的");
+
+        return;
+
+    }
+
+
+    if (!restaurantId) {
+
+        alert(
+            "无法识别餐厅，请返回菜单重新加入菜品。"
+        );
+
+        return;
+
+    }
+
+
+    const name =
+        document.getElementById("name")
+        .value.trim();
+
+
+    const phone =
+        document.getElementById("phone")
+        .value.trim();
+
+
+    const address =
+        document.getElementById("address")
+        .value.trim();
+
+
+    const paymentElement =
+        document.querySelector(
+            'input[name="payment"]:checked'
+        );
+
+
+    const payment =
+        paymentElement
+        ? paymentElement.value
+        : "现金";
+
+
+    if (!name) {
+
+        alert("请输入姓名");
+
+        return;
+
+    }
+
+
+    if (!phone) {
+
+        alert("请输入电话号码");
+
+        return;
+
+    }
+
+
+    if (!address) {
+
+        alert("请输入配送地址");
+
+        return;
+
+    }
+
+
+    const submitButton =
+        document.getElementById(
+            "submitButton"
+        );
+
+
+    submitButton.disabled = true;
+
+
+    submitButton.innerText =
+        "正在提交订单...";
+
+
     /* =========================
-       提交订单
+       计算金额
     ========================= */
 
-    async function submitOrder() {
+    const subtotal =
+        cart.reduce(
+            function(sum, item) {
 
-        if (cart.length === 0) {
+                return sum +
+                    Number(item.price) *
+                    Number(item.quantity);
 
-            alert("购物车是空的");
-
-            return;
-        }
-
-
-        const name =
-            document.getElementById("name")
-            .value.trim();
+            },
+            0
+        );
 
 
-        const phone =
-            document.getElementById("phone")
-            .value.trim();
+    const total =
+        subtotal + 2000;
 
 
-        const address =
-            document.getElementById("address")
-            .value.trim();
+    /* 订单号 */
+
+    const orderNumber =
+        "MDY" + Date.now();
 
 
-        const paymentElement =
-            document.querySelector(
-                'input[name="payment"]:checked'
-            );
-
-
-        const payment =
-            paymentElement
-            ? paymentElement.value
-            : "现金";
-
-
-        if (!name) {
-
-            alert("请输入姓名");
-
-            return;
-        }
-
-
-        if (!phone) {
-
-            alert("请输入电话号码");
-
-            return;
-        }
-
-
-        if (!address) {
-
-            alert("请输入配送地址");
-
-            return;
-        }
-
-
-        const submitButton =
-            document.getElementById(
-                "submitButton"
-            );
-
-
-        submitButton.disabled = true;
-
-        submitButton.innerText =
-            "正在提交订单...";
-
+    try {
 
         /* =========================
-           计算总金额
+           写入 Firebase
         ========================= */
 
-        const subtotal =
-            cart.reduce(
-                function(sum, item) {
+        await db
+            .collection("orders")
+            .add({
 
-                    return sum +
-                        Number(item.price) *
-                        Number(item.quantity);
-
-                },
-                0
-            );
-
-
-        const total =
-            subtotal + 2000;
-
-
-        /* 订单号 */
-
-        const orderNumber =
-            "MDY" + Date.now();
-
-
-        try {
-
-            /* =========================
-               写入 Firebase
-            ========================= */
-
-            await db
-                .collection("orders")
-                .add({
-
-                    order_number:
-                        orderNumber,
-
-                    customername:
-                        name,
-
-                    phone:
-                        phone,
-
-                    adress:
-                        address,
-
-                    total:
-                        total,
-
-                    status:
-                        "待接单",
-
-                    payment:
-                        payment,
-
-                    method:
-                        "网站",
-
-                    items:
-                        cart,
-
-                    created_at:
-                        firebase.firestore
-                        .FieldValue
-                        .serverTimestamp()
-
-                });
-
-
-            /* =========================
-               本地也保存
-               防止影响现有后台
-            ========================= */
-
-            const order = {
-
-                orderNumber:
+                order_number:
                     orderNumber,
 
-                name:
+                /* ⭐ 新增：餐厅 ID */
+
+                restaurantId:
+                    restaurantId,
+
+                /* ⭐ 新增：餐厅名称 */
+
+                restaurantName:
+                    restaurantName,
+
+                customername:
                     name,
 
                 phone:
                     phone,
 
-                address:
+                adress:
                     address,
-
-                payment:
-                    payment,
-
-                items:
-                    cart,
 
                 total:
                     total,
@@ -536,76 +608,134 @@
                 status:
                     "待接单",
 
-                createdAt:
-                    new Date()
-                    .toLocaleString()
+                payment:
+                    payment,
 
-            };
+                method:
+                    "网站",
 
+                items:
+                    cart,
 
-            let orders =
-                JSON.parse(
-                    localStorage.getItem("orders")
-                ) || [];
+                created_at:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
 
-
-            orders.push(order);
-
-
-            localStorage.setItem(
-                "orders",
-                JSON.stringify(orders)
-            );
+            });
 
 
-            localStorage.setItem(
-                "lastOrder",
-                JSON.stringify(order)
-            );
+        /* =========================
+           本地保存
+        ========================= */
+
+        const order = {
+
+            orderNumber:
+                orderNumber,
+
+            restaurantId:
+                restaurantId,
+
+            restaurantName:
+                restaurantName,
+
+            name:
+                name,
+
+            phone:
+                phone,
+
+            address:
+                address,
+
+            payment:
+                payment,
+
+            items:
+                cart,
+
+            total:
+                total,
+
+            status:
+                "待接单",
+
+            createdAt:
+                new Date()
+                .toLocaleString()
+
+        };
 
 
-            /* 清空购物车 */
-
-            localStorage.removeItem("cart");
-
-
-            /* 成功 */
-
-            window.location.href =
-                "success.html";
+        let orders =
+            JSON.parse(
+                localStorage.getItem("orders")
+            ) || [];
 
 
-        } catch (error) {
-
-            console.error(
-                "Firebase 订单错误:",
-                error
-            );
+        orders.push(order);
 
 
-            alert(
-                "订单提交失败：\n" +
-                error.message
-            );
+        localStorage.setItem(
+            "orders",
+            JSON.stringify(orders)
+        );
 
 
-            submitButton.disabled =
-                false;
+        localStorage.setItem(
+            "lastOrder",
+            JSON.stringify(order)
+        );
 
 
-            submitButton.innerText =
-                "提交订单";
+        /* 清空购物车 */
 
-        }
+        localStorage.removeItem("cart");
+
+
+        /* 成功 */
+
+        window.location.href =
+            "success.html";
+
+
+    } catch (error) {
+
+        console.error(
+            "Firebase 订单错误:",
+            error
+        );
+
+
+        alert(
+            "订单提交失败：\n" +
+            error.message
+        );
+
+
+        submitButton.disabled =
+            false;
+
+
+        submitButton.innerText =
+            "提交订单";
 
     }
 
+}
 
-    showOrder();
+
+/* =========================
+   页面启动
+========================= */
+
+showOrder();
+
+loadRestaurant();
 
 </script>
 
 </body>
 
 </html>
-```
