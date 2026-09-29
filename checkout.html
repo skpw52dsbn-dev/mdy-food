@@ -5,170 +5,331 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>确认订单 - MDY FOOD</title>
 
+
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 
     <style>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
+        * {
+            box-sizing: border-box;
         }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                "Microsoft YaHei",
+                sans-serif;
+
+            background: #f5f5f5;
+
+            color: #333;
+
+        }
+
 
         header {
+
             background: #ff5a1f;
+
             color: white;
+
             padding: 20px;
+
             font-size: 20px;
+
             font-weight: bold;
+
         }
+
 
         .container {
+
             max-width: 700px;
+
             margin: 25px auto;
+
             padding: 0 20px;
+
         }
+
 
         .box {
+
             background: white;
+
             padding: 20px;
+
             border-radius: 12px;
+
             margin-bottom: 20px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.05);
+
         }
+
 
         h2 {
+
             margin-top: 0;
+
         }
+
 
         .restaurant-name {
+
             color: #ff5a1f;
+
             font-size: 18px;
+
             font-weight: bold;
+
             margin-bottom: 15px;
+
         }
+
 
         .item {
+
             display: flex;
+
             justify-content: space-between;
+
+            gap: 10px;
+
             padding: 12px 0;
-            border-bottom: 1px solid #eee;
+
+            border-bottom:
+                1px solid #eee;
+
         }
+
 
         .summary {
+
             line-height: 2;
+
+            margin-top: 12px;
+
         }
 
+
         .total {
+
             display: flex;
+
             justify-content: space-between;
+
             font-size: 20px;
+
             font-weight: bold;
+
             margin-top: 15px;
+
+            padding-top: 15px;
+
+            border-top:
+                1px solid #eee;
+
+            color: #ff5a1f;
+
         }
+
 
         input,
         textarea {
+
             width: 100%;
-            box-sizing: border-box;
+
             padding: 13px;
+
             margin-top: 8px;
+
             margin-bottom: 15px;
-            border: 1px solid #ddd;
+
+            border:
+                1px solid #ddd;
+
             border-radius: 8px;
+
             font-size: 16px;
+
+            outline: none;
+
         }
+
+
+        input:focus,
+        textarea:focus {
+
+            border-color: #ff5a1f;
+
+        }
+
 
         textarea {
+
             min-height: 100px;
+
             resize: vertical;
+
         }
+
 
         .payment {
+
             margin-bottom: 15px;
+
         }
+
 
         .payment label {
+
             display: block;
+
             padding: 12px;
-            border: 1px solid #ddd;
+
+            border:
+                1px solid #ddd;
+
             border-radius: 8px;
+
             margin-bottom: 8px;
+
             cursor: pointer;
+
         }
+
+
+        .payment input {
+
+            width: auto;
+
+            margin: 0 8px 0 0;
+
+        }
+
 
         button {
+
             width: 100%;
+
             padding: 15px;
+
             background: #ff5a1f;
+
             color: white;
+
             border: none;
+
             border-radius: 8px;
+
             font-size: 17px;
+
             cursor: pointer;
+
         }
+
 
         button:disabled {
+
             background: #aaa;
+
             cursor: not-allowed;
+
         }
+
 
         .empty {
-            text-align: center;
-            padding: 50px 20px;
-        }
 
-        .warning {
-            background: #fff3cd;
-            color: #856404;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            text-align: center;
+
+            padding: 50px 20px;
+
         }
 
     </style>
 
 </head>
 
+
 <body>
 
+
 <header>
+
     🛒 确认订单
+
 </header>
+
 
 <div class="container">
 
+
     <div class="box">
 
-        <h2>🍜 订单内容</h2>
+        <h2>
+            🍜 订单内容
+        </h2>
 
-        <div id="restaurantName" class="restaurant-name">
+
+        <div
+            id="restaurantName"
+            class="restaurant-name"
+        >
             正在确认餐厅...
         </div>
 
+
         <div id="orderItems"></div>
+
 
         <div class="summary">
 
             <div>
+
                 小计：
-                <span id="subtotal">0 Ks</span>
+
+                <span id="subtotal">
+                    0 Ks
+                </span>
+
             </div>
 
+
             <div>
+
                 配送费：
-                <span>2,000 Ks</span>
+
+                <span>
+                    2,000 Ks
+                </span>
+
             </div>
 
         </div>
 
+
         <div class="total">
 
-            <span>总计</span>
+            <span>
+                总计
+            </span>
 
             <span id="total">
                 2,000 Ks
@@ -179,11 +340,18 @@
     </div>
 
 
+
     <div class="box">
 
-        <h2>📍 配送信息</h2>
+        <h2>
+            📍 配送信息
+        </h2>
 
-        <label>姓名</label>
+
+        <label>
+            姓名
+        </label>
+
 
         <input
             id="name"
@@ -191,7 +359,11 @@
             placeholder="请输入姓名"
         >
 
-        <label>电话</label>
+
+        <label>
+            电话
+        </label>
+
 
         <input
             id="phone"
@@ -199,7 +371,11 @@
             placeholder="请输入电话号码"
         >
 
-        <label>地址</label>
+
+        <label>
+            地址
+        </label>
+
 
         <textarea
             id="address"
@@ -209,43 +385,64 @@
     </div>
 
 
+
     <div class="box">
 
-        <h2>💳 付款方式</h2>
+        <h2>
+            💳 付款方式
+        </h2>
+
 
         <div class="payment">
 
+
             <label>
+
                 <input
                     type="radio"
                     name="payment"
                     value="现金"
                     checked
                 >
+
                 💵 现金
+
             </label>
 
+
             <label>
+
                 <input
                     type="radio"
                     name="payment"
                     value="KBZPay"
                 >
+
                 📱 KBZPay
+
             </label>
 
+
             <label>
+
                 <input
                     type="radio"
                     name="payment"
                     value="Wave Money"
                 >
+
                 📱 Wave Money
+
             </label>
+
 
         </div>
 
-        <button id="submitButton" onclick="submitOrder()">
+
+        <button
+            id="submitButton"
+            onclick="submitOrder()"
+        >
             提交订单
         </button>
 
@@ -254,36 +451,94 @@
 </div>
 
 
+
 <script>
+
+
+// ========================================
+// Firebase
+// ========================================
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+    apiKey:
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
 
-    authDomain: "mdy-food.firebaseapp.com",
+    authDomain:
+        "mdy-food.firebaseapp.com",
 
-    projectId: "mdy-food",
+    projectId:
+        "mdy-food",
 
-    storageBucket: "mdy-food.firebasestorage.app",
+    storageBucket:
+        "mdy-food.firebasestorage.app",
 
-    messagingSenderId: "498327590625",
+    messagingSenderId:
+        "498327590625",
 
-    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0",
 
-    measurementId: "G-6Q5G2862XQ"
+    measurementId:
+        "G-6Q5G2862XQ"
 
 };
 
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(
+    firebaseConfig
+);
 
 
-const db = firebase.firestore();
+const db =
+    firebase.firestore();
 
 
-/* =========================
-   获取购物车
-========================= */
+
+// ========================================
+// 顾客 ID
+// ========================================
+
+function getCustomerId() {
+
+    let customerId =
+        localStorage.getItem(
+            "customerId"
+        );
+
+
+    if (!customerId) {
+
+        customerId =
+            "mdy_customer_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2, 10);
+
+
+        localStorage.setItem(
+            "customerId",
+            customerId
+        );
+
+    }
+
+
+    return customerId;
+
+}
+
+
+const customerId =
+    getCustomerId();
+
+
+
+// ========================================
+// 获取购物车
+// ========================================
 
 let cart =
     JSON.parse(
@@ -291,35 +546,38 @@ let cart =
     ) || [];
 
 
-/* =========================
-   获取餐厅 ID
-========================= */
+// ========================================
+// 餐厅
+// ========================================
 
-let restaurantId = null;
+let restaurantId =
+    null;
 
-let restaurantName = "未知餐厅";
 
+let restaurantName =
+    "未知餐厅";
 
-/*
-   从购物车里的菜品获取餐厅 ID
-*/
 
 if (cart.length > 0) {
 
     restaurantId =
-        cart[0].restaurantId || null;
+        cart[0].restaurantId ||
+        null;
 
 }
 
 
-/* =========================
-   获取餐厅名称
-========================= */
+
+// ========================================
+// 读取餐厅
+// ========================================
 
 async function loadRestaurant() {
 
     const nameElement =
-        document.getElementById("restaurantName");
+        document.getElementById(
+            "restaurantName"
+        );
 
 
     if (!restaurantId) {
@@ -348,22 +606,30 @@ async function loadRestaurant() {
 
 
             restaurantName =
-                data.name || "未知餐厅";
+                data.name ||
+                "未知餐厅";
 
 
             nameElement.innerText =
-                "🏪 " + restaurantName;
+                "🏪 " +
+                restaurantName;
 
-        } else {
+        }
+
+        else {
 
             nameElement.innerText =
                 "⚠️ 餐厅不存在";
 
         }
 
-    } catch (error) {
+
+    }
+
+    catch (error) {
 
         console.error(error);
+
 
         nameElement.innerText =
             "⚠️ 餐厅信息加载失败";
@@ -373,22 +639,33 @@ async function loadRestaurant() {
 }
 
 
-/* =========================
-   显示订单
-========================= */
+
+// ========================================
+// 显示订单
+// ========================================
 
 function showOrder() {
 
     const container =
-        document.getElementById("orderItems");
+        document.getElementById(
+            "orderItems"
+        );
 
 
     if (cart.length === 0) {
 
         container.innerHTML = `
+
             <div class="empty">
+
+                🛒
+
+                <br><br>
+
                 购物车是空的
+
             </div>
+
         `;
 
         return;
@@ -402,63 +679,97 @@ function showOrder() {
     container.innerHTML = "";
 
 
-    cart.forEach(function(item) {
-
-        subtotal +=
-            Number(item.price) *
-            Number(item.quantity);
+    cart.forEach(
+        function(item) {
 
 
-        const div =
-            document.createElement("div");
+            const price =
+                Number(item.price) || 0;
 
 
-        div.className =
-            "item";
+            const quantity =
+                Number(item.quantity) || 0;
 
 
-        div.innerHTML = `
-
-            <span>
-                ${item.name} × ${item.quantity}
-            </span>
-
-            <span>
-                ${(Number(item.price) *
-                  Number(item.quantity))
-                  .toLocaleString()} Ks
-            </span>
-
-        `;
+            const itemTotal =
+                price * quantity;
 
 
-        container.appendChild(div);
-
-    });
-
-
-    document.getElementById("subtotal")
-        .innerText =
-        subtotal.toLocaleString() + " Ks";
+            subtotal +=
+                itemTotal;
 
 
-    document.getElementById("total")
-        .innerText =
-        (subtotal + 2000)
-        .toLocaleString() + " Ks";
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "item";
+
+
+            div.innerHTML = `
+
+                <span>
+
+                    ${item.name}
+
+                    × ${quantity}
+
+                </span>
+
+
+                <span>
+
+                    ${itemTotal
+                        .toLocaleString()}
+                    Ks
+
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
+
+    document.getElementById(
+        "subtotal"
+    ).innerText =
+        subtotal.toLocaleString() +
+        " Ks";
+
+
+    document.getElementById(
+        "total"
+    ).innerText =
+        (
+            subtotal + 2000
+        ).toLocaleString() +
+        " Ks";
 
 }
 
 
-/* =========================
-   提交订单
-========================= */
+
+// ========================================
+// 提交订单
+// ========================================
 
 async function submitOrder() {
 
+
     if (cart.length === 0) {
 
-        alert("购物车是空的");
+        alert(
+            "购物车是空的"
+        );
 
         return;
 
@@ -477,18 +788,24 @@ async function submitOrder() {
 
 
     const name =
-        document.getElementById("name")
-        .value.trim();
+        document
+            .getElementById("name")
+            .value
+            .trim();
 
 
     const phone =
-        document.getElementById("phone")
-        .value.trim();
+        document
+            .getElementById("phone")
+            .value
+            .trim();
 
 
     const address =
-        document.getElementById("address")
-        .value.trim();
+        document
+            .getElementById("address")
+            .value
+            .trim();
 
 
     const paymentElement =
@@ -499,13 +816,15 @@ async function submitOrder() {
 
     const payment =
         paymentElement
-        ? paymentElement.value
-        : "现金";
+            ? paymentElement.value
+            : "现金";
 
 
     if (!name) {
 
-        alert("请输入姓名");
+        alert(
+            "请输入姓名"
+        );
 
         return;
 
@@ -514,7 +833,9 @@ async function submitOrder() {
 
     if (!phone) {
 
-        alert("请输入电话号码");
+        alert(
+            "请输入电话号码"
+        );
 
         return;
 
@@ -523,7 +844,9 @@ async function submitOrder() {
 
     if (!address) {
 
-        alert("请输入配送地址");
+        alert(
+            "请输入配送地址"
+        );
 
         return;
 
@@ -536,24 +859,30 @@ async function submitOrder() {
         );
 
 
-    submitButton.disabled = true;
+    submitButton.disabled =
+        true;
 
 
     submitButton.innerText =
         "正在提交订单...";
 
 
-    /* =========================
-       计算金额
-    ========================= */
+
+    // ========================================
+    // 计算金额
+    // ========================================
 
     const subtotal =
         cart.reduce(
             function(sum, item) {
 
                 return sum +
-                    Number(item.price) *
-                    Number(item.quantity);
+                    (
+                        Number(item.price) || 0
+                    ) *
+                    (
+                        Number(item.quantity) || 0
+                    );
 
             },
             0
@@ -564,17 +893,23 @@ async function submitOrder() {
         subtotal + 2000;
 
 
-    /* 订单号 */
+
+    // ========================================
+    // 订单号
+    // ========================================
 
     const orderNumber =
-        "MDY" + Date.now();
+        "MDY" +
+        Date.now();
+
 
 
     try {
 
-        /* =========================
-           写入 Firebase
-        ========================= */
+
+        // ========================================
+        // Firebase
+        // ========================================
 
         await db
             .collection("orders")
@@ -583,124 +918,170 @@ async function submitOrder() {
                 order_number:
                     orderNumber,
 
-                /* ⭐ 新增：餐厅 ID */
 
                 restaurantId:
                     restaurantId,
 
-                /* ⭐ 新增：餐厅名称 */
 
                 restaurantName:
                     restaurantName,
 
+
+                // ⭐ 顾客唯一 ID
+
+                customerId:
+                    customerId,
+
+
                 customername:
                     name,
+
 
                 phone:
                     phone,
 
+
                 adress:
                     address,
+
 
                 total:
                     total,
 
+
                 status:
                     "待接单",
+
 
                 payment:
                     payment,
 
+
                 method:
                     "网站",
+
 
                 items:
                     cart,
 
+
                 created_at:
                     firebase.firestore
-                    .FieldValue
-                    .serverTimestamp()
+                        .FieldValue
+                        .serverTimestamp()
 
             });
 
 
-        /* =========================
-           本地保存
-        ========================= */
+
+        // ========================================
+        // 本地保存
+        // ========================================
 
         const order = {
 
             orderNumber:
                 orderNumber,
 
+
             restaurantId:
                 restaurantId,
+
 
             restaurantName:
                 restaurantName,
 
+
+            customerId:
+                customerId,
+
+
             name:
                 name,
+
 
             phone:
                 phone,
 
+
             address:
                 address,
+
 
             payment:
                 payment,
 
+
             items:
                 cart,
+
 
             total:
                 total,
 
+
             status:
                 "待接单",
 
+
             createdAt:
                 new Date()
-                .toLocaleString()
+                    .toLocaleString()
 
         };
 
 
         let orders =
             JSON.parse(
-                localStorage.getItem("orders")
+                localStorage.getItem(
+                    "orders"
+                )
             ) || [];
 
 
-        orders.push(order);
+        orders.push(
+            order
+        );
 
 
         localStorage.setItem(
             "orders",
-            JSON.stringify(orders)
+            JSON.stringify(
+                orders
+            )
         );
 
 
         localStorage.setItem(
             "lastOrder",
-            JSON.stringify(order)
+            JSON.stringify(
+                order
+            )
         );
 
 
-        /* 清空购物车 */
 
-        localStorage.removeItem("cart");
+        // ========================================
+        // 清空购物车
+        // ========================================
+
+        localStorage.removeItem(
+            "cart"
+        );
 
 
-        /* 成功 */
+
+        // ========================================
+        // 成功
+        // ========================================
 
         window.location.href =
             "success.html";
 
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "Firebase 订单错误:",
@@ -726,15 +1107,17 @@ async function submitOrder() {
 }
 
 
-/* =========================
-   页面启动
-========================= */
+
+// ========================================
+// 页面启动
+// ========================================
 
 showOrder();
 
 loadRestaurant();
 
 </script>
+
 
 </body>
 
