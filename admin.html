@@ -2,7 +2,9 @@
 <html lang="zh-CN">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>商家后台 - MDY FOOD</title>
@@ -11,6 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -42,11 +45,18 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            gap: 10px;
         }
 
         .title {
             font-size: 20px;
             font-weight: bold;
+        }
+
+        .restaurant-name {
+            color: #ff5a1f;
+            margin-top: 5px;
+            font-size: 15px;
         }
 
         .logout {
@@ -83,8 +93,7 @@
         }
 
         .form-group input,
-        .form-group textarea,
-        .form-group select {
+        .form-group textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
@@ -271,7 +280,9 @@
             margin-bottom: 12px;
             display: none;
         }
+
     </style>
+
 </head>
 
 <body>
@@ -280,13 +291,26 @@
     🍜 MDY FOOD 商家后台
 </header>
 
+
 <div class="container">
 
     <div class="top">
 
-        <div class="title">
-            👨‍🍳 商家管理
+        <div>
+
+            <div class="title">
+                👨‍🍳 商家管理
+            </div>
+
+            <div
+                id="restaurantName"
+                class="restaurant-name"
+            >
+                正在读取餐厅...
+            </div>
+
         </div>
+
 
         <button
             class="logout"
@@ -298,7 +322,7 @@
     </div>
 
 
-    <!-- 菜品管理 -->
+    <!-- 添加菜品 -->
 
     <div class="section">
 
@@ -306,9 +330,13 @@
             ➕ 添加菜品
         </div>
 
-        <div id="successMessage" class="success">
+        <div
+            id="successMessage"
+            class="success"
+        >
             菜品添加成功！
         </div>
+
 
         <div class="form-group">
 
@@ -363,7 +391,7 @@
             <input
                 id="foodImage"
                 type="text"
-                placeholder="粘贴图片 URL"
+                placeholder="粘贴图片 URL（可留空）"
             >
 
         </div>
@@ -379,7 +407,7 @@
     </div>
 
 
-    <!-- 菜品列表 -->
+    <!-- 我的菜品 -->
 
     <div class="section">
 
@@ -394,7 +422,7 @@
     </div>
 
 
-    <!-- 订单管理 -->
+    <!-- 订单 -->
 
     <div class="section">
 
@@ -414,7 +442,9 @@
 <script>
 
 
+// =========================
 // 登录检查
+// =========================
 
 if (
     localStorage.getItem("merchantLogin")
@@ -427,7 +457,35 @@ if (
 }
 
 
+// =========================
+// 获取当前商家餐厅 ID
+// =========================
+
+const restaurantId =
+    localStorage.getItem(
+        "merchantRestaurantId"
+    );
+
+
+if (!restaurantId) {
+
+    alert(
+        "没有找到商家餐厅信息，请重新登录"
+    );
+
+    localStorage.removeItem(
+        "merchantLogin"
+    );
+
+    window.location.href =
+        "admin-login.html";
+
+}
+
+
+// =========================
 // Firebase
+// =========================
 
 const firebaseConfig = {
 
@@ -454,31 +512,88 @@ const db =
     firebase.firestore();
 
 
-// 四川味道 ID
+// =========================
+// 读取餐厅名称
+// =========================
 
-const restaurantId =
-    "AxVX8H1owO7IKe0EJcmb";
+async function loadRestaurant() {
+
+    try {
+
+        const doc =
+            await db
+                .collection("restaurants")
+                .doc(restaurantId)
+                .get();
 
 
-// ======================
+        if (doc.exists) {
+
+            const restaurant =
+                doc.data();
+
+            document.getElementById(
+                "restaurantName"
+            ).innerText =
+                "🏪 " +
+                (restaurant.name || "我的餐厅");
+
+        } else {
+
+            document.getElementById(
+                "restaurantName"
+            ).innerText =
+                "🏪 我的餐厅";
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "restaurantName"
+        ).innerText =
+            "🏪 我的餐厅";
+
+    }
+
+}
+
+
+// =========================
 // 添加菜品
-// ======================
+// =========================
 
 async function addFood() {
 
     const name =
-        document.getElementById("foodName").value.trim();
+        document
+            .getElementById("foodName")
+            .value
+            .trim();
+
 
     const price =
         Number(
-            document.getElementById("foodPrice").value
+            document
+                .getElementById("foodPrice")
+                .value
         );
 
+
     const description =
-        document.getElementById("foodDescription").value.trim();
+        document
+            .getElementById("foodDescription")
+            .value
+            .trim();
+
 
     const image =
-        document.getElementById("foodImage").value.trim();
+        document
+            .getElementById("foodImage")
+            .value
+            .trim();
 
 
     if (!name) {
@@ -486,6 +601,7 @@ async function addFood() {
         alert("请输入菜品名称");
 
         return;
+
     }
 
 
@@ -494,6 +610,7 @@ async function addFood() {
         alert("请输入正确的价格");
 
         return;
+
     }
 
 
@@ -524,21 +641,31 @@ async function addFood() {
             });
 
 
-        document.getElementById("foodName")
-            .value = "";
+        document.getElementById(
+            "foodName"
+        ).value = "";
 
-        document.getElementById("foodPrice")
-            .value = "";
 
-        document.getElementById("foodDescription")
-            .value = "";
+        document.getElementById(
+            "foodPrice"
+        ).value = "";
 
-        document.getElementById("foodImage")
-            .value = "";
+
+        document.getElementById(
+            "foodDescription"
+        ).value = "";
+
+
+        document.getElementById(
+            "foodImage"
+        ).value = "";
 
 
         const message =
-            document.getElementById("successMessage");
+            document.getElementById(
+                "successMessage"
+            );
+
 
         message.style.display =
             "block";
@@ -569,9 +696,9 @@ async function addFood() {
 }
 
 
-// ======================
-// 读取菜品
-// ======================
+// =========================
+// 读取当前餐厅菜品
+// =========================
 
 async function loadFoods() {
 
@@ -589,18 +716,23 @@ async function loadFoods() {
 
 
         const container =
-            document.getElementById("foods");
+            document.getElementById(
+                "foods"
+            );
 
 
         if (snapshot.empty) {
 
             container.innerHTML = `
+
                 <div class="empty">
                     目前还没有菜品
                 </div>
+
             `;
 
             return;
+
         }
 
 
@@ -615,6 +747,7 @@ async function loadFoods() {
 
             const div =
                 document.createElement("div");
+
 
             div.className =
                 "food";
@@ -638,23 +771,33 @@ async function loadFoods() {
                     alt="${food.name || ""}"
                 >
 
+
                 <div class="food-info">
 
                     <div class="food-name">
                         ${food.name || ""}
                     </div>
 
+
                     <div class="food-price">
-                        ${Number(food.price || 0).toLocaleString()} Ks
+                        ${
+                            Number(
+                                food.price || 0
+                            ).toLocaleString()
+                        }
+                        Ks
                     </div>
+
 
                     <div class="food-description">
                         ${food.description || ""}
                     </div>
 
+
                     <div class="food-status">
                         ${statusText}
                     </div>
+
 
                     <div class="food-buttons">
 
@@ -665,14 +808,19 @@ async function loadFoods() {
                                 '${food.status}'
                             )"
                         >
-                            ${food.status === "营业中"
-                                ? "下架"
-                                : "上架"}
+                            ${
+                                food.status === "营业中"
+                                    ? "下架"
+                                    : "上架"
+                            }
                         </button>
+
 
                         <button
                             class="delete-btn"
-                            onclick="deleteFood('${doc.id}')"
+                            onclick="deleteFood(
+                                '${doc.id}'
+                            )"
                         >
                             删除
                         </button>
@@ -693,29 +841,31 @@ async function loadFoods() {
 
         console.error(error);
 
-        document.getElementById("foods")
-            .innerHTML = `
 
-                <div class="error">
+        document.getElementById(
+            "foods"
+        ).innerHTML = `
 
-                    ❌ 读取菜品失败
+            <div class="error">
 
-                    <br><br>
+                ❌ 读取菜品失败
 
-                    ${error.message}
+                <br><br>
 
-                </div>
+                ${error.message}
 
-            `;
+            </div>
+
+        `;
 
     }
 
 }
 
 
-// ======================
+// =========================
 // 上架 / 下架
-// ======================
+// =========================
 
 async function toggleFoodStatus(
     documentId,
@@ -756,9 +906,9 @@ async function toggleFoodStatus(
 }
 
 
-// ======================
+// =========================
 // 删除菜品
-// ======================
+// =========================
 
 async function deleteFood(
     documentId
@@ -798,9 +948,9 @@ async function deleteFood(
 }
 
 
-// ======================
-// 订单
-// ======================
+// =========================
+// 读取订单
+// =========================
 
 async function loadOrders() {
 
@@ -852,7 +1002,9 @@ async function loadOrders() {
 
 
         const container =
-            document.getElementById("orders");
+            document.getElementById(
+                "orders"
+            );
 
 
         if (orders.length === 0) {
@@ -887,18 +1039,15 @@ async function loadOrders() {
                 "暂无";
 
 
-            if (order.created_at) {
+            if (
+                order.created_at &&
+                order.created_at.toDate
+            ) {
 
-                if (
-                    order.created_at.toDate
-                ) {
-
-                    createdTime =
-                        order.created_at
-                            .toDate()
-                            .toLocaleString();
-
-                }
+                createdTime =
+                    order.created_at
+                        .toDate()
+                        .toLocaleString();
 
             }
 
@@ -923,14 +1072,18 @@ async function loadOrders() {
                                 ${item.quantity}
                             </span>
 
+
                             <span>
+
                                 ${
                                     (
                                         item.price *
                                         item.quantity
                                     ).toLocaleString()
                                 }
+
                                 Ks
+
                             </span>
 
                         </div>
@@ -1078,9 +1231,11 @@ async function loadOrders() {
                 <div class="total">
 
                     总计：
-                    ${(
-                        order.total || 0
-                    ).toLocaleString()}
+                    ${
+                        (
+                            order.total || 0
+                        ).toLocaleString()
+                    }
                     Ks
 
                 </div>
@@ -1105,27 +1260,30 @@ async function loadOrders() {
         console.error(error);
 
 
-        document.getElementById("orders")
-            .innerHTML = `
+        document.getElementById(
+            "orders"
+        ).innerHTML = `
 
-                <div class="error">
+            <div class="error">
 
-                    ❌ 读取订单失败
+                ❌ 读取订单失败
 
-                    <br><br>
+                <br><br>
 
-                    ${error.message}
+                ${error.message}
 
-                </div>
+            </div>
 
-            `;
+        `;
 
     }
 
 }
 
 
+// =========================
 // 修改订单状态
+// =========================
 
 async function changeStatus(
     documentId,
@@ -1155,14 +1313,14 @@ async function changeStatus(
             error.message
         );
 
-        console.error(error);
-
     }
 
 }
 
 
-// 退出
+// =========================
+// 退出登录
+// =========================
 
 function logout() {
 
@@ -1170,20 +1328,31 @@ function logout() {
         "merchantLogin"
     );
 
+    localStorage.removeItem(
+        "merchantUsername"
+    );
+
+    localStorage.removeItem(
+        "merchantRestaurantId"
+    );
+
+
     window.location.href =
         "admin-login.html";
 
 }
 
 
+// =========================
 // 启动
+// =========================
+
+loadRestaurant();
 
 loadFoods();
 
 loadOrders();
 
-
-// 每 3 秒刷新订单
 
 setInterval(
     loadOrders,
@@ -1193,5 +1362,5 @@ setInterval(
 </script>
 
 </body>
-</html>
 
+</html>
