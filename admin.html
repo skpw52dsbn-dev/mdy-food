@@ -63,6 +63,57 @@ header {
     cursor: pointer;
 }
 
+/* =========================
+   数据统计
+========================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.stat-icon {
+    font-size: 25px;
+    margin-bottom: 7px;
+}
+
+.stat-number {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: #888;
+    font-size: 13px;
+}
+
+.stat-money {
+    color: #ff5a1f;
+}
+
+.stat-pending {
+    color: #d88700;
+}
+
+.stat-delivering {
+    color: #16833b;
+}
+
+/* =========================
+   通用
+========================= */
+
 .section {
     background: white;
     border-radius: 12px;
@@ -192,6 +243,10 @@ header {
 .save-edit-btn {
     background: #2e8b57;
 }
+
+/* =========================
+   订单
+========================= */
 
 .order {
     background: white;
@@ -401,12 +456,6 @@ header {
     background: #d88700 !important;
 }
 
-.completed {
-    color: #2e8b57;
-    font-weight: bold;
-    margin-top: 15px;
-}
-
 .delivery-info {
     margin-top: 12px;
     padding: 13px;
@@ -513,6 +562,19 @@ header {
         padding: 14px;
     }
 
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 14px 8px;
+    }
+
+    .stat-number {
+        font-size: 20px;
+    }
+
     .food {
         align-items: flex-start;
     }
@@ -559,6 +621,90 @@ header {
         <button class="logout" onclick="logout()">
             退出登录
         </button>
+    </div>
+
+
+    <!-- =========================
+         数据统计
+    ========================== -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📦
+            </div>
+
+            <div
+                id="todayOrders"
+                class="stat-number">
+                0
+            </div>
+
+            <div class="stat-label">
+                今日订单
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                💰
+            </div>
+
+            <div
+                id="todayRevenue"
+                class="stat-number stat-money">
+                0 Ks
+            </div>
+
+            <div class="stat-label">
+                今日营业额
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⏳
+            </div>
+
+            <div
+                id="pendingOrders"
+                class="stat-number stat-pending">
+                0
+            </div>
+
+            <div class="stat-label">
+                待处理
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🛵
+            </div>
+
+            <div
+                id="deliveringOrders"
+                class="stat-number stat-delivering">
+                0
+            </div>
+
+            <div class="stat-label">
+                配送中
+            </div>
+
+        </div>
+
     </div>
 
 
@@ -756,6 +902,172 @@ function escapeHtml(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+
+}
+
+
+// ========================================
+// 判断订单是不是今天
+// ========================================
+
+function isToday(timestamp) {
+
+    if (!timestamp) {
+        return false;
+    }
+
+    let date;
+
+    try {
+
+        if (timestamp.toDate) {
+
+            date = timestamp.toDate();
+
+        } else if (timestamp instanceof Date) {
+
+            date = timestamp;
+
+        } else {
+
+            return false;
+
+        }
+
+    } catch (error) {
+
+        return false;
+    }
+
+    const now = new Date();
+
+    return (
+        date.getFullYear() === now.getFullYear() &&
+        date.getMonth() === now.getMonth() &&
+        date.getDate() === now.getDate()
+    );
+
+}
+
+
+// ========================================
+// 更新商家统计
+// ========================================
+
+async function loadStats() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("orders")
+                .where(
+                    "restaurantId",
+                    "==",
+                    restaurantId
+                )
+                .get();
+
+
+        let todayOrders = 0;
+
+        let todayRevenue = 0;
+
+        let pendingOrders = 0;
+
+        let deliveringOrders = 0;
+
+
+        snapshot.forEach(function(doc) {
+
+            const order = doc.data();
+
+            const status =
+                order.status || "待接单";
+
+
+            // ----------------------------
+            // 待处理
+            // ----------------------------
+
+            if (
+                status === "待接单" ||
+                status === "商家已接单" ||
+                status === "骑手已接单" ||
+                status === "外卖好了"
+            ) {
+
+                pendingOrders++;
+
+            }
+
+
+            // ----------------------------
+            // 配送中
+            // ----------------------------
+
+            if (
+                status === "配送中"
+            ) {
+
+                deliveringOrders++;
+
+            }
+
+
+            // ----------------------------
+            // 今日数据
+            // ----------------------------
+
+            if (
+                isToday(order.created_at)
+            ) {
+
+                todayOrders++;
+
+                todayRevenue +=
+                    Number(
+                        order.total || 0
+                    );
+
+            }
+
+        });
+
+
+        document.getElementById(
+            "todayOrders"
+        ).innerText =
+            todayOrders;
+
+
+        document.getElementById(
+            "todayRevenue"
+        ).innerText =
+            todayRevenue.toLocaleString() +
+            " Ks";
+
+
+        document.getElementById(
+            "pendingOrders"
+        ).innerText =
+            pendingOrders;
+
+
+        document.getElementById(
+            "deliveringOrders"
+        ).innerText =
+            deliveringOrders;
+
+
+    } catch (error) {
+
+        console.error(
+            "读取统计失败：",
+            error
+        );
+
+    }
 
 }
 
@@ -1298,6 +1610,7 @@ async function loadFoods() {
             </div>
 
         `;
+
     }
 
 }
@@ -1693,10 +2006,6 @@ async function loadOrders() {
         });
 
 
-        // ========================================
-        // 最新订单排前面
-        // ========================================
-
         orders.sort(function(a, b) {
 
             const timeA =
@@ -1748,10 +2057,6 @@ async function loadOrders() {
                 orderObject.id;
 
 
-            // ========================================
-            // 时间
-            // ========================================
-
             let createdTime = "暂无";
 
             if (
@@ -1767,17 +2072,9 @@ async function loadOrders() {
             }
 
 
-            // ========================================
-            // 状态
-            // ========================================
-
             const status =
                 order.status || "待接单";
 
-
-            // ========================================
-            // 菜品
-            // ========================================
 
             let itemsHTML = "";
 
@@ -1835,16 +2132,8 @@ async function loadOrders() {
             }
 
 
-            // ========================================
-            // 商家按钮
-            // ========================================
-
             let buttonHTML = "";
 
-
-            // ----------------------------------------
-            // 待接单
-            // ----------------------------------------
 
             if (status === "待接单") {
 
@@ -1865,10 +2154,6 @@ async function loadOrders() {
 
             }
 
-
-            // ----------------------------------------
-            // 商家已接单
-            // ----------------------------------------
 
             else if (
                 status === "商家已接单"
@@ -1901,10 +2186,6 @@ async function loadOrders() {
 
             }
 
-
-            // ----------------------------------------
-            // 骑手已接单
-            // ----------------------------------------
 
             else if (
                 status === "骑手已接单"
@@ -1950,10 +2231,6 @@ async function loadOrders() {
             }
 
 
-            // ----------------------------------------
-            // 外卖好了
-            // ----------------------------------------
-
             else if (
                 status === "外卖好了"
             ) {
@@ -1982,10 +2259,6 @@ async function loadOrders() {
 
             }
 
-
-            // ----------------------------------------
-            // 配送中
-            // ----------------------------------------
 
             else if (
                 status === "配送中"
@@ -2019,10 +2292,6 @@ async function loadOrders() {
             }
 
 
-            // ----------------------------------------
-            // 已完成
-            // ----------------------------------------
-
             else if (
                 status === "已完成"
             ) {
@@ -2043,10 +2312,6 @@ async function loadOrders() {
 
             }
 
-
-            // ========================================
-            // 骑手信息
-            // ========================================
 
             let riderInfoHTML = "";
 
@@ -2084,19 +2349,11 @@ async function loadOrders() {
             }
 
 
-            // ========================================
-            // 新订单判断
-            // ========================================
-
             const newOrderClass =
                 status === "待接单"
                     ? "order order-new"
                     : "order";
 
-
-            // ========================================
-            // 创建订单卡片
-            // ========================================
 
             const div =
                 document.createElement("div");
@@ -2327,10 +2584,6 @@ async function changeStatus(
             orderSnap.data();
 
 
-        // ========================================
-        // 接受订单
-        // ========================================
-
         if (
             newStatus === "商家已接单"
         ) {
@@ -2348,10 +2601,6 @@ async function changeStatus(
 
         }
 
-
-        // ========================================
-        // 外卖好了
-        // ========================================
 
         if (
             newStatus === "外卖好了"
@@ -2380,6 +2629,8 @@ async function changeStatus(
 
 
         await loadOrders();
+
+        await loadStats();
 
     } catch (error) {
 
@@ -2432,15 +2683,20 @@ loadFoods();
 
 loadOrders();
 
+loadStats();
+
 
 // ========================================
-// 每 3 秒自动刷新订单
+// 每 3 秒自动刷新
 // ========================================
 
-setInterval(
-    loadOrders,
-    3000
-);
+setInterval(function() {
+
+    loadOrders();
+
+    loadStats();
+
+}, 3000);
 
 </script>
 
