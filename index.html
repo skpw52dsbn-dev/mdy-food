@@ -91,12 +91,6 @@
             font-size: 15px;
             cursor: pointer;
         }
-
-        .loading {
-            text-align: center;
-            padding: 25px;
-            color: #777;
-        }
     </style>
 </head>
 
@@ -127,7 +121,8 @@
             <h3>四川味道</h3>
             <p>川菜 · 中餐</p>
             <p>⭐ 4.8</p>
-            <button onclick="window.location.href='menu.html'">
+
+            <button onclick="openRestaurant('AxVX8H1owO7IKe0EJcmb')">
                 查看菜单
             </button>
         </div>
@@ -136,7 +131,8 @@
             <h3>Mandalay Kitchen</h3>
             <p>缅甸菜</p>
             <p>⭐ 4.7</p>
-            <button onclick="window.location.href='menu.html'">
+
+            <button onclick="openRestaurant('')">
                 查看菜单
             </button>
         </div>
@@ -145,7 +141,8 @@
             <h3>夜猫子烧烤</h3>
             <p>烧烤 · 夜宵</p>
             <p>⭐ 4.9</p>
-            <button onclick="window.location.href='menu.html'">
+
+            <button onclick="openRestaurant('')">
                 查看菜单
             </button>
         </div>
@@ -154,25 +151,18 @@
 
 </div>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 <script>
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
-    authDomain: "mdy-food.firebaseapp.com",
-    projectId: "mdy-food",
-    storageBucket: "mdy-food.firebasestorage.app",
-    messagingSenderId: "498327590625",
-    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
-    measurementId: "G-6Q5G2862XQ"
-};
+function openRestaurant(id) {
 
-firebase.initializeApp(firebaseConfig);
+    if (!id) {
+        alert("这家餐厅的菜单还在准备中");
+        return;
+    }
 
-const db = firebase.firestore();
+    window.location.href =
+        "menu.html?id=" + id;
+}
 
 
 // 搜索餐厅
@@ -198,76 +188,10 @@ function searchRestaurants() {
         }
 
     });
-}
-
-
-// 从 Firebase 读取餐厅
-function loadRestaurants() {
-
-    db.collection("restaurants")
-        .get()
-        .then(function(snapshot) {
-
-            const restaurants =
-                document.querySelectorAll(".restaurant");
-
-            snapshot.forEach(function(doc, index) {
-
-                if (index >= restaurants.length) {
-                    return;
-                }
-
-                const data = doc.data();
-
-                const restaurant =
-                    restaurants[index];
-
-                const title =
-                    restaurant.querySelector("h3");
-
-                const info =
-                    restaurant.querySelector("p");
-
-                if (title) {
-                    title.innerText =
-                        data.name || "";
-                }
-
-                if (info) {
-                    info.innerText =
-                        data.category || "";
-                }
-
-                const paragraphs =
-                    restaurant.querySelectorAll("p");
-
-                if (paragraphs.length > 1) {
-
-                    paragraphs[1].innerText =
-                        "⭐ " +
-                        (data.rating || "");
-                }
-
-            });
-
-        })
-        .catch(function(error) {
-
-            console.error(
-                "读取餐厅失败：",
-                error
-            );
-
-        });
 
 }
-
-
-// 开始读取
-loadRestaurants();
 
 </script>
 
 </body>
 </html>
-
