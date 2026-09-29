@@ -1,23 +1,38 @@
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>餐厅菜单 - Mandalay Food</title>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>餐厅菜单 - MDY FOOD</title>
+
 
     <style>
+
         * {
             box-sizing: border-box;
         }
+
 
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f5f5f5;
-            padding-bottom: 90px;
+            color: #333;
+            padding-bottom: 95px;
         }
+
+
+        /* =========================
+           顶部
+        ========================= */
 
         header {
             background: #ff5a1f;
@@ -25,61 +40,178 @@
             padding: 16px;
         }
 
+
         .back {
             color: white;
             text-decoration: none;
             font-size: 15px;
         }
 
+
+        /* =========================
+           餐厅信息
+        ========================= */
+
         .restaurant-info {
             background: white;
-            padding: 20px;
         }
 
-        .restaurant-info h2 {
+
+        .restaurant-cover {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            display: block;
+        }
+
+
+        .restaurant-placeholder {
+            width: 100%;
+            height: 190px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                #fff1eb,
+                #ffe0d4
+            );
+            color: #ff5a1f;
+            font-size: 65px;
+        }
+
+
+        .restaurant-details {
+            padding: 18px;
+        }
+
+
+        .restaurant-details h2 {
             margin: 0 0 8px;
+            font-size: 23px;
         }
 
-        .restaurant-info p {
-            margin: 5px 0;
+
+        .restaurant-details p {
+            margin: 6px 0;
             color: #666;
+            font-size: 14px;
         }
 
-        #foodList {
+
+        .restaurant-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+
+        .rating {
+            color: #f59e0b !important;
+            font-weight: bold;
+        }
+
+
+        .open {
+            color: #2e8b57 !important;
+            font-weight: bold;
+        }
+
+
+        .closed {
+            color: #d33 !important;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           搜索
+        ========================= */
+
+        .search-box {
             padding: 15px;
         }
+
+
+        .search {
+            width: 100%;
+            padding: 13px 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+
+        .search:focus {
+            box-shadow: 0 0 0 2px #ff5a1f;
+        }
+
+
+        /* =========================
+           菜品列表
+        ========================= */
+
+        #foodList {
+            padding: 0 15px;
+        }
+
+
+        .section-title {
+            font-size: 19px;
+            font-weight: bold;
+            margin: 5px 0 13px;
+        }
+
 
         .food {
             background: white;
             margin-bottom: 15px;
-            padding: 15px;
+            padding: 14px;
             border-radius: 12px;
             display: flex;
-            gap: 15px;
+            gap: 13px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
+
+
+        .food-image-box {
+            position: relative;
+            flex-shrink: 0;
+        }
+
 
         .food img {
             width: 110px;
             height: 110px;
             object-fit: cover;
             border-radius: 10px;
+            display: block;
         }
+
 
         .food-info {
             flex: 1;
+            min-width: 0;
         }
+
 
         .food-name {
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 7px;
         }
+
 
         .food-description {
             color: #777;
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
+
 
         .price {
             color: #ff5a1f;
@@ -87,15 +219,117 @@
             font-size: 17px;
         }
 
+
+        /* =========================
+           数量控制
+        ========================= */
+
+        .food-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 9px;
+            gap: 8px;
+        }
+
+
         .add-btn {
-            margin-top: 10px;
             border: none;
             background: #ff5a1f;
             color: white;
-            padding: 8px 15px;
+            padding: 8px 13px;
             border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
         }
+
+
+        .quantity-control {
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        .quantity-control.show {
+            display: flex;
+        }
+
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            background: #fff1ed;
+            color: #ff5a1f;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+        .quantity-number {
+            min-width: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           加入动画提示
+        ========================= */
+
+        .added-tip {
+            color: #2e8b57;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+
+        .added-tip.show {
+            display: block;
+        }
+
+
+        /* =========================
+           Loading
+        ========================= */
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #d00;
+        }
+
+
+        .empty {
+            background: white;
+            border-radius: 12px;
+            padding: 40px 15px;
+            text-align: center;
+            color: #777;
+        }
+
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+
+        /* =========================
+           底部购物车
+        ========================= */
 
         .cart-bar {
             position: fixed;
@@ -104,73 +338,217 @@
             right: 0;
             background: #222;
             color: white;
-            padding: 15px;
+            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
         }
+
+
+        .cart-summary {
+            font-size: 14px;
+        }
+
+
+        .cart-total {
+            color: #ff7a4d;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
 
         .cart-btn {
             background: #ff5a1f;
             border: none;
             color: white;
-            padding: 10px 18px;
+            padding: 11px 18px;
             border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #777;
+
+        /* =========================
+           手机
+        ========================= */
+
+        @media (max-width: 500px) {
+
+            .restaurant-cover,
+            .restaurant-placeholder {
+                height: 170px;
+            }
+
+
+            .food {
+                padding: 12px;
+            }
+
+
+            .food img {
+                width: 95px;
+                height: 95px;
+            }
+
+
+            .food-name {
+                font-size: 16px;
+            }
+
+
+            .food-description {
+                font-size: 12px;
+            }
+
+
+            .add-btn {
+                padding: 7px 10px;
+                font-size: 12px;
+            }
+
         }
 
-        .error {
-            text-align: center;
-            padding: 40px;
-            color: #d00;
-        }
     </style>
+
 </head>
+
 
 <body>
 
+
 <header>
-    <a href="index.html" class="back">
+
+    <a
+        href="index.html"
+        class="back"
+    >
         ← 返回餐厅
     </a>
+
 </header>
+
+
+<!-- =========================
+     餐厅信息
+========================= -->
 
 <div class="restaurant-info">
 
-    <h2 id="restaurantName">
-        正在加载...
-    </h2>
+    <img
+        id="restaurantImage"
+        class="restaurant-cover"
+        src=""
+        alt="餐厅"
+        style="display:none;"
+    >
 
-    <p id="restaurantCategory"></p>
 
-    <p id="restaurantRating"></p>
+    <div
+        id="restaurantPlaceholder"
+        class="restaurant-placeholder"
+    >
+        🍜
+    </div>
+
+
+    <div class="restaurant-details">
+
+        <h2 id="restaurantName">
+            正在加载...
+        </h2>
+
+
+        <p id="restaurantCategory">
+        </p>
+
+
+        <div class="restaurant-meta">
+
+            <p
+                id="restaurantRating"
+                class="rating"
+            >
+            </p>
+
+
+            <p
+                id="restaurantStatus"
+                class="open"
+            >
+                正在读取营业状态...
+            </p>
+
+        </div>
+
+    </div>
 
 </div>
 
+
+<!-- =========================
+     搜索
+========================= -->
+
+<div class="search-box">
+
+    <input
+        id="foodSearch"
+        class="search"
+        type="text"
+        placeholder="🔍 搜索菜品 / 搜索菜单"
+        oninput="searchFoods()"
+    >
+
+</div>
+
+
+<!-- =========================
+     菜品
+========================= -->
+
 <div id="foodList">
+
     <div class="loading">
         正在加载菜单...
     </div>
+
 </div>
+
+
+<!-- =========================
+     底部购物车
+========================= -->
 
 <div class="cart-bar">
 
-    <div>
-        🛒 <span id="cartCount">0</span> 件
-       　<span id="cartTotal">0</span> Ks
+    <div class="cart-summary">
+
+        🛒
+        <span id="cartCount">
+            0
+        </span>
+        件
+
+        <span style="margin-left:8px;">
+            <span
+                id="cartTotal"
+                class="cart-total"
+            >
+                0
+            </span>
+            Ks
+        </span>
+
     </div>
+
 
     <button
         class="cart-btn"
         onclick="openCart()"
     >
-        查看购物车
+        查看购物车 →
     </button>
 
 </div>
@@ -185,50 +563,99 @@
 
 <script>
 
+
+// =========================
+// Firebase
+// =========================
+
 const firebaseConfig = {
 
-    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+    apiKey:
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
 
-    authDomain: "mdy-food.firebaseapp.com",
+    authDomain:
+        "mdy-food.firebaseapp.com",
 
-    projectId: "mdy-food",
+    projectId:
+        "mdy-food",
 
-    storageBucket: "mdy-food.firebasestorage.app",
+    storageBucket:
+        "mdy-food.firebasestorage.app",
 
-    messagingSenderId: "498327590625",
+    messagingSenderId:
+        "498327590625",
 
-    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0",
 
-    measurementId: "G-6Q5G2862XQ"
+    measurementId:
+        "G-6Q5G2862XQ"
 
 };
 
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(
+    firebaseConfig
+);
 
 
-const db = firebase.firestore();
+const db =
+    firebase.firestore();
 
 
-// 获取网址里的餐厅 ID
+// =========================
+// 获取餐厅 ID
+// =========================
 
 const params =
-    new URLSearchParams(window.location.search);
+    new URLSearchParams(
+        window.location.search
+    );
+
 
 const restaurantId =
     params.get("id");
 
 
+// =========================
+// 购物车
+// =========================
+
 let cart =
-    JSON.parse(localStorage.getItem("cart")) || [];
+    JSON.parse(
+        localStorage.getItem("cart")
+    ) || [];
 
 
-// 如果没有餐厅 ID
+// =========================
+// 菜品数据
+// =========================
+
+let allFoods = [];
+
+
+// =========================
+// 默认图片
+// =========================
+
+const defaultFoodImage =
+    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
+
+
+// =========================
+// 没有餐厅 ID
+// =========================
 
 if (!restaurantId) {
 
-    document.getElementById("foodList").innerHTML =
-        '<div class="error">找不到餐厅</div>';
+    document.getElementById(
+        "foodList"
+    ).innerHTML =
+        `
+        <div class="error">
+            找不到餐厅
+        </div>
+        `;
 
 } else {
 
@@ -239,7 +666,9 @@ if (!restaurantId) {
 }
 
 
+// =========================
 // 读取餐厅
+// =========================
 
 function loadRestaurant() {
 
@@ -247,50 +676,209 @@ function loadRestaurant() {
         .doc(restaurantId)
         .get()
 
-        .then(function(doc) {
+        .then(
+            function(doc) {
 
-            if (!doc.exists) {
+                if (!doc.exists) {
 
-                document.getElementById("restaurantName")
-                    .innerText = "餐厅不存在";
+                    document.getElementById(
+                        "restaurantName"
+                    ).innerText =
+                        "餐厅不存在";
 
-                return;
+                    return;
+
+                }
+
+
+                const data =
+                    doc.data();
+
+
+                // 名称
+
+                document.getElementById(
+                    "restaurantName"
+                ).innerText =
+                    data.name ||
+                    "餐厅";
+
+
+                // 分类
+
+                document.getElementById(
+                    "restaurantCategory"
+                ).innerText =
+                    data.category ||
+                    "";
+
+
+                // 评分
+
+                document.getElementById(
+                    "restaurantRating"
+                ).innerText =
+                    "⭐ " +
+                    (
+                        data.rating ||
+                        "暂无评分"
+                    );
+
+
+                // 营业状态
+
+                updateRestaurantStatus(
+                    data.status ||
+                    "营业中"
+                );
+
+
+                // 图片
+
+                setRestaurantImage(
+                    data.image ||
+                    ""
+                );
+
+
+                // 页面标题
+
+                document.title =
+                    (
+                        data.name ||
+                        "餐厅"
+                    ) +
+                    " - MDY FOOD";
+
             }
+        )
 
-            const data = doc.data();
+        .catch(
+            function(error) {
 
-            document.getElementById("restaurantName")
-                .innerText =
-                data.name || "餐厅";
+                console.error(error);
 
-            document.getElementById("restaurantCategory")
-                .innerText =
-                data.category || "";
 
-            document.getElementById("restaurantRating")
-                .innerText =
-                "⭐ " + (data.rating || "");
+                document.getElementById(
+                    "restaurantName"
+                ).innerText =
+                    "餐厅加载失败";
 
-            document.title =
-                (data.name || "餐厅") +
-                " - Mandalay Food";
-
-        })
-
-        .catch(function(error) {
-
-            console.error(error);
-
-            document.getElementById("restaurantName")
-                .innerText =
-                "餐厅加载失败";
-
-        });
+            }
+        );
 
 }
 
 
-// 读取这个餐厅的菜
+// =========================
+// 餐厅图片
+// =========================
+
+function setRestaurantImage(
+    imageUrl
+) {
+
+    const image =
+        document.getElementById(
+            "restaurantImage"
+        );
+
+
+    const placeholder =
+        document.getElementById(
+            "restaurantPlaceholder"
+        );
+
+
+    if (!imageUrl) {
+
+        image.style.display =
+            "none";
+
+
+        placeholder.style.display =
+            "flex";
+
+
+        return;
+
+    }
+
+
+    image.src =
+        imageUrl;
+
+
+    image.onload =
+        function() {
+
+            image.style.display =
+                "block";
+
+
+            placeholder.style.display =
+                "none";
+
+        };
+
+
+    image.onerror =
+        function() {
+
+            image.style.display =
+                "none";
+
+
+            placeholder.style.display =
+                "flex";
+
+        };
+
+}
+
+
+// =========================
+// 餐厅营业状态
+// =========================
+
+function updateRestaurantStatus(
+    status
+) {
+
+    const element =
+        document.getElementById(
+            "restaurantStatus"
+        );
+
+
+    if (
+        status === "营业中"
+    ) {
+
+        element.innerText =
+            "🟢 营业中";
+
+
+        element.className =
+            "open";
+
+    } else {
+
+        element.innerText =
+            "🔴 休息中";
+
+
+        element.className =
+            "closed";
+
+    }
+
+}
+
+
+// =========================
+// 读取菜品
+// =========================
 
 function loadFoods() {
 
@@ -304,103 +892,371 @@ function loadFoods() {
 
         .get()
 
-        .then(function(snapshot) {
+        .then(
+            function(snapshot) {
 
-            const foodList =
-                document.getElementById("foodList");
+                allFoods = [];
 
-            foodList.innerHTML = "";
 
-            if (snapshot.empty) {
+                snapshot.forEach(
+                    function(doc) {
 
-                foodList.innerHTML =
-                    '<div class="loading">暂时没有菜单</div>';
+                        const food =
+                            doc.data();
 
-                return;
+
+                        // 只读取营业中的菜
+
+                        if (
+                            food.status !==
+                            "营业中"
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        allFoods.push({
+
+                            id: doc.id,
+
+                            ...food
+
+                        });
+
+                    }
+                );
+
+
+                renderFoods(
+                    allFoods
+                );
+
             }
+        )
+
+        .catch(
+            function(error) {
+
+                console.error(error);
 
 
-            snapshot.forEach(function(doc) {
-
-                const food =
-                    doc.data();
-
-
-                if (food.status !== "营业中") {
-                    return;
-                }
-
-
-                const div =
-                    document.createElement("div");
-
-                div.className =
-                    "food";
-
-
-                div.innerHTML = `
-
-                    <img
-                        src="${food.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'}"
-                        alt="${food.name}"
-                    >
-
-                    <div class="food-info">
-
-                        <div class="food-name">
-                            ${food.name}
-                        </div>
-
-                        <div class="food-description">
-                            ${food.description || ""}
-                        </div>
-
-                        <div class="price">
-                            ${Number(food.price).toLocaleString()} Ks
-                        </div>
-
-                        <button
-                            class="add-btn"
-                            onclick="addFood('${food.name}', ${food.price})"
-                        >
-                            + 加入购物车
-                        </button>
-
+                document.getElementById(
+                    "foodList"
+                ).innerHTML =
+                    `
+                    <div class="error">
+                        菜单加载失败，请检查网络
                     </div>
+                    `;
 
-                `;
-
-
-                foodList.appendChild(div);
-
-            });
-
-        })
-
-        .catch(function(error) {
-
-            console.error(error);
-
-            document.getElementById("foodList").innerHTML =
-                '<div class="error">菜单加载失败，请检查网络</div>';
-
-        });
+            }
+        );
 
 }
 
 
-// 加入购物车
-// 这里会把当前餐厅 ID 一起保存
+// =========================
+// 显示菜品
+// =========================
 
-function addFood(name, price) {
+function renderFoods(
+    foods
+) {
+
+    const foodList =
+        document.getElementById(
+            "foodList"
+        );
+
+
+    foodList.innerHTML = "";
+
+
+    if (
+        foods.length === 0
+    ) {
+
+        foodList.innerHTML =
+            `
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🍽️
+                </div>
+
+                暂时没有找到相关菜品
+
+            </div>
+            `;
+
+        return;
+
+    }
+
+
+    const title =
+        document.createElement(
+            "div"
+        );
+
+
+    title.className =
+        "section-title";
+
+
+    title.innerText =
+        "🍽️ 菜单";
+
+
+    foodList.appendChild(
+        title
+    );
+
+
+    foods.forEach(
+        function(food) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "food";
+
+
+            div.dataset.foodId =
+                food.id;
+
+
+            const image =
+                food.image ||
+                defaultFoodImage;
+
+
+            const quantity =
+                getFoodQuantity(
+                    food.name
+                );
+
+
+            div.innerHTML =
+                `
+                <div class="food-image-box">
+
+                    <img
+                        src="${image}"
+                        alt="${escapeHtml(food.name || "菜品")}"
+                        onerror="this.src='${defaultFoodImage}'"
+                    >
+
+                </div>
+
+
+                <div class="food-info">
+
+                    <div class="food-name">
+                        ${escapeHtml(food.name || "菜品")}
+                    </div>
+
+
+                    <div class="food-description">
+                        ${escapeHtml(food.description || "")}
+                    </div>
+
+
+                    <div class="price">
+                        ${Number(food.price || 0).toLocaleString()}
+                        Ks
+                    </div>
+
+
+                    <div class="food-actions">
+
+                        <button
+                            class="add-btn"
+                            onclick="addFood('${escapeJs(food.name || "")}', ${Number(food.price || 0)})"
+                            style="${quantity > 0 ? "display:none;" : ""}"
+                        >
+                            + 加入购物车
+                        </button>
+
+
+                        <div
+                            class="quantity-control ${quantity > 0 ? "show" : ""}"
+                        >
+
+                            <button
+                                class="quantity-btn"
+                                onclick="changeFoodQuantity('${escapeJs(food.name || "")}', -1)"
+                            >
+                                −
+                            </button>
+
+
+                            <span
+                                class="quantity-number"
+                                id="quantity-${food.id}"
+                            >
+                                ${quantity}
+                            </span>
+
+
+                            <button
+                                class="quantity-btn"
+                                onclick="changeFoodQuantity('${escapeJs(food.name || "")}', 1)"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="added-tip ${quantity > 0 ? "show" : ""}"
+                    >
+                        ✓ 已加入购物车
+                    </div>
+
+                </div>
+                `;
+
+
+            foodList.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+// =========================
+// 搜索菜品
+// =========================
+
+function searchFoods() {
+
+    const keyword =
+        document.getElementById(
+            "foodSearch"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    if (!keyword) {
+
+        renderFoods(
+            allFoods
+        );
+
+        return;
+
+    }
+
+
+    const results =
+        allFoods.filter(
+            function(food) {
+
+                const name =
+                    String(
+                        food.name ||
+                        ""
+                    ).toLowerCase();
+
+
+                const description =
+                    String(
+                        food.description ||
+                        ""
+                    ).toLowerCase();
+
+
+                return (
+                    name.includes(keyword)
+                    ||
+                    description.includes(keyword)
+                );
+
+            }
+        );
+
+
+    renderFoods(
+        results
+    );
+
+}
+
+
+// =========================
+// 获取菜品数量
+// =========================
+
+function getFoodQuantity(
+    name
+) {
+
+    const item =
+        cart.find(
+            function(item) {
+
+                return (
+                    item.name === name
+                    &&
+                    item.restaurantId ===
+                    restaurantId
+                );
+
+            }
+        );
+
+
+    if (!item) {
+
+        return 0;
+
+    }
+
+
+    return Number(
+        item.quantity
+    ) || 0;
+
+}
+
+
+// =========================
+// 加入购物车
+// =========================
+
+function addFood(
+    name,
+    price
+) {
 
     let existingFood =
-        cart.find(function(item) {
+        cart.find(
+            function(item) {
 
-            return item.name === name &&
-                   item.restaurantId === restaurantId;
+                return (
+                    item.name === name
+                    &&
+                    item.restaurantId ===
+                    restaurantId
+                );
 
-        });
+            }
+        );
 
 
     if (existingFood) {
@@ -417,31 +1273,165 @@ function addFood(name, price) {
 
             quantity: 1,
 
-            restaurantId: restaurantId
+            restaurantId:
+                restaurantId
 
         });
 
     }
 
 
-    localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-    );
+    saveCart();
 
 
     updateCart();
 
 
-    alert(
-        name +
-        " 已加入购物车！"
+    renderFoods(
+        getCurrentSearchResults()
     );
 
 }
 
 
+// =========================
+// 修改菜品数量
+// =========================
+
+function changeFoodQuantity(
+    name,
+    amount
+) {
+
+    const item =
+        cart.find(
+            function(item) {
+
+                return (
+                    item.name === name
+                    &&
+                    item.restaurantId ===
+                    restaurantId
+                );
+
+            }
+        );
+
+
+    if (!item) {
+
+        return;
+
+    }
+
+
+    item.quantity +=
+        Number(amount);
+
+
+    if (
+        item.quantity <= 0
+    ) {
+
+        cart =
+            cart.filter(
+                function(cartItem) {
+
+                    return !(
+                        cartItem.name ===
+                        name
+                        &&
+                        cartItem.restaurantId ===
+                        restaurantId
+                    );
+
+                }
+            );
+
+    }
+
+
+    saveCart();
+
+
+    updateCart();
+
+
+    renderFoods(
+        getCurrentSearchResults()
+    );
+
+}
+
+
+// =========================
+// 保存购物车
+// =========================
+
+function saveCart() {
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+}
+
+
+// =========================
+// 当前搜索结果
+// =========================
+
+function getCurrentSearchResults() {
+
+    const keyword =
+        document.getElementById(
+            "foodSearch"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    if (!keyword) {
+
+        return allFoods;
+
+    }
+
+
+    return allFoods.filter(
+        function(food) {
+
+            const name =
+                String(
+                    food.name ||
+                    ""
+                ).toLowerCase();
+
+
+            const description =
+                String(
+                    food.description ||
+                    ""
+                ).toLowerCase();
+
+
+            return (
+                name.includes(keyword)
+                ||
+                description.includes(keyword)
+            );
+
+        }
+    );
+
+}
+
+
+// =========================
 // 更新购物车
+// =========================
 
 function updateCart() {
 
@@ -450,30 +1440,44 @@ function updateCart() {
     let total = 0;
 
 
-    cart.forEach(function(item) {
+    cart.forEach(
+        function(item) {
 
-        count +=
-            Number(item.quantity);
-
-        total +=
-            Number(item.price) *
-            Number(item.quantity);
-
-    });
+            count +=
+                Number(
+                    item.quantity
+                );
 
 
-    document.getElementById("cartCount")
-        .innerText = count;
+            total +=
+                Number(
+                    item.price
+                ) *
+                Number(
+                    item.quantity
+                );
+
+        }
+    );
 
 
-    document.getElementById("cartTotal")
-        .innerText =
+    document.getElementById(
+        "cartCount"
+    ).innerText =
+        count;
+
+
+    document.getElementById(
+        "cartTotal"
+    ).innerText =
         total.toLocaleString();
 
 }
 
 
+// =========================
 // 打开购物车
+// =========================
 
 function openCart() {
 
@@ -483,10 +1487,70 @@ function openCart() {
 }
 
 
+// =========================
+// HTML 安全处理
+// =========================
+
+function escapeHtml(
+    text
+) {
+
+    return String(text)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// =========================
+// JS 字符串安全处理
+// =========================
+
+function escapeJs(
+    text
+) {
+
+    return String(text)
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+        .replace(
+            /'/g,
+            "\\'"
+        );
+
+}
+
+
+// =========================
+// 启动
+// =========================
+
 updateCart();
 
 </script>
 
+
 </body>
 
 </html>
+```
