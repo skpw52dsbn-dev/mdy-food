@@ -13,8 +13,6 @@
     <title>我的订单 - MDY FOOD</title>
 
 
-    <!-- Firebase -->
-
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -57,10 +55,6 @@
 
             font-weight: bold;
 
-            box-shadow:
-                0 2px 8px
-                rgba(0,0,0,0.12);
-
         }
 
 
@@ -92,7 +86,7 @@
 
         .live-box {
 
-            background: #ffffff;
+            background: white;
 
             border-radius: 10px;
 
@@ -103,10 +97,6 @@
             font-size: 14px;
 
             color: #666;
-
-            box-shadow:
-                0 2px 8px
-                rgba(0,0,0,0.06);
 
         }
 
@@ -145,26 +135,13 @@
         }
 
 
-        .order-top {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            gap: 10px;
-
-            margin-bottom: 12px;
-
-        }
-
-
         .order-number {
 
             font-size: 17px;
 
             font-weight: bold;
+
+            margin-bottom: 10px;
 
             word-break: break-all;
 
@@ -309,8 +286,6 @@
 
             justify-content: space-between;
 
-            align-items: center;
-
             font-size: 18px;
 
             font-weight: bold;
@@ -332,10 +307,6 @@
 
             color: #888;
 
-            box-shadow:
-                0 2px 8px
-                rgba(0,0,0,0.06);
-
         }
 
 
@@ -343,23 +314,12 @@
 
             font-size: 55px;
 
-            margin-bottom: 10px;
-
         }
 
 
         .empty h2 {
 
-            margin: 8px 0;
-
             color: #555;
-
-        }
-
-
-        .empty p {
-
-            margin-bottom: 20px;
 
         }
 
@@ -367,6 +327,8 @@
         .home-button {
 
             display: block;
+
+            margin-top: 20px;
 
             padding: 14px;
 
@@ -426,32 +388,9 @@
 
         @media (max-width: 480px) {
 
-            .container {
-
-                padding: 12px;
-
-            }
-
-
             .order {
 
                 padding: 15px;
-
-            }
-
-
-            .order-top {
-
-                align-items: flex-start;
-
-                flex-direction: column;
-
-            }
-
-
-            .total {
-
-                font-size: 17px;
 
             }
 
@@ -511,7 +450,7 @@
 
 
 // ========================================
-// Firebase 配置
+// Firebase
 // ========================================
 
 const firebaseConfig = {
@@ -551,10 +490,95 @@ const db =
 
 
 // ========================================
+// 获取当前顾客 ID
+// ========================================
+
+let customerId =
+    localStorage.getItem(
+        "customerId"
+    );
+
+
+
+// ========================================
+// 如果这个浏览器还没有顾客 ID
+// 就创建一个
+// ========================================
+
+if (!customerId) {
+
+    customerId =
+        "mdy_customer_" +
+        Date.now() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .substring(2, 10);
+
+
+    localStorage.setItem(
+        "customerId",
+        customerId
+    );
+
+}
+
+
+
+// ========================================
+// HTML 安全处理
+// ========================================
+
+function escapeHTML(value) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+// ========================================
 // 状态样式
 // ========================================
 
-function getStatusClass(status) {
+function getStatusClass(
+    status
+) {
 
     if (
         status === "商家已接单"
@@ -603,7 +627,9 @@ function getStatusClass(status) {
 // 状态图标
 // ========================================
 
-function getStatusIcon(status) {
+function getStatusIcon(
+    status
+) {
 
     if (
         status === "待接单"
@@ -658,14 +684,14 @@ function getStatusIcon(status) {
 
 
 // ========================================
-// 格式化时间
+// 时间
 // ========================================
 
-function formatTime(createdAt) {
+function formatTime(
+    createdAt
+) {
 
-    if (
-        !createdAt
-    ) {
+    if (!createdAt) {
 
         return "暂无";
 
@@ -674,116 +700,65 @@ function formatTime(createdAt) {
 
     try {
 
-        let date;
-
-
         if (
             createdAt.toDate
         ) {
 
-            date =
-                createdAt.toDate();
-
-        }
-
-        else if (
-            createdAt.seconds
-        ) {
-
-            date =
-                new Date(
-                    createdAt.seconds * 1000
+            return createdAt
+                .toDate()
+                .toLocaleString(
+                    "zh-CN",
+                    {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
                 );
 
         }
 
-        else {
 
-            return "暂无";
+        if (
+            createdAt.seconds
+        ) {
+
+            return new Date(
+                createdAt.seconds * 1000
+            ).toLocaleString(
+                "zh-CN"
+            );
 
         }
 
 
-        return date.toLocaleString(
-            "zh-CN",
-            {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit"
-            }
-        );
+    }
 
+    catch (error) {
 
-    } catch (error) {
-
-        return "暂无";
+        console.error(error);
 
     }
+
+
+    return "暂无";
 
 }
 
 
 
 // ========================================
-// 金额格式化
+// 金额
 // ========================================
 
-function formatMoney(number) {
+function formatMoney(
+    number
+) {
 
-    const value =
-        Number(number) || 0;
-
-
-    return value.toLocaleString();
-
-}
-
-
-
-// ========================================
-// HTML 安全处理
-// ========================================
-
-function escapeHTML(value) {
-
-    if (
-        value === undefined ||
-        value === null
-    ) {
-
-        return "";
-
-    }
-
-
-    return String(value)
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+    return (
+        Number(number) || 0
+    ).toLocaleString();
 
 }
 
@@ -815,13 +790,16 @@ function renderOrders(
                     📦
                 </div>
 
+
                 <h2>
                     暂时没有订单
                 </h2>
 
+
                 <p>
                     你还没有提交订单
                 </p>
+
 
                 <a
                     class="home-button"
@@ -849,77 +827,15 @@ function renderOrders(
                 orderObject.data;
 
 
-            const orderNumber =
-                escapeHTML(
-                    order.order_number ||
-                    "暂无"
-                );
-
-
-            const restaurantName =
-                escapeHTML(
-                    order.restaurantName ||
-                    "MDY FOOD 餐厅"
-                );
-
-
             const status =
                 order.status ||
                 "待接单";
-
-
-            const statusClass =
-                getStatusClass(
-                    status
-                );
-
-
-            const statusIcon =
-                getStatusIcon(
-                    status
-                );
-
-
-            const customerName =
-                escapeHTML(
-                    order.customername ||
-                    ""
-                );
-
-
-            const phone =
-                escapeHTML(
-                    order.phone ||
-                    ""
-                );
-
-
-            const address =
-                escapeHTML(
-                    order.adress ||
-                    order.address ||
-                    ""
-                );
-
-
-            const payment =
-                escapeHTML(
-                    order.payment ||
-                    ""
-                );
-
-
-            const createdTime =
-                formatTime(
-                    order.created_at
-                );
 
 
             let itemsHTML = "";
 
 
             if (
-                order.items &&
                 Array.isArray(
                     order.items
                 )
@@ -956,7 +872,9 @@ function renderOrders(
 
                             <div class="item">
 
-                                <span class="item-name">
+                                <span
+                                    class="item-name"
+                                >
 
                                     ${name}
 
@@ -964,9 +882,15 @@ function renderOrders(
 
                                 </span>
 
-                                <span class="item-price">
 
-                                    ${formatMoney(itemTotal)}
+                                <span
+                                    class="item-price"
+                                >
+
+                                    ${formatMoney(
+                                        itemTotal
+                                    )}
+
                                     Ks
 
                                 </span>
@@ -981,32 +905,6 @@ function renderOrders(
             }
 
 
-            if (
-                itemsHTML === ""
-            ) {
-
-                itemsHTML = `
-
-                    <div
-                        style="
-                            color:#999;
-                            padding:8px 0;
-                        "
-                    >
-                        暂无菜品信息
-                    </div>
-
-                `;
-
-            }
-
-
-            const total =
-                Number(
-                    order.total
-                ) || 0;
-
-
             const div =
                 document.createElement(
                     "div"
@@ -1019,31 +917,36 @@ function renderOrders(
 
             div.innerHTML = `
 
-                <div class="order-top">
+                <div class="order-number">
 
-                    <div class="order-number">
+                    订单号：
 
-                        订单号：
-
-                        ${orderNumber}
-
-                    </div>
+                    ${escapeHTML(
+                        order.order_number ||
+                        "暂无"
+                    )}
 
                 </div>
 
 
                 <div class="restaurant-name">
 
-                    🏪 ${restaurantName}
+                    🏪
+
+                    ${escapeHTML(
+                        order.restaurantName ||
+                        "MDY FOOD 餐厅"
+                    )}
 
                 </div>
 
 
                 <div
-                    class="status ${statusClass}"
+                    class="status
+                    ${getStatusClass(status)}"
                 >
 
-                    ${statusIcon}
+                    ${getStatusIcon(status)}
 
                     ${escapeHTML(status)}
 
@@ -1054,28 +957,41 @@ function renderOrders(
 
                     👤 姓名：
 
-                    ${customerName}
+                    ${escapeHTML(
+                        order.customername ||
+                        ""
+                    )}
 
                     <br>
 
 
                     📱 电话：
 
-                    ${phone}
+                    ${escapeHTML(
+                        order.phone ||
+                        ""
+                    )}
 
                     <br>
 
 
                     📍 地址：
 
-                    ${address}
+                    ${escapeHTML(
+                        order.adress ||
+                        order.address ||
+                        ""
+                    )}
 
                     <br>
 
 
                     💳 付款：
 
-                    ${payment}
+                    ${escapeHTML(
+                        order.payment ||
+                        ""
+                    )}
 
                     <br>
 
@@ -1084,7 +1000,9 @@ function renderOrders(
 
                     <span class="time">
 
-                        ${createdTime}
+                        ${formatTime(
+                            order.created_at
+                        )}
 
                     </span>
 
@@ -1099,6 +1017,7 @@ function renderOrders(
 
                     </div>
 
+
                     ${itemsHTML}
 
                 </div>
@@ -1110,9 +1029,13 @@ function renderOrders(
                         总计
                     </span>
 
+
                     <span>
 
-                        ${formatMoney(total)}
+                        ${formatMoney(
+                            order.total
+                        )}
+
                         Ks
 
                     </span>
@@ -1134,17 +1057,24 @@ function renderOrders(
 
 
 // ========================================
-// 真正的 Firebase 实时监听
+// 真正实时监听当前顾客订单
 // ========================================
 
-function listenOrders() {
+function listenMyOrders() {
 
 
     db.collection("orders")
 
+        .where(
+            "customerId",
+            "==",
+            customerId
+        )
+
         .onSnapshot(
 
             function(snapshot) {
+
 
                 let orders = [];
 
@@ -1154,9 +1084,11 @@ function listenOrders() {
 
                         orders.push({
 
-                            id: doc.id,
+                            id:
+                                doc.id,
 
-                            data: doc.data()
+                            data:
+                                doc.data()
 
                         });
 
@@ -1165,7 +1097,7 @@ function listenOrders() {
 
 
                 // ========================================
-                // 最新订单排前面
+                // 最新订单在最上面
                 // ========================================
 
                 orders.sort(
@@ -1216,7 +1148,7 @@ function listenOrders() {
             function(error) {
 
                 console.error(
-                    "实时监听订单失败：",
+                    "订单实时监听失败：",
                     error
                 );
 
@@ -1248,11 +1180,10 @@ function listenOrders() {
 
 
 // ========================================
-// 开始实时监听
+// 启动
 // ========================================
 
-listenOrders();
-
+listenMyOrders();
 
 </script>
 
