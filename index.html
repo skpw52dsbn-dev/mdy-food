@@ -1,6 +1,5 @@
-```html
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -64,7 +63,7 @@
 
 
         /* =========================
-           页面容器
+           容器
         ========================= */
 
         .container {
@@ -80,7 +79,7 @@
 
         .account-box {
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 15px;
             padding: 14px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -220,26 +219,100 @@
 
 
         /* =========================
-           餐厅
+           餐厅卡片
         ========================= */
 
         .restaurant {
             background: white;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            padding: 18px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 14px;
+            margin-bottom: 18px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+
+        /* =========================
+           餐厅图片
+        ========================= */
+
+        .restaurant-image-box {
+            position: relative;
+            width: 100%;
+            height: 190px;
+            overflow: hidden;
+            background: #eee;
+        }
+
+
+        .restaurant-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                #fff1eb,
+                #ffe0d4
+            );
+            color: #ff5a1f;
+            font-size: 55px;
+        }
+
+
+        /* =========================
+           营业标签
+        ========================= */
+
+        .status-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+
+        .status-badge.open {
+            color: #238b57;
+        }
+
+
+        .status-badge.closed {
+            color: #d33;
+        }
+
+
+        /* =========================
+           餐厅内容
+        ========================= */
+
+        .restaurant-content {
+            padding: 17px;
         }
 
 
         .restaurant h2 {
-            margin: 0 0 8px;
+            margin: 0 0 7px;
             font-size: 21px;
         }
 
 
         .category {
             color: #777;
+            font-size: 14px;
             margin-bottom: 8px;
         }
 
@@ -248,30 +321,49 @@
             color: #666;
             font-size: 14px;
             line-height: 1.6;
-            margin-bottom: 8px;
+            margin-bottom: 9px;
         }
 
 
-        .rating {
-            margin-bottom: 8px;
+        .restaurant-info {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 13px;
+            font-size: 13px;
+            color: #666;
         }
 
 
-        .status {
+        .restaurant-rating {
+            color: #f59e0b;
             font-weight: bold;
-            margin-bottom: 15px;
         }
 
 
-        .open-status {
-            color: #2e8b57;
+        .food-count {
+            color: #666;
         }
 
 
-        .closed-status {
-            color: #d33;
+        /* =========================
+           菜品搜索提示
+        ========================= */
+
+        .food-match {
+            display: none;
+            margin-bottom: 12px;
+            padding: 9px 12px;
+            background: #fff4ef;
+            border-radius: 8px;
+            color: #ff5a1f;
+            font-size: 13px;
         }
 
+
+        /* =========================
+           按钮
+        ========================= */
 
         .restaurant button {
             width: 100%;
@@ -302,7 +394,7 @@
 
 
         /* =========================
-           搜索无结果
+           无搜索结果
         ========================= */
 
         #noResult {
@@ -336,21 +428,6 @@
 
 
         /* =========================
-           菜品搜索提示
-        ========================= */
-
-        .food-match {
-            display: none;
-            margin-top: 10px;
-            padding: 9px 12px;
-            background: #fff4ef;
-            border-radius: 8px;
-            color: #ff5a1f;
-            font-size: 13px;
-        }
-
-
-        /* =========================
            手机
         ========================= */
 
@@ -360,16 +437,24 @@
                 padding: 18px 12px;
             }
 
+
             header h1 {
                 font-size: 25px;
             }
+
 
             .container {
                 padding: 12px;
             }
 
-            .restaurant {
-                padding: 16px;
+
+            .restaurant-image-box {
+                height: 170px;
+            }
+
+
+            .restaurant-content {
+                padding: 15px;
             }
 
         }
@@ -407,8 +492,6 @@
         id="accountBox"
     >
 
-        <!-- 未登录 -->
-
         <div id="loggedOut">
 
             <a
@@ -420,8 +503,6 @@
 
         </div>
 
-
-        <!-- 已登录 -->
 
         <div
             id="loggedIn"
@@ -510,7 +591,6 @@
             🔥 烧烤
         </button>
 
-
     </div>
 
 
@@ -536,55 +616,99 @@
         data-category="川菜"
     >
 
-        <h2 id="name-sichuan">
-            正在读取...
-        </h2>
+        <div class="restaurant-image-box">
+
+            <img
+                id="image-sichuan"
+                class="restaurant-image"
+                src=""
+                alt="四川味道"
+                style="display:none;"
+            >
+
+            <div
+                id="placeholder-sichuan"
+                class="image-placeholder"
+            >
+                🌶️
+            </div>
 
 
-        <div
-            id="category-sichuan"
-            class="category"
-        >
-            正在读取...
+            <div
+                id="badge-sichuan"
+                class="status-badge open"
+            >
+                🟢 营业中
+            </div>
+
         </div>
 
 
-        <div
-            id="description-sichuan"
-            class="description"
-        >
+        <div class="restaurant-content">
+
+            <h2 id="name-sichuan">
+                正在读取...
+            </h2>
+
+
+            <div
+                id="category-sichuan"
+                class="category"
+            >
+                正在读取...
+            </div>
+
+
+            <div
+                id="description-sichuan"
+                class="description"
+            >
+            </div>
+
+
+            <div class="restaurant-info">
+
+                <span
+                    id="rating-sichuan"
+                    class="restaurant-rating"
+                >
+                    ⭐
+                </span>
+
+
+                <span
+                    id="food-count-sichuan"
+                    class="food-count"
+                >
+                    🍽️ 菜品读取中
+                </span>
+
+            </div>
+
+
+            <div
+                id="status-sichuan"
+                class="status open-status"
+                style="display:none;"
+            >
+            </div>
+
+
+            <div
+                id="food-match-sichuan"
+                class="food-match"
+            >
+            </div>
+
+
+            <button
+                id="button-sichuan"
+                onclick="openRestaurant('AxVX8H1owO7IKe0EJcmb')"
+            >
+                正在读取...
+            </button>
+
         </div>
-
-
-        <div
-            id="rating-sichuan"
-            class="rating"
-        >
-            ⭐
-        </div>
-
-
-        <div
-            id="status-sichuan"
-            class="status"
-        >
-            正在读取营业状态...
-        </div>
-
-
-        <div
-            id="food-match-sichuan"
-            class="food-match"
-        >
-        </div>
-
-
-        <button
-            id="button-sichuan"
-            onclick="openRestaurant('AxVX8H1owO7IKe0EJcmb')"
-        >
-            正在读取...
-        </button>
 
     </div>
 
@@ -599,55 +723,100 @@
         data-category="缅甸菜"
     >
 
-        <h2 id="name-mandalay">
-            正在读取...
-        </h2>
+        <div class="restaurant-image-box">
+
+            <img
+                id="image-mandalay"
+                class="restaurant-image"
+                src=""
+                alt="Mandalay Kitchen"
+                style="display:none;"
+            >
 
 
-        <div
-            id="category-mandalay"
-            class="category"
-        >
-            正在读取...
+            <div
+                id="placeholder-mandalay"
+                class="image-placeholder"
+            >
+                🇲🇲
+            </div>
+
+
+            <div
+                id="badge-mandalay"
+                class="status-badge open"
+            >
+                🟢 营业中
+            </div>
+
         </div>
 
 
-        <div
-            id="description-mandalay"
-            class="description"
-        >
+        <div class="restaurant-content">
+
+            <h2 id="name-mandalay">
+                正在读取...
+            </h2>
+
+
+            <div
+                id="category-mandalay"
+                class="category"
+            >
+                正在读取...
+            </div>
+
+
+            <div
+                id="description-mandalay"
+                class="description"
+            >
+            </div>
+
+
+            <div class="restaurant-info">
+
+                <span
+                    id="rating-mandalay"
+                    class="restaurant-rating"
+                >
+                    ⭐
+                </span>
+
+
+                <span
+                    id="food-count-mandalay"
+                    class="food-count"
+                >
+                    🍽️ 菜品读取中
+                </span>
+
+            </div>
+
+
+            <div
+                id="status-mandalay"
+                class="status open-status"
+                style="display:none;"
+            >
+            </div>
+
+
+            <div
+                id="food-match-mandalay"
+                class="food-match"
+            >
+            </div>
+
+
+            <button
+                id="button-mandalay"
+                onclick="openRestaurant('DKIiikHUTmC5bFtuSVdb')"
+            >
+                正在读取...
+            </button>
+
         </div>
-
-
-        <div
-            id="rating-mandalay"
-            class="rating"
-        >
-            ⭐
-        </div>
-
-
-        <div
-            id="status-mandalay"
-            class="status"
-        >
-            正在读取营业状态...
-        </div>
-
-
-        <div
-            id="food-match-mandalay"
-            class="food-match"
-        >
-        </div>
-
-
-        <button
-            id="button-mandalay"
-            onclick="openRestaurant('DKIiikHUTmC5bFtuSVdb')"
-        >
-            正在读取...
-        </button>
 
     </div>
 
@@ -662,43 +831,65 @@
         data-category="烧烤"
     >
 
-        <h2>
-            夜猫子烧烤
-        </h2>
+        <div class="restaurant-image-box">
+
+            <div class="image-placeholder">
+                🔥
+            </div>
 
 
-        <div class="category">
-            烧烤 · 夜宵
+            <div class="status-badge closed">
+                🔴 菜单准备中
+            </div>
+
         </div>
 
 
-        <div class="description">
-            夜宵烧烤，菜单准备中
+        <div class="restaurant-content">
+
+            <h2>
+                夜猫子烧烤
+            </h2>
+
+
+            <div class="category">
+                烧烤 · 夜宵
+            </div>
+
+
+            <div class="description">
+                夜宵烧烤，菜单准备中
+            </div>
+
+
+            <div class="restaurant-info">
+
+                <span class="restaurant-rating">
+                    ⭐ 4.9
+                </span>
+
+
+                <span class="food-count">
+                    🍽️ 菜单准备中
+                </span>
+
+            </div>
+
+
+            <button
+                class="no-menu"
+                onclick="openRestaurant('')"
+            >
+                菜单准备中
+            </button>
+
         </div>
-
-
-        <div class="rating">
-            ⭐ 4.9
-        </div>
-
-
-        <div class="status closed-status">
-            🔴 菜单准备中
-        </div>
-
-
-        <button
-            class="no-menu"
-            onclick="openRestaurant('')"
-        >
-            菜单准备中
-        </button>
 
     </div>
 
 
     <!-- =========================
-         没有搜索结果
+         无结果
     ========================= -->
 
     <div id="noResult">
@@ -707,9 +898,11 @@
             🔍
         </div>
 
+
         <div class="no-result-title">
             没有找到相关餐厅
         </div>
+
 
         <div class="no-result-text">
             换一个关键词试试看
@@ -775,14 +968,29 @@ let currentCategory = "全部";
 
 
 // =========================
-// 菜品数据
+// 所有菜品
 // =========================
 
 let allFoods = [];
 
 
 // =========================
-// 用户登录状态
+// 餐厅图片默认图
+// =========================
+
+const defaultImages = {
+
+    sichuan:
+        "https://images.unsplash.com/photo-1582450871972-ab5ca641643d",
+
+    mandalay:
+        ""
+
+};
+
+
+// =========================
+// 登录状态
 // =========================
 
 auth.onAuthStateChanged(
@@ -819,6 +1027,7 @@ auth.onAuthStateChanged(
             userEmail.innerText =
                 user.email ||
                 "用户";
+
 
         } else {
 
@@ -866,7 +1075,81 @@ async function logout() {
 
 
 // =========================
-// 读取餐厅资料
+// 设置餐厅图片
+// =========================
+
+function setRestaurantImage(
+    imageUrl,
+    key
+) {
+
+    const image =
+        document.getElementById(
+            "image-" + key
+        );
+
+
+    const placeholder =
+        document.getElementById(
+            "placeholder-" + key
+        );
+
+
+    const finalImage =
+        imageUrl ||
+        defaultImages[key] ||
+        "";
+
+
+    if (!finalImage) {
+
+        image.style.display =
+            "none";
+
+
+        placeholder.style.display =
+            "flex";
+
+
+        return;
+
+    }
+
+
+    image.src =
+        finalImage;
+
+
+    image.onload =
+        function() {
+
+            image.style.display =
+                "block";
+
+
+            placeholder.style.display =
+                "none";
+
+        };
+
+
+    image.onerror =
+        function() {
+
+            image.style.display =
+                "none";
+
+
+            placeholder.style.display =
+                "flex";
+
+        };
+
+}
+
+
+// =========================
+// 读取餐厅
 // =========================
 
 async function loadRestaurant(
@@ -896,7 +1179,7 @@ async function loadRestaurant(
             doc.data();
 
 
-        // 餐厅名称
+        // 名称
 
         document.getElementById(
             "name-" + key
@@ -935,6 +1218,25 @@ async function loadRestaurant(
             );
 
 
+        // 图片
+
+        setRestaurantImage(
+            restaurant.image ||
+            "",
+            key
+        );
+
+
+        // 分类
+
+        document.getElementById(
+            "restaurant-" + key
+        ).dataset.category =
+            getCategoryName(
+                restaurant.category
+            );
+
+
         // 营业状态
 
         updateRestaurantStatus(
@@ -944,18 +1246,12 @@ async function loadRestaurant(
         );
 
 
-        // 保存分类
+        // 菜品数量
 
-        const restaurantElement =
-            document.getElementById(
-                "restaurant-" + key
-            );
-
-
-        restaurantElement.dataset.category =
-            getCategoryName(
-                restaurant.category
-            );
+        updateFoodCount(
+            restaurantId,
+            key
+        );
 
 
     } catch (error) {
@@ -970,7 +1266,76 @@ async function loadRestaurant(
 
 
 // =========================
-// 分类名称处理
+// 菜品数量
+// =========================
+
+async function updateFoodCount(
+    restaurantId,
+    key
+) {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("foods")
+                .where(
+                    "restaurantId",
+                    "==",
+                    restaurantId
+                )
+                .get();
+
+
+        let count = 0;
+
+
+        snapshot.forEach(
+            function(doc) {
+
+                const food =
+                    doc.data();
+
+
+                if (
+                    food.status !== "下架"
+                ) {
+
+                    count++;
+
+                }
+
+            }
+        );
+
+
+        document.getElementById(
+            "food-count-" + key
+        ).innerText =
+            "🍽️ " +
+            count +
+            " 道菜品";
+
+
+    } catch (error) {
+
+        console.error(
+            "菜品数量读取失败:",
+            error
+        );
+
+
+        document.getElementById(
+            "food-count-" + key
+        ).innerText =
+            "🍽️ 菜品";
+    }
+
+}
+
+
+// =========================
+// 分类名称
 // =========================
 
 function getCategoryName(
@@ -1018,7 +1383,7 @@ function getCategoryName(
 
 
 // =========================
-// 显示营业状态
+// 营业状态
 // =========================
 
 function updateRestaurantStatus(
@@ -1026,9 +1391,9 @@ function updateRestaurantStatus(
     key
 ) {
 
-    const statusElement =
+    const restaurant =
         document.getElementById(
-            "status-" + key
+            "restaurant-" + key
         );
 
 
@@ -1038,16 +1403,22 @@ function updateRestaurantStatus(
         );
 
 
+    const badge =
+        document.getElementById(
+            "badge-" + key
+        );
+
+
     if (
         status === "营业中"
     ) {
 
-        statusElement.innerText =
+        badge.innerText =
             "🟢 营业中";
 
 
-        statusElement.className =
-            "status open-status";
+        badge.className =
+            "status-badge open";
 
 
         button.innerText =
@@ -1088,12 +1459,12 @@ function updateRestaurantStatus(
 
     } else {
 
-        statusElement.innerText =
+        badge.innerText =
             "🔴 休息中";
 
 
-        statusElement.className =
-            "status closed-status";
+        badge.className =
+            "status-badge closed";
 
 
         button.innerText =
@@ -1120,7 +1491,7 @@ function updateRestaurantStatus(
 
 
 // =========================
-// 读取失败
+// 错误
 // =========================
 
 function showRestaurantError(
@@ -1140,15 +1511,15 @@ function showRestaurantError(
 
 
     document.getElementById(
-        "status-" + key
+        "description-" + key
     ).innerText =
-        "⚠️ 暂时无法点餐";
+        "";
 
 
     document.getElementById(
-        "status-" + key
-    ).className =
-        "status closed-status";
+        "rating-" + key
+    ).innerText =
+        "⭐";
 
 
     const button =
@@ -1164,6 +1535,20 @@ function showRestaurantError(
     button.classList.add(
         "closed"
     );
+
+
+    const badge =
+        document.getElementById(
+            "badge-" + key
+        );
+
+
+    badge.innerText =
+        "⚠️ 暂时无法点餐";
+
+
+    badge.className =
+        "status-badge closed";
 
 }
 
@@ -1192,7 +1577,7 @@ function openRestaurant(id) {
 
 
 // =========================
-// 读取所有菜品
+// 读取菜品
 // =========================
 
 async function loadFoods() {
@@ -1227,6 +1612,9 @@ async function loadFoods() {
         );
 
 
+        searchRestaurants();
+
+
     } catch (error) {
 
         console.error(
@@ -1240,7 +1628,7 @@ async function loadFoods() {
 
 
 // =========================
-// 搜索菜品是否属于餐厅
+// 查找菜品
 // =========================
 
 function findFoodMatches(
@@ -1260,16 +1648,12 @@ function findFoodMatches(
 
             const foodRestaurantId =
                 food.restaurantId ||
-                food.restaurantID ||
-                food.restaurant_id ||
                 "";
 
 
             const foodName =
                 String(
                     food.name ||
-                    food.foodName ||
-                    food.title ||
                     ""
                 ).toLowerCase();
 
@@ -1277,18 +1661,36 @@ function findFoodMatches(
             const foodDescription =
                 String(
                     food.description ||
-                    food.desc ||
                     ""
                 ).toLowerCase();
 
 
+            const foodStatus =
+                food.status ||
+                "营业中";
+
+
+            if (
+                foodStatus === "下架"
+            ) {
+
+                return false;
+
+            }
+
+
             return (
-                foodRestaurantId === restaurantId
+                foodRestaurantId ===
+                restaurantId
                 &&
                 (
-                    foodName.includes(keyword)
+                    foodName.includes(
+                        keyword
+                    )
                     ||
-                    foodDescription.includes(keyword)
+                    foodDescription.includes(
+                        keyword
+                    )
                 )
             );
 
@@ -1377,7 +1779,9 @@ function searchRestaurants() {
 
             const keywordMatch =
                 !keyword ||
-                restaurantText.includes(keyword) ||
+                restaurantText.includes(
+                    keyword
+                ) ||
                 foodMatch;
 
 
@@ -1399,7 +1803,6 @@ function searchRestaurants() {
 
                 visibleCount++;
 
-
             } else {
 
                 restaurant.style.display =
@@ -1408,14 +1811,13 @@ function searchRestaurants() {
             }
 
 
-            // 菜品匹配提示
+            // 菜品搜索提示
 
             const key =
-                restaurant.id
-                    .replace(
-                        "restaurant-",
-                        ""
-                    );
+                restaurant.id.replace(
+                    "restaurant-",
+                    ""
+                );
 
 
             const foodMatchElement =
@@ -1441,8 +1843,6 @@ function searchRestaurants() {
 
                                     return (
                                         food.name ||
-                                        food.foodName ||
-                                        food.title ||
                                         "菜品"
                                     );
 
@@ -1564,24 +1964,10 @@ loadRestaurant(
 loadFoods();
 
 
-// =========================
-// 页面加载后重新搜索一次
-// =========================
-
-setTimeout(
-    function() {
-
-        searchRestaurants();
-
-    },
-    1000
-);
-
-
 </script>
 
 
 </body>
 
 </html>
-```
+
