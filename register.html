@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MDY FOOD - 注册</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+    color: #222;
+}
+
+.container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.logo {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #ff5a36;
+}
+
+.subtitle {
+    text-align: center;
+    color: #777;
+    margin: 8px 0 25px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+}
+
+h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin-top: 7px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.register-btn {
+    background: #ff5a36;
+    color: white;
+}
+
+.login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login a {
+    color: #ff5a36;
+    text-decoration: none;
+}
+
+#message {
+    text-align: center;
+    margin-top: 15px;
+    color: #e74c3c;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">MDY FOOD</div>
+    <div class="subtitle">Mandalay Food Delivery</div>
+
+    <div class="card">
+
+        <h2>创建账号</h2>
+
+        <label>姓名</label>
+        <input
+            type="text"
+            id="name"
+            placeholder="请输入你的姓名"
+        >
+
+        <label>电话号码</label>
+        <input
+            type="tel"
+            id="phone"
+            placeholder="例如 09xxxxxxxxx"
+        >
+
+        <label>邮箱</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="请输入邮箱"
+        >
+
+        <label>密码</label>
+        <input
+            type="password"
+            id="password"
+            placeholder="至少 6 位密码"
+        >
+
+        <label>确认密码</label>
+        <input
+            type="password"
+            id="confirmPassword"
+            placeholder="再次输入密码"
+        >
+
+        <label>默认送餐地址</label>
+        <input
+            type="text"
+            id="address"
+            placeholder="例如：Mandalay Chanayethazan..."
+        >
+
+        <button class="register-btn" onclick="register()">
+            注册账号
+        </button>
+
+        <div class="login">
+            已经有账号？
+            <a href="login.html">立即登录</a>
+        </div>
+
+        <div id="message"></div>
+
+    </div>
+
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv",
+    authDomain: "mdy-food.firebaseapp.com",
+    projectId: "mdy-food",
+    storageBucket: "mdy-food.firebasestorage.app",
+    messagingSenderId: "498327590625",
+    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+    measurementId: "G-6Q5G2862XQ"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+function showMessage(message) {
+    document.getElementById("message").innerText = message;
+}
+
+async function register() {
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const address = document.getElementById("address").value.trim();
+
+    if (!name || !phone || !email || !password || !confirmPassword) {
+        showMessage("请填写完整信息");
+        return;
+    }
+
+    if (password.length < 6) {
+        showMessage("密码至少需要 6 位");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        showMessage("两次密码不一致");
+        return;
+    }
+
+    try {
+
+        const userCredential =
+            await auth.createUserWithEmailAndPassword(email, password);
+
+        const user = userCredential.user;
+
+        await db.collection("customers").doc(user.uid).set({
+
+            uid: user.uid,
+            name: name,
+            phone: phone,
+            email: email,
+            address: address,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+        });
+
+        showMessage("注册成功！");
+
+        setTimeout(function() {
+            window.location.href = "index.html";
+        }, 1000);
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.code === "auth/email-already-in-use") {
+            showMessage("这个邮箱已经注册过了");
+        } else if (error.code === "auth/invalid-email") {
+            showMessage("邮箱格式不正确");
+        } else if (error.code === "auth/weak-password") {
+            showMessage("密码太简单了");
+        } else {
+            showMessage("注册失败，请稍后再试");
+        }
+
+    }
+}
+
+</script>
+
+</body>
+</html>

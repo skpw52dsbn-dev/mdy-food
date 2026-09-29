@@ -1,312 +1,449 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MDY FOOD</title>
+```
+<title>MDY FOOD</title>
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
-    <style>
+<style>
 
-        * {
-            box-sizing: border-box;
-        }
+    * {
+        box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #333;
-        }
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #333;
+    }
 
-        header {
-            background: #ff5a1f;
-            color: white;
-            padding: 22px 15px;
-            text-align: center;
-        }
+    header {
+        background: #ff5a1f;
+        color: white;
+        padding: 22px 15px;
+        text-align: center;
+    }
 
-        header h1 {
-            margin: 0;
-            font-size: 28px;
-        }
+    header h1 {
+        margin: 0;
+        font-size: 28px;
+    }
 
-        header p {
-            margin: 7px 0 0;
-            font-size: 14px;
-        }
+    header p {
+        margin: 7px 0 0;
+        font-size: 14px;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 15px;
-        }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 15px;
+    }
 
-        .search {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            outline: none;
-        }
+    /* =========================
+       账号区域
+    ========================= */
 
-        .orders-link {
-            display: block;
-            margin: 15px 0;
-            padding: 14px;
-            background: white;
-            color: #ff5a1f;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: bold;
-        }
+    .account-box {
+        background: white;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        padding: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        text-align: center;
+    }
 
-        .restaurant {
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            padding: 18px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
+    .account-login {
+        display: block;
+        width: 100%;
+        padding: 13px;
+        background: #ff5a1f;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+    }
 
-        .restaurant h2 {
-            margin: 0 0 8px;
-            font-size: 21px;
-        }
+    .account-user {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 10px;
+    }
 
-        .category {
-            color: #777;
-            margin-bottom: 8px;
-        }
+    .account-user strong {
+        color: #ff5a1f;
+    }
 
-        .description {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
+    .account-buttons {
+        display: flex;
+        gap: 10px;
+    }
 
-        .rating {
-            margin-bottom: 8px;
-        }
+    .account-buttons a,
+    .logout-btn {
+        flex: 1;
+        padding: 11px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+    }
 
-        .status {
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
+    .account-buttons a {
+        background: #fff1ed;
+        color: #ff5a1f;
+    }
 
-        .open-status {
-            color: #2e8b57;
-        }
+    .logout-btn {
+        border: none;
+        background: #eee;
+        color: #555;
+    }
 
-        .closed-status {
-            color: #d33;
-        }
+    .search {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        outline: none;
+    }
 
-        .restaurant button {
-            width: 100%;
-            border: none;
-            background: #ff5a1f;
-            color: white;
-            padding: 13px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    .orders-link {
+        display: block;
+        margin: 15px 0;
+        padding: 14px;
+        background: white;
+        color: #ff5a1f;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: bold;
+    }
 
-        .restaurant button:hover {
-            opacity: 0.9;
-        }
+    .restaurant {
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        padding: 18px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
 
-        .restaurant button.closed {
-            background: #999 !important;
-        }
+    .restaurant h2 {
+        margin: 0 0 8px;
+        font-size: 21px;
+    }
 
-        .no-menu {
-            background: #999 !important;
-        }
+    .category {
+        color: #777;
+        margin-bottom: 8px;
+    }
 
-    </style>
+    .description {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 8px;
+    }
+
+    .rating {
+        margin-bottom: 8px;
+    }
+
+    .status {
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .open-status {
+        color: #2e8b57;
+    }
+
+    .closed-status {
+        color: #d33;
+    }
+
+    .restaurant button {
+        width: 100%;
+        border: none;
+        background: #ff5a1f;
+        color: white;
+        padding: 13px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .restaurant button:hover {
+        opacity: 0.9;
+    }
+
+    .restaurant button.closed {
+        background: #999 !important;
+    }
+
+    .no-menu {
+        background: #999 !important;
+    }
+
+</style>
+```
 
 </head>
-
 
 <body>
 
 <header>
 
-    <h1>
-        🍜 MDY FOOD
-    </h1>
+```
+<h1>
+    🍜 MDY FOOD
+</h1>
 
-    <p>
-        缅甸外卖 · အစားအစာ Delivery
-    </p>
+<p>
+    缅甸外卖 · အစားအစာ Delivery
+</p>
+```
 
 </header>
 
-
 <div class="container">
 
-    <input
-        id="searchInput"
-        class="search"
-        type="text"
-        placeholder="搜索餐厅 / အစားအစာ ရှာရန်"
-        oninput="searchRestaurants()"
-    >
+```
+<!-- =========================
+     用户账号
+========================= -->
 
+<div
+    class="account-box"
+    id="accountBox"
+>
 
-    <a
-        href="orders.html"
-        class="orders-link"
-    >
-        📦 我的订单
-    </a>
+    <!-- 未登录 -->
 
+    <div id="loggedOut">
 
-    <!-- 四川味道 -->
-
-    <div
-        class="restaurant"
-        id="restaurant-sichuan"
-    >
-
-        <h2 id="name-sichuan">
-            正在读取...
-        </h2>
-
-        <div
-            id="category-sichuan"
-            class="category"
+        <a
+            href="login.html"
+            class="account-login"
         >
-            正在读取...
-        </div>
-
-        <div
-            id="description-sichuan"
-            class="description"
-        >
-        </div>
-
-        <div
-            id="rating-sichuan"
-            class="rating"
-        >
-            ⭐
-        </div>
-
-        <div
-            id="status-sichuan"
-            class="status"
-        >
-            正在读取营业状态...
-        </div>
-
-        <button
-            id="button-sichuan"
-            onclick="openRestaurant('AxVX8H1owO7IKe0EJcmb')"
-        >
-            正在读取...
-        </button>
+            👤 登录 / 注册
+        </a>
 
     </div>
 
 
-    <!-- Mandalay Kitchen -->
+    <!-- 已登录 -->
 
     <div
-        class="restaurant"
-        id="restaurant-mandalay"
+        id="loggedIn"
+        style="display:none;"
     >
 
-        <h2 id="name-mandalay">
-            正在读取...
-        </h2>
+        <div class="account-user">
 
-        <div
-            id="category-mandalay"
-            class="category"
-        >
-            正在读取...
+            👋 欢迎回来，
+            <strong id="userEmail">
+                用户
+            </strong>
+
         </div>
 
-        <div
-            id="description-mandalay"
-            class="description"
-        >
+        <div class="account-buttons">
+
+            <a href="orders.html">
+                📦 我的订单
+            </a>
+
+            <button
+                class="logout-btn"
+                onclick="logout()"
+            >
+                退出登录
+            </button>
+
         </div>
-
-        <div
-            id="rating-mandalay"
-            class="rating"
-        >
-            ⭐
-        </div>
-
-        <div
-            id="status-mandalay"
-            class="status"
-        >
-            正在读取营业状态...
-        </div>
-
-        <button
-            id="button-mandalay"
-            onclick="openRestaurant('DKIiikHUTmC5bFtuSVdb')"
-        >
-            正在读取...
-        </button>
-
-    </div>
-
-
-    <!-- 夜猫子烧烤 -->
-
-    <div
-        class="restaurant"
-        id="restaurant-night"
-    >
-
-        <h2>
-            夜猫子烧烤
-        </h2>
-
-        <div class="category">
-            烧烤 · 夜宵
-        </div>
-
-        <div class="description">
-            夜宵烧烤，菜单准备中
-        </div>
-
-        <div class="rating">
-            ⭐ 4.9
-        </div>
-
-        <div class="status closed-status">
-            🔴 菜单准备中
-        </div>
-
-        <button
-            class="no-menu"
-            onclick="openRestaurant('')"
-        >
-            菜单准备中
-        </button>
 
     </div>
 
 </div>
 
+
+<!-- 搜索 -->
+
+<input
+    id="searchInput"
+    class="search"
+    type="text"
+    placeholder="搜索餐厅 / အစားအစာ ရှာရန်"
+    oninput="searchRestaurants()"
+>
+
+
+<!-- 我的订单 -->
+
+<a
+    href="orders.html"
+    class="orders-link"
+>
+    📦 我的订单
+</a>
+
+
+<!-- =========================
+     四川味道
+========================= -->
+
+<div
+    class="restaurant"
+    id="restaurant-sichuan"
+>
+
+    <h2 id="name-sichuan">
+        正在读取...
+    </h2>
+
+    <div
+        id="category-sichuan"
+        class="category"
+    >
+        正在读取...
+    </div>
+
+    <div
+        id="description-sichuan"
+        class="description"
+    >
+    </div>
+
+    <div
+        id="rating-sichuan"
+        class="rating"
+    >
+        ⭐
+    </div>
+
+    <div
+        id="status-sichuan"
+        class="status"
+    >
+        正在读取营业状态...
+    </div>
+
+    <button
+        id="button-sichuan"
+        onclick="openRestaurant('AxVX8H1owO7IKe0EJcmb')"
+    >
+        正在读取...
+    </button>
+
+</div>
+
+
+<!-- =========================
+     Mandalay Kitchen
+========================= -->
+
+<div
+    class="restaurant"
+    id="restaurant-mandalay"
+>
+
+    <h2 id="name-mandalay">
+        正在读取...
+    </h2>
+
+    <div
+        id="category-mandalay"
+        class="category"
+    >
+        正在读取...
+    </div>
+
+    <div
+        id="description-mandalay"
+        class="description"
+    >
+    </div>
+
+    <div
+        id="rating-mandalay"
+        class="rating"
+    >
+        ⭐
+    </div>
+
+    <div
+        id="status-mandalay"
+        class="status"
+    >
+        正在读取营业状态...
+    </div>
+
+    <button
+        id="button-mandalay"
+        onclick="openRestaurant('DKIiikHUTmC5bFtuSVdb')"
+    >
+        正在读取...
+    </button>
+
+</div>
+
+
+<!-- =========================
+     夜猫子烧烤
+========================= -->
+
+<div
+    class="restaurant"
+    id="restaurant-night"
+>
+
+    <h2>
+        夜猫子烧烤
+    </h2>
+
+    <div class="category">
+        烧烤 · 夜宵
+    </div>
+
+    <div class="description">
+        夜宵烧烤，菜单准备中
+    </div>
+
+    <div class="rating">
+        ⭐ 4.9
+    </div>
+
+    <div class="status closed-status">
+        🔴 菜单准备中
+    </div>
+
+    <button
+        class="no-menu"
+        onclick="openRestaurant('')"
+    >
+        菜单准备中
+    </button>
+
+</div>
+```
+
+</div>
 
 <script>
 
@@ -348,6 +485,92 @@ firebase.initializeApp(
 
 const db =
     firebase.firestore();
+
+
+const auth =
+    firebase.auth();
+
+
+// =========================
+// 用户登录状态
+// =========================
+
+auth.onAuthStateChanged(
+    function(user) {
+
+        const loggedOut =
+            document.getElementById(
+                "loggedOut"
+            );
+
+        const loggedIn =
+            document.getElementById(
+                "loggedIn"
+            );
+
+        const userEmail =
+            document.getElementById(
+                "userEmail"
+            );
+
+
+        if (user) {
+
+            // 已登录
+
+            loggedOut.style.display =
+                "none";
+
+            loggedIn.style.display =
+                "block";
+
+
+            userEmail.innerText =
+                user.email ||
+                "用户";
+
+
+        } else {
+
+            // 未登录
+
+            loggedOut.style.display =
+                "block";
+
+            loggedIn.style.display =
+                "none";
+
+        }
+
+    }
+);
+
+
+// =========================
+// 退出登录
+// =========================
+
+async function logout() {
+
+    try {
+
+        await auth.signOut();
+
+        alert(
+            "已退出登录"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "退出登录失败，请稍后再试"
+        );
+
+    }
+
+}
 
 
 // =========================
@@ -478,6 +701,30 @@ function updateRestaurantStatus(
         button.classList.remove(
             "closed"
         );
+
+
+        // 恢复正常点击
+
+        button.onclick =
+            function() {
+
+                if (key === "sichuan") {
+
+                    openRestaurant(
+                        "AxVX8H1owO7IKe0EJcmb"
+                    );
+
+                }
+
+                if (key === "mandalay") {
+
+                    openRestaurant(
+                        "DKIiikHUTmC5bFtuSVdb"
+                    );
+
+                }
+
+            };
 
 
     } else {
@@ -647,8 +894,8 @@ loadRestaurant(
     "mandalay"
 );
 
-</script>
 
+</script>
 
 </body>
 

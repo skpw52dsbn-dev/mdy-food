@@ -1,426 +1,541 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 
 <head>
 
-    <meta charset="UTF-8">
+```
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <title>我的订单 - MDY FOOD</title>
-
-
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<title>我的订单 - MDY FOOD</title>
 
 
-    <style>
+<!-- Firebase -->
 
-        * {
-            box-sizing: border-box;
-        }
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-        body {
-
-            margin: 0;
-
-            font-family:
-                Arial,
-                "Microsoft YaHei",
-                sans-serif;
-
-            background: #f5f5f5;
-
-            color: #333;
-
-        }
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 
-        header {
+<style>
 
-            background: #ff5a1f;
-
-            color: white;
-
-            padding: 20px 15px;
-
-            text-align: center;
-
-            font-size: 22px;
-
-            font-weight: bold;
-
-        }
+    * {
+        box-sizing: border-box;
+    }
 
 
-        .container {
+    body {
 
-            max-width: 650px;
+        margin: 0;
 
-            margin: auto;
+        font-family:
+            Arial,
+            "Microsoft YaHei",
+            sans-serif;
+
+        background: #f5f5f5;
+
+        color: #333;
+
+    }
+
+
+    header {
+
+        background: #ff5a1f;
+
+        color: white;
+
+        padding: 20px 15px;
+
+        text-align: center;
+
+        font-size: 22px;
+
+        font-weight: bold;
+
+    }
+
+
+    .container {
+
+        max-width: 650px;
+
+        margin: auto;
+
+        padding: 15px;
+
+    }
+
+
+    .back {
+
+        display: block;
+
+        margin-bottom: 15px;
+
+        color: #ff5a1f;
+
+        text-decoration: none;
+
+        font-weight: bold;
+
+    }
+
+
+    .login-box {
+
+        background: white;
+
+        border-radius: 14px;
+
+        padding: 30px 20px;
+
+        text-align: center;
+
+        box-shadow:
+            0 2px 10px
+            rgba(0,0,0,0.08);
+
+        margin-bottom: 16px;
+
+    }
+
+
+    .login-icon {
+
+        font-size: 55px;
+
+    }
+
+
+    .login-box h2 {
+
+        color: #555;
+
+        margin: 15px 0 10px;
+
+    }
+
+
+    .login-box p {
+
+        color: #888;
+
+        line-height: 1.7;
+
+    }
+
+
+    .login-button {
+
+        display: block;
+
+        margin-top: 20px;
+
+        padding: 14px;
+
+        background: #ff5a1f;
+
+        color: white;
+
+        text-align: center;
+
+        text-decoration: none;
+
+        border-radius: 9px;
+
+        font-weight: bold;
+
+    }
+
+
+    .live-box {
+
+        background: white;
+
+        border-radius: 10px;
+
+        padding: 12px 15px;
+
+        margin-bottom: 15px;
+
+        font-size: 14px;
+
+        color: #666;
+
+    }
+
+
+    .live-dot {
+
+        display: inline-block;
+
+        width: 8px;
+
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: #2e9d55;
+
+        margin-right: 6px;
+
+    }
+
+
+    .order {
+
+        background: white;
+
+        border-radius: 14px;
+
+        padding: 18px;
+
+        margin-bottom: 16px;
+
+        box-shadow:
+            0 2px 10px
+            rgba(0,0,0,0.08);
+
+    }
+
+
+    .order-number {
+
+        font-size: 17px;
+
+        font-weight: bold;
+
+        margin-bottom: 10px;
+
+        word-break: break-all;
+
+    }
+
+
+    .restaurant-name {
+
+        color: #666;
+
+        font-size: 14px;
+
+        margin-bottom: 12px;
+
+    }
+
+
+    .status {
+
+        padding: 11px 12px;
+
+        border-radius: 10px;
+
+        background: #fff1eb;
+
+        color: #ff5a1f;
+
+        font-weight: bold;
+
+        text-align: center;
+
+        margin-bottom: 14px;
+
+    }
+
+
+    .status.accepted {
+
+        background: #fff7df;
+
+        color: #c98a00;
+
+    }
+
+
+    .status.delivery {
+
+        background: #edf5ff;
+
+        color: #2777c8;
+
+    }
+
+
+    .status.completed {
+
+        background: #edf9f0;
+
+        color: #2e8b57;
+
+    }
+
+
+    .status.cancelled {
+
+        background: #fff0f0;
+
+        color: #c33;
+
+    }
+
+
+    .info {
+
+        line-height: 1.9;
+
+        font-size: 14px;
+
+    }
+
+
+    .items {
+
+        margin-top: 14px;
+
+        padding-top: 14px;
+
+        border-top:
+            1px solid #eee;
+
+    }
+
+
+    .items-title {
+
+        font-weight: bold;
+
+        margin-bottom: 10px;
+
+    }
+
+
+    .item {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        gap: 10px;
+
+        margin: 9px 0;
+
+        line-height: 1.5;
+
+    }
+
+
+    .item-name {
+
+        flex: 1;
+
+    }
+
+
+    .item-price {
+
+        white-space: nowrap;
+
+    }
+
+
+    .total {
+
+        margin-top: 14px;
+
+        padding-top: 14px;
+
+        border-top:
+            1px solid #eee;
+
+        display: flex;
+
+        justify-content: space-between;
+
+        font-size: 18px;
+
+        font-weight: bold;
+
+        color: #ff5a1f;
+
+    }
+
+
+    .empty {
+
+        background: white;
+
+        padding: 45px 20px;
+
+        text-align: center;
+
+        border-radius: 14px;
+
+        color: #888;
+
+    }
+
+
+    .empty-icon {
+
+        font-size: 55px;
+
+    }
+
+
+    .empty h2 {
+
+        color: #555;
+
+    }
+
+
+    .home-button {
+
+        display: block;
+
+        margin-top: 20px;
+
+        padding: 14px;
+
+        background: #ff5a1f;
+
+        color: white;
+
+        text-align: center;
+
+        text-decoration: none;
+
+        border-radius: 9px;
+
+        font-weight: bold;
+
+    }
+
+
+    .loading {
+
+        background: white;
+
+        padding: 35px 20px;
+
+        text-align: center;
+
+        border-radius: 14px;
+
+        color: #888;
+
+    }
+
+
+    .error {
+
+        background: #fff0f0;
+
+        color: #c00;
+
+        padding: 20px;
+
+        border-radius: 12px;
+
+        line-height: 1.6;
+
+    }
+
+
+    .time {
+
+        color: #888;
+
+        font-size: 13px;
+
+    }
+
+
+    @media (max-width: 480px) {
+
+        .order {
 
             padding: 15px;
 
         }
 
+    }
 
-        .back {
-
-            display: block;
-
-            margin-bottom: 15px;
-
-            color: #ff5a1f;
-
-            text-decoration: none;
-
-            font-weight: bold;
-
-        }
-
-
-        .live-box {
-
-            background: white;
-
-            border-radius: 10px;
-
-            padding: 12px 15px;
-
-            margin-bottom: 15px;
-
-            font-size: 14px;
-
-            color: #666;
-
-        }
-
-
-        .live-dot {
-
-            display: inline-block;
-
-            width: 8px;
-
-            height: 8px;
-
-            border-radius: 50%;
-
-            background: #2e9d55;
-
-            margin-right: 6px;
-
-        }
-
-
-        .order {
-
-            background: white;
-
-            border-radius: 14px;
-
-            padding: 18px;
-
-            margin-bottom: 16px;
-
-            box-shadow:
-                0 2px 10px
-                rgba(0,0,0,0.08);
-
-        }
-
-
-        .order-number {
-
-            font-size: 17px;
-
-            font-weight: bold;
-
-            margin-bottom: 10px;
-
-            word-break: break-all;
-
-        }
-
-
-        .restaurant-name {
-
-            color: #666;
-
-            font-size: 14px;
-
-            margin-bottom: 12px;
-
-        }
-
-
-        .status {
-
-            padding: 11px 12px;
-
-            border-radius: 10px;
-
-            background: #fff1eb;
-
-            color: #ff5a1f;
-
-            font-weight: bold;
-
-            text-align: center;
-
-            margin-bottom: 14px;
-
-        }
-
-
-        .status.accepted {
-
-            background: #fff7df;
-
-            color: #c98a00;
-
-        }
-
-
-        .status.delivery {
-
-            background: #edf5ff;
-
-            color: #2777c8;
-
-        }
-
-
-        .status.completed {
-
-            background: #edf9f0;
-
-            color: #2e8b57;
-
-        }
-
-
-        .status.cancelled {
-
-            background: #fff0f0;
-
-            color: #c33;
-
-        }
-
-
-        .info {
-
-            line-height: 1.9;
-
-            font-size: 14px;
-
-        }
-
-
-        .items {
-
-            margin-top: 14px;
-
-            padding-top: 14px;
-
-            border-top:
-                1px solid #eee;
-
-        }
-
-
-        .items-title {
-
-            font-weight: bold;
-
-            margin-bottom: 10px;
-
-        }
-
-
-        .item {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            gap: 10px;
-
-            margin: 9px 0;
-
-            line-height: 1.5;
-
-        }
-
-
-        .item-name {
-
-            flex: 1;
-
-        }
-
-
-        .item-price {
-
-            white-space: nowrap;
-
-        }
-
-
-        .total {
-
-            margin-top: 14px;
-
-            padding-top: 14px;
-
-            border-top:
-                1px solid #eee;
-
-            display: flex;
-
-            justify-content: space-between;
-
-            font-size: 18px;
-
-            font-weight: bold;
-
-            color: #ff5a1f;
-
-        }
-
-
-        .empty {
-
-            background: white;
-
-            padding: 45px 20px;
-
-            text-align: center;
-
-            border-radius: 14px;
-
-            color: #888;
-
-        }
-
-
-        .empty-icon {
-
-            font-size: 55px;
-
-        }
-
-
-        .empty h2 {
-
-            color: #555;
-
-        }
-
-
-        .home-button {
-
-            display: block;
-
-            margin-top: 20px;
-
-            padding: 14px;
-
-            background: #ff5a1f;
-
-            color: white;
-
-            text-align: center;
-
-            text-decoration: none;
-
-            border-radius: 9px;
-
-            font-weight: bold;
-
-        }
-
-
-        .loading {
-
-            background: white;
-
-            padding: 35px 20px;
-
-            text-align: center;
-
-            border-radius: 14px;
-
-            color: #888;
-
-        }
-
-
-        .error {
-
-            background: #fff0f0;
-
-            color: #c00;
-
-            padding: 20px;
-
-            border-radius: 12px;
-
-            line-height: 1.6;
-
-        }
-
-
-        .time {
-
-            color: #888;
-
-            font-size: 13px;
-
-        }
-
-
-        @media (max-width: 480px) {
-
-            .order {
-
-                padding: 15px;
-
-            }
-
-        }
-
-    </style>
+</style>
+```
 
 </head>
 
-
 <body>
-
 
 <header>
 
-    📦 我的订单
+```
+📦 我的订单
+```
 
 </header>
 
-
 <div class="container">
+
+```
+<a
+    class="back"
+    href="index.html"
+>
+    ← 返回首页
+</a>
+
+
+<!-- 未登录 -->
+
+<div
+    id="loginBox"
+    class="login-box"
+    style="display:none;"
+>
+
+    <div class="login-icon">
+        🔐
+    </div>
+
+
+    <h2>
+        请先登录
+    </h2>
+
+
+    <p>
+        登录后才能查看你的订单。
+        <br>
+        订单会自动保存到你的账号。
+    </p>
 
 
     <a
-        class="back"
-        href="index.html"
+        class="login-button"
+        href="login.html"
     >
-        ← 返回首页
+        👤 登录 / 注册
     </a>
 
+</div>
+
+
+<!-- 已登录 -->
+
+<div
+    id="orderArea"
+    style="display:none;"
+>
 
     <div class="live-box">
 
@@ -441,10 +556,10 @@
 
     </div>
 
+</div>
+```
 
 </div>
-
-
 
 <script>
 
@@ -488,40 +603,21 @@ const db =
     firebase.firestore();
 
 
-
-// ========================================
-// 获取当前顾客 ID
-// ========================================
-
-let customerId =
-    localStorage.getItem(
-        "customerId"
-    );
+const auth =
+    firebase.auth();
 
 
 
 // ========================================
-// 如果这个浏览器还没有顾客 ID
-// 就创建一个
+// 当前登录用户
 // ========================================
 
-if (!customerId) {
-
-    customerId =
-        "mdy_customer_" +
-        Date.now() +
-        "_" +
-        Math.random()
-            .toString(36)
-            .substring(2, 10);
+let currentUser =
+    null;
 
 
-    localStorage.setItem(
-        "customerId",
-        customerId
-    );
-
-}
+let unsubscribeOrders =
+    null;
 
 
 
@@ -731,7 +827,6 @@ function formatTime(
             );
 
         }
-
 
     }
 
@@ -1057,136 +1152,226 @@ function renderOrders(
 
 
 // ========================================
-// 真正实时监听当前顾客订单
+// 实时监听当前用户订单
 // ========================================
 
 function listenMyOrders() {
 
 
-    db.collection("orders")
+    // 如果之前已经监听过
+    // 先取消旧监听
 
-        .where(
-            "customerId",
-            "==",
-            customerId
-        )
+    if (
+        unsubscribeOrders
+    ) {
 
-        .onSnapshot(
+        unsubscribeOrders();
 
-            function(snapshot) {
+        unsubscribeOrders =
+            null;
 
-
-                let orders = [];
-
-
-                snapshot.forEach(
-                    function(doc) {
-
-                        orders.push({
-
-                            id:
-                                doc.id,
-
-                            data:
-                                doc.data()
-
-                        });
-
-                    }
-                );
+    }
 
 
-                // ========================================
-                // 最新订单在最上面
-                // ========================================
+    if (!currentUser) {
 
-                orders.sort(
-                    function(a, b) {
+        return;
 
-                        let timeA = 0;
-
-                        let timeB = 0;
+    }
 
 
-                        if (
-                            a.data.created_at &&
-                            a.data.created_at.toMillis
-                        ) {
+    unsubscribeOrders =
 
-                            timeA =
-                                a.data.created_at
-                                    .toMillis();
+        db
+            .collection("orders")
 
-                        }
+            .where(
+                "customerId",
+                "==",
+                currentUser.uid
+            )
+
+            .onSnapshot(
+
+                function(snapshot) {
 
 
-                        if (
-                            b.data.created_at &&
-                            b.data.created_at.toMillis
-                        ) {
+                    let orders = [];
 
-                            timeB =
-                                b.data.created_at
-                                    .toMillis();
+
+                    snapshot.forEach(
+                        function(doc) {
+
+                            orders.push({
+
+                                id:
+                                    doc.id,
+
+                                data:
+                                    doc.data()
+
+                            });
 
                         }
+                    );
 
 
-                        return timeB - timeA;
+                    // ========================================
+                    // 最新订单在最上面
+                    // ========================================
 
-                    }
-                );
+                    orders.sort(
+                        function(a, b) {
 
+                            let timeA = 0;
 
-                renderOrders(
-                    orders
-                );
-
-            },
-
-
-            function(error) {
-
-                console.error(
-                    "订单实时监听失败：",
-                    error
-                );
+                            let timeB = 0;
 
 
-                document.getElementById(
-                    "orders"
-                ).innerHTML = `
+                            if (
+                                a.data.created_at &&
+                                a.data.created_at.toMillis
+                            ) {
 
-                    <div class="error">
+                                timeA =
+                                    a.data.created_at
+                                        .toMillis();
 
-                        ❌ 订单加载失败
+                            }
 
-                        <br><br>
 
-                        ${escapeHTML(
-                            error.message
-                        )}
+                            if (
+                                b.data.created_at &&
+                                b.data.created_at.toMillis
+                            ) {
 
-                    </div>
+                                timeB =
+                                    b.data.created_at
+                                        .toMillis();
 
-                `;
+                            }
 
-            }
 
-        );
+                            return timeB - timeA;
+
+                        }
+                    );
+
+
+                    renderOrders(
+                        orders
+                    );
+
+                },
+
+
+                function(error) {
+
+                    console.error(
+                        "订单实时监听失败：",
+                        error
+                    );
+
+
+                    document.getElementById(
+                        "orders"
+                    ).innerHTML = `
+
+                        <div class="error">
+
+                            ❌ 订单加载失败
+
+                            <br><br>
+
+                            ${escapeHTML(
+                                error.message
+                            )}
+
+                        </div>
+
+                    `;
+
+                }
+
+            );
 
 }
 
 
 
 // ========================================
-// 启动
+// Firebase 登录状态
 // ========================================
 
-listenMyOrders();
+auth.onAuthStateChanged(
+    function(user) {
+
+        currentUser =
+            user;
+
+
+        const loginBox =
+            document.getElementById(
+                "loginBox"
+            );
+
+
+        const orderArea =
+            document.getElementById(
+                "orderArea"
+            );
+
+
+        if (user) {
+
+            // ========================================
+            // 已登录
+            // ========================================
+
+            loginBox.style.display =
+                "none";
+
+
+            orderArea.style.display =
+                "block";
+
+
+            listenMyOrders();
+
+        }
+
+        else {
+
+            // ========================================
+            // 未登录
+            // ========================================
+
+            if (
+                unsubscribeOrders
+            ) {
+
+                unsubscribeOrders();
+
+                unsubscribeOrders =
+                    null;
+
+            }
+
+
+            loginBox.style.display =
+                "block";
+
+
+            orderArea.style.display =
+                "none";
+
+        }
+
+    }
+);
+
 
 </script>
-
 
 </body>
 

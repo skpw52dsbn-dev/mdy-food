@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MDY FOOD - 登录</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+    color: #222;
+}
+
+.container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.logo {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 30px;
+    color: #ff5a36;
+}
+
+.subtitle {
+    text-align: center;
+    color: #777;
+    margin: 8px 0 30px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+}
+
+h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-btn {
+    background: #ff5a36;
+    color: white;
+}
+
+.google-btn {
+    background: #4285f4;
+    color: white;
+}
+
+.phone-btn {
+    background: #222;
+    color: white;
+}
+
+.divider {
+    text-align: center;
+    color: #999;
+    margin: 20px 0;
+}
+
+.register {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register a {
+    color: #ff5a36;
+    text-decoration: none;
+}
+
+#message {
+    text-align: center;
+    margin-top: 15px;
+    color: #e74c3c;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">MDY FOOD</div>
+    <div class="subtitle">Mandalay Food Delivery</div>
+
+    <div class="card">
+
+        <h2>登录</h2>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="请输入邮箱"
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="请输入密码"
+        >
+
+        <button class="login-btn" onclick="loginWithEmail()">
+            邮箱登录
+        </button>
+
+        <div class="divider">或</div>
+
+        <button class="google-btn" onclick="loginWithGoogle()">
+            使用 Google 登录
+        </button>
+
+        <button class="phone-btn" onclick="showPhoneLogin()">
+            📱 使用手机号登录
+        </button>
+
+        <div class="register">
+            还没有账号？
+            <a href="register.html">立即注册</a>
+        </div>
+
+        <div id="message"></div>
+
+    </div>
+
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+    authDomain: "mdy-food.firebaseapp.com",
+    projectId: "mdy-food",
+    storageBucket: "mdy-food.firebasestorage.app",
+    messagingSenderId: "498327590625",
+    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+    measurementId: "G-6Q5G2862XQ"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+
+function showMessage(message) {
+    document.getElementById("message").innerText = message;
+}
+
+async function loginWithEmail() {
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+        showMessage("请输入邮箱和密码");
+        return;
+    }
+
+    try {
+
+        await auth.signInWithEmailAndPassword(email, password);
+
+        window.location.href = "index.html";
+
+    } catch (error) {
+
+        console.error(error);
+        showMessage("邮箱或密码错误");
+
+    }
+}
+
+async function loginWithGoogle() {
+
+    try {
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        await auth.signInWithPopup(provider);
+
+        window.location.href = "index.html";
+
+    } catch (error) {
+
+        console.error(error);
+        showMessage("Google 登录失败");
+
+    }
+}
+
+function showPhoneLogin() {
+
+    showMessage("手机号登录功能马上接入");
+
+}
+
+</script>
+
+</body>
+</html>
