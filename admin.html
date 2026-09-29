@@ -198,6 +198,12 @@
             margin-bottom: 10px;
         }
 
+        .order-restaurant {
+            color: #ff5a1f;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
         .status {
             display: inline-block;
             background: #fff1eb;
@@ -427,7 +433,7 @@
     <div class="section">
 
         <div class="section-title">
-            📦 订单管理
+            📦 我的订单
         </div>
 
         <div id="orders">
@@ -950,6 +956,7 @@ async function deleteFood(
 
 // =========================
 // 读取订单
+// ⭐ 只读取当前餐厅的订单
 // =========================
 
 async function loadOrders() {
@@ -959,6 +966,11 @@ async function loadOrders() {
         const snapshot =
             await db
                 .collection("orders")
+                .where(
+                    "restaurantId",
+                    "==",
+                    restaurantId
+                )
                 .get();
 
 
@@ -1012,7 +1024,7 @@ async function loadOrders() {
             container.innerHTML = `
 
                 <div class="empty">
-                    目前没有订单
+                    目前没有属于本餐厅的订单
                 </div>
 
             `;
@@ -1077,8 +1089,8 @@ async function loadOrders() {
 
                                 ${
                                     (
-                                        item.price *
-                                        item.quantity
+                                        Number(item.price) *
+                                        Number(item.quantity)
                                     ).toLocaleString()
                                 }
 
@@ -1182,6 +1194,14 @@ async function loadOrders() {
                 </div>
 
 
+                <div class="order-restaurant">
+
+                    🏪
+                    ${order.restaurantName || "本餐厅"}
+
+                </div>
+
+
                 <div class="status">
 
                     ${order.status || "待接单"}
@@ -1232,7 +1252,7 @@ async function loadOrders() {
 
                     总计：
                     ${
-                        (
+                        Number(
                             order.total || 0
                         ).toLocaleString()
                     }
