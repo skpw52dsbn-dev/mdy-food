@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Mandalay Food</title>
+    <title>MDY FOOD</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <style>
         * {
@@ -16,12 +19,13 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f5f5f5;
+            color: #333;
         }
 
         header {
             background: #ff5a1f;
             color: white;
-            padding: 20px;
+            padding: 22px 15px;
             text-align: center;
         }
 
@@ -31,12 +35,12 @@
         }
 
         header p {
-            margin: 6px 0 0;
+            margin: 7px 0 0;
             font-size: 14px;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 800px;
             margin: auto;
             padding: 15px;
         }
@@ -48,6 +52,7 @@
             border-radius: 10px;
             font-size: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            outline: none;
         }
 
         .orders-link {
@@ -64,32 +69,44 @@
 
         .restaurant {
             background: white;
+            border-radius: 12px;
             margin-bottom: 15px;
             padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .restaurant h3 {
+        .restaurant h2 {
             margin: 0 0 8px;
-            font-size: 20px;
+            font-size: 21px;
         }
 
-        .restaurant p {
-            margin: 5px 0;
-            color: #666;
+        .category {
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .rating {
+            margin-bottom: 15px;
         }
 
         .restaurant button {
-            margin-top: 12px;
             width: 100%;
-            padding: 12px;
             border: none;
             background: #ff5a1f;
             color: white;
+            padding: 13px;
             border-radius: 8px;
             font-size: 15px;
+            font-weight: bold;
             cursor: pointer;
+        }
+
+        .restaurant button:hover {
+            opacity: 0.9;
+        }
+
+        .no-menu {
+            background: #999 !important;
         }
     </style>
 </head>
@@ -97,8 +114,8 @@
 <body>
 
 <header>
-    <h1>🍜 Mandalay Food</h1>
-    <p>缅甸曼德勒外卖平台</p>
+    <h1>🍜 MDY FOOD</h1>
+    <p>缅甸外卖 · အစားအစာ Delivery</p>
 </header>
 
 <div class="container">
@@ -111,80 +128,165 @@
         oninput="searchRestaurants()"
     >
 
-    <a href="orders.html" class="orders-link">
+    <a
+        href="orders.html"
+        class="orders-link"
+    >
         📦 我的订单
     </a>
 
-    <div id="restaurantList">
 
-        <div class="restaurant">
-            <h3>四川味道</h3>
-            <p>川菜 · 中餐</p>
-            <p>⭐ 4.8</p>
+    <!-- 四川味道 -->
 
-            <button onclick="openRestaurant('AxVX8H1owO7IKe0EJcmb')">
-                查看菜单
-            </button>
+    <div class="restaurant">
+
+        <h2>
+            四川味道
+        </h2>
+
+        <div class="category">
+            川菜 · 中餐
         </div>
 
-        <div class="restaurant">
-            <h3>Mandalay Kitchen</h3>
-            <p>缅甸菜</p>
-            <p>⭐ 4.7</p>
-
-            <button onclick="openRestaurant('')">
-                查看菜单
-            </button>
+        <div class="rating">
+            ⭐ 4.8
         </div>
 
-        <div class="restaurant">
-            <h3>夜猫子烧烤</h3>
-            <p>烧烤 · 夜宵</p>
-            <p>⭐ 4.9</p>
+        <button
+            onclick="openRestaurant('AxVX8H1owO7IKe0EJcmb')"
+        >
+            查看菜单
+        </button>
 
-            <button onclick="openRestaurant('')">
-                查看菜单
-            </button>
+    </div>
+
+
+    <!-- Mandalay Kitchen -->
+
+    <div class="restaurant">
+
+        <h2>
+            Mandalay Kitchen
+        </h2>
+
+        <div class="category">
+            缅甸菜
         </div>
+
+        <div class="rating">
+            ⭐ 4.7
+        </div>
+
+        <button
+            onclick="openRestaurant('DKIiikHUTmC5bFtuSVdb')"
+        >
+            查看菜单
+        </button>
+
+    </div>
+
+
+    <!-- 夜猫子烧烤 -->
+
+    <div class="restaurant">
+
+        <h2>
+            夜猫子烧烤
+        </h2>
+
+        <div class="category">
+            烧烤 · 夜宵
+        </div>
+
+        <div class="rating">
+            ⭐ 4.9
+        </div>
+
+        <button
+            class="no-menu"
+            onclick="openRestaurant('')"
+        >
+            菜单准备中
+        </button>
 
     </div>
 
 </div>
 
+
 <script>
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+
+    authDomain: "mdy-food.firebaseapp.com",
+
+    projectId: "mdy-food",
+
+    storageBucket: "mdy-food.firebasestorage.app",
+
+    messagingSenderId: "498327590625",
+
+    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+
+    measurementId: "G-6Q5G2862XQ"
+
+};
+
+
+firebase.initializeApp(firebaseConfig);
+
+
+const db =
+    firebase.firestore();
+
 
 function openRestaurant(id) {
 
     if (!id) {
-        alert("这家餐厅的菜单还在准备中");
+
+        alert(
+            "这家餐厅的菜单还在准备中"
+        );
+
         return;
+
     }
 
     window.location.href =
         "menu.html?id=" + id;
+
 }
 
 
-// 搜索餐厅
 function searchRestaurants() {
 
-    const keyword = document
-        .getElementById("searchInput")
-        .value
-        .toLowerCase();
+    const keyword =
+        document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase();
+
 
     const restaurants =
         document.querySelectorAll(".restaurant");
+
 
     restaurants.forEach(function(restaurant) {
 
         const text =
             restaurant.innerText.toLowerCase();
 
+
         if (text.includes(keyword)) {
+
             restaurant.style.display = "";
+
         } else {
+
             restaurant.style.display = "none";
+
         }
 
     });
