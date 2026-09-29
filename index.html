@@ -86,7 +86,20 @@
         }
 
         .rating {
+            margin-bottom: 10px;
+        }
+
+        .status {
+            font-weight: bold;
             margin-bottom: 15px;
+        }
+
+        .open-status {
+            color: #2e8b57;
+        }
+
+        .closed-status {
+            color: #d33;
         }
 
         .restaurant button {
@@ -103,6 +116,10 @@
 
         .restaurant button:hover {
             opacity: 0.9;
+        }
+
+        .restaurant button.closed {
+            background: #999 !important;
         }
 
         .no-menu {
@@ -138,7 +155,10 @@
 
     <!-- 四川味道 -->
 
-    <div class="restaurant">
+    <div
+        class="restaurant"
+        id="restaurant-sichuan"
+    >
 
         <h2>
             四川味道
@@ -152,10 +172,18 @@
             ⭐ 4.8
         </div>
 
+        <div
+            id="status-sichuan"
+            class="status"
+        >
+            正在读取营业状态...
+        </div>
+
         <button
+            id="button-sichuan"
             onclick="openRestaurant('AxVX8H1owO7IKe0EJcmb')"
         >
-            查看菜单
+            正在读取...
         </button>
 
     </div>
@@ -163,7 +191,10 @@
 
     <!-- Mandalay Kitchen -->
 
-    <div class="restaurant">
+    <div
+        class="restaurant"
+        id="restaurant-mandalay"
+    >
 
         <h2>
             Mandalay Kitchen
@@ -177,10 +208,18 @@
             ⭐ 4.7
         </div>
 
+        <div
+            id="status-mandalay"
+            class="status"
+        >
+            正在读取营业状态...
+        </div>
+
         <button
+            id="button-mandalay"
             onclick="openRestaurant('DKIiikHUTmC5bFtuSVdb')"
         >
-            查看菜单
+            正在读取...
         </button>
 
     </div>
@@ -200,6 +239,10 @@
 
         <div class="rating">
             ⭐ 4.9
+        </div>
+
+        <div class="status closed-status">
+            🔴 菜单准备中
         </div>
 
         <button
@@ -237,10 +280,138 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-
 const db =
     firebase.firestore();
 
+
+// =========================
+// 读取餐厅营业状态
+// =========================
+
+async function loadRestaurantStatus(
+    restaurantId,
+    statusId,
+    buttonId
+) {
+
+    try {
+
+        const doc =
+            await db
+                .collection("restaurants")
+                .doc(restaurantId)
+                .get();
+
+
+        const statusElement =
+            document.getElementById(statusId);
+
+        const button =
+            document.getElementById(buttonId);
+
+
+        if (!doc.exists) {
+
+            statusElement.innerText =
+                "🔴 暂停营业";
+
+            statusElement.className =
+                "status closed-status";
+
+            button.innerText =
+                "暂时无法点餐";
+
+            button.classList.add("closed");
+
+            button.onclick = function() {
+
+                alert(
+                    "餐厅信息暂时无法获取"
+                );
+
+            };
+
+            return;
+
+        }
+
+
+        const restaurant =
+            doc.data();
+
+
+        const status =
+            restaurant.status || "营业中";
+
+
+        if (status === "营业中") {
+
+            statusElement.innerText =
+                "🟢 营业中";
+
+            statusElement.className =
+                "status open-status";
+
+            button.innerText =
+                "查看菜单";
+
+            button.classList.remove(
+                "closed"
+            );
+
+        } else {
+
+            statusElement.innerText =
+                "🔴 休息中";
+
+            statusElement.className =
+                "status closed-status";
+
+            button.innerText =
+                "休息中";
+
+            button.classList.add(
+                "closed"
+            );
+
+            button.onclick = function() {
+
+                alert(
+                    "这家餐厅目前休息中，请稍后再来"
+                );
+
+            };
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        const statusElement =
+            document.getElementById(statusId);
+
+        const button =
+            document.getElementById(buttonId);
+
+        statusElement.innerText =
+            "⚠️ 状态读取失败";
+
+        button.innerText =
+            "暂时无法点餐";
+
+        button.classList.add(
+            "closed"
+        );
+
+    }
+
+}
+
+
+// =========================
+// 打开餐厅菜单
+// =========================
 
 function openRestaurant(id) {
 
@@ -260,6 +431,10 @@ function openRestaurant(id) {
 }
 
 
+// =========================
+// 搜索餐厅
+// =========================
+
 function searchRestaurants() {
 
     const keyword =
@@ -270,28 +445,55 @@ function searchRestaurants() {
 
 
     const restaurants =
-        document.querySelectorAll(".restaurant");
+        document.querySelectorAll(
+            ".restaurant"
+        );
 
 
-    restaurants.forEach(function(restaurant) {
+    restaurants.forEach(
+        function(restaurant) {
 
-        const text =
-            restaurant.innerText.toLowerCase();
+            const text =
+                restaurant.innerText
+                    .toLowerCase();
 
 
-        if (text.includes(keyword)) {
+            if (
+                text.includes(keyword)
+            ) {
 
-            restaurant.style.display = "";
+                restaurant.style.display =
+                    "";
 
-        } else {
+            } else {
 
-            restaurant.style.display = "none";
+                restaurant.style.display =
+                    "none";
+
+            }
 
         }
-
-    });
+    );
 
 }
+
+
+// =========================
+// 启动
+// =========================
+
+loadRestaurantStatus(
+    "AxVX8H1owO7IKe0EJcmb",
+    "status-sichuan",
+    "button-sichuan"
+);
+
+
+loadRestaurantStatus(
+    "DKIiikHUTmC5bFtuSVdb",
+    "status-mandalay",
+    "button-mandalay"
+);
 
 </script>
 
