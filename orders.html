@@ -2,33 +2,40 @@
 <html lang="zh-CN">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>我的订单 - MDY FOOD</title>
 
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f5f5f5;
+            color: #333;
         }
 
         header {
             background: #ff5a1f;
             color: white;
-            padding: 20px;
-            font-size: 20px;
+            padding: 18px;
+            text-align: center;
+            font-size: 22px;
             font-weight: bold;
         }
 
         .container {
-            max-width: 700px;
-            margin: 25px auto;
-            padding: 0 20px;
+            max-width: 600px;
+            margin: auto;
+            padding: 15px;
         }
 
         .back {
@@ -36,60 +43,83 @@
             margin-bottom: 15px;
             color: #ff5a1f;
             text-decoration: none;
+            font-weight: bold;
         }
 
-        .order-card {
+        .order {
             background: white;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .order-number {
-            color: #ff5a1f;
             font-size: 18px;
             font-weight: bold;
+            margin-bottom: 10px;
         }
 
         .status {
-            margin: 15px 0;
-            padding: 15px;
-            background: #fff3ed;
-            color: #ff5a1f;
+            display: block;
+            padding: 12px;
             border-radius: 10px;
-            text-align: center;
-            font-size: 18px;
+            background: #fff1eb;
+            color: #ff5a1f;
             font-weight: bold;
+            text-align: center;
+            margin-bottom: 12px;
         }
 
         .info {
-            background: #f7f7f7;
-            padding: 15px;
-            border-radius: 8px;
             line-height: 1.8;
+        }
+
+        .items {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
         }
 
         .item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
+            margin: 8px 0;
         }
 
         .total {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff5a1f;
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
         }
 
         .empty {
             background: white;
+            padding: 40px 20px;
             text-align: center;
-            padding: 50px 20px;
             border-radius: 12px;
-            color: #777;
+            color: #888;
+        }
+
+        .loading {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 12px;
+            color: #888;
+        }
+
+        .error {
+            background: #fff0f0;
+            color: #c00;
+            padding: 20px;
+            border-radius: 12px;
+            line-height: 1.6;
         }
 
         .home-button {
@@ -102,14 +132,7 @@
             text-decoration: none;
             border-radius: 8px;
         }
-
-        .order-title {
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-
     </style>
-
 </head>
 
 <body>
@@ -124,197 +147,289 @@
         ← 返回首页
     </a>
 
-    <div id="orders"></div>
+    <div id="orders">
+        <div class="loading">
+            正在加载订单...
+        </div>
+    </div>
 
 </div>
 
-
 <script>
 
-function showOrders() {
+const firebaseConfig = {
+    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+    authDomain: "mdy-food.firebaseapp.com",
+    projectId: "mdy-food",
+    storageBucket: "mdy-food.firebasestorage.app",
+    messagingSenderId: "498327590625",
+    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+    measurementId: "G-6Q5G2862XQ"
+};
 
-    const container =
-        document.getElementById("orders");
+firebase.initializeApp(firebaseConfig);
 
-
-    let orders =
-        JSON.parse(
-            localStorage.getItem("orders")
-        ) || [];
-
-
-    /*
-        如果以前只有 lastOrder，
-        自动把它加入订单列表
-    */
-
-    if (
-        orders.length === 0 &&
-        localStorage.getItem("lastOrder")
-    ) {
-
-        const oldOrder =
-            JSON.parse(
-                localStorage.getItem("lastOrder")
-            );
-
-        orders.push(oldOrder);
-
-        localStorage.setItem(
-            "orders",
-            JSON.stringify(orders)
-        );
-
-    }
+const db = firebase.firestore();
 
 
-    if (orders.length === 0) {
+async function loadOrders() {
 
-        container.innerHTML = `
+    try {
 
-            <div class="empty">
+        const snapshot =
+            await db
+                .collection("orders")
+                .get();
 
-                <div style="font-size:50px;">
-                    📦
+        let orders = [];
+
+        snapshot.forEach(function(doc) {
+
+            orders.push({
+                id: doc.id,
+                data: doc.data()
+            });
+
+        });
+
+
+        // 最新订单排在最前面
+        orders.sort(function(a, b) {
+
+            let timeA = 0;
+            let timeB = 0;
+
+            if (
+                a.data.created_at &&
+                a.data.created_at.toMillis
+            ) {
+                timeA =
+                    a.data.created_at.toMillis();
+            }
+
+            if (
+                b.data.created_at &&
+                b.data.created_at.toMillis
+            ) {
+                timeB =
+                    b.data.created_at.toMillis();
+            }
+
+            return timeB - timeA;
+
+        });
+
+
+        const container =
+            document.getElementById("orders");
+
+
+        if (orders.length === 0) {
+
+            container.innerHTML = `
+                <div class="empty">
+
+                    <div style="font-size:50px;">
+                        📦
+                    </div>
+
+                    <h2>
+                        暂时没有订单
+                    </h2>
+
+                    <p>
+                        你还没有提交订单
+                    </p>
+
+                    <a
+                        class="home-button"
+                        href="index.html"
+                    >
+                        去点餐
+                    </a>
+
+                </div>
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        orders.forEach(function(orderObject) {
+
+            const order =
+                orderObject.data;
+
+
+            let createdTime = "暂无";
+
+
+            if (
+                order.created_at &&
+                order.created_at.toDate
+            ) {
+
+                createdTime =
+                    order.created_at
+                        .toDate()
+                        .toLocaleString();
+
+            }
+
+
+            let itemsHTML = "";
+
+
+            if (
+                order.items &&
+                Array.isArray(order.items)
+            ) {
+
+                order.items.forEach(function(item) {
+
+                    itemsHTML += `
+
+                        <div class="item">
+
+                            <span>
+                                ${item.name}
+                                × ${item.quantity}
+                            </span>
+
+                            <span>
+                                ${(item.price * item.quantity)
+                                    .toLocaleString()}
+                                Ks
+                            </span>
+
+                        </div>
+
+                    `;
+
+                });
+
+            }
+
+
+            const div =
+                document.createElement("div");
+
+            div.className = "order";
+
+
+            div.innerHTML = `
+
+                <div class="order-number">
+
+                    订单号：
+                    ${order.order_number || "暂无"}
+
                 </div>
 
-                <h2>
-                    暂时没有订单
-                </h2>
 
-                <p>
-                    你还没有提交订单
-                </p>
+                <div class="status">
 
-                <a
-                    class="home-button"
-                    href="index.html"
-                >
-                    去点餐
-                </a>
+                    🚚
+                    ${order.status || "待接单"}
 
-            </div>
-
-        `;
-
-        return;
-
-    }
+                </div>
 
 
-    container.innerHTML = "";
+                <div class="info">
+
+                    👤 姓名：
+                    ${order.customername || ""}
+
+                    <br>
+
+                    📱 电话：
+                    ${order.phone || ""}
+
+                    <br>
+
+                    📍 地址：
+                    ${order.adress || ""}
+
+                    <br>
+
+                    💳 付款：
+                    ${order.payment || ""}
+
+                    <br>
+
+                    🕐 下单时间：
+                    ${createdTime}
+
+                </div>
 
 
-    /*
-        最新订单显示在最上面
-    */
+                <div class="items">
 
-    orders
-        .slice()
-        .reverse()
-        .forEach(function(order) {
+                    <strong>
+                        🍜 订单内容
+                    </strong>
 
+                    ${itemsHTML}
 
-        let itemsHTML = "";
+                </div>
 
 
-        order.items.forEach(function(item) {
-
-            itemsHTML += `
-
-                <div class="item">
+                <div class="total">
 
                     <span>
-                        ${item.name} × ${item.quantity}
+                        总计
                     </span>
 
                     <span>
-                        ${(item.price * item.quantity)
-                            .toLocaleString()} Ks
+                        ${(order.total || 0)
+                            .toLocaleString()}
+                        Ks
                     </span>
 
                 </div>
 
             `;
 
+
+            container.appendChild(div);
+
         });
 
 
-        const div =
-            document.createElement("div");
+    } catch (error) {
 
+        console.error(error);
 
-        div.className =
-            "order-card";
+        document.getElementById("orders").innerHTML = `
 
+            <div class="error">
 
-        div.innerHTML = `
+                ❌ 加载订单失败
 
-            <div class="order-number">
-                订单号：${order.orderNumber}
-            </div>
+                <br><br>
 
-
-            <div class="status">
-                🚚 ${order.status}
-            </div>
-
-
-            <div class="info">
-
-                👤 姓名：${order.name}<br>
-
-                📱 电话：${order.phone}<br>
-
-                📍 地址：${order.address}<br>
-
-                💳 付款：${order.payment}<br>
-
-                🕐 下单时间：${order.createdAt}
-
-            </div>
-
-
-            <h3 class="order-title">
-                🍜 订单内容
-            </h3>
-
-
-            ${itemsHTML}
-
-
-            <div class="total">
-
-                <span>
-                    总计
-                </span>
-
-                <span>
-                    ${order.total.toLocaleString()} Ks
-                </span>
+                ${error.message}
 
             </div>
 
         `;
 
-
-        container.appendChild(div);
-
-    });
+    }
 
 }
 
 
-/* 第一次显示 */
+// 第一次加载
+loadOrders();
 
-showOrders();
 
-
-/* 每 2 秒检查订单状态 */
-
+// 每 2 秒自动检查一次
 setInterval(function() {
 
-    showOrders();
+    loadOrders();
 
 }, 2000);
 
