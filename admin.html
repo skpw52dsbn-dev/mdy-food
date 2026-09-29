@@ -287,9 +287,24 @@
             display: none;
         }
 
+        .restaurant-status {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .open-status {
+            color: #2e8b57;
+        }
+
+        .closed-status {
+            color: #d33;
+        }
+
     </style>
 
 </head>
+
 
 <body>
 
@@ -317,7 +332,6 @@
 
         </div>
 
-
         <button
             class="logout"
             onclick="logout()"
@@ -342,7 +356,6 @@
         >
             菜品添加成功！
         </div>
-
 
         <div class="form-group">
 
@@ -412,32 +425,104 @@
 
     </div>
 
-<!-- 餐厅营业状态 -->
 
-<div class="section">
+    <!-- 餐厅营业状态 -->
 
-    <div class="section-title">
-        🏪 餐厅营业状态
+    <div class="section">
+
+        <div class="section-title">
+            🏪 餐厅营业状态
+        </div>
+
+        <div
+            id="restaurantStatus"
+            class="restaurant-status"
+        >
+            正在读取...
+        </div>
+
+        <button
+            id="restaurantStatusBtn"
+            class="add-food-btn"
+            onclick="toggleRestaurantStatus()"
+        >
+            正在读取...
+        </button>
+
     </div>
 
-    <div id="restaurantStatus"
-         style="
-            font-size:18px;
-            font-weight:bold;
-            margin-bottom:15px;
-         ">
-        正在读取...
+
+    <!-- 餐厅资料 -->
+
+    <div class="section">
+
+        <div class="section-title">
+            🏪 餐厅资料
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                餐厅名称
+            </label>
+
+            <input
+                id="editRestaurantName"
+                type="text"
+                placeholder="例如：四川味道"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                餐厅分类
+            </label>
+
+            <input
+                id="editRestaurantCategory"
+                type="text"
+                placeholder="例如：川菜 · 中餐"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                餐厅介绍
+            </label>
+
+            <textarea
+                id="editRestaurantDescription"
+                placeholder="介绍一下你的餐厅"
+            ></textarea>
+
+        </div>
+
+
+        <button
+            class="add-food-btn"
+            onclick="saveRestaurantInfo()"
+        >
+            💾 保存餐厅资料
+        </button>
+
+
+        <div
+            id="restaurantSaveMessage"
+            class="success"
+            style="margin-top:12px;"
+        >
+            餐厅资料保存成功！
+        </div>
+
     </div>
 
-    <button
-        id="restaurantStatusBtn"
-        class="add-food-btn"
-        onclick="toggleRestaurantStatus()"
-    >
-        正在读取...
-    </button>
 
-</div>
     <!-- 我的菜品 -->
 
     <div class="section">
@@ -453,7 +538,7 @@
     </div>
 
 
-    <!-- 订单 -->
+    <!-- 我的订单 -->
 
     <div class="section">
 
@@ -489,7 +574,7 @@ if (
 
 
 // =========================
-// 获取当前商家餐厅 ID
+// 当前餐厅 ID
 // =========================
 
 const restaurantId =
@@ -591,33 +676,197 @@ async function loadRestaurant() {
 
 }
 
+
 // =========================
-// 餐厅营业状态
+// 读取餐厅资料
+// =========================
+
+async function loadRestaurantInfo() {
+
+    try {
+
+        const doc =
+            await db
+                .collection("restaurants")
+                .doc(restaurantId)
+                .get();
+
+
+        if (!doc.exists) {
+
+            return;
+
+        }
+
+
+        const restaurant =
+            doc.data();
+
+
+        document.getElementById(
+            "editRestaurantName"
+        ).value =
+            restaurant.name || "";
+
+
+        document.getElementById(
+            "editRestaurantCategory"
+        ).value =
+            restaurant.category || "";
+
+
+        document.getElementById(
+            "editRestaurantDescription"
+        ).value =
+            restaurant.description || "";
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+// =========================
+// 保存餐厅资料
+// =========================
+
+async function saveRestaurantInfo() {
+
+    const name =
+        document
+            .getElementById(
+                "editRestaurantName"
+            )
+            .value
+            .trim();
+
+
+    const category =
+        document
+            .getElementById(
+                "editRestaurantCategory"
+            )
+            .value
+            .trim();
+
+
+    const description =
+        document
+            .getElementById(
+                "editRestaurantDescription"
+            )
+            .value
+            .trim();
+
+
+    if (!name) {
+
+        alert(
+            "请输入餐厅名称"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await db
+            .collection("restaurants")
+            .doc(restaurantId)
+            .update({
+
+                name: name,
+
+                category: category,
+
+                description: description
+
+            });
+
+
+        document.getElementById(
+            "restaurantName"
+        ).innerText =
+            "🏪 " + name;
+
+
+        const message =
+            document.getElementById(
+                "restaurantSaveMessage"
+            );
+
+
+        message.style.display =
+            "block";
+
+
+        setTimeout(function() {
+
+            message.style.display =
+                "none";
+
+        }, 2500);
+
+
+    } catch (error) {
+
+        alert(
+            "保存餐厅资料失败：" +
+            error.message
+        );
+
+        console.error(error);
+
+    }
+
+}
+
+
+// =========================
+// 读取营业状态
 // =========================
 
 async function loadRestaurantStatus() {
 
     try {
 
-        const doc = await db
-            .collection("restaurants")
-            .doc(restaurantId)
-            .get();
+        const doc =
+            await db
+                .collection("restaurants")
+                .doc(restaurantId)
+                .get();
 
-        const status = doc.exists
-            ? (doc.data().status || "营业中")
-            : "营业中";
+
+        const status =
+            doc.exists
+                ? (doc.data().status || "营业中")
+                : "营业中";
+
 
         const statusElement =
-            document.getElementById("restaurantStatus");
+            document.getElementById(
+                "restaurantStatus"
+            );
+
 
         const button =
-            document.getElementById("restaurantStatusBtn");
+            document.getElementById(
+                "restaurantStatusBtn"
+            );
+
 
         if (status === "营业中") {
 
             statusElement.innerText =
                 "🟢 营业中";
+
+            statusElement.className =
+                "restaurant-status open-status";
 
             button.innerText =
                 "🔴 暂停营业";
@@ -626,6 +875,9 @@ async function loadRestaurantStatus() {
 
             statusElement.innerText =
                 "🔴 休息中";
+
+            statusElement.className =
+                "restaurant-status closed-status";
 
             button.innerText =
                 "🟢 恢复营业";
@@ -636,44 +888,51 @@ async function loadRestaurantStatus() {
 
         console.error(error);
 
-        document.getElementById(
-            "restaurantStatus"
-        ).innerText = "读取失败";
-
     }
 
 }
 
 
+// =========================
+// 修改营业状态
+// =========================
+
 async function toggleRestaurantStatus() {
 
     try {
 
-        const doc = await db
-            .collection("restaurants")
-            .doc(restaurantId)
-            .get();
+        const doc =
+            await db
+                .collection("restaurants")
+                .doc(restaurantId)
+                .get();
+
 
         const currentStatus =
             doc.exists
                 ? (doc.data().status || "营业中")
                 : "营业中";
 
+
         const newStatus =
             currentStatus === "营业中"
                 ? "休息中"
                 : "营业中";
+
 
         await db
             .collection("restaurants")
             .doc(restaurantId)
             .update({
 
-                status: newStatus
+                status:
+                    newStatus
 
             });
 
+
         loadRestaurantStatus();
+
 
     } catch (error) {
 
@@ -687,6 +946,8 @@ async function toggleRestaurantStatus() {
     }
 
 }
+
+
 // =========================
 // 添加菜品
 // =========================
@@ -724,7 +985,9 @@ async function addFood() {
 
     if (!name) {
 
-        alert("请输入菜品名称");
+        alert(
+            "请输入菜品名称"
+        );
 
         return;
 
@@ -733,7 +996,9 @@ async function addFood() {
 
     if (!price || price <= 0) {
 
-        alert("请输入正确的价格");
+        alert(
+            "请输入正确的价格"
+        );
 
         return;
 
@@ -872,7 +1137,9 @@ async function loadFoods() {
 
 
             const div =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             div.className =
@@ -897,13 +1164,11 @@ async function loadFoods() {
                     alt="${food.name || ""}"
                 >
 
-
                 <div class="food-info">
 
                     <div class="food-name">
                         ${food.name || ""}
                     </div>
-
 
                     <div class="food-price">
                         ${
@@ -914,16 +1179,13 @@ async function loadFoods() {
                         Ks
                     </div>
 
-
                     <div class="food-description">
                         ${food.description || ""}
                     </div>
 
-
                     <div class="food-status">
                         ${statusText}
                     </div>
-
 
                     <div class="food-buttons">
 
@@ -1075,8 +1337,7 @@ async function deleteFood(
 
 
 // =========================
-// 读取订单
-// ⭐ 只读取当前餐厅的订单
+// 读取当前餐厅订单
 // =========================
 
 async function loadOrders() {
@@ -1204,7 +1465,6 @@ async function loadOrders() {
                                 ${item.quantity}
                             </span>
 
-
                             <span>
 
                                 ${
@@ -1297,7 +1557,9 @@ async function loadOrders() {
 
 
             const div =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             div.className =
@@ -1490,6 +1752,8 @@ function logout() {
 loadRestaurant();
 
 loadRestaurantStatus();
+
+loadRestaurantInfo();
 
 loadFoods();
 
