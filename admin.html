@@ -1,25 +1,16 @@
 
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>商家后台 - MDY FOOD</title>
 
-    <title>MDY FOOD 商家后台</title>
-
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <style>
-
         * {
             box-sizing: border-box;
         }
@@ -28,6 +19,7 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f5f5f5;
+            color: #333;
         }
 
         header {
@@ -35,12 +27,35 @@
             color: white;
             padding: 18px;
             text-align: center;
+            font-size: 22px;
+            font-weight: bold;
         }
 
         .container {
-            max-width: 700px;
-            margin: 20px auto;
-            padding: 0 15px;
+            max-width: 800px;
+            margin: auto;
+            padding: 15px;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logout {
+            border: none;
+            background: #555;
+            color: white;
+            padding: 9px 14px;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         .order {
@@ -59,75 +74,65 @@
 
         .status {
             display: inline-block;
-            padding: 7px 12px;
-            border-radius: 20px;
             background: #fff1eb;
             color: #ff5a1f;
+            padding: 7px 12px;
+            border-radius: 20px;
             font-weight: bold;
             margin-bottom: 12px;
         }
 
         .info {
             line-height: 1.8;
-            color: #444;
         }
 
         .items {
+            border-top: 1px solid #eee;
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid #eee;
         }
 
         .item {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
+            margin: 7px 0;
         }
 
         .total {
+            border-top: 1px solid #eee;
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid #eee;
+            color: #ff5a1f;
             font-size: 18px;
             font-weight: bold;
         }
 
-        button {
-            width: 100%;
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .buttons button {
             border: none;
-            border-radius: 8px;
-            padding: 13px;
-            margin-top: 12px;
+            background: #ff5a1f;
             color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .accept {
-            background: #28a745;
-        }
-
-        .delivery {
-            background: #007bff;
-        }
-
-        .complete {
-            background: #6f42c1;
-        }
-
-        .done {
-            background: #eee;
-            color: #555;
-            padding: 12px;
-            text-align: center;
+            padding: 11px 16px;
             border-radius: 8px;
-            margin-top: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .completed {
+            color: #2e8b57;
+            font-weight: bold;
+            margin-top: 15px;
         }
 
         .empty {
             background: white;
-            padding: 40px 20px;
+            padding: 30px;
             text-align: center;
             border-radius: 12px;
             color: #888;
@@ -138,540 +143,378 @@
             color: #c00;
             padding: 15px;
             border-radius: 10px;
-            margin-bottom: 15px;
+            line-height: 1.6;
         }
-
-        .logout {
-            background: #555;
-            margin-bottom: 20px;
-        }
-
     </style>
-
 </head>
 
 <body>
 
 <header>
-
-    <h1>🍜 MDY FOOD</h1>
-
-    <div>商家订单后台</div>
-
+    🍜 MDY FOOD 商家后台
 </header>
-
 
 <div class="container">
 
-    <button
-        class="logout"
-        onclick="logout()"
-    >
-        退出商家账号
-    </button>
+    <div class="top">
+        <div class="title">📦 订单管理</div>
 
-    <div id="orders"></div>
+        <button class="logout" onclick="logout()">
+            退出登录
+        </button>
+    </div>
+
+    <div id="orders">
+        正在加载订单...
+    </div>
 
 </div>
 
-
 <script>
 
-    /* =========================
-       检查商家登录
-    ========================= */
+if (localStorage.getItem("merchantLogin") !== "true") {
+    window.location.href = "admin-login.html";
+}
 
-    if (
-        localStorage.getItem("merchantLogin")
-        !== "true"
-    ) {
+const firebaseConfig = {
+    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+    authDomain: "mdy-food.firebaseapp.com",
+    projectId: "mdy-food",
+    storageBucket: "mdy-food.firebasestorage.app",
+    messagingSenderId: "498327590625",
+    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+    measurementId: "G-6Q5G2862XQ"
+};
 
-        window.location.href =
-            "admin-login.html";
+firebase.initializeApp(firebaseConfig);
 
-    }
+const db = firebase.firestore();
 
 
-    /* =========================
-       Firebase 配置
-    ========================= */
+async function loadOrders() {
 
-    const firebaseConfig = {
+    try {
 
-        apiKey:
-            "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
-
-        authDomain:
-            "mdy-food.firebaseapp.com",
-
-        projectId:
-            "mdy-food",
-
-        storageBucket:
-            "mdy-food.firebasestorage.app",
-
-        messagingSenderId:
-            "498327590625",
-
-        appId:
-            "1:498327590625:web:cceafb7febb689e7ad09a0",
-
-        measurementId:
-            "G-6Q5G2862XQ"
-
-    };
-
-
-    /* 初始化 Firebase */
-
-    firebase.initializeApp(
-        firebaseConfig
-    );
-
-
-    /* Firestore */
-
-    const db =
-        firebase.firestore();
-
-
-    /* =========================
-       从 Firebase 获取订单
-    ========================= */
-
-    async function loadOrders() {
-
-        const container =
-            document.getElementById(
-                "orders"
-            );
-
-        try {
-
-            const snapshot =
-                await db
-                    .collection("orders")
-                    .orderBy(
-                        "created_at",
-                        "desc"
-                    )
-                    .get();
-
-
-            if (snapshot.empty) {
-
-                container.innerHTML = `
-                    <div class="empty">
-
-                        <div style="font-size:40px;">
-                            📦
-                        </div>
-
-                        <h3>
-                            目前没有订单
-                        </h3>
-
-                        <p>
-                            新订单会显示在这里
-                        </p>
-
-                    </div>
-                `;
-
-                return;
-            }
-
-
-            container.innerHTML = "";
-
-
-            snapshot.forEach(
-                function(doc) {
-
-                    const order =
-                        doc.data();
-
-                    showOrder(
-                        doc.id,
-                        order,
-                        container
-                    );
-
-                }
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "读取订单失败:",
-                error
-            );
-
-
-            container.innerHTML = `
-
-                <div class="error">
-
-                    ❌ 读取订单失败
-
-                    <br><br>
-
-                    ${error.message}
-
-                </div>
-
-            `;
-
-        }
-
-    }
-
-
-    /* =========================
-       显示单个订单
-    ========================= */
-
-    function showOrder(
-        documentId,
-        order,
-        container
-    ) {
-
-        let buttonHTML = "";
-
-
-        if (
-            order.status === "待接单"
-        ) {
-
-            buttonHTML = `
-
-                <button
-                    class="accept"
-                    onclick="
-                        changeStatus(
-                            '${documentId}',
-                            '商家已接单'
-                        )
-                    "
-                >
-                    ✅ 接受订单
-                </button>
-
-            `;
-
-        }
-
-
-        else if (
-            order.status === "商家已接单"
-        ) {
-
-            buttonHTML = `
-
-                <button
-                    class="delivery"
-                    onclick="
-                        changeStatus(
-                            '${documentId}',
-                            '配送中'
-                        )
-                    "
-                >
-                    🛵 开始配送
-                </button>
-
-            `;
-
-        }
-
-
-        else if (
-            order.status === "配送中"
-        ) {
-
-            buttonHTML = `
-
-                <button
-                    class="complete"
-                    onclick="
-                        changeStatus(
-                            '${documentId}',
-                            '已完成'
-                        )
-                    "
-                >
-                    ✅ 完成订单
-                </button>
-
-            `;
-
-        }
-
-
-        else {
-
-            buttonHTML = `
-
-                <div class="done">
-
-                    🎉 订单已完成
-
-                </div>
-
-            `;
-
-        }
-
-
-        /* =========================
-           订单商品
-        ========================= */
-
-        let itemsHTML = "";
-
-
-        const items =
-            Array.isArray(order.items)
-                ? order.items
-                : [];
-
-
-        items.forEach(
-            function(item) {
-
-                const price =
-                    Number(item.price) || 0;
-
-                const quantity =
-                    Number(item.quantity) || 0;
-
-
-                itemsHTML += `
-
-                    <div class="item">
-
-                        <span>
-                            ${item.name}
-                            ×
-                            ${quantity}
-                        </span>
-
-                        <span>
-                            ${(price * quantity)
-                                .toLocaleString()}
-                            Ks
-                        </span>
-
-                    </div>
-
-                `;
-
-            }
-        );
-
-
-        /* =========================
-           时间
-        ========================= */
-
-        let createdAt = "暂无";
-
-
-        if (
-            order.created_at &&
-            order.created_at.toDate
-        ) {
-
-            createdAt =
-                order.created_at
-                    .toDate()
-                    .toLocaleString();
-
-        }
-
-
-        /* =========================
-           创建订单卡片
-        ========================= */
-
-        const div =
-            document.createElement(
-                "div"
-            );
-
-
-        div.className =
-            "order";
-
-
-        div.innerHTML = `
-
-            <div class="order-number">
-
-                📦 订单号：
-
-                ${order.order_number || "暂无"}
-
-            </div>
-
-
-            <div class="status">
-
-                ${order.status || "待接单"}
-
-            </div>
-
-
-            <div class="info">
-
-                👤 姓名：
-                ${order.customername || "暂无"}
-
-                <br>
-
-
-                📞 电话：
-                ${order.phone || "暂无"}
-
-                <br>
-
-
-                📍 地址：
-                ${order.adress || "暂无"}
-
-                <br>
-
-
-                💳 支付：
-                ${order.payment || "暂无"}
-
-                <br>
-
-
-                🕐 时间：
-                ${createdAt}
-
-            </div>
-
-
-            <div class="items">
-
-                <strong>
-                    🍜 订单内容
-                </strong>
-
-                ${itemsHTML}
-
-            </div>
-
-
-            <div class="total">
-
-                💰 总计：
-
-                ${Number(order.total || 0)
-                    .toLocaleString()}
-                Ks
-
-            </div>
-
-
-            ${buttonHTML}
-
-        `;
-
-
-        container.appendChild(div);
-
-    }
-
-
-    /* =========================
-       修改订单状态
-    ========================= */
-
-    async function changeStatus(
-        documentId,
-        newStatus
-    ) {
-
-        try {
-
+        const snapshot =
             await db
                 .collection("orders")
-                .doc(documentId)
-                .update({
+                .get();
 
-                    status:
-                        newStatus
+        let orders = [];
+
+        snapshot.forEach(function(doc) {
+
+            orders.push({
+                id: doc.id,
+                data: doc.data()
+            });
+
+        });
+
+
+        // 自己在网页里按照时间排序
+        orders.sort(function(a, b) {
+
+            const timeA =
+                a.data.created_at &&
+                a.data.created_at.toMillis
+                    ? a.data.created_at.toMillis()
+                    : 0;
+
+            const timeB =
+                b.data.created_at &&
+                b.data.created_at.toMillis
+                    ? b.data.created_at.toMillis()
+                    : 0;
+
+            return timeB - timeA;
+
+        });
+
+
+        const container =
+            document.getElementById("orders");
+
+
+        if (orders.length === 0) {
+
+            container.innerHTML = `
+                <div class="empty">
+                    目前没有订单
+                </div>
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        orders.forEach(function(orderObject) {
+
+            const order =
+                orderObject.data;
+
+            const documentId =
+                orderObject.id;
+
+
+            let createdTime = "暂无";
+
+            if (order.created_at) {
+
+                if (order.created_at.toDate) {
+
+                    createdTime =
+                        order.created_at
+                            .toDate()
+                            .toLocaleString();
+
+                }
+
+            }
+
+
+            let itemsHTML = "";
+
+
+            if (
+                order.items &&
+                Array.isArray(order.items)
+            ) {
+
+                order.items.forEach(function(item) {
+
+                    itemsHTML += `
+                        <div class="item">
+
+                            <span>
+                                ${item.name} × ${item.quantity}
+                            </span>
+
+                            <span>
+                                ${(item.price * item.quantity).toLocaleString()} Ks
+                            </span>
+
+                        </div>
+                    `;
 
                 });
 
-
-            /* 更新成功后重新读取 */
-
-            loadOrders();
+            }
 
 
-        } catch (error) {
-
-            console.error(
-                "修改订单状态失败:",
-                error
-            );
+            let buttonHTML = "";
 
 
-            alert(
-                "修改订单失败：\n" +
-                error.message
-            );
+            if (order.status === "待接单") {
 
-        }
+                buttonHTML = `
+                    <button onclick="changeStatus(
+                        '${documentId}',
+                        '商家已接单'
+                    )">
+                        接受订单
+                    </button>
+                `;
+
+            } else if (
+                order.status === "商家已接单"
+            ) {
+
+                buttonHTML = `
+                    <button onclick="changeStatus(
+                        '${documentId}',
+                        '配送中'
+                    )">
+                        开始配送
+                    </button>
+                `;
+
+            } else if (
+                order.status === "配送中"
+            ) {
+
+                buttonHTML = `
+                    <button onclick="changeStatus(
+                        '${documentId}',
+                        '已完成'
+                    )">
+                        完成订单
+                    </button>
+                `;
+
+            } else if (
+                order.status === "已完成"
+            ) {
+
+                buttonHTML = `
+                    <div class="completed">
+                        ✅ 订单已完成
+                    </div>
+                `;
+
+            }
+
+
+            const div =
+                document.createElement("div");
+
+            div.className = "order";
+
+
+            div.innerHTML = `
+
+                <div class="order-number">
+                    订单号：
+                    ${order.order_number || "暂无"}
+                </div>
+
+                <div class="status">
+                    ${order.status || "待接单"}
+                </div>
+
+                <div class="info">
+
+                    👤 顾客：
+                    ${order.customername || ""}
+
+                    <br>
+
+                    📞 电话：
+                    ${order.phone || ""}
+
+                    <br>
+
+                    📍 地址：
+                    ${order.adress || ""}
+
+                    <br>
+
+                    💳 支付：
+                    ${order.payment || ""}
+
+                    <br>
+
+                    🕒 时间：
+                    ${createdTime}
+
+                </div>
+
+
+                <div class="items">
+
+                    <strong>
+                        🍜 订单内容
+                    </strong>
+
+                    ${itemsHTML}
+
+                </div>
+
+
+                <div class="total">
+
+                    总计：
+                    ${(order.total || 0).toLocaleString()}
+                    Ks
+
+                </div>
+
+
+                <div class="buttons">
+
+                    ${buttonHTML}
+
+                </div>
+
+            `;
+
+
+            container.appendChild(div);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("orders").innerHTML = `
+
+            <div class="error">
+
+                ❌ 读取订单失败
+
+                <br><br>
+
+                ${error.message}
+
+            </div>
+
+        `;
 
     }
 
+}
 
-    /* =========================
-       退出登录
-    ========================= */
 
-    function logout() {
+async function changeStatus(
+    documentId,
+    newStatus
+) {
 
-        localStorage.removeItem(
-            "merchantLogin"
+    try {
+
+        await db
+            .collection("orders")
+            .doc(documentId)
+            .update({
+                status: newStatus
+            });
+
+
+        loadOrders();
+
+
+    } catch (error) {
+
+        alert(
+            "修改订单状态失败：" +
+            error.message
         );
 
-        window.location.href =
-            "admin-login.html";
+        console.error(error);
 
     }
 
-
-    /* =========================
-       第一次加载
-    ========================= */
-
-    loadOrders();
+}
 
 
-    /* =========================
-       每 3 秒检查新订单
-    ========================= */
+function logout() {
 
-    setInterval(
-        function() {
-
-            loadOrders();
-
-        },
-        3000
+    localStorage.removeItem(
+        "merchantLogin"
     );
+
+    window.location.href =
+        "admin-login.html";
+
+}
+
+
+loadOrders();
+
+
+// 每3秒自动刷新
+setInterval(
+    loadOrders,
+    3000
+);
 
 </script>
 
 </body>
-
 </html>
 ```
