@@ -3,315 +3,337 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>商家后台 - MDY FOOD</title>
+<title>商家后台 - MDY FOOD</title>
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-    <style>
+<style>
 
-        * {
-            box-sizing: border-box;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #333;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+}
 
-        header {
-            background: #ff5a1f;
-            color: white;
-            padding: 18px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-        }
+header {
+    background: #ff5a1f;
+    color: white;
+    padding: 18px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+}
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 15px;
-        }
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 15px;
+}
 
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            gap: 10px;
-        }
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
 
-        .title {
-            font-size: 20px;
-            font-weight: bold;
-        }
+.title {
+    font-size: 20px;
+    font-weight: bold;
+}
 
-        .restaurant-name {
-            color: #ff5a1f;
-            margin-top: 5px;
-            font-size: 15px;
-        }
+.restaurant-name {
+    color: #ff5a1f;
+    margin-top: 5px;
+    font-size: 15px;
+}
 
-        .logout {
-            border: none;
-            background: #555;
-            color: white;
-            padding: 9px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
+.logout {
+    border: none;
+    background: #555;
+    color: white;
+    padding: 9px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
 
-        .section {
-            background: white;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
+.section {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
 
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
+.section-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
 
-        .form-group {
-            margin-bottom: 12px;
-        }
+.form-group {
+    margin-bottom: 12px;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 15px;
-        }
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+}
 
-        .form-group textarea {
-            height: 80px;
-            resize: vertical;
-        }
+.form-group textarea {
+    height: 80px;
+    resize: vertical;
+}
 
-        .add-food-btn {
-            width: 100%;
-            border: none;
-            background: #ff5a1f;
-            color: white;
-            padding: 13px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.add-food-btn {
+    width: 100%;
+    border: none;
+    background: #ff5a1f;
+    color: white;
+    padding: 13px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        .food {
-            border: 1px solid #eee;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            gap: 12px;
-        }
+.food {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 12px;
+}
 
-        .food img {
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+.food img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+}
 
-        .food-info {
-            flex: 1;
-        }
+.food-info {
+    flex: 1;
+}
 
-        .food-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+.food-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
 
-        .food-price {
-            color: #ff5a1f;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+.food-price {
+    color: #ff5a1f;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
 
-        .food-description {
-            color: #777;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
+.food-description {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
 
-        .food-status {
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
+.food-status {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
 
-        .food-buttons {
-            display: flex;
-            gap: 7px;
-            flex-wrap: wrap;
-        }
+.food-buttons {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
 
-        .food-buttons button {
-            border: none;
-            padding: 7px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            color: white;
-        }
+.food-buttons button {
+    border: none;
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+}
 
-        .status-btn {
-            background: #555;
-        }
+.status-btn {
+    background: #555;
+}
 
-        .delete-btn {
-            background: #d33;
-        }
+.delete-btn {
+    background: #d33;
+}
 
-        .order {
-            background: white;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
+.order {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
 
-        .order-number {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+.order-number {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
 
-        .order-restaurant {
-            color: #ff5a1f;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+.order-restaurant {
+    color: #ff5a1f;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
 
-        .status {
-            display: inline-block;
-            background: #fff1eb;
-            color: #ff5a1f;
-            padding: 7px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
+.status {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    background: #fff1eb;
+    color: #ff5a1f;
+}
 
-        .info {
-            line-height: 1.8;
-        }
+.status-ready {
+    background: #fff7e6;
+    color: #d88700;
+}
 
-        .items {
-            border-top: 1px solid #eee;
-            margin-top: 12px;
-            padding-top: 12px;
-        }
+.status-completed {
+    background: #effff4;
+    color: #16833b;
+}
 
-        .item {
-            display: flex;
-            justify-content: space-between;
-            margin: 7px 0;
-        }
+.info {
+    line-height: 1.8;
+}
 
-        .total {
-            border-top: 1px solid #eee;
-            margin-top: 12px;
-            padding-top: 12px;
-            color: #ff5a1f;
-            font-size: 18px;
-            font-weight: bold;
-        }
+.items {
+    border-top: 1px solid #eee;
+    margin-top: 12px;
+    padding-top: 12px;
+}
 
-        .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
+.item {
+    display: flex;
+    justify-content: space-between;
+    margin: 7px 0;
+}
 
-        .buttons button {
-            border: none;
-            background: #ff5a1f;
-            color: white;
-            padding: 11px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+.total {
+    border-top: 1px solid #eee;
+    margin-top: 12px;
+    padding-top: 12px;
+    color: #ff5a1f;
+    font-size: 18px;
+    font-weight: bold;
+}
 
-        .completed {
-            color: #2e8b57;
-            font-weight: bold;
-            margin-top: 15px;
-        }
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
 
-        .empty {
-            background: white;
-            padding: 30px;
-            text-align: center;
-            border-radius: 12px;
-            color: #888;
-        }
+.buttons button {
+    border: none;
+    background: #ff5a1f;
+    color: white;
+    padding: 11px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
 
-        .error {
-            background: #fff0f0;
-            color: #c00;
-            padding: 15px;
-            border-radius: 10px;
-            line-height: 1.6;
-        }
+.ready-button {
+    background: #d88700 !important;
+}
 
-        .success {
-            background: #effff4;
-            color: #16833b;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            display: none;
-        }
+.completed {
+    color: #2e8b57;
+    font-weight: bold;
+    margin-top: 15px;
+}
 
-        .restaurant-status {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
+.delivery-info {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f7f7f7;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.7;
+    width: 100%;
+}
 
-        .open-status {
-            color: #2e8b57;
-        }
+.empty {
+    background: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 12px;
+    color: #888;
+}
 
-        .closed-status {
-            color: #d33;
-        }
+.error {
+    background: #fff0f0;
+    color: #c00;
+    padding: 15px;
+    border-radius: 10px;
+    line-height: 1.6;
+}
 
-    </style>
+.success {
+    background: #effff4;
+    color: #16833b;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: none;
+}
+
+.restaurant-status {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.open-status {
+    color: #2e8b57;
+}
+
+.closed-status {
+    color: #d33;
+}
+
+</style>
 
 </head>
-
 
 <body>
 
 <header>
     🍜 MDY FOOD 商家后台
 </header>
-
 
 <div class="container">
 
@@ -323,19 +345,13 @@
                 👨‍🍳 商家管理
             </div>
 
-            <div
-                id="restaurantName"
-                class="restaurant-name"
-            >
+            <div id="restaurantName" class="restaurant-name">
                 正在读取餐厅...
             </div>
 
         </div>
 
-        <button
-            class="logout"
-            onclick="logout()"
-        >
+        <button class="logout" onclick="logout()">
             退出登录
         </button>
 
@@ -350,18 +366,13 @@
             ➕ 添加菜品
         </div>
 
-        <div
-            id="successMessage"
-            class="success"
-        >
+        <div id="successMessage" class="success">
             菜品添加成功！
         </div>
 
         <div class="form-group">
 
-            <label>
-                菜品名称
-            </label>
+            <label>菜品名称</label>
 
             <input
                 id="foodName"
@@ -371,12 +382,9 @@
 
         </div>
 
-
         <div class="form-group">
 
-            <label>
-                价格（Ks）
-            </label>
+            <label>价格（Ks）</label>
 
             <input
                 id="foodPrice"
@@ -386,12 +394,9 @@
 
         </div>
 
-
         <div class="form-group">
 
-            <label>
-                菜品描述
-            </label>
+            <label>菜品描述</label>
 
             <textarea
                 id="foodDescription"
@@ -400,12 +405,9 @@
 
         </div>
 
-
         <div class="form-group">
 
-            <label>
-                图片地址
-            </label>
+            <label>图片地址</label>
 
             <input
                 id="foodImage"
@@ -415,11 +417,7 @@
 
         </div>
 
-
-        <button
-            class="add-food-btn"
-            onclick="addFood()"
-        >
+        <button class="add-food-btn" onclick="addFood()">
             🍜 添加菜品
         </button>
 
@@ -462,9 +460,7 @@
 
         <div class="form-group">
 
-            <label>
-                餐厅名称
-            </label>
+            <label>餐厅名称</label>
 
             <input
                 id="editRestaurantName"
@@ -474,12 +470,9 @@
 
         </div>
 
-
         <div class="form-group">
 
-            <label>
-                餐厅分类
-            </label>
+            <label>餐厅分类</label>
 
             <input
                 id="editRestaurantCategory"
@@ -489,12 +482,9 @@
 
         </div>
 
-
         <div class="form-group">
 
-            <label>
-                餐厅介绍
-            </label>
+            <label>餐厅介绍</label>
 
             <textarea
                 id="editRestaurantDescription"
@@ -503,14 +493,12 @@
 
         </div>
 
-
         <button
             class="add-food-btn"
             onclick="saveRestaurantInfo()"
         >
             💾 保存餐厅资料
         </button>
-
 
         <div
             id="restaurantSaveMessage"
@@ -558,79 +546,73 @@
 <script>
 
 
-// =========================
+// ========================================
 // 登录检查
-// =========================
+// ========================================
 
 if (
-    localStorage.getItem("merchantLogin")
-    !== "true"
+    localStorage.getItem("merchantLogin") !== "true"
 ) {
 
-    window.location.href =
-        "admin-login.html";
+    window.location.href = "admin-login.html";
 
 }
 
 
-// =========================
+// ========================================
 // 当前餐厅 ID
-// =========================
+// ========================================
 
 const restaurantId =
-    localStorage.getItem(
-        "merchantRestaurantId"
-    );
+    localStorage.getItem("merchantRestaurantId");
 
 
 if (!restaurantId) {
 
-    alert(
-        "没有找到商家餐厅信息，请重新登录"
-    );
+    alert("没有找到商家餐厅信息，请重新登录");
 
-    localStorage.removeItem(
-        "merchantLogin"
-    );
+    localStorage.removeItem("merchantLogin");
 
-    window.location.href =
-        "admin-login.html";
+    window.location.href = "admin-login.html";
 
 }
 
 
-// =========================
+// ========================================
 // Firebase
-// =========================
+// ========================================
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+    apiKey:
+        "AIzaSyA84W7Xx-yNWAWWqwmcbeHzKCRsqxv5X7Q",
 
-    authDomain: "mdy-food.firebaseapp.com",
+    authDomain:
+        "mdy-food.firebaseapp.com",
 
-    projectId: "mdy-food",
+    projectId:
+        "mdy-food",
 
-    storageBucket: "mdy-food.firebasestorage.app",
+    storageBucket:
+        "mdy-food.firebasestorage.app",
 
-    messagingSenderId: "498327590625",
+    messagingSenderId:
+        "498327590625",
 
-    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
-
-    measurementId: "G-6Q5G2862XQ"
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0"
 
 };
 
 
 firebase.initializeApp(firebaseConfig);
 
-const db =
-    firebase.firestore();
+const db = firebase.firestore();
 
 
-// =========================
-// 读取餐厅名称
-// =========================
+// ========================================
+// 读取餐厅
+// ========================================
 
 async function loadRestaurant() {
 
@@ -642,11 +624,9 @@ async function loadRestaurant() {
                 .doc(restaurantId)
                 .get();
 
-
         if (doc.exists) {
 
-            const restaurant =
-                doc.data();
+            const restaurant = doc.data();
 
             document.getElementById(
                 "restaurantName"
@@ -677,9 +657,9 @@ async function loadRestaurant() {
 }
 
 
-// =========================
-// 读取餐厅资料
-// =========================
+// ========================================
+// 餐厅资料
+// ========================================
 
 async function loadRestaurantInfo() {
 
@@ -691,29 +671,21 @@ async function loadRestaurantInfo() {
                 .doc(restaurantId)
                 .get();
 
-
         if (!doc.exists) {
-
             return;
-
         }
 
-
-        const restaurant =
-            doc.data();
-
+        const restaurant = doc.data();
 
         document.getElementById(
             "editRestaurantName"
         ).value =
             restaurant.name || "";
 
-
         document.getElementById(
             "editRestaurantCategory"
         ).value =
             restaurant.category || "";
-
 
         document.getElementById(
             "editRestaurantDescription"
@@ -729,49 +701,37 @@ async function loadRestaurantInfo() {
 }
 
 
-// =========================
+// ========================================
 // 保存餐厅资料
-// =========================
+// ========================================
 
 async function saveRestaurantInfo() {
 
     const name =
         document
-            .getElementById(
-                "editRestaurantName"
-            )
+            .getElementById("editRestaurantName")
             .value
             .trim();
-
 
     const category =
         document
-            .getElementById(
-                "editRestaurantCategory"
-            )
+            .getElementById("editRestaurantCategory")
             .value
             .trim();
-
 
     const description =
         document
-            .getElementById(
-                "editRestaurantDescription"
-            )
+            .getElementById("editRestaurantDescription")
             .value
             .trim();
 
-
     if (!name) {
 
-        alert(
-            "请输入餐厅名称"
-        );
+        alert("请输入餐厅名称");
 
         return;
 
     }
-
 
     try {
 
@@ -788,30 +748,23 @@ async function saveRestaurantInfo() {
 
             });
 
-
         document.getElementById(
             "restaurantName"
         ).innerText =
             "🏪 " + name;
-
 
         const message =
             document.getElementById(
                 "restaurantSaveMessage"
             );
 
-
-        message.style.display =
-            "block";
-
+        message.style.display = "block";
 
         setTimeout(function() {
 
-            message.style.display =
-                "none";
+            message.style.display = "none";
 
         }, 2500);
-
 
     } catch (error) {
 
@@ -827,9 +780,9 @@ async function saveRestaurantInfo() {
 }
 
 
-// =========================
-// 读取营业状态
-// =========================
+// ========================================
+// 餐厅营业状态
+// ========================================
 
 async function loadRestaurantStatus() {
 
@@ -841,24 +794,20 @@ async function loadRestaurantStatus() {
                 .doc(restaurantId)
                 .get();
 
-
         const status =
             doc.exists
                 ? (doc.data().status || "营业中")
                 : "营业中";
-
 
         const statusElement =
             document.getElementById(
                 "restaurantStatus"
             );
 
-
         const button =
             document.getElementById(
                 "restaurantStatusBtn"
             );
-
 
         if (status === "营业中") {
 
@@ -893,10 +842,6 @@ async function loadRestaurantStatus() {
 }
 
 
-// =========================
-// 修改营业状态
-// =========================
-
 async function toggleRestaurantStatus() {
 
     try {
@@ -907,32 +852,26 @@ async function toggleRestaurantStatus() {
                 .doc(restaurantId)
                 .get();
 
-
         const currentStatus =
             doc.exists
                 ? (doc.data().status || "营业中")
                 : "营业中";
-
 
         const newStatus =
             currentStatus === "营业中"
                 ? "休息中"
                 : "营业中";
 
-
         await db
             .collection("restaurants")
             .doc(restaurantId)
             .update({
 
-                status:
-                    newStatus
+                status: newStatus
 
             });
 
-
         loadRestaurantStatus();
-
 
     } catch (error) {
 
@@ -948,9 +887,9 @@ async function toggleRestaurantStatus() {
 }
 
 
-// =========================
+// ========================================
 // 添加菜品
-// =========================
+// ========================================
 
 async function addFood() {
 
@@ -960,7 +899,6 @@ async function addFood() {
             .value
             .trim();
 
-
     const price =
         Number(
             document
@@ -968,13 +906,11 @@ async function addFood() {
                 .value
         );
 
-
     const description =
         document
             .getElementById("foodDescription")
             .value
             .trim();
-
 
     const image =
         document
@@ -982,28 +918,21 @@ async function addFood() {
             .value
             .trim();
 
-
     if (!name) {
 
-        alert(
-            "请输入菜品名称"
-        );
+        alert("请输入菜品名称");
 
         return;
 
     }
-
 
     if (!price || price <= 0) {
 
-        alert(
-            "请输入正确的价格"
-        );
+        alert("请输入正确的价格");
 
         return;
 
     }
-
 
     try {
 
@@ -1011,67 +940,50 @@ async function addFood() {
             .collection("foods")
             .add({
 
-                restaurantId:
-                    restaurantId,
+                restaurantId: restaurantId,
 
-                name:
-                    name,
+                name: name,
 
-                price:
-                    price,
+                price: price,
 
-                description:
-                    description,
+                description: description,
 
-                image:
-                    image,
+                image: image,
 
-                status:
-                    "营业中"
+                status: "营业中"
 
             });
-
 
         document.getElementById(
             "foodName"
         ).value = "";
 
-
         document.getElementById(
             "foodPrice"
         ).value = "";
-
 
         document.getElementById(
             "foodDescription"
         ).value = "";
 
-
         document.getElementById(
             "foodImage"
         ).value = "";
-
 
         const message =
             document.getElementById(
                 "successMessage"
             );
 
-
-        message.style.display =
-            "block";
-
+        message.style.display = "block";
 
         setTimeout(function() {
 
-            message.style.display =
-                "none";
+            message.style.display = "none";
 
         }, 2500);
 
-
         loadFoods();
-
 
     } catch (error) {
 
@@ -1087,9 +999,9 @@ async function addFood() {
 }
 
 
-// =========================
-// 读取当前餐厅菜品
-// =========================
+// ========================================
+// 菜品
+// ========================================
 
 async function loadFoods() {
 
@@ -1105,12 +1017,8 @@ async function loadFoods() {
                 )
                 .get();
 
-
         const container =
-            document.getElementById(
-                "foods"
-            );
-
+            document.getElementById("foods");
 
         if (snapshot.empty) {
 
@@ -1126,36 +1034,25 @@ async function loadFoods() {
 
         }
 
-
         container.innerHTML = "";
-
 
         snapshot.forEach(function(doc) {
 
-            const food =
-                doc.data();
-
+            const food = doc.data();
 
             const div =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
-
-            div.className =
-                "food";
-
+            div.className = "food";
 
             const image =
                 food.image ||
                 "https://via.placeholder.com/90";
 
-
             const statusText =
                 food.status === "营业中"
                     ? "🟢 营业中"
                     : "🔴 已下架";
-
 
             div.innerHTML = `
 
@@ -1171,12 +1068,13 @@ async function loadFoods() {
                     </div>
 
                     <div class="food-price">
-                        ${
-                            Number(
-                                food.price || 0
-                            ).toLocaleString()
-                        }
+
+                        ${Number(
+                            food.price || 0
+                        ).toLocaleString()}
+
                         Ks
+
                     </div>
 
                     <div class="food-description">
@@ -1196,13 +1094,14 @@ async function loadFoods() {
                                 '${food.status}'
                             )"
                         >
+
                             ${
                                 food.status === "营业中"
                                     ? "下架"
                                     : "上架"
                             }
-                        </button>
 
+                        </button>
 
                         <button
                             class="delete-btn"
@@ -1210,7 +1109,9 @@ async function loadFoods() {
                                 '${doc.id}'
                             )"
                         >
+
                             删除
+
                         </button>
 
                     </div>
@@ -1219,16 +1120,13 @@ async function loadFoods() {
 
             `;
 
-
             container.appendChild(div);
 
         });
 
-
     } catch (error) {
 
         console.error(error);
-
 
         document.getElementById(
             "foods"
@@ -1251,10 +1149,6 @@ async function loadFoods() {
 }
 
 
-// =========================
-// 上架 / 下架
-// =========================
-
 async function toggleFoodStatus(
     documentId,
     currentStatus
@@ -1265,7 +1159,6 @@ async function toggleFoodStatus(
             ? "已下架"
             : "营业中";
 
-
     try {
 
         await db
@@ -1273,14 +1166,11 @@ async function toggleFoodStatus(
             .doc(documentId)
             .update({
 
-                status:
-                    newStatus
+                status: newStatus
 
             });
 
-
         loadFoods();
-
 
     } catch (error) {
 
@@ -1294,13 +1184,7 @@ async function toggleFoodStatus(
 }
 
 
-// =========================
-// 删除菜品
-// =========================
-
-async function deleteFood(
-    documentId
-) {
+async function deleteFood(documentId) {
 
     if (
         !confirm(
@@ -1312,7 +1196,6 @@ async function deleteFood(
 
     }
 
-
     try {
 
         await db
@@ -1320,9 +1203,7 @@ async function deleteFood(
             .doc(documentId)
             .delete();
 
-
         loadFoods();
-
 
     } catch (error) {
 
@@ -1336,9 +1217,9 @@ async function deleteFood(
 }
 
 
-// =========================
-// 读取当前餐厅订单
-// =========================
+// ========================================
+// 订单
+// ========================================
 
 async function loadOrders() {
 
@@ -1354,19 +1235,15 @@ async function loadOrders() {
                 )
                 .get();
 
-
         let orders = [];
-
 
         snapshot.forEach(function(doc) {
 
             orders.push({
 
-                id:
-                    doc.id,
+                id: doc.id,
 
-                data:
-                    doc.data()
+                data: doc.data()
 
             });
 
@@ -1381,13 +1258,11 @@ async function loadOrders() {
                     ? a.data.created_at.toMillis()
                     : 0;
 
-
             const timeB =
                 b.data.created_at &&
                 b.data.created_at.toMillis
                     ? b.data.created_at.toMillis()
                     : 0;
-
 
             return timeB - timeA;
 
@@ -1395,9 +1270,7 @@ async function loadOrders() {
 
 
         const container =
-            document.getElementById(
-                "orders"
-            );
+            document.getElementById("orders");
 
 
         if (orders.length === 0) {
@@ -1405,7 +1278,9 @@ async function loadOrders() {
             container.innerHTML = `
 
                 <div class="empty">
+
                     目前没有属于本餐厅的订单
+
                 </div>
 
             `;
@@ -1422,7 +1297,6 @@ async function loadOrders() {
 
             const order =
                 orderObject.data;
-
 
             const documentId =
                 orderObject.id;
@@ -1460,17 +1334,21 @@ async function loadOrders() {
                         <div class="item">
 
                             <span>
+
                                 ${item.name}
+
                                 ×
+
                                 ${item.quantity}
+
                             </span>
 
                             <span>
 
                                 ${
                                     (
-                                        Number(item.price) *
-                                        Number(item.quantity)
+                                        Number(item.price || 0) *
+                                        Number(item.quantity || 0)
                                     ).toLocaleString()
                                 }
 
@@ -1490,6 +1368,10 @@ async function loadOrders() {
             let buttonHTML = "";
 
 
+            // ====================================
+            // 待接单
+            // ====================================
+
             if (
                 order.status === "待接单"
             ) {
@@ -1502,53 +1384,135 @@ async function loadOrders() {
                             '商家已接单'
                         )"
                     >
+
                         接受订单
+
                     </button>
 
                 `;
 
-            } else if (
+            }
+
+
+            // ====================================
+            // 商家已接单
+            // ====================================
+
+            else if (
                 order.status === "商家已接单"
             ) {
 
                 buttonHTML = `
 
                     <button
+                        class="ready-button"
                         onclick="changeStatus(
                             '${documentId}',
-                            '配送中'
+                            '外卖好了'
                         )"
                     >
-                        开始配送
+
+                        🍱 外卖好了
+
                     </button>
 
                 `;
 
-            } else if (
-                order.status === "配送中"
+            }
+
+
+            // ====================================
+            // 骑手已接单
+            //
+            // 重点修复：
+            // 骑手抢单后必须显示外卖好了
+            // ====================================
+
+            else if (
+                order.status === "骑手已接单" ||
+                (
+                    order.deliveryId &&
+                    order.status !== "外卖好了" &&
+                    order.status !== "配送中" &&
+                    order.status !== "已完成"
+                )
             ) {
 
                 buttonHTML = `
+
+                    <div class="delivery-info">
+
+                        🛵
+                        <strong>
+                            骑手已接单
+                        </strong>
+
+                        <br>
+
+                        👨‍🍳
+                        骑手正在等待外卖做好
+
+                        <br>
+
+                        ${
+                            order.deliveryUsername
+                                ? "配送员：" +
+                                  order.deliveryUsername
+                                : "配送员：已接单"
+                        }
+
+                    </div>
 
                     <button
+                        class="ready-button"
+                        style="margin-top:10px;"
                         onclick="changeStatus(
                             '${documentId}',
-                            '已完成'
+                            '外卖好了'
                         )"
                     >
-                        完成订单
+
+                        🍱 外卖好了
+
                     </button>
 
                 `;
 
-            } else if (
-                order.status === "已完成"
+            }
+
+
+            // ====================================
+            // 外卖好了
+            // ====================================
+
+            else if (
+                order.status === "外卖好了"
             ) {
 
                 buttonHTML = `
 
-                    <div class="completed">
-                        ✅ 订单已完成
+                    <div class="delivery-info">
+
+                        🍱
+                        <strong>
+                            外卖已经做好
+                        </strong>
+
+                        <br>
+
+                        ${
+                            order.deliveryUsername
+                                ? "🛵 配送员：" +
+                                  order.deliveryUsername
+                                : "🛵 正在等待骑手接单"
+                        }
+
+                        ${
+                            order.deliveryUsername
+                                ? "<br>骑手可以来取餐"
+                                : ""
+                        }
+
                     </div>
 
                 `;
@@ -1556,14 +1520,112 @@ async function loadOrders() {
             }
 
 
+            // ====================================
+            // 配送中
+            // ====================================
+
+            else if (
+                order.status === "配送中"
+            ) {
+
+                buttonHTML = `
+
+                    <div class="delivery-info">
+
+                        🛵
+                        <strong>
+                            骑手正在配送
+                        </strong>
+
+                        <br>
+
+                        ${
+                            order.deliveryUsername
+                                ? "配送员：" +
+                                  order.deliveryUsername
+                                : "骑手信息读取中"
+                        }
+
+                    </div>
+
+                `;
+
+            }
+
+
+            // ====================================
+            // 已完成
+            // ====================================
+
+            else if (
+                order.status === "已完成"
+            ) {
+
+                buttonHTML = `
+
+                    <div class="completed">
+
+                        ✅ 订单已完成
+
+                    </div>
+
+                `;
+
+            }
+
+
+            // ====================================
+            // 保险：
+            // 有骑手但状态异常
+            // 仍然显示外卖好了
+            // ====================================
+
+            else if (
+                order.deliveryId
+            ) {
+
+                buttonHTML = `
+
+                    <div class="delivery-info">
+
+                        🛵
+                        <strong>
+                            骑手已接单
+                        </strong>
+
+                        <br>
+
+                        配送员：
+                        ${
+                            order.deliveryUsername ||
+                            "配送员"
+                        }
+
+                    </div>
+
+                    <button
+                        class="ready-button"
+                        style="margin-top:10px;"
+                        onclick="changeStatus(
+                            '${documentId}',
+                            '外卖好了'
+                        )"
+                    >
+
+                        🍱 外卖好了
+
+                    </button>
+
+                `;
+
+            }
+
+
             const div =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
-            div.className =
-                "order";
+            div.className = "order";
 
 
             div.innerHTML = `
@@ -1571,6 +1633,7 @@ async function loadOrders() {
                 <div class="order-number">
 
                     订单号：
+
                     ${order.order_number || "暂无"}
 
                 </div>
@@ -1579,6 +1642,7 @@ async function loadOrders() {
                 <div class="order-restaurant">
 
                     🏪
+
                     ${order.restaurantName || "本餐厅"}
 
                 </div>
@@ -1594,26 +1658,31 @@ async function loadOrders() {
                 <div class="info">
 
                     👤 顾客：
+
                     ${order.customername || ""}
 
                     <br>
 
                     📞 电话：
+
                     ${order.phone || ""}
 
                     <br>
 
                     📍 地址：
-                    ${order.adress || ""}
+
+                    ${order.adress || order.address || ""}
 
                     <br>
 
                     💳 支付：
+
                     ${order.payment || ""}
 
                     <br>
 
                     🕒 时间：
+
                     ${createdTime}
 
                 </div>
@@ -1633,11 +1702,13 @@ async function loadOrders() {
                 <div class="total">
 
                     总计：
+
                     ${
                         Number(
                             order.total || 0
                         ).toLocaleString()
                     }
+
                     Ks
 
                 </div>
@@ -1661,7 +1732,6 @@ async function loadOrders() {
 
         console.error(error);
 
-
         document.getElementById(
             "orders"
         ).innerHTML = `
@@ -1683,29 +1753,126 @@ async function loadOrders() {
 }
 
 
-// =========================
+// ========================================
 // 修改订单状态
-// =========================
+// ========================================
 
 async function changeStatus(
     documentId,
     newStatus
 ) {
 
+    // 商家只允许这两个状态
+
+    const allowedStatuses = [
+
+        "商家已接单",
+
+        "外卖好了"
+
+    ];
+
+
+    if (
+        !allowedStatuses.includes(newStatus)
+    ) {
+
+        alert(
+            "商家不能直接修改为这个状态"
+        );
+
+        return;
+
+    }
+
+
     try {
 
-        await db
-            .collection("orders")
-            .doc(documentId)
-            .update({
-
-                status:
-                    newStatus
-
-            });
+        const orderRef =
+            db
+                .collection("orders")
+                .doc(documentId);
 
 
-        loadOrders();
+        const orderSnap =
+            await orderRef.get();
+
+
+        if (!orderSnap.exists) {
+
+            alert("订单不存在");
+
+            return;
+
+        }
+
+
+        const order =
+            orderSnap.data();
+
+
+        // ====================================
+        // 接受订单
+        // ====================================
+
+        if (
+            newStatus === "商家已接单"
+        ) {
+
+            if (
+                order.status !== "待接单"
+            ) {
+
+                alert(
+                    "这个订单当前不能接受"
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        // ====================================
+        // 外卖好了
+        //
+        // 允许：
+        //
+        // 商家已接单
+        // 骑手已接单
+        // ====================================
+
+        if (
+            newStatus === "外卖好了"
+        ) {
+
+            if (
+                order.status !== "商家已接单" &&
+                order.status !== "骑手已接单"
+            ) {
+
+                alert(
+                    "这个订单当前不能标记为外卖好了"
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        await orderRef.update({
+
+            status: newStatus
+
+        });
+
+
+        // 立即重新读取订单
+
+        await loadOrders();
 
 
     } catch (error) {
@@ -1715,14 +1882,16 @@ async function changeStatus(
             error.message
         );
 
+        console.error(error);
+
     }
 
 }
 
 
-// =========================
+// ========================================
 // 退出登录
-// =========================
+// ========================================
 
 function logout() {
 
@@ -1738,16 +1907,15 @@ function logout() {
         "merchantRestaurantId"
     );
 
-
     window.location.href =
         "admin-login.html";
 
 }
 
 
-// =========================
+// ========================================
 // 启动
-// =========================
+// ========================================
 
 loadRestaurant();
 
@@ -1759,6 +1927,8 @@ loadFoods();
 
 loadOrders();
 
+
+// 每 3 秒刷新订单
 
 setInterval(
     loadOrders,
