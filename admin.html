@@ -412,7 +412,32 @@
 
     </div>
 
+<!-- 餐厅营业状态 -->
 
+<div class="section">
+
+    <div class="section-title">
+        🏪 餐厅营业状态
+    </div>
+
+    <div id="restaurantStatus"
+         style="
+            font-size:18px;
+            font-weight:bold;
+            margin-bottom:15px;
+         ">
+        正在读取...
+    </div>
+
+    <button
+        id="restaurantStatusBtn"
+        class="add-food-btn"
+        onclick="toggleRestaurantStatus()"
+    >
+        正在读取...
+    </button>
+
+</div>
     <!-- 我的菜品 -->
 
     <div class="section">
@@ -566,7 +591,102 @@ async function loadRestaurant() {
 
 }
 
+// =========================
+// 餐厅营业状态
+// =========================
 
+async function loadRestaurantStatus() {
+
+    try {
+
+        const doc = await db
+            .collection("restaurants")
+            .doc(restaurantId)
+            .get();
+
+        const status = doc.exists
+            ? (doc.data().status || "营业中")
+            : "营业中";
+
+        const statusElement =
+            document.getElementById("restaurantStatus");
+
+        const button =
+            document.getElementById("restaurantStatusBtn");
+
+        if (status === "营业中") {
+
+            statusElement.innerText =
+                "🟢 营业中";
+
+            button.innerText =
+                "🔴 暂停营业";
+
+        } else {
+
+            statusElement.innerText =
+                "🔴 休息中";
+
+            button.innerText =
+                "🟢 恢复营业";
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "restaurantStatus"
+        ).innerText = "读取失败";
+
+    }
+
+}
+
+
+async function toggleRestaurantStatus() {
+
+    try {
+
+        const doc = await db
+            .collection("restaurants")
+            .doc(restaurantId)
+            .get();
+
+        const currentStatus =
+            doc.exists
+                ? (doc.data().status || "营业中")
+                : "营业中";
+
+        const newStatus =
+            currentStatus === "营业中"
+                ? "休息中"
+                : "营业中";
+
+        await db
+            .collection("restaurants")
+            .doc(restaurantId)
+            .update({
+
+                status: newStatus
+
+            });
+
+        loadRestaurantStatus();
+
+    } catch (error) {
+
+        alert(
+            "修改营业状态失败：" +
+            error.message
+        );
+
+        console.error(error);
+
+    }
+
+}
 // =========================
 // 添加菜品
 // =========================
@@ -1368,6 +1488,8 @@ function logout() {
 // =========================
 
 loadRestaurant();
+
+loadRestaurantStatus();
 
 loadFoods();
 
