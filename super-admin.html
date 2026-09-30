@@ -1439,23 +1439,23 @@ function renderApplications() {
         }
 
 
-        if (
-            status !==
-            "rejected"
-        ) {
+       if (
+    status !== "approved" &&
+    status !== "rejected"
+) {
 
-            buttons += `
+    buttons += `
 
-                <button
-                    class="reject-btn"
-                    onclick="rejectRestaurant('${escapeHtml(id)}')"
-                >
-                    ❌ 拒绝申请
-                </button>
+        <button
+            class="reject-btn"
+            onclick="rejectRestaurant('${escapeHtml(id)}')"
+        >
+            ❌ 拒绝申请
+        </button>
 
-            `;
+    `;
 
-        }
+}
 
 
         if (
