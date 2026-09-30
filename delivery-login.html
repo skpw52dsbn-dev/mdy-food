@@ -1,772 +1,413 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
-
 <head>
-
-```
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>MDY FOOD - 骑手登录</title>
-
-
-<style>
-
-    * {
-        box-sizing: border-box;
-    }
-
-
-    body {
-
-        margin: 0;
-
-        min-height: 100vh;
-
-        display: flex;
-
-        justify-content: center;
-
-        align-items: center;
-
-        background: #f5f5f5;
-
-        font-family:
-            Arial,
-            "Microsoft YaHei",
-            sans-serif;
-
-    }
-
-
-    .login-box {
-
-        width: 92%;
-
-        max-width: 400px;
-
-        background: white;
-
-        padding: 30px 25px;
-
-        border-radius: 16px;
-
-        box-shadow:
-            0 4px 20px
-            rgba(0,0,0,0.08);
-
-    }
-
-
-    .logo {
-
-        text-align: center;
-
-        font-size: 30px;
-
-        font-weight: bold;
-
-        color: #ff6b00;
-
-        margin-bottom: 8px;
-
-    }
-
-
-    .subtitle {
-
-        text-align: center;
-
-        color: #777;
-
-        margin-bottom: 25px;
-
-    }
-
-
-    label {
-
-        display: block;
-
-        margin: 15px 0 7px;
-
-        font-weight: bold;
-
-        font-size: 14px;
-
-    }
-
-
-    input {
-
-        width: 100%;
-
-        padding: 13px;
-
-        border: 1px solid #ddd;
-
-        border-radius: 9px;
-
-        font-size: 15px;
-
-        outline: none;
-
-    }
-
-
-    input:focus {
-
-        border-color: #ff6b00;
-
-    }
-
-
-    button {
-
-        width: 100%;
-
-        margin-top: 22px;
-
-        padding: 14px;
-
-        border: none;
-
-        border-radius: 9px;
-
-        background: #ff6b00;
-
-        color: white;
-
-        font-size: 16px;
-
-        font-weight: bold;
-
-        cursor: pointer;
-
-    }
-
-
-    button:disabled {
-
-        background: #ccc;
-
-        cursor: not-allowed;
-
-    }
-
-
-    .back {
-
-        display: block;
-
-        text-align: center;
-
-        margin-top: 18px;
-
-        color: #777;
-
-        text-decoration: none;
-
-        font-size: 14px;
-
-    }
-
-
-    .register-link {
-
-        display: block;
-
-        text-align: center;
-
-        margin-top: 12px;
-
-        color: #ff6b00;
-
-        text-decoration: none;
-
-        font-size: 14px;
-
-        font-weight: bold;
-
-    }
-
-
-    .error {
-
-        display: none;
-
-        margin-top: 15px;
-
-        padding: 11px;
-
-        background: #fff0f0;
-
-        color: #d33;
-
-        border-radius: 8px;
-
-        font-size: 14px;
-
-        line-height: 1.5;
-
-    }
-
-
-    .success {
-
-        display: none;
-
-        margin-top: 15px;
-
-        padding: 11px;
-
-        background: #edf9f1;
-
-        color: #168a43;
-
-        border-radius: 8px;
-
-        font-size: 14px;
-
-        line-height: 1.5;
-
-    }
-
-
-    .hint {
-
-        margin-top: 15px;
-
-        padding: 11px;
-
-        background: #fff8ed;
-
-        color: #996000;
-
-        border-radius: 8px;
-
-        font-size: 13px;
-
-        line-height: 1.6;
-
-    }
-
-</style>
-```
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MDY FOOD - 骑手登录</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                "Microsoft YaHei",
+                sans-serif;
+            background: linear-gradient(135deg, #ff6b35, #ff9f43);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 22px;
+            padding: 32px 26px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.18);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 34px;
+            font-weight: 800;
+            color: #ff5a1f;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 28px;
+        }
+
+        .rider-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: #fff2eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 0 14px;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 18px;
+        }
+
+        input:focus {
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+
+        button {
+            width: 100%;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            background: #ff6b35;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #f45b25;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .error {
+            display: block;
+            background: #fff1f0;
+            color: #d93025;
+        }
+
+        .success {
+            display: block;
+            background: #f0fff4;
+            color: #188038;
+        }
+
+        .register {
+            text-align: center;
+            margin-top: 22px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .register a {
+            color: #ff5a1f;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .tip {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            background: #f7f7f7;
+            color: #777;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="login-box">
 
-```
-<div class="logo">
+    <div class="rider-icon">🏍️</div>
 
-    🛵 MDY FOOD
+    <div class="logo">MDY FOOD</div>
 
-</div>
+    <div class="subtitle">骑手工作台登录</div>
 
+    <form id="loginForm">
 
-<div class="subtitle">
+        <label for="username">骑手账号</label>
 
-    骑手登录
+        <input
+            type="text"
+            id="username"
+            placeholder="请输入手机号 / 邮箱 / UID"
+            autocomplete="username"
+            required
+        >
 
-</div>
+        <label for="password">登录密码</label>
 
+        <input
+            type="password"
+            id="password"
+            placeholder="请输入密码"
+            autocomplete="current-password"
+            required
+        >
 
-<label>
+        <button type="submit" id="loginBtn">
+            登录骑手工作台
+        </button>
 
-    骑手账号 / 手机号 / UID
+    </form>
 
-</label>
+    <div id="message" class="message"></div>
 
+    <div class="register">
+        还没有骑手账号？
+        <a href="delivery-register.html">申请成为骑手</a>
+    </div>
 
-<input
-    type="text"
-    id="username"
-    placeholder="请输入账号、手机号或 UID"
-    autocomplete="username"
->
-
-
-<label>
-
-    密码
-
-</label>
-
-
-<input
-    type="password"
-    id="password"
-    placeholder="请输入密码"
-    autocomplete="current-password"
->
-
-
-<button
-    id="loginBtn"
-    onclick="login()"
->
-
-    登录
-
-</button>
-
-
-<div
-    id="error"
-    class="error"
-></div>
-
-
-<div
-    id="success"
-    class="success"
->
-
-    登录成功，正在进入骑手工作台...
+    <div class="tip">
+        💡 测试账号：<br>
+        账号可以使用注册时的<strong>手机号</strong>登录。<br>
+        当前测试密码：<strong>123456</strong>
+    </div>
 
 </div>
-
-
-<div class="hint">
-
-    💡 测试账号说明：<br>
-
-    可以使用注册时填写的账号、手机号、邮箱、UID
-    或骑手资料 ID 登录。<br>
-
-    当前测试密码：
-
-    <b>123456</b>
-
-</div>
-
-
-<a
-    href="delivery-register.html"
-    class="register-link"
->
-
-    🛵 还没有骑手账号？申请成为骑手
-
-</a>
-
-
-<a
-    href="index.html"
-    class="back"
->
-
-    ← 返回顾客首页
-
-</a>
-```
-
-</div>
-
-<!-- Firebase -->
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
 
-
-/* =========================================================
-   Firebase
-========================================================= */
-
 const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyA84W7Xx-yNWAWWqwmcbeHzKCRsqv5X7Q",
-
-    authDomain:
-        "mdy-food.firebaseapp.com",
-
-    projectId:
-        "mdy-food",
-
-    storageBucket:
-        "mdy-food.firebasestorage.app",
-
-    messagingSenderId:
-        "498327590625",
-
-    appId:
-        "1:498327590625:web:cceafb7febb689e7ad09a0"
-
+    apiKey: "AIzaSyA84W7Xx-yNWAWWqwmcbeHzKCRsqxv5X7Q",
+    authDomain: "mdy-food.firebaseapp.com",
+    projectId: "mdy-food",
+    storageBucket: "mdy-food.firebasestorage.app",
+    messagingSenderId: "498327590625",
+    appId: "1:498327590625:web:cceafb7febb689e7ad09a0"
 };
 
+firebase.initializeApp(firebaseConfig);
 
-firebase.initializeApp(
-    firebaseConfig
-);
+const db = firebase.firestore();
 
+const form = document.getElementById("loginForm");
+const loginBtn = document.getElementById("loginBtn");
+const message = document.getElementById("message");
 
-const db =
-    firebase.firestore();
+function showMessage(text, type) {
 
-
-
-/* =========================================================
-   显示错误
-========================================================= */
-
-function showError(message) {
-
-    const errorBox =
-        document.getElementById(
-            "error"
-        );
-
-
-    errorBox.textContent =
-        message;
-
-
-    errorBox.style.display =
-        "block";
-
-
-    document.getElementById(
-        "success"
-    ).style.display =
-        "none";
+    message.className = "message " + type;
+    message.textContent = text;
 
 }
 
+function normalize(value) {
 
-
-/* =========================================================
-   显示成功
-========================================================= */
-
-function showSuccess() {
-
-    document.getElementById(
-        "error"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "success"
-    ).style.display =
-        "block";
+    return String(value || "")
+        .trim()
+        .toLowerCase();
 
 }
 
-
-
-/* =========================================================
-   登录
-========================================================= */
 
 async function login() {
 
-
-    const username =
-        document.getElementById(
-            "username"
-        )
-        .value
-        .trim();
-
+    const usernameInput =
+        document.getElementById("username").value.trim();
 
     const password =
-        document.getElementById(
-            "password"
-        )
-        .value;
+        document.getElementById("password").value;
 
+    if (!usernameInput) {
 
-    const loginBtn =
-        document.getElementById(
-            "loginBtn"
-        );
-
-
-    document.getElementById(
-        "error"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "success"
-    ).style.display =
-        "none";
-
-
-
-    /* -------------------------------------------------------
-       基本检查
-    ------------------------------------------------------- */
-
-    if (
-        !username ||
-        !password
-    ) {
-
-        showError(
-            "请输入账号和密码。"
-        );
-
+        showMessage("请输入骑手账号。", "error");
         return;
 
     }
 
+    if (!password) {
 
+        showMessage("请输入登录密码。", "error");
+        return;
 
-    loginBtn.disabled =
-        true;
+    }
 
+    loginBtn.disabled = true;
+    loginBtn.textContent = "登录中...";
 
-    loginBtn.textContent =
-        "正在登录...";
-
-
+    message.className = "message";
+    message.textContent = "";
 
     try {
 
+        console.log("开始读取 delivery 集合...");
 
-        let riderDoc =
-            null;
+        /*
+         * 不再使用：
+         *
+         * where("username", "==", xxx)
+         *
+         * 而是直接读取 delivery。
+         *
+         * 这样可以兼容目前已经存在的骑手资料。
+         */
 
+        const snapshot =
+            await db.collection("delivery").get();
 
+        console.log(
+            "delivery 集合读取成功，共有：",
+            snapshot.size,
+            "条"
+        );
 
-        /* ===================================================
-           1. 先按照 username 查找
-        =================================================== */
-
-        let snapshot =
-            await db
-                .collection(
-                    "delivery"
-                )
-                .where(
-                    "username",
-                    "==",
-                    username
-                )
-                .limit(1)
-                .get();
-
-
-        if (
-            !snapshot.empty
-        ) {
-
-            riderDoc =
-                snapshot.docs[0];
-
-        }
-
-
-
-        /* ===================================================
-           2. 如果没有 username
-              尝试手机号
-        =================================================== */
-
-        if (
-            !riderDoc
-        ) {
-
-            snapshot =
-                await db
-                    .collection(
-                        "delivery"
-                    )
-                    .where(
-                        "phone",
-                        "==",
-                        username
-                    )
-                    .limit(1)
-                    .get();
-
-
-            if (
-                !snapshot.empty
-            ) {
-
-                riderDoc =
-                    snapshot.docs[0];
-
-            }
-
-        }
-
-
-
-        /* ===================================================
-           3. 尝试邮箱
-        =================================================== */
-
-        if (
-            !riderDoc
-        ) {
-
-            snapshot =
-                await db
-                    .collection(
-                        "delivery"
-                    )
-                    .where(
-                        "email",
-                        "==",
-                        username
-                    )
-                    .limit(1)
-                    .get();
-
-
-            if (
-                !snapshot.empty
-            ) {
-
-                riderDoc =
-                    snapshot.docs[0];
-
-            }
-
-        }
-
-
-
-        /* ===================================================
-           4. 尝试 UID
-        =================================================== */
-
-        if (
-            !riderDoc
-        ) {
-
-            snapshot =
-                await db
-                    .collection(
-                        "delivery"
-                    )
-                    .where(
-                        "uid",
-                        "==",
-                        username
-                    )
-                    .limit(1)
-                    .get();
-
-
-            if (
-                !snapshot.empty
-            ) {
-
-                riderDoc =
-                    snapshot.docs[0];
-
-            }
-
-        }
-
-
-
-        /* ===================================================
-           5. 如果上面都找不到
-              尝试把输入当成 Firestore 文档 ID
-        =================================================== */
-
-        if (
-            !riderDoc
-        ) {
-
-            const doc =
-                await db
-                    .collection(
-                        "delivery"
-                    )
-                    .doc(
-                        username
-                    )
-                    .get();
-
-
-            if (
-                doc.exists
-            ) {
-
-                riderDoc =
-                    doc;
-
-            }
-
-        }
-
-
-
-        /* ===================================================
-           6. 还是找不到
-        =================================================== */
-
-        if (
-            !riderDoc
-        ) {
+        if (snapshot.empty) {
 
             throw new Error(
-                "账号不存在。请确认你输入的是审核通过的骑手账号、手机号或 UID。"
+                "delivery 集合目前没有任何骑手资料"
             );
 
         }
 
+        const input =
+            normalize(usernameInput);
 
+        let rider = null;
+        let riderId = null;
 
-        /* ===================================================
-           获取骑手资料
-        =================================================== */
+        snapshot.forEach(function(doc) {
 
-        const rider =
-            riderDoc.data() || {};
+            if (rider) {
+                return;
+            }
 
+            const data = doc.data() || {};
 
+            const possibleAccounts = [
 
-        /* ===================================================
-           检查骑手状态
-        =================================================== */
+                data.username,
+                data.account,
+                data.phone,
+                data.email,
+                data.uid,
+                data.name,
+                doc.id
 
-        const approvalStatus =
-            rider.approvalStatus ||
-            rider.status ||
-            "";
+            ];
 
+            for (let i = 0; i < possibleAccounts.length; i++) {
 
-        if (
-            rider.enabled === false
-        ) {
+                if (
+                    normalize(possibleAccounts[i]) === input
+                ) {
 
-            throw new Error(
-                "该骑手账号已被平台暂停，暂时无法登录。"
-            );
+                    rider = data;
+                    riderId = doc.id;
 
-        }
+                    break;
 
+                }
+
+            }
+
+        });
 
 
         /*
-         * 如果明确是 rejected
+         * 如果没有找到，输出实际读取到的字段，
+         * 方便以后排查。
          */
 
+        if (!rider) {
+
+            console.log(
+                "没有匹配到骑手账号。"
+            );
+
+            snapshot.forEach(function(doc) {
+
+                const data = doc.data() || {};
+
+                console.log(
+                    "骑手文档：",
+                    doc.id,
+                    {
+                        username: data.username || "",
+                        account: data.account || "",
+                        phone: data.phone || "",
+                        email: data.email || "",
+                        uid: data.uid || "",
+                        name: data.name || "",
+                        status: data.status || "",
+                        enabled: data.enabled
+                    }
+                );
+
+            });
+
+            throw new Error(
+                "账号不存在，请使用注册时的手机号、邮箱或UID。"
+            );
+
+        }
+
+
+        console.log(
+            "找到骑手：",
+            rider
+        );
+
+
+        /*
+         * 检查账号状态
+         */
+
+        if (rider.enabled === false) {
+
+            throw new Error(
+                "该骑手账号已被停用，请联系平台管理员。"
+            );
+
+        }
+
+
         if (
-            approvalStatus ===
-            "rejected"
+            rider.status === "rejected" ||
+            rider.approvalStatus === "rejected"
         ) {
 
             throw new Error(
@@ -776,15 +417,26 @@ async function login() {
         }
 
 
-
-        /* ===================================================
-           当前测试密码
-        =================================================== */
-
         if (
-            password !==
-            "123456"
+            rider.status &&
+            rider.status !== "approved" &&
+            rider.status !== "在线" &&
+            rider.status !== "offline"
         ) {
+
+            throw new Error(
+                "该骑手账号当前状态为：" +
+                rider.status
+            );
+
+        }
+
+
+        /*
+         * 当前系统使用统一测试密码
+         */
+
+        if (password !== "123456") {
 
             throw new Error(
                 "密码错误。当前测试密码为 123456"
@@ -793,164 +445,122 @@ async function login() {
         }
 
 
-
-        /* ===================================================
-           保存登录信息
-        =================================================== */
+        /*
+         * 保存骑手登录状态
+         */
 
         localStorage.setItem(
             "deliveryLogin",
             "true"
         );
 
+        localStorage.setItem(
+            "deliveryId",
+            riderId
+        );
 
         localStorage.setItem(
             "deliveryUsername",
-            username
+            usernameInput
         );
-
-
-        localStorage.setItem(
-            "deliveryId",
-            riderDoc.id
-        );
-
 
         localStorage.setItem(
             "deliveryName",
-            rider.name ||
-            ""
+            rider.name || ""
         );
-
 
         localStorage.setItem(
             "deliveryPhone",
-            rider.phone ||
-            ""
+            rider.phone || ""
         );
-
 
         localStorage.setItem(
             "deliveryUid",
-            rider.uid ||
-            riderDoc.id
+            rider.uid || ""
         );
 
 
+        /*
+         * 如果没有 online 字段，
+         * 自动补充基础状态。
+         */
 
-        /* ===================================================
-           如果没有 online 字段
-           设置默认状态
-        =================================================== */
+        const updateData = {};
 
-        if (
-            typeof rider.online ===
-            "undefined"
-        ) {
+        if (typeof rider.online === "undefined") {
+            updateData.online = false;
+        }
+
+        if (typeof rider.available === "undefined") {
+            updateData.available = true;
+        }
+
+        if (typeof rider.enabled === "undefined") {
+            updateData.enabled = true;
+        }
+
+        if (Object.keys(updateData).length > 0) {
 
             await db
-                .collection(
-                    "delivery"
-                )
-                .doc(
-                    riderDoc.id
-                )
-                .set({
-
-                    online:
-                        false,
-
-                    available:
-                        true,
-
-                    enabled:
-                        true
-
-                }, {
-
-                    merge: true
-
-                });
+                .collection("delivery")
+                .doc(riderId)
+                .set(
+                    updateData,
+                    { merge: true }
+                );
 
         }
 
 
-
-        /* ===================================================
-           登录成功
-        =================================================== */
-
-        showSuccess();
-
-
-        loginBtn.textContent =
-            "登录成功";
-
-
-        setTimeout(
-            function() {
-
-                window.location.href =
-                    "delivery.html";
-
-            },
-            500
+        showMessage(
+            "登录成功，正在进入骑手工作台...",
+            "success"
         );
 
+        setTimeout(function() {
 
-    }
+            window.location.href =
+                "delivery.html";
 
-    catch (error) {
+        }, 700);
 
+
+    } catch (error) {
 
         console.error(
             "骑手登录失败：",
             error
         );
 
-
-        showError(
+        showMessage(
             error.message ||
-            "登录失败，请稍后重试。"
+            "登录失败，请稍后再试。",
+            "error"
         );
 
+    } finally {
 
-        loginBtn.disabled =
-            false;
-
-
+        loginBtn.disabled = false;
         loginBtn.textContent =
-            "登录";
+            "登录骑手工作台";
 
     }
 
 }
 
 
-
-/* =========================================================
-   Enter 登录
-========================================================= */
-
-document.addEventListener(
-    "keydown",
+form.addEventListener(
+    "submit",
     function(event) {
 
-        if (
-            event.key ===
-            "Enter"
-        ) {
+        event.preventDefault();
 
-            login();
-
-        }
+        login();
 
     }
 );
 
-
 </script>
 
 </body>
-
 </html>
