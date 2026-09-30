@@ -14,6 +14,7 @@
 
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 
@@ -40,6 +41,7 @@ body {
 header {
     background: linear-gradient(135deg, #111827, #1f2937);
     color: white;
+
     padding: 22px 30px;
 
     display: flex;
@@ -62,11 +64,15 @@ header p {
 
 .refresh-top {
     border: none;
-    background: #fff;
+    background: white;
     color: #111827;
+
     padding: 10px 18px;
+
     border-radius: 8px;
+
     cursor: pointer;
+
     font-weight: bold;
 }
 
@@ -77,13 +83,9 @@ header p {
 .container {
     width: 95%;
     max-width: 1500px;
+
     margin: 25px auto;
 }
-
-
-/* =========================
-   通用标题
-========================= */
 
 .section {
     margin-bottom: 28px;
@@ -109,7 +111,7 @@ header p {
 
 
 /* =========================
-   统计卡片
+   平台统计
 ========================= */
 
 .stats-grid {
@@ -123,7 +125,9 @@ header p {
 
 .stat-card {
     background: white;
+
     border-radius: 14px;
+
     padding: 20px;
 
     box-shadow:
@@ -134,17 +138,21 @@ header p {
 
 .stat-card .icon {
     font-size: 28px;
+
     margin-bottom: 8px;
 }
 
 .stat-card .label {
     color: #777;
+
     font-size: 13px;
 }
 
 .stat-card .value {
     margin-top: 7px;
+
     font-size: 25px;
+
     font-weight: bold;
 }
 
@@ -152,6 +160,99 @@ header p {
 /* =========================
    财务中心
 ========================= */
+
+.finance-setting {
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid #eee;
+
+    box-shadow:
+        0 2px 10px rgba(0,0,0,.05);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+.finance-setting-left h3 {
+    margin: 0 0 5px;
+
+    font-size: 17px;
+}
+
+.finance-setting-left p {
+    margin: 0;
+
+    color: #888;
+
+    font-size: 12px;
+}
+
+.commission-control {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.commission-control input {
+    width: 100px;
+
+    padding: 10px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    font-size: 16px;
+
+    text-align: center;
+
+    outline: none;
+}
+
+.commission-control input:focus {
+    border-color: #888;
+}
+
+.commission-control span {
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+.save-commission-btn {
+    border: none;
+
+    background: #111827;
+
+    color: white;
+
+    padding: 10px 16px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.save-commission-btn:hover {
+    opacity: .9;
+}
 
 .finance-grid {
     display: grid;
@@ -164,7 +265,9 @@ header p {
 
 .finance-card {
     background: white;
+
     border-radius: 14px;
+
     padding: 20px;
 
     border: 1px solid #eee;
@@ -175,254 +278,55 @@ header p {
 
 .finance-card .finance-icon {
     font-size: 28px;
+
     margin-bottom: 8px;
 }
 
 .finance-card .finance-label {
     color: #777;
+
     font-size: 13px;
 }
 
 .finance-card .finance-value {
     font-size: 26px;
+
     font-weight: bold;
+
     margin-top: 8px;
 }
 
 .finance-card small {
     display: block;
+
     margin-top: 7px;
+
     color: #999;
+
     font-size: 12px;
 }
 
 .finance-note {
     background: #fff8e1;
+
     border: 1px solid #ffe082;
 
     padding: 13px 15px;
+
     border-radius: 10px;
 
     margin-top: 15px;
 
     color: #795548;
-    font-size: 13px;
-}
-
-
-/* =========================
-   表格
-========================= */
-
-.table-wrap {
-    background: white;
-
-    border-radius: 14px;
-
-    overflow-x: auto;
-
-    box-shadow:
-        0 2px 10px rgba(0,0,0,.05);
-
-    border: 1px solid #eee;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-
-    min-width: 800px;
-}
-
-th,
-td {
-    padding: 14px 15px;
-
-    border-bottom: 1px solid #eee;
-
-    text-align: left;
 
     font-size: 13px;
-}
 
-th {
-    background: #f8f9fb;
-    font-weight: bold;
-}
-
-tr:last-child td {
-    border-bottom: none;
+    line-height: 1.7;
 }
 
 
 /* =========================
-   商家申请
-========================= */
-
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-
-    margin-bottom: 15px;
-}
-
-.filter-btn {
-    border: 1px solid #ddd;
-
-    background: white;
-
-    padding: 8px 14px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-size: 13px;
-}
-
-.filter-btn.active {
-    background: #111827;
-    color: white;
-    border-color: #111827;
-}
-
-.search-box {
-    width: 100%;
-
-    padding: 11px 13px;
-
-    border: 1px solid #ddd;
-
-    border-radius: 8px;
-
-    outline: none;
-
-    margin-bottom: 15px;
-}
-
-.search-box:focus {
-    border-color: #888;
-}
-
-
-/* =========================
-   状态
-========================= */
-
-.status {
-    display: inline-block;
-
-    padding: 4px 9px;
-
-    border-radius: 20px;
-
-    font-size: 12px;
-
-    font-weight: bold;
-}
-
-.status.pending {
-    background: #fff3cd;
-    color: #856404;
-}
-
-.status.approved {
-    background: #d4edda;
-    color: #155724;
-}
-
-.status.rejected {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.status.open {
-    background: #d4edda;
-    color: #155724;
-}
-
-.status.closed {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-
-/* =========================
-   按钮
-========================= */
-
-button {
-    font-family: inherit;
-}
-
-.action-btn {
-    border: none;
-
-    padding: 7px 11px;
-
-    border-radius: 7px;
-
-    cursor: pointer;
-
-    font-size: 12px;
-
-    margin-right: 5px;
-
-    margin-bottom: 4px;
-}
-
-.approve-btn {
-    background: #28a745;
-    color: white;
-}
-
-.reject-btn {
-    background: #dc3545;
-    color: white;
-}
-
-.pause-btn {
-    background: #ff9800;
-    color: white;
-}
-
-.restore-btn {
-    background: #2196f3;
-    color: white;
-}
-
-
-/* =========================
-   空状态
-========================= */
-
-.empty {
-    padding: 40px;
-
-    text-align: center;
-
-    color: #999;
-
-    background: white;
-}
-
-
-/* =========================
-   加载
-========================= */
-
-.loading {
-    padding: 35px;
-
-    text-align: center;
-
-    color: #888;
-}
-
-
-/* =========================
-   财务商家卡片
+   商家财务
 ========================= */
 
 .merchant-finance-grid {
@@ -448,12 +352,12 @@ button {
 }
 
 .merchant-finance-card h3 {
-    margin: 0 0 10px;
+    margin: 0 0 8px;
 
     font-size: 17px;
 }
 
-.merchant-finance-card .merchant-id {
+.merchant-id {
     color: #999;
 
     font-size: 11px;
@@ -470,7 +374,7 @@ button {
 
     align-items: center;
 
-    padding: 8px 0;
+    padding: 9px 0;
 
     border-bottom: 1px solid #f0f0f0;
 }
@@ -487,6 +391,230 @@ button {
 
 .finance-row span:last-child {
     font-weight: bold;
+}
+
+
+/* =========================
+   搜索
+========================= */
+
+.search-box {
+    width: 100%;
+
+    padding: 11px 13px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    margin-bottom: 15px;
+}
+
+.search-box:focus {
+    border-color: #888;
+}
+
+
+/* =========================
+   筛选
+========================= */
+
+.filters {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 15px;
+}
+
+.filter-btn {
+    border: 1px solid #ddd;
+
+    background: white;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+}
+
+.filter-btn.active {
+    background: #111827;
+
+    color: white;
+
+    border-color: #111827;
+}
+
+
+/* =========================
+   表格
+========================= */
+
+.table-wrap {
+    background: white;
+
+    border-radius: 14px;
+
+    overflow-x: auto;
+
+    box-shadow:
+        0 2px 10px rgba(0,0,0,.05);
+
+    border: 1px solid #eee;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 900px;
+}
+
+th,
+td {
+    padding: 14px 15px;
+
+    border-bottom: 1px solid #eee;
+
+    text-align: left;
+
+    font-size: 13px;
+
+    vertical-align: top;
+}
+
+th {
+    background: #f8f9fb;
+
+    font-weight: bold;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================
+   状态
+========================= */
+
+.status {
+    display: inline-block;
+
+    padding: 4px 9px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+.status.pending {
+    background: #fff3cd;
+
+    color: #856404;
+}
+
+.status.approved {
+    background: #d4edda;
+
+    color: #155724;
+}
+
+.status.rejected {
+    background: #f8d7da;
+
+    color: #721c24;
+}
+
+.status.open {
+    background: #d4edda;
+
+    color: #155724;
+}
+
+.status.closed {
+    background: #f8d7da;
+
+    color: #721c24;
+}
+
+
+/* =========================
+   按钮
+========================= */
+
+.action-btn {
+    border: none;
+
+    padding: 7px 11px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    margin-right: 5px;
+
+    margin-bottom: 4px;
+}
+
+.approve-btn {
+    background: #28a745;
+
+    color: white;
+}
+
+.reject-btn {
+    background: #dc3545;
+
+    color: white;
+}
+
+.pause-btn {
+    background: #ff9800;
+
+    color: white;
+}
+
+.restore-btn {
+    background: #2196f3;
+
+    color: white;
+}
+
+
+/* =========================
+   空状态
+========================= */
+
+.empty {
+    padding: 40px;
+
+    text-align: center;
+
+    color: #999;
+
+    background: white;
+}
+
+.loading {
+    padding: 35px;
+
+    text-align: center;
+
+    color: #888;
 }
 
 
@@ -533,6 +661,15 @@ button {
         grid-template-columns: 1fr;
     }
 
+    .finance-setting {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .commission-control {
+        width: 100%;
+    }
+
 }
 
 </style>
@@ -557,6 +694,7 @@ button {
 
     </div>
 
+
     <button
         class="refresh-top"
         onclick="refreshAll()"
@@ -570,9 +708,9 @@ button {
 <div class="container">
 
 
-<!-- =========================
-     平台统计
-========================= -->
+<!-- =====================================================
+     平台概况
+===================================================== -->
 
 <section class="section">
 
@@ -591,9 +729,12 @@ button {
 
     <div class="stats-grid">
 
+
         <div class="stat-card">
 
-            <div class="icon">📦</div>
+            <div class="icon">
+                📦
+            </div>
 
             <div class="label">
                 总订单
@@ -611,17 +752,19 @@ button {
 
         <div class="stat-card">
 
-            <div class="icon">💰</div>
+            <div class="icon">
+                💰
+            </div>
 
             <div class="label">
-                总订单金额
+                累计订单金额
             </div>
 
             <div
                 class="value"
                 id="totalRevenue"
             >
-                0 MMK
+                0 Ks
             </div>
 
         </div>
@@ -629,7 +772,9 @@ button {
 
         <div class="stat-card">
 
-            <div class="icon">🏪</div>
+            <div class="icon">
+                🏪
+            </div>
 
             <div class="label">
                 已通过商家
@@ -647,7 +792,9 @@ button {
 
         <div class="stat-card">
 
-            <div class="icon">⏳</div>
+            <div class="icon">
+                ⏳
+            </div>
 
             <div class="label">
                 待审核商家
@@ -665,7 +812,9 @@ button {
 
         <div class="stat-card">
 
-            <div class="icon">⭐</div>
+            <div class="icon">
+                ⭐
+            </div>
 
             <div class="label">
                 总评价
@@ -680,15 +829,16 @@ button {
 
         </div>
 
+
     </div>
 
 </section>
 
 
 
-<!-- =========================
+<!-- =====================================================
      财务中心
-========================= -->
+===================================================== -->
 
 <section class="section">
 
@@ -699,8 +849,53 @@ button {
         </h2>
 
         <span>
-            根据订单数据自动计算
+            平台经营财务统计
         </span>
+
+    </div>
+
+
+    <!-- 抽成设置 -->
+
+    <div class="finance-setting">
+
+        <div class="finance-setting-left">
+
+            <h3>
+                ⚙️ 平台抽成设置
+            </h3>
+
+            <p>
+                只影响「已完成」订单的平台收入和商家结算计算
+            </p>
+
+        </div>
+
+
+        <div class="commission-control">
+
+            <input
+                type="number"
+                id="commissionRateInput"
+                min="0"
+                max="100"
+                step="0.1"
+                value="10"
+            >
+
+            <span>
+                %
+            </span>
+
+
+            <button
+                class="save-commission-btn"
+                onclick="saveCommissionRate()"
+            >
+                💾 保存
+            </button>
+
+        </div>
 
     </div>
 
@@ -715,18 +910,18 @@ button {
             </div>
 
             <div class="finance-label">
-                累计订单总额
+                累计订单金额
             </div>
 
             <div
                 class="finance-value"
                 id="financeTotal"
             >
-                0 MMK
+                0 Ks
             </div>
 
             <small>
-                所有订单 total 合计
+                全部订单 total 合计
             </small>
 
         </div>
@@ -746,11 +941,11 @@ button {
                 class="finance-value"
                 id="financeToday"
             >
-                0 MMK
+                0 Ks
             </div>
 
             <small>
-                今天创建的订单
+                今日创建的全部订单
             </small>
 
         </div>
@@ -770,11 +965,11 @@ button {
                 class="finance-value"
                 id="financeMonth"
             >
-                0 MMK
+                0 Ks
             </div>
 
             <small>
-                本月创建的订单
+                本月创建的全部订单
             </small>
 
         </div>
@@ -787,18 +982,18 @@ button {
             </div>
 
             <div class="finance-label">
-                有效订单数量
+                已完成订单
             </div>
 
             <div
                 class="finance-value"
-                id="financeOrderCount"
+                id="financeCompletedCount"
             >
                 0
             </div>
 
             <small>
-                当前 Firestore orders
+                仅 status = 已完成
             </small>
 
         </div>
@@ -811,18 +1006,18 @@ button {
             </div>
 
             <div class="finance-label">
-                商家销售额
+                已完成订单金额
             </div>
 
             <div
                 class="finance-value"
-                id="financeMerchantSales"
+                id="financeCompletedAmount"
             >
-                0 MMK
+                0 Ks
             </div>
 
             <small>
-                当前等于订单总额
+                平台结算计算基础
             </small>
 
         </div>
@@ -835,18 +1030,18 @@ button {
             </div>
 
             <div class="finance-label">
-                平台收入
+                平台累计收入
             </div>
 
             <div
                 class="finance-value"
                 id="financePlatformIncome"
             >
-                0 MMK
+                0 Ks
             </div>
 
             <small>
-                当前暂未设置平台抽成
+                已完成金额 × 抽成比例
             </small>
 
         </div>
@@ -866,11 +1061,11 @@ button {
                 class="finance-value"
                 id="financeMerchantSettlement"
             >
-                0 MMK
+                0 Ks
             </div>
 
             <small>
-                暂按 0% 平台抽成计算
+                已完成金额 − 平台收入
             </small>
 
         </div>
@@ -883,18 +1078,18 @@ button {
             </div>
 
             <div class="finance-label">
-                平台抽成比例
+                当前平台抽成
             </div>
 
             <div
                 class="finance-value"
                 id="financeCommissionRate"
             >
-                0%
+                10%
             </div>
 
             <small>
-                第一版暂不实际扣除
+                当前设置
             </small>
 
         </div>
@@ -905,13 +1100,22 @@ button {
 
     <div class="finance-note">
 
-        💡 <b>财务说明：</b>
-        目前系统订单中已有
-        <b>total</b>
-        字段，因此上面的订单金额均来自真实订单数据。
-        当前没有虚构配送费或平台收入。
-        平台收入暂按 <b>0%</b> 抽成计算，因此商家应结算金额 = 商家销售额。
-        后续可以再增加正式的「平台抽成 / 配送费 / 商家结算」系统。
+        💡 <b>财务计算说明：</b><br>
+
+        • “累计订单金额”统计目前系统中的全部订单金额。<br>
+
+        • “平台累计收入”和“商家应结算”只根据
+        <b>已完成订单</b>
+        计算。<br>
+
+        • 平台收入 =
+        已完成订单金额 × 平台抽成比例。<br>
+
+        • 商家应结算 =
+        已完成订单金额 − 平台收入。<br>
+
+        • 当前数据属于平台经营统计，
+        不代表真实银行余额或实际支付流水。
 
     </div>
 
@@ -919,9 +1123,9 @@ button {
 
 
 
-<!-- =========================
+<!-- =====================================================
      商家财务
-========================= -->
+===================================================== -->
 
 <section class="section">
 
@@ -932,7 +1136,7 @@ button {
         </h2>
 
         <span>
-            按餐厅统计订单金额
+            只统计已完成订单
         </span>
 
     </div>
@@ -962,9 +1166,9 @@ button {
 
 
 
-<!-- =========================
+<!-- =====================================================
      商家申请
-========================= -->
+===================================================== -->
 
 <section class="section">
 
@@ -986,6 +1190,7 @@ button {
             全部
         </button>
 
+
         <button
             class="filter-btn"
             onclick="setApplicationFilter('pending', this)"
@@ -993,12 +1198,14 @@ button {
             待审核
         </button>
 
+
         <button
             class="filter-btn"
             onclick="setApplicationFilter('approved', this)"
         >
             已通过
         </button>
+
 
         <button
             class="filter-btn"
@@ -1025,9 +1232,9 @@ button {
 
 
 
-<!-- =========================
+<!-- =====================================================
      商家管理
-========================= -->
+===================================================== -->
 
 <section class="section">
 
@@ -1064,9 +1271,9 @@ button {
 
 
 
-<!-- =========================
+<!-- =====================================================
      全部订单
-========================= -->
+===================================================== -->
 
 <section class="section">
 
@@ -1097,12 +1304,14 @@ button {
             全部
         </button>
 
+
         <button
             class="filter-btn"
             onclick="setOrderFilter('待接单', this)"
         >
             待接单
         </button>
+
 
         <button
             class="filter-btn"
@@ -1111,12 +1320,14 @@ button {
             已接单
         </button>
 
+
         <button
             class="filter-btn"
             onclick="setOrderFilter('配送中', this)"
         >
             配送中
         </button>
+
 
         <button
             class="filter-btn"
@@ -1143,9 +1354,9 @@ button {
 
 
 
-<!-- =========================
+<!-- =====================================================
      全部评价
-========================= -->
+===================================================== -->
 
 <section class="section">
 
@@ -1220,7 +1431,9 @@ const firebaseConfig = {
 
 if (!firebase.apps.length) {
 
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(
+        firebaseConfig
+    );
 
 }
 
@@ -1229,9 +1442,8 @@ const db =
     firebase.firestore();
 
 
-
 /* =========================================================
-   全局数据
+   全局变量
 ========================================================= */
 
 let allOrders = [];
@@ -1247,6 +1459,41 @@ let applicationFilter = "all";
 let orderFilter = "all";
 
 
+/* =========================================================
+   平台抽成
+========================================================= */
+
+let commissionRate =
+    Number(
+        localStorage.getItem(
+            "mdyFoodCommissionRate"
+        )
+    );
+
+
+if (
+    isNaN(commissionRate) ||
+    commissionRate < 0 ||
+    commissionRate > 100
+) {
+
+    commissionRate = 10;
+
+}
+
+
+document.getElementById(
+    "commissionRateInput"
+).value =
+    commissionRate;
+
+
+document.getElementById(
+    "financeCommissionRate"
+).innerText =
+    commissionRate + "%";
+
+
 
 /* =========================================================
    工具
@@ -1254,17 +1501,43 @@ let orderFilter = "all";
 
 function escapeHtml(value) {
 
-    if (value === null || value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
         return "";
+
     }
+
 
     return String(value)
 
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
 }
 
 
@@ -1273,37 +1546,60 @@ function formatMoney(value) {
     const number =
         Number(value) || 0;
 
-    return number.toLocaleString("en-US") + " MMK";
+
+    return number.toLocaleString(
+        "en-US"
+    ) + " Ks";
+
 }
 
 
 function getDateValue(value) {
 
     if (!value) {
+
         return null;
+
     }
+
 
     if (
         value &&
-        typeof value.toDate === "function"
+        typeof value.toDate ===
+        "function"
     ) {
 
         return value.toDate();
 
     }
 
-    if (value instanceof Date) {
+
+    if (
+        value instanceof Date
+    ) {
+
         return value;
+
     }
+
 
     const date =
         new Date(value);
 
-    if (isNaN(date.getTime())) {
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
         return null;
+
     }
 
+
     return date;
+
 }
 
 
@@ -1312,9 +1608,13 @@ function formatDate(value) {
     const date =
         getDateValue(value);
 
+
     if (!date) {
+
         return "暂无";
+
     }
+
 
     return date.toLocaleString(
         "zh-CN",
@@ -1332,7 +1632,9 @@ function formatDate(value) {
 
 function getTodayStart() {
 
-    const date = new Date();
+    const date =
+        new Date();
+
 
     date.setHours(
         0,
@@ -1340,6 +1642,7 @@ function getTodayStart() {
         0,
         0
     );
+
 
     return date;
 
@@ -1348,9 +1651,12 @@ function getTodayStart() {
 
 function getMonthStart() {
 
-    const date = new Date();
+    const date =
+        new Date();
+
 
     date.setDate(1);
+
 
     date.setHours(
         0,
@@ -1359,20 +1665,96 @@ function getMonthStart() {
         0
     );
 
+
     return date;
 
 }
 
 
-function isSameOrAfter(date, start) {
+function isCompletedOrder(order) {
 
-    if (!date) {
-        return false;
-    }
-
-    return date.getTime() >= start.getTime();
+    return (
+        String(
+            order.status || ""
+        ).trim() ===
+        "已完成"
+    );
 
 }
+
+
+
+/* =========================================================
+   保存抽成
+========================================================= */
+
+function saveCommissionRate() {
+
+    const input =
+        document.getElementById(
+            "commissionRateInput"
+        );
+
+
+    let value =
+        Number(
+            input.value
+        );
+
+
+    if (
+        isNaN(value) ||
+        value < 0 ||
+        value > 100
+    ) {
+
+        alert(
+            "抽成比例必须在 0% 到 100% 之间"
+        );
+
+        input.value =
+            commissionRate;
+
+        return;
+
+    }
+
+
+    value =
+        Math.round(
+            value * 10
+        ) / 10;
+
+
+    commissionRate =
+        value;
+
+
+    localStorage.setItem(
+        "mdyFoodCommissionRate",
+        commissionRate
+    );
+
+
+    document.getElementById(
+        "financeCommissionRate"
+    ).innerText =
+        commissionRate + "%";
+
+
+    updateFinanceCenter();
+
+    renderMerchantFinance();
+
+
+    alert(
+        "平台抽成已设置为 " +
+        commissionRate +
+        "%"
+    );
+
+}
+
 
 
 /* =========================================================
@@ -1391,37 +1773,49 @@ async function loadOrders() {
 
         allOrders = [];
 
-        snapshot.forEach(function(doc) {
 
-            allOrders.push({
+        snapshot.forEach(
+            function(doc) {
 
-                id: doc.id,
+                allOrders.push({
 
-                ...doc.data()
+                    id: doc.id,
 
-            });
+                    ...doc.data()
 
-        });
+                });
+
+            }
+        );
 
 
-        allOrders.sort(function(a, b) {
+        allOrders.sort(
+            function(a, b) {
 
-            const dateA =
-                getDateValue(
-                    a.created_at
-                );
+                const dateA =
+                    getDateValue(
+                        a.created_at
+                    );
 
-            const dateB =
-                getDateValue(
-                    b.created_at
-                );
+                const dateB =
+                    getDateValue(
+                        b.created_at
+                    );
 
-            return
-                (dateB?.getTime() || 0)
-                -
-                (dateA?.getTime() || 0);
 
-        });
+                return
+                    (
+                        dateB?.getTime() ||
+                        0
+                    )
+                    -
+                    (
+                        dateA?.getTime() ||
+                        0
+                    );
+
+            }
+        );
 
 
         renderOrders();
@@ -1443,12 +1837,21 @@ async function loadOrders() {
             error
         );
 
+
         document.getElementById(
             "ordersList"
         ).innerHTML =
 
             `<div class="empty">
+
                 ❌ 读取订单失败
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
             </div>`;
 
     }
@@ -1474,39 +1877,50 @@ async function loadReviews() {
         allReviews = [];
 
 
-        snapshot.forEach(function(doc) {
+        snapshot.forEach(
+            function(doc) {
 
-            allReviews.push({
+                allReviews.push({
 
-                id: doc.id,
+                    id: doc.id,
 
-                ...doc.data()
+                    ...doc.data()
 
-            });
+                });
 
-        });
+            }
+        );
 
 
-        allReviews.sort(function(a, b) {
+        allReviews.sort(
+            function(a, b) {
 
-            const dateA =
-                getDateValue(
-                    a.createdAt ||
-                    a.created_at
-                );
+                const dateA =
+                    getDateValue(
+                        a.createdAt ||
+                        a.created_at
+                    );
 
-            const dateB =
-                getDateValue(
-                    b.createdAt ||
-                    b.created_at
-                );
+                const dateB =
+                    getDateValue(
+                        b.createdAt ||
+                        b.created_at
+                    );
 
-            return
-                (dateB?.getTime() || 0)
-                -
-                (dateA?.getTime() || 0);
 
-        });
+                return
+                    (
+                        dateB?.getTime() ||
+                        0
+                    )
+                    -
+                    (
+                        dateA?.getTime() ||
+                        0
+                    );
+
+            }
+        );
 
 
         renderReviews();
@@ -1526,12 +1940,21 @@ async function loadReviews() {
             error
         );
 
+
         document.getElementById(
             "reviewsList"
         ).innerHTML =
 
             `<div class="empty">
+
                 ❌ 读取评价失败
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
             </div>`;
 
     }
@@ -1550,44 +1973,57 @@ async function loadApplications() {
 
         const snapshot =
             await db
-                .collection("merchantApplications")
+                .collection(
+                    "merchantApplications"
+                )
                 .get();
 
 
         allApplications = [];
 
 
-        snapshot.forEach(function(doc) {
+        snapshot.forEach(
+            function(doc) {
 
-            allApplications.push({
+                allApplications.push({
 
-                id: doc.id,
+                    id: doc.id,
 
-                ...doc.data()
+                    ...doc.data()
 
-            });
+                });
 
-        });
+            }
+        );
 
 
-        allApplications.sort(function(a, b) {
+        allApplications.sort(
+            function(a, b) {
 
-            const dateA =
-                getDateValue(
-                    a.createdAt
-                );
+                const dateA =
+                    getDateValue(
+                        a.createdAt
+                    );
 
-            const dateB =
-                getDateValue(
-                    b.createdAt
-                );
+                const dateB =
+                    getDateValue(
+                        b.createdAt
+                    );
 
-            return
-                (dateB?.getTime() || 0)
-                -
-                (dateA?.getTime() || 0);
 
-        });
+                return
+                    (
+                        dateB?.getTime() ||
+                        0
+                    )
+                    -
+                    (
+                        dateA?.getTime() ||
+                        0
+                    );
+
+            }
+        );
 
 
         renderApplications();
@@ -1603,13 +2039,21 @@ async function loadApplications() {
             error
         );
 
+
         document.getElementById(
             "applicationsList"
         ).innerHTML =
 
             `<div class="empty">
-                ❌ 读取商家申请失败<br><br>
-                ${escapeHtml(error.message)}
+
+                ❌ 读取商家申请失败
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
             </div>`;
 
     }
@@ -1619,7 +2063,7 @@ async function loadApplications() {
 
 
 /* =========================================================
-   读取餐厅
+   读取商家
 ========================================================= */
 
 async function loadRestaurants() {
@@ -1635,17 +2079,19 @@ async function loadRestaurants() {
         allRestaurants = [];
 
 
-        snapshot.forEach(function(doc) {
+        snapshot.forEach(
+            function(doc) {
 
-            allRestaurants.push({
+                allRestaurants.push({
 
-                id: doc.id,
+                    id: doc.id,
 
-                ...doc.data()
+                    ...doc.data()
 
-            });
+                });
 
-        });
+            }
+        );
 
 
         renderRestaurants();
@@ -1663,12 +2109,21 @@ async function loadRestaurants() {
             error
         );
 
+
         document.getElementById(
             "restaurantsList"
         ).innerHTML =
 
             `<div class="empty">
+
                 ❌ 读取商家失败
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
             </div>`;
 
     }
@@ -1678,7 +2133,7 @@ async function loadRestaurants() {
 
 
 /* =========================================================
-   平台统计
+   平台概况
 ========================================================= */
 
 function updatePlatformStats() {
@@ -1686,12 +2141,16 @@ function updatePlatformStats() {
     let totalRevenue = 0;
 
 
-    allOrders.forEach(function(order) {
+    allOrders.forEach(
+        function(order) {
 
-        totalRevenue +=
-            Number(order.total) || 0;
+            totalRevenue +=
+                Number(
+                    order.total
+                ) || 0;
 
-    });
+        }
+    );
 
 
     document.getElementById(
@@ -1703,23 +2162,35 @@ function updatePlatformStats() {
     document.getElementById(
         "totalRevenue"
     ).innerText =
-        formatMoney(totalRevenue);
+        formatMoney(
+            totalRevenue
+        );
 
 
     const approved =
-        allApplications.filter(function(item) {
+        allApplications.filter(
+            function(item) {
 
-            return item.status === "approved";
+                return (
+                    item.status ===
+                    "approved"
+                );
 
-        }).length;
+            }
+        ).length;
 
 
     const pending =
-        allApplications.filter(function(item) {
+        allApplications.filter(
+            function(item) {
 
-            return item.status === "pending";
+                return (
+                    item.status ===
+                    "pending"
+                );
 
-        }).length;
+            }
+        ).length;
 
 
     document.getElementById(
@@ -1749,11 +2220,15 @@ function updatePlatformStats() {
 
 function updateFinanceCenter() {
 
-    let total = 0;
+    let totalAmount = 0;
 
-    let today = 0;
+    let todayAmount = 0;
 
-    let month = 0;
+    let monthAmount = 0;
+
+    let completedAmount = 0;
+
+    let completedCount = 0;
 
 
     const todayStart =
@@ -1763,109 +2238,129 @@ function updateFinanceCenter() {
         getMonthStart();
 
 
-    allOrders.forEach(function(order) {
+    allOrders.forEach(
+        function(order) {
 
-        const amount =
-            Number(order.total) || 0;
-
-        total += amount;
-
-
-        const date =
-            getDateValue(
-                order.created_at
-            );
+            const amount =
+                Number(
+                    order.total
+                ) || 0;
 
 
-        if (
-            date &&
-            isSameOrAfter(
-                date,
-                todayStart
-            )
-        ) {
+            totalAmount +=
+                amount;
 
-            today += amount;
+
+            const date =
+                getDateValue(
+                    order.created_at
+                );
+
+
+            if (
+                date &&
+                date.getTime() >=
+                todayStart.getTime()
+            ) {
+
+                todayAmount +=
+                    amount;
+
+            }
+
+
+            if (
+                date &&
+                date.getTime() >=
+                monthStart.getTime()
+            ) {
+
+                monthAmount +=
+                    amount;
+
+            }
+
+
+            if (
+                isCompletedOrder(
+                    order
+                )
+            ) {
+
+                completedCount++;
+
+                completedAmount +=
+                    amount;
+
+            }
 
         }
+    );
 
-
-        if (
-            date &&
-            isSameOrAfter(
-                date,
-                monthStart
-            )
-        ) {
-
-            month += amount;
-
-        }
-
-    });
-
-
-    /*
-        当前没有设置平台抽成。
-        所以：
-
-        平台收入 = 0
-
-        商家应结算 = 总订单金额
-    */
-
-    const commissionRate = 0;
 
     const platformIncome =
-        total *
+        completedAmount *
         commissionRate /
         100;
 
+
     const merchantSettlement =
-        total -
+        completedAmount -
         platformIncome;
 
 
     document.getElementById(
         "financeTotal"
     ).innerText =
-        formatMoney(total);
+        formatMoney(
+            totalAmount
+        );
 
 
     document.getElementById(
         "financeToday"
     ).innerText =
-        formatMoney(today);
+        formatMoney(
+            todayAmount
+        );
 
 
     document.getElementById(
         "financeMonth"
     ).innerText =
-        formatMoney(month);
+        formatMoney(
+            monthAmount
+        );
 
 
     document.getElementById(
-        "financeOrderCount"
+        "financeCompletedCount"
     ).innerText =
-        allOrders.length;
+        completedCount;
 
 
     document.getElementById(
-        "financeMerchantSales"
+        "financeCompletedAmount"
     ).innerText =
-        formatMoney(total);
+        formatMoney(
+            completedAmount
+        );
 
 
     document.getElementById(
         "financePlatformIncome"
     ).innerText =
-        formatMoney(platformIncome);
+        formatMoney(
+            platformIncome
+        );
 
 
     document.getElementById(
         "financeMerchantSettlement"
     ).innerText =
-        formatMoney(merchantSettlement);
+        formatMoney(
+            merchantSettlement
+        );
 
 
     document.getElementById(
@@ -1890,7 +2385,9 @@ function renderMerchantFinance() {
 
 
     if (!container) {
+
         return;
+
     }
 
 
@@ -1904,7 +2401,9 @@ function renderMerchantFinance() {
         .toLowerCase();
 
 
-    if (!allRestaurants.length) {
+    if (
+        !allRestaurants.length
+    ) {
 
         container.innerHTML =
 
@@ -1920,191 +2419,253 @@ function renderMerchantFinance() {
     let html = "";
 
 
-    allRestaurants.forEach(function(restaurant) {
+    allRestaurants.forEach(
+        function(restaurant) {
 
-        const restaurantId =
-            restaurant.restaurantId ||
-            restaurant.id;
-
-
-        const restaurantName =
-            restaurant.name ||
-            restaurant.restaurantName ||
-            "未命名商家";
+            const restaurantId =
+                restaurant.restaurantId ||
+                restaurant.id;
 
 
-        if (
-            search &&
-            !restaurantName
-                .toLowerCase()
-                .includes(search)
-        ) {
+            const restaurantName =
+                restaurant.name ||
+                restaurant.restaurantName ||
+                "未知餐厅";
 
-            return;
-
-        }
-
-
-        let orderCount = 0;
-
-        let sales = 0;
-
-
-        allOrders.forEach(function(order) {
 
             if (
-                order.restaurantId ===
-                restaurantId
+                search &&
+                !restaurantName
+                    .toLowerCase()
+                    .includes(search)
             ) {
 
-                orderCount += 1;
-
-                sales +=
-                    Number(order.total) || 0;
+                return;
 
             }
 
-        });
+
+            let completedCount = 0;
+
+            let completedAmount = 0;
 
 
-        let reviewCount = 0;
+            allOrders.forEach(
+                function(order) {
 
-        let ratingTotal = 0;
+                    if (
+                        order.restaurantId ===
+                        restaurantId &&
+                        isCompletedOrder(
+                            order
+                        )
+                    ) {
 
+                        completedCount++;
 
-        allReviews.forEach(function(review) {
+                        completedAmount +=
+                            Number(
+                                order.total
+                            ) || 0;
 
-            if (
-                review.restaurantId ===
-                restaurantId
-            ) {
-
-                reviewCount += 1;
-
-                const rating =
-                    Number(
-                        review.rating ||
-                        review.star ||
-                        review.stars ||
-                        review.score ||
-                        0
-                    );
-
-                if (rating > 0) {
-
-                    ratingTotal += rating;
+                    }
 
                 }
-
-            }
-
-        });
+            );
 
 
-        const averageRating =
-            reviewCount > 0
-                ? (
-                    ratingTotal /
-                    reviewCount
-                ).toFixed(1)
-                : "暂无";
+            const platformIncome =
+                completedAmount *
+                commissionRate /
+                100;
 
 
-        html += `
+            const settlement =
+                completedAmount -
+                platformIncome;
 
-            <div class="merchant-finance-card">
 
-                <h3>
-                    🏪 ${escapeHtml(restaurantName)}
-                </h3>
+            let reviewCount = 0;
 
-                <div class="merchant-id">
-                    ID：${escapeHtml(restaurantId)}
+            let ratingTotal = 0;
+
+
+            allReviews.forEach(
+                function(review) {
+
+                    if (
+                        review.restaurantId ===
+                        restaurantId
+                    ) {
+
+                        reviewCount++;
+
+
+                        const rating =
+                            Number(
+                                review.rating ||
+                                review.star ||
+                                review.stars ||
+                                review.score ||
+                                0
+                            );
+
+
+                        if (
+                            rating > 0
+                        ) {
+
+                            ratingTotal +=
+                                rating;
+
+                        }
+
+                    }
+
+                }
+            );
+
+
+            const averageRating =
+                reviewCount > 0
+
+                    ?
+
+                    (
+                        ratingTotal /
+                        reviewCount
+                    ).toFixed(1)
+
+                    :
+
+                    "暂无";
+
+
+            html += `
+
+                <div
+                    class="merchant-finance-card"
+                >
+
+                    <h3>
+                        🏪
+                        ${escapeHtml(
+                            restaurantName
+                        )}
+                    </h3>
+
+
+                    <div
+                        class="merchant-id"
+                    >
+                        ID：
+                        ${escapeHtml(
+                            restaurantId
+                        )}
+                    </div>
+
+
+                    <div
+                        class="finance-row"
+                    >
+
+                        <span>
+                            📦 已完成订单
+                        </span>
+
+                        <span>
+                            ${completedCount}
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="finance-row"
+                    >
+
+                        <span>
+                            💰 已完成金额
+                        </span>
+
+                        <span>
+                            ${formatMoney(
+                                completedAmount
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="finance-row"
+                    >
+
+                        <span>
+                            👑 平台抽成
+                        </span>
+
+                        <span>
+                            ${formatMoney(
+                                platformIncome
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="finance-row"
+                    >
+
+                        <span>
+                            🏪 商家应结算
+                        </span>
+
+                        <span>
+                            ${formatMoney(
+                                settlement
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="finance-row"
+                    >
+
+                        <span>
+                            ⭐ 平均评分
+                        </span>
+
+                        <span>
+                            ⭐ ${averageRating}
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="finance-row"
+                    >
+
+                        <span>
+                            💬 评价数量
+                        </span>
+
+                        <span>
+                            ${reviewCount}
+                        </span>
+
+                    </div>
+
                 </div>
 
+            `;
 
-                <div class="finance-row">
-
-                    <span>
-                        订单数量
-                    </span>
-
-                    <span>
-                        ${orderCount}
-                    </span>
-
-                </div>
-
-
-                <div class="finance-row">
-
-                    <span>
-                        销售额
-                    </span>
-
-                    <span>
-                        ${formatMoney(sales)}
-                    </span>
-
-                </div>
-
-
-                <div class="finance-row">
-
-                    <span>
-                        平台抽成
-                    </span>
-
-                    <span>
-                        ${formatMoney(0)}
-                    </span>
-
-                </div>
-
-
-                <div class="finance-row">
-
-                    <span>
-                        应结算
-                    </span>
-
-                    <span>
-                        ${formatMoney(sales)}
-                    </span>
-
-                </div>
-
-
-                <div class="finance-row">
-
-                    <span>
-                        平均评分
-                    </span>
-
-                    <span>
-                        ⭐ ${averageRating}
-                    </span>
-
-                </div>
-
-
-                <div class="finance-row">
-
-                    <span>
-                        评价数量
-                    </span>
-
-                    <span>
-                        ${reviewCount}
-                    </span>
-
-                </div>
-
-            </div>
-
-        `;
-
-    });
+        }
+    );
 
 
     if (!html) {
@@ -2120,7 +2681,8 @@ function renderMerchantFinance() {
     }
 
 
-    container.innerHTML = html;
+    container.innerHTML =
+        html;
 
 }
 
@@ -2139,12 +2701,6 @@ function setApplicationFilter(
         filter;
 
 
-    document
-        .querySelectorAll(
-            ".filters .filter-btn"
-        );
-
-
     const parent =
         button.parentElement;
 
@@ -2153,13 +2709,15 @@ function setApplicationFilter(
         .querySelectorAll(
             ".filter-btn"
         )
-        .forEach(function(btn) {
+        .forEach(
+            function(btn) {
 
-            btn.classList.remove(
-                "active"
-            );
+                btn.classList.remove(
+                    "active"
+                );
 
-        });
+            }
+        );
 
 
     button.classList.add(
@@ -2174,7 +2732,7 @@ function setApplicationFilter(
 
 
 /* =========================================================
-   商家申请显示
+   商家申请
 ========================================================= */
 
 function renderApplications() {
@@ -2195,12 +2753,16 @@ function renderApplications() {
     ) {
 
         list =
-            list.filter(function(item) {
+            list.filter(
+                function(item) {
 
-                return item.status ===
-                    applicationFilter;
+                    return (
+                        item.status ===
+                        applicationFilter
+                    );
 
-            });
+                }
+            );
 
     }
 
@@ -2267,148 +2829,179 @@ function renderApplications() {
     `;
 
 
-    list.forEach(function(item) {
+    list.forEach(
+        function(item) {
 
-        const status =
-            item.status || "pending";
-
-
-        let statusText =
-            "待审核";
+            const status =
+                item.status ||
+                "pending";
 
 
-        let statusClass =
-            "pending";
+            let statusText =
+                "待审核";
 
 
-        if (status === "approved") {
-
-            statusText =
-                "审核通过";
-
-            statusClass =
-                "approved";
-
-        }
+            let statusClass =
+                "pending";
 
 
-        if (status === "rejected") {
+            if (
+                status ===
+                "approved"
+            ) {
 
-            statusText =
-                "已拒绝";
+                statusText =
+                    "审核通过";
 
-            statusClass =
-                "rejected";
+                statusClass =
+                    "approved";
 
-        }
-
-
-        let buttons = "";
-
-
-        if (
-            status !== "approved"
-        ) {
-
-            buttons += `
-
-                <button
-                    class="action-btn approve-btn"
-                    onclick="approveRestaurant('${escapeHtml(item.id)}')"
-                >
-                    ✅ ${status === "rejected" ? "重新通过" : "审核通过"}
-                </button>
-
-            `;
-
-        }
+            }
 
 
-        if (
-            status !== "approved" &&
-            status !== "rejected"
-        ) {
+            if (
+                status ===
+                "rejected"
+            ) {
 
-            buttons += `
+                statusText =
+                    "已拒绝";
 
-                <button
-                    class="action-btn reject-btn"
-                    onclick="rejectRestaurant('${escapeHtml(item.id)}')"
-                >
-                    ❌ 拒绝申请
-                </button>
+                statusClass =
+                    "rejected";
 
-            `;
-
-        }
+            }
 
 
-        html += `
+            let buttons = "";
 
-            <tr>
 
-                <td>
-                    <b>
+            if (
+                status !==
+                "approved"
+            ) {
+
+                buttons += `
+
+                    <button
+                        class="action-btn approve-btn"
+                        onclick="approveRestaurant('${escapeHtml(item.id)}')"
+                    >
+                        ✅
+                        ${
+                            status ===
+                            "rejected"
+
+                                ?
+
+                                "重新通过"
+
+                                :
+
+                                "审核通过"
+                        }
+                    </button>
+
+                `;
+
+            }
+
+
+            if (
+                status !==
+                "approved" &&
+                status !==
+                "rejected"
+            ) {
+
+                buttons += `
+
+                    <button
+                        class="action-btn reject-btn"
+                        onclick="rejectRestaurant('${escapeHtml(item.id)}')"
+                    >
+                        ❌ 拒绝申请
+                    </button>
+
+                `;
+
+            }
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        <b>
+                            ${escapeHtml(
+                                item.restaurantName ||
+                                ""
+                            )}
+                        </b>
+                    </td>
+
+
+                    <td>
                         ${escapeHtml(
-                            item.restaurantName ||
+                            item.restaurantType ||
                             ""
                         )}
-                    </b>
-                </td>
+                    </td>
 
-                <td>
-                    ${escapeHtml(
-                        item.restaurantType ||
-                        ""
-                    )}
-                </td>
 
-                <td>
-                    ${escapeHtml(
-                        item.ownerName ||
-                        ""
-                    )}
-                </td>
+                    <td>
+                        ${escapeHtml(
+                            item.ownerName ||
+                            ""
+                        )}
+                    </td>
 
-                <td>
-                    ${escapeHtml(
-                        item.phone ||
-                        ""
-                    )}
-                </td>
 
-                <td>
-                    ${escapeHtml(
-                        item.restaurantAddress ||
-                        ""
-                    )}
-                </td>
+                    <td>
+                        ${escapeHtml(
+                            item.phone ||
+                            ""
+                        )}
+                    </td>
 
-                <td>
 
-                    <span
-                        class="status ${statusClass}"
-                    >
-                        ${statusText}
-                    </span>
+                    <td>
+                        ${escapeHtml(
+                            item.restaurantAddress ||
+                            ""
+                        )}
+                    </td>
 
-                </td>
 
-                <td>
-                    ${formatDate(
-                        item.createdAt
-                    )}
-                </td>
+                    <td>
 
-                <td>
-                    ${buttons}
-                </td>
+                        <span
+                            class="status ${statusClass}"
+                        >
+                            ${statusText}
+                        </span>
 
-            </tr>
+                    </td>
 
-        `;
 
-    });
+                    <td>
+                        ${formatDate(
+                            item.createdAt
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${buttons}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
 
 
     html += `
@@ -2445,7 +3038,9 @@ async function approveRestaurant(id) {
 
     if (!application) {
 
-        alert("找不到商家申请");
+        alert(
+            "找不到商家申请"
+        );
 
         return;
 
@@ -2484,7 +3079,9 @@ async function approveRestaurant(id) {
 
 
         await db
-            .collection("restaurants")
+            .collection(
+                "restaurants"
+            )
             .doc(id)
             .set({
 
@@ -2582,6 +3179,7 @@ async function approveRestaurant(id) {
             error
         );
 
+
         alert(
             "操作失败：\n" +
             error.message
@@ -2666,6 +3264,7 @@ async function rejectRestaurant(id) {
             error
         );
 
+
         alert(
             "操作失败：\n" +
             error.message
@@ -2678,7 +3277,7 @@ async function rejectRestaurant(id) {
 
 
 /* =========================================================
-   商家列表
+   商家管理
 ========================================================= */
 
 function renderRestaurants() {
@@ -2706,33 +3305,39 @@ function renderRestaurants() {
     if (search) {
 
         list =
-            list.filter(function(item) {
+            list.filter(
+                function(item) {
 
-                const text = (
+                    const text =
 
-                    item.name ||
-                    item.restaurantName ||
-                    ""
+                        (
+                            item.name ||
+                            item.restaurantName ||
+                            ""
+                        )
 
-                ) + " " + (
+                        + " " +
 
-                    item.address ||
-                    item.restaurantAddress ||
-                    ""
+                        (
+                            item.address ||
+                            item.restaurantAddress ||
+                            ""
+                        )
 
-                ) + " " + (
+                        + " " +
 
-                    item.phone ||
-                    ""
+                        (
+                            item.phone ||
+                            ""
+                        );
 
-                );
 
+                    return text
+                        .toLowerCase()
+                        .includes(search);
 
-                return text
-                    .toLowerCase()
-                    .includes(search);
-
-            });
+                }
+            );
 
     }
 
@@ -2803,193 +3408,212 @@ function renderRestaurants() {
     `;
 
 
-    list.forEach(function(restaurant) {
+    list.forEach(
+        function(restaurant) {
 
-        const restaurantId =
-            restaurant.restaurantId ||
-            restaurant.id;
-
-
-        const name =
-            restaurant.name ||
-            restaurant.restaurantName ||
-            "未命名商家";
+            const restaurantId =
+                restaurant.restaurantId ||
+                restaurant.id;
 
 
-        const enabled =
-            restaurant.enabled !== false;
+            const name =
+                restaurant.name ||
+                restaurant.restaurantName ||
+                "未知餐厅";
 
 
-        let orderCount = 0;
-
-        let revenue = 0;
-
-
-        allOrders.forEach(function(order) {
-
-            if (
-                order.restaurantId ===
-                restaurantId
-            ) {
-
-                orderCount++;
-
-                revenue +=
-                    Number(order.total) || 0;
-
-            }
-
-        });
+            const enabled =
+                restaurant.enabled !== false;
 
 
-        let reviewCount = 0;
+            let orderCount = 0;
 
-        let ratingTotal = 0;
-
-
-        allReviews.forEach(function(review) {
-
-            if (
-                review.restaurantId ===
-                restaurantId
-            ) {
-
-                reviewCount++;
-
-                ratingTotal +=
-                    Number(
-                        review.rating ||
-                        review.star ||
-                        review.stars ||
-                        review.score ||
-                        0
-                    );
-
-            }
-
-        });
+            let revenue = 0;
 
 
-        const average =
-            reviewCount > 0
-                ? (
-                    ratingTotal /
-                    reviewCount
-                ).toFixed(1)
-                : "暂无";
+            allOrders.forEach(
+                function(order) {
+
+                    if (
+                        order.restaurantId ===
+                        restaurantId
+                    ) {
+
+                        orderCount++;
+
+                        revenue +=
+                            Number(
+                                order.total
+                            ) || 0;
+
+                    }
+
+                }
+            );
 
 
-        html += `
+            let reviewCount = 0;
 
-            <tr>
+            let ratingTotal = 0;
 
-                <td>
 
-                    <b>
-                        ${escapeHtml(name)}
-                    </b>
+            allReviews.forEach(
+                function(review) {
 
-                    <br>
+                    if (
+                        review.restaurantId ===
+                        restaurantId
+                    ) {
 
-                    <small>
-                        ID：
+                        reviewCount++;
+
+
+                        ratingTotal +=
+                            Number(
+                                review.rating ||
+                                review.star ||
+                                review.stars ||
+                                review.score ||
+                                0
+                            );
+
+                    }
+
+                }
+            );
+
+
+            const average =
+                reviewCount > 0
+
+                    ?
+
+                    (
+                        ratingTotal /
+                        reviewCount
+                    ).toFixed(1)
+
+                    :
+
+                    "暂无";
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+
+                        <b>
+                            ${escapeHtml(
+                                name
+                            )}
+                        </b>
+
+                        <br>
+
+                        <small>
+                            ID：
+                            ${escapeHtml(
+                                restaurantId
+                            )}
+                        </small>
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="status ${
+                                enabled
+                                    ? "open"
+                                    : "closed"
+                            }"
+                        >
+
+                            ${
+                                enabled
+                                    ? "营业中"
+                                    : "已暂停"
+                            }
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
                         ${escapeHtml(
-                            restaurantId
+                            restaurant.address ||
+                            restaurant.restaurantAddress ||
+                            ""
                         )}
-                    </small>
-
-                </td>
+                    </td>
 
 
-                <td>
+                    <td>
+                        ${escapeHtml(
+                            restaurant.phone ||
+                            ""
+                        )}
+                    </td>
 
-                    <span
-                        class="status ${
-                            enabled
-                                ? "open"
-                                : "closed"
-                        }"
-                    >
+
+                    <td>
+                        ${orderCount}
+                    </td>
+
+
+                    <td>
+                        ${formatMoney(
+                            revenue
+                        )}
+                    </td>
+
+
+                    <td>
+                        ⭐ ${average}
+                    </td>
+
+
+                    <td>
+                        ${reviewCount}
+                    </td>
+
+
+                    <td>
 
                         ${
                             enabled
-                                ? "营业中"
-                                : "已暂停"
+
+                                ?
+
+                                `<button
+                                    class="action-btn pause-btn"
+                                    onclick="disableRestaurant('${escapeHtml(restaurantId)}')"
+                                >
+                                    ⏸ 暂停
+                                </button>`
+
+                                :
+
+                                `<button
+                                    class="action-btn restore-btn"
+                                    onclick="enableRestaurant('${escapeHtml(restaurantId)}')"
+                                >
+                                    ▶ 恢复
+                                </button>`
                         }
 
-                    </span>
+                    </td>
 
-                </td>
+                </tr>
 
+            `;
 
-                <td>
-                    ${escapeHtml(
-                        restaurant.address ||
-                        restaurant.restaurantAddress ||
-                        ""
-                    )}
-                </td>
-
-
-                <td>
-                    ${escapeHtml(
-                        restaurant.phone ||
-                        ""
-                    )}
-                </td>
-
-
-                <td>
-                    ${orderCount}
-                </td>
-
-
-                <td>
-                    ${formatMoney(revenue)}
-                </td>
-
-
-                <td>
-                    ⭐ ${average}
-                </td>
-
-
-                <td>
-                    ${reviewCount}
-                </td>
-
-
-                <td>
-
-                    ${
-                        enabled
-
-                        ?
-
-                        `<button
-                            class="action-btn pause-btn"
-                            onclick="disableRestaurant('${escapeHtml(restaurantId)}')"
-                        >
-                            ⏸ 暂停
-                        </button>`
-
-                        :
-
-                        `<button
-                            class="action-btn restore-btn"
-                            onclick="enableRestaurant('${escapeHtml(restaurantId)}')"
-                        >
-                            ▶ 恢复
-                        </button>`
-                    }
-
-                </td>
-
-            </tr>
-
-        `;
-
-    });
+        }
+    );
 
 
     html += `
@@ -3028,7 +3652,9 @@ async function disableRestaurant(id) {
     try {
 
         await db
-            .collection("restaurants")
+            .collection(
+                "restaurants"
+            )
             .doc(id)
             .update({
 
@@ -3052,6 +3678,7 @@ async function disableRestaurant(id) {
             error
         );
 
+
         alert(
             "操作失败：\n" +
             error.message
@@ -3072,7 +3699,9 @@ async function enableRestaurant(id) {
     try {
 
         await db
-            .collection("restaurants")
+            .collection(
+                "restaurants"
+            )
             .doc(id)
             .update({
 
@@ -3095,6 +3724,7 @@ async function enableRestaurant(id) {
         console.error(
             error
         );
+
 
         alert(
             "操作失败：\n" +
@@ -3128,13 +3758,15 @@ function setOrderFilter(
         .querySelectorAll(
             ".filter-btn"
         )
-        .forEach(function(btn) {
+        .forEach(
+            function(btn) {
 
-            btn.classList.remove(
-                "active"
-            );
+                btn.classList.remove(
+                    "active"
+                );
 
-        });
+            }
+        );
 
 
     button.classList.add(
@@ -3180,12 +3812,16 @@ function renderOrders() {
     ) {
 
         list =
-            list.filter(function(order) {
+            list.filter(
+                function(order) {
 
-                return order.status ===
-                    orderFilter;
+                    return (
+                        order.status ===
+                        orderFilter
+                    );
 
-            });
+                }
+            );
 
     }
 
@@ -3193,37 +3829,45 @@ function renderOrders() {
     if (search) {
 
         list =
-            list.filter(function(order) {
+            list.filter(
+                function(order) {
 
-                const text = (
+                    const text =
 
-                    order.order_number ||
-                    ""
+                        (
+                            order.order_number ||
+                            ""
+                        )
 
-                ) + " " + (
+                        + " " +
 
-                    order.restaurantName ||
-                    ""
+                        (
+                            order.restaurantName ||
+                            ""
+                        )
 
-                ) + " " + (
+                        + " " +
 
-                    order.customername ||
-                    order.customerName ||
-                    ""
+                        (
+                            order.customername ||
+                            order.customerName ||
+                            ""
+                        )
 
-                ) + " " + (
+                        + " " +
 
-                    order.phone ||
-                    ""
+                        (
+                            order.phone ||
+                            ""
+                        );
 
-                );
 
+                    return text
+                        .toLowerCase()
+                        .includes(search);
 
-                return text
-                    .toLowerCase()
-                    .includes(search);
-
-            });
+                }
+            );
 
     }
 
@@ -3298,127 +3942,141 @@ function renderOrders() {
     `;
 
 
-    list.forEach(function(order) {
+    list.forEach(
+        function(order) {
 
-        let itemsText = "";
+            let itemsText = "";
 
 
-        if (
-            Array.isArray(
-                order.items
-            )
-        ) {
+            if (
+                Array.isArray(
+                    order.items
+                )
+            ) {
 
-            itemsText =
-                order.items
-                    .map(function(item) {
+                itemsText =
+                    order.items
+                        .map(
+                            function(item) {
 
-                        return (
-                            item.name ||
-                            "商品"
-                        ) +
-                        " × " +
-                        (
-                            item.quantity ||
-                            item.qty ||
-                            1
+                                return (
+
+                                    item.name ||
+                                    "商品"
+
+                                )
+                                +
+                                " × "
+                                +
+                                (
+                                    item.quantity ||
+                                    item.qty ||
+                                    1
+                                );
+
+                            }
+                        )
+                        .join(
+                            "<br>"
                         );
 
-                    })
-                    .join("<br>");
+            }
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+
+                        <b>
+                            ${escapeHtml(
+                                order.order_number ||
+                                order.id
+                            )}
+                        </b>
+
+                    </td>
+
+
+                    <td>
+                        ${escapeHtml(
+                            order.restaurantName ||
+                            ""
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHtml(
+                            order.customername ||
+                            order.customerName ||
+                            ""
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHtml(
+                            order.phone ||
+                            ""
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHtml(
+                            order.adress ||
+                            order.address ||
+                            ""
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHtml(
+                            order.payment ||
+                            ""
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHtml(
+                            order.status ||
+                            ""
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${itemsText}
+                    </td>
+
+
+                    <td>
+
+                        <b>
+                            ${formatMoney(
+                                order.total
+                            )}
+                        </b>
+
+                    </td>
+
+
+                    <td>
+                        ${formatDate(
+                            order.created_at
+                        )}
+                    </td>
+
+                </tr>
+
+            `;
 
         }
-
-
-        html += `
-
-            <tr>
-
-                <td>
-                    <b>
-                        ${escapeHtml(
-                            order.order_number ||
-                            order.id
-                        )}
-                    </b>
-                </td>
-
-
-                <td>
-                    ${escapeHtml(
-                        order.restaurantName ||
-                        ""
-                    )}
-                </td>
-
-
-                <td>
-                    ${escapeHtml(
-                        order.customername ||
-                        order.customerName ||
-                        ""
-                    )}
-                </td>
-
-
-                <td>
-                    ${escapeHtml(
-                        order.phone ||
-                        ""
-                    )}
-                </td>
-
-
-                <td>
-                    ${escapeHtml(
-                        order.adress ||
-                        order.address ||
-                        ""
-                    )}
-                </td>
-
-
-                <td>
-                    ${escapeHtml(
-                        order.payment ||
-                        ""
-                    )}
-                </td>
-
-
-                <td>
-                    ${escapeHtml(
-                        order.status ||
-                        ""
-                    )}
-                </td>
-
-
-                <td>
-                    ${itemsText}
-                </td>
-
-
-                <td>
-                    <b>
-                        ${formatMoney(
-                            order.total
-                        )}
-                    </b>
-                </td>
-
-
-                <td>
-                    ${formatDate(
-                        order.created_at
-                    )}
-                </td>
-
-            </tr>
-
-        `;
-
-    });
+    );
 
 
     html += `
@@ -3438,7 +4096,7 @@ function renderOrders() {
 
 
 /* =========================================================
-   评价列表
+   评价
 ========================================================= */
 
 function renderReviews() {
@@ -3466,32 +4124,38 @@ function renderReviews() {
     if (search) {
 
         list =
-            list.filter(function(review) {
+            list.filter(
+                function(review) {
 
-                const text = (
+                    const text =
 
-                    review.restaurantName ||
-                    ""
+                        (
+                            review.restaurantName ||
+                            ""
+                        )
 
-                ) + " " + (
+                        + " " +
 
-                    review.customerName ||
-                    review.customername ||
-                    ""
+                        (
+                            review.customerName ||
+                            review.customername ||
+                            ""
+                        )
 
-                ) + " " + (
+                        + " " +
 
-                    review.comment ||
-                    ""
+                        (
+                            review.comment ||
+                            ""
+                        );
 
-                );
 
+                    return text
+                        .toLowerCase()
+                        .includes(search);
 
-                return text
-                    .toLowerCase()
-                    .includes(search);
-
-            });
+                }
+            );
 
     }
 
@@ -3546,60 +4210,66 @@ function renderReviews() {
     `;
 
 
-    list.forEach(function(review) {
+    list.forEach(
+        function(review) {
 
-        const rating =
-            Number(
-                review.rating ||
-                review.star ||
-                review.stars ||
-                review.score ||
-                0
-            );
+            const rating =
+                Number(
+                    review.rating ||
+                    review.star ||
+                    review.stars ||
+                    review.score ||
+                    0
+                );
 
 
-        html += `
+            html += `
 
-            <tr>
+                <tr>
 
-                <td>
-                    ⭐ ${rating}
-                </td>
+                    <td>
+                        ⭐ ${rating}
+                    </td>
 
-                <td>
-                    ${escapeHtml(
-                        review.restaurantName ||
-                        ""
-                    )}
-                </td>
 
-                <td>
-                    ${escapeHtml(
-                        review.customerName ||
-                        review.customername ||
-                        ""
-                    )}
-                </td>
+                    <td>
+                        ${escapeHtml(
+                            review.restaurantName ||
+                            ""
+                        )}
+                    </td>
 
-                <td>
-                    ${escapeHtml(
-                        review.comment ||
-                        ""
-                    )}
-                </td>
 
-                <td>
-                    ${formatDate(
-                        review.createdAt ||
-                        review.created_at
-                    )}
-                </td>
+                    <td>
+                        ${escapeHtml(
+                            review.customerName ||
+                            review.customername ||
+                            ""
+                        )}
+                    </td>
 
-            </tr>
 
-        `;
+                    <td>
+                        ${escapeHtml(
+                            review.comment ||
+                            ""
+                        )}
+                    </td>
 
-    });
+
+                    <td>
+                        ${formatDate(
+                            review.createdAt ||
+                            review.created_at
+                        )}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
 
 
     html += `
