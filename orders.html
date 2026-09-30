@@ -688,8 +688,6 @@ header {
 >
 
 
-    <!-- 操作按钮 -->
-
     <div class="toolbar">
 
         <button
@@ -763,45 +761,35 @@ header {
                 class="star-button"
                 data-rating="1"
                 onclick="selectRating(1)"
-            >
-                ★
-            </button>
+            >★</button>
 
             <button
                 type="button"
                 class="star-button"
                 data-rating="2"
                 onclick="selectRating(2)"
-            >
-                ★
-            </button>
+            >★</button>
 
             <button
                 type="button"
                 class="star-button"
                 data-rating="3"
                 onclick="selectRating(3)"
-            >
-                ★
-            </button>
+            >★</button>
 
             <button
                 type="button"
                 class="star-button"
                 data-rating="4"
                 onclick="selectRating(4)"
-            >
-                ★
-            </button>
+            >★</button>
 
             <button
                 type="button"
                 class="star-button"
                 data-rating="5"
                 onclick="selectRating(5)"
-            >
-                ★
-            </button>
+            >★</button>
 
         </div>
 
@@ -910,41 +898,15 @@ let currentUser = null;
 
 let unsubscribeOrders = null;
 
-
-/*
-    第一次加载订单时不提醒。
-    后面订单发生变化才提醒。
-*/
-
 let firstSnapshot = true;
 
 let previousOrders = {};
 
-
-/*
-    当前订单
-*/
-
 let currentOrders = [];
-
-
-/*
-    已评价订单 ID
-*/
 
 let reviewedOrderIds = new Set();
 
-
-/*
-    当前正在评价的订单
-*/
-
 let currentReviewOrder = null;
-
-
-/*
-    当前选择的星级
-*/
 
 let selectedRating = 0;
 
@@ -960,22 +922,162 @@ function escapeHTML(value) {
         value === undefined ||
         value === null
     ) {
-
         return "";
-
     }
 
     return String(value)
-
         .replace(/&/g, "&amp;")
-
         .replace(/</g, "&lt;")
-
         .replace(/>/g, "&gt;")
-
         .replace(/"/g, "&quot;")
-
         .replace(/'/g, "&#039;");
+
+}
+
+
+
+// ========================================
+// 统一订单状态
+//
+// 兼容：
+// 中文状态
+// 英文状态
+// 骑手系统状态
+// ========================================
+
+function normalizeStatus(status) {
+
+    const value =
+        String(status || "")
+            .trim()
+            .toLowerCase();
+
+
+    // 待接单
+
+    if (
+        value === "pending" ||
+        value === "待接单" ||
+        value === "pending_order" ||
+        value === "waiting"
+    ) {
+
+        return "待接单";
+
+    }
+
+
+    // 商家已接单
+
+    if (
+        value === "accepted_by_merchant" ||
+        value === "merchant_accepted" ||
+        value === "商家已接单"
+    ) {
+
+        return "商家已接单";
+
+    }
+
+
+    /*
+        rider 页面目前接单后使用 accepted。
+        因此 accepted 统一解释为“骑手已接单”
+        或者根据 deliveryId 判断。
+    */
+
+    if (
+        value === "accepted" ||
+        value === "rider_accepted" ||
+        value === "骑手已接单" ||
+        value === "已接单"
+    ) {
+
+        return "骑手已接单";
+
+    }
+
+
+    // 外卖做好
+
+    if (
+        value === "ready" ||
+        value === "food_ready" ||
+        value === "外卖好了" ||
+        value === "已备餐" ||
+        value === "ready_for_pickup"
+    ) {
+
+        return "外卖好了";
+
+    }
+
+
+    // 配送中
+
+    if (
+        value === "delivering" ||
+        value === "delivery" ||
+        value === "配送中" ||
+        value === "配送"
+    ) {
+
+        return "配送中";
+
+    }
+
+
+    // 已完成
+
+    if (
+        value === "completed" ||
+        value === "complete" ||
+        value === "已完成" ||
+        value === "完成"
+    ) {
+
+        return "已完成";
+
+    }
+
+
+    // 已取消
+
+    if (
+        value === "cancelled" ||
+        value === "canceled" ||
+        value === "cancel" ||
+        value === "cancelled_order" ||
+        value === "已取消" ||
+        value === "取消"
+    ) {
+
+        return "已取消";
+
+    }
+
+
+    /*
+        如果 Firestore 里面本身已经是中文，
+        直接返回。
+    */
+
+    if (
+        status === "商家已接单" ||
+        status === "骑手已接单" ||
+        status === "外卖好了" ||
+        status === "配送中" ||
+        status === "已完成" ||
+        status === "已取消" ||
+        status === "待接单"
+    ) {
+
+        return status;
+
+    }
+
+
+    return "待接单";
 
 }
 
@@ -987,32 +1089,51 @@ function escapeHTML(value) {
 
 function getStatusClass(status) {
 
-    if (status === "商家已接单") {
+    const normalized =
+        normalizeStatus(status);
+
+
+    if (
+        normalized === "商家已接单"
+    ) {
         return "accepted";
     }
 
-    if (status === "骑手已接单") {
+
+    if (
+        normalized === "骑手已接单"
+    ) {
         return "rider";
     }
 
-    if (status === "外卖好了") {
+
+    if (
+        normalized === "外卖好了"
+    ) {
         return "ready";
     }
 
-    if (status === "配送中") {
+
+    if (
+        normalized === "配送中"
+    ) {
         return "delivery";
     }
 
-    if (status === "已完成") {
+
+    if (
+        normalized === "已完成"
+    ) {
         return "completed";
     }
 
+
     if (
-        status === "已取消" ||
-        status === "取消"
+        normalized === "已取消"
     ) {
         return "cancelled";
     }
+
 
     return "";
 
@@ -1026,36 +1147,58 @@ function getStatusClass(status) {
 
 function getStatusIcon(status) {
 
-    if (status === "待接单") {
+    const normalized =
+        normalizeStatus(status);
+
+
+    if (
+        normalized === "待接单"
+    ) {
         return "⏳";
     }
 
-    if (status === "商家已接单") {
+
+    if (
+        normalized === "商家已接单"
+    ) {
         return "👨‍🍳";
     }
 
-    if (status === "骑手已接单") {
+
+    if (
+        normalized === "骑手已接单"
+    ) {
         return "🛵";
     }
 
-    if (status === "外卖好了") {
+
+    if (
+        normalized === "外卖好了"
+    ) {
         return "🍱";
     }
 
-    if (status === "配送中") {
+
+    if (
+        normalized === "配送中"
+    ) {
         return "🚴";
     }
 
-    if (status === "已完成") {
+
+    if (
+        normalized === "已完成"
+    ) {
         return "✅";
     }
 
+
     if (
-        status === "已取消" ||
-        status === "取消"
+        normalized === "已取消"
     ) {
         return "❌";
     }
+
 
     return "📦";
 
@@ -1072,6 +1215,7 @@ function formatTime(createdAt) {
     if (!createdAt) {
         return "暂无";
     }
+
 
     try {
 
@@ -1111,6 +1255,7 @@ function formatTime(createdAt) {
 
     }
 
+
     return "暂无";
 
 }
@@ -1138,9 +1283,7 @@ function formatMoney(number) {
 function renderRiderInfo(order) {
 
     if (!order.deliveryId) {
-
         return "";
-
     }
 
 
@@ -1193,11 +1336,14 @@ function renderRiderInfo(order) {
 function renderStatusInfo(order) {
 
     const status =
-        order.status ||
-        "待接单";
+        normalizeStatus(
+            order.status
+        );
 
 
-    if (status === "待接单") {
+    if (
+        status === "待接单"
+    ) {
 
         return `
 
@@ -1216,7 +1362,9 @@ function renderStatusInfo(order) {
     }
 
 
-    if (status === "商家已接单") {
+    if (
+        status === "商家已接单"
+    ) {
 
         return `
 
@@ -1235,7 +1383,9 @@ function renderStatusInfo(order) {
     }
 
 
-    if (status === "骑手已接单") {
+    if (
+        status === "骑手已接单"
+    ) {
 
         return `
 
@@ -1254,7 +1404,9 @@ function renderStatusInfo(order) {
     }
 
 
-    if (status === "外卖好了") {
+    if (
+        status === "外卖好了"
+    ) {
 
         return `
 
@@ -1273,7 +1425,9 @@ function renderStatusInfo(order) {
     }
 
 
-    if (status === "配送中") {
+    if (
+        status === "配送中"
+    ) {
 
         return `
 
@@ -1292,7 +1446,9 @@ function renderStatusInfo(order) {
     }
 
 
-    if (status === "已完成") {
+    if (
+        status === "已完成"
+    ) {
 
         return `
 
@@ -1312,8 +1468,7 @@ function renderStatusInfo(order) {
 
 
     if (
-        status === "已取消" ||
-        status === "取消"
+        status === "已取消"
     ) {
 
         return `
@@ -1344,9 +1499,7 @@ function renderItems(order) {
     if (
         !Array.isArray(order.items)
     ) {
-
         return "";
-
     }
 
 
@@ -1376,8 +1529,7 @@ function renderItems(order) {
 
 
             const itemTotal =
-                price *
-                quantity;
+                price * quantity;
 
 
             html += `
@@ -1426,14 +1578,28 @@ function renderReviewArea(
     orderId
 ) {
 
+    const status =
+        normalizeStatus(
+            order.status
+        );
+
+
+    /*
+        只有真正完成的订单才能评价
+    */
+
     if (
-        order.status !== "已完成"
+        status !== "已完成"
     ) {
 
         return "";
 
     }
 
+
+    /*
+        已经评价
+    */
 
     if (
         reviewedOrderIds.has(orderId)
@@ -1460,6 +1626,10 @@ function renderReviewArea(
     }
 
 
+    /*
+        可以评价
+    */
+
     return `
 
         <div class="review-area">
@@ -1469,7 +1639,9 @@ function renderReviewArea(
                 class="review-button"
                 onclick="openReviewModal('${orderId}')"
             >
+
                 ⭐ 去评价
+
             </button>
 
         </div>
@@ -1538,9 +1710,15 @@ function renderOrders(orders) {
                 orderObject.data;
 
 
-            const status =
+            const rawStatus =
                 order.status ||
                 "待接单";
+
+
+            const status =
+                normalizeStatus(
+                    rawStatus
+                );
 
 
             const div =
@@ -1552,11 +1730,6 @@ function renderOrders(orders) {
             div.className =
                 "order";
 
-
-            /*
-                如果是刚刚变化的订单，
-                给它加闪烁效果
-            */
 
             if (
                 orderObject.isChanged
@@ -1607,7 +1780,10 @@ function renderOrders(orders) {
                 </div>
 
 
-                ${renderStatusInfo(order)}
+                ${renderStatusInfo({
+                    ...order,
+                    status: status
+                })}
 
 
                 ${renderRiderInfo(order)}
@@ -1704,7 +1880,10 @@ function renderOrders(orders) {
 
 
                 ${renderReviewArea(
-                    order,
+                    {
+                        ...order,
+                        status: status
+                    },
                     orderObject.id
                 )}
 
@@ -1733,9 +1912,7 @@ async function loadMyReviews() {
 
 
     if (!currentUser) {
-
         return;
-
     }
 
 
@@ -1758,6 +1935,19 @@ async function loadMyReviews() {
                 const data =
                     doc.data() || {};
 
+
+                /*
+                    评价文档本身就是订单 ID
+                */
+
+                reviewedOrderIds.add(
+                    doc.id
+                );
+
+
+                /*
+                    同时兼容旧评价结构
+                */
 
                 if (
                     data.orderId
@@ -1786,8 +1976,7 @@ async function loadMyReviews() {
 
 
     /*
-        重新显示订单，
-        让“去评价 / 已评价”立即更新
+        重新显示订单
     */
 
     if (
@@ -1846,8 +2035,14 @@ function openReviewModal(orderId) {
         orderObject.data;
 
 
+    const status =
+        normalizeStatus(
+            order.status
+        );
+
+
     if (
-        order.status !== "已完成"
+        status !== "已完成"
     ) {
 
         alert(
@@ -2097,6 +2292,48 @@ async function submitReview() {
         currentReviewOrder.data;
 
 
+    const status =
+        normalizeStatus(
+            order.status
+        );
+
+
+    if (
+        status !== "已完成"
+    ) {
+
+        alert(
+            "只有已经完成的订单才能评价。"
+        );
+
+        return;
+
+    }
+
+
+    /*
+        再次防止重复评价
+    */
+
+    if (
+        reviewedOrderIds.has(orderId)
+    ) {
+
+        alert(
+            "这个订单已经评价过了。"
+        );
+
+        closeReviewModal();
+
+        renderOrders(
+            currentOrders
+        );
+
+        return;
+
+    }
+
+
     const comment =
         document
             .getElementById(
@@ -2123,11 +2360,9 @@ async function submitReview() {
     try {
 
         /*
-            使用订单 Firebase 文档 ID
-            作为评价文档 ID。
+            评价文档 ID = 订单文档 ID
 
-            这样同一个订单只能存在一条评价，
-            可以防止重复评价。
+            同一个订单只能有一条评价
         */
 
         await db
@@ -2185,7 +2420,7 @@ async function submitReview() {
 
 
         /*
-            本地立即标记为已评价
+            立即标记已评价
         */
 
         reviewedOrderIds.add(
@@ -2193,16 +2428,8 @@ async function submitReview() {
         );
 
 
-        /*
-            关闭弹窗
-        */
-
         closeReviewModal();
 
-
-        /*
-            刷新订单显示
-        */
 
         renderOrders(
             currentOrders
@@ -2331,6 +2558,7 @@ function playNotificationSound() {
 
 
         oscillator.start();
+
 
         oscillator.stop(
             audioContext.currentTime + 0.6
@@ -2509,11 +2737,6 @@ function checkOrderChanges(
     orders
 ) {
 
-    /*
-        第一次加载：
-        只保存数据，不提醒
-    */
-
     if (firstSnapshot) {
 
         previousOrders = {};
@@ -2555,10 +2778,6 @@ function checkOrderChanges(
                 previousOrders[id];
 
 
-            /*
-                新订单
-            */
-
             if (
                 oldStatus === undefined
             ) {
@@ -2583,10 +2802,6 @@ function checkOrderChanges(
             }
 
 
-            /*
-                订单状态改变
-            */
-
             else if (
                 oldStatus !== status
             ) {
@@ -2595,9 +2810,15 @@ function checkOrderChanges(
                     true;
 
 
+                const displayStatus =
+                    normalizeStatus(
+                        status
+                    );
+
+
                 showToast(
                     "🔔 订单状态：" +
-                    status
+                    displayStatus
                 );
 
 
@@ -2607,7 +2828,7 @@ function checkOrderChanges(
                 sendBrowserNotification(
                     "🔔 MDY FOOD 订单更新",
                     "订单状态已经变更为：" +
-                    status
+                    displayStatus
                 );
 
             }
@@ -2619,10 +2840,6 @@ function checkOrderChanges(
         }
     );
 
-
-    /*
-        删除的订单
-    */
 
     Object.keys(
         previousOrders
@@ -2685,15 +2902,12 @@ function listenMyOrders() {
     unsubscribeOrders =
 
         db
-
             .collection("orders")
-
             .where(
                 "customerId",
                 "==",
                 currentUser.uid
             )
-
             .onSnapshot(
 
                 async function(snapshot) {
@@ -2760,17 +2974,9 @@ function listenMyOrders() {
                     );
 
 
-                    /*
-                        保存当前订单
-                    */
-
                     currentOrders =
                         orders;
 
-
-                    /*
-                        检查变化
-                    */
 
                     checkOrderChanges(
                         orders
@@ -2787,7 +2993,7 @@ function listenMyOrders() {
 
 
                     /*
-                        再读取已经评价的订单
+                        再读取评价
                     */
 
                     await loadMyReviews();
@@ -2853,6 +3059,7 @@ function manualRefresh() {
 
             button.textContent =
                 "🔄 刷新订单";
+
 
             showToast(
                 "✅ 订单已刷新"
