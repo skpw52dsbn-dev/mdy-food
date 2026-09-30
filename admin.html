@@ -705,16 +705,70 @@ header {
     }
 }
 
-.review-summary { display:flex; gap:14px; align-items:center; flex-wrap:wrap; background:#fff8f2; border-radius:10px; padding:14px; margin-bottom:15px; }
-.review-average { font-size:30px; font-weight:bold; color:#ff5a1f; }
-.review-stars { color:#ffb000; font-size:20px; letter-spacing:2px; }
-.review-count { color:#777; font-size:13px; }
-.review-card { border:1px solid #eee; border-radius:10px; padding:14px; margin-bottom:12px; }
-.review-top { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:7px; }
-.review-user { font-weight:bold; }
-.review-time { color:#999; font-size:12px; }
-.review-comment { margin-top:8px; line-height:1.7; color:#444; white-space:pre-wrap; }
-.review-order { color:#888; font-size:12px; margin-top:8px; }
+.review-summary {
+    display:flex;
+    gap:14px;
+    align-items:center;
+    flex-wrap:wrap;
+    background:#fff8f2;
+    border-radius:10px;
+    padding:14px;
+    margin-bottom:15px;
+}
+
+.review-average {
+    font-size:30px;
+    font-weight:bold;
+    color:#ff5a1f;
+}
+
+.review-stars {
+    color:#ffb000;
+    font-size:20px;
+    letter-spacing:2px;
+}
+
+.review-count {
+    color:#777;
+    font-size:13px;
+}
+
+.review-card {
+    border:1px solid #eee;
+    border-radius:10px;
+    padding:14px;
+    margin-bottom:12px;
+}
+
+.review-top {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:7px;
+}
+
+.review-user {
+    font-weight:bold;
+}
+
+.review-time {
+    color:#999;
+    font-size:12px;
+}
+
+.review-comment {
+    margin-top:8px;
+    line-height:1.7;
+    color:#444;
+    white-space:pre-wrap;
+}
+
+.review-order {
+    color:#888;
+    font-size:12px;
+    margin-top:8px;
+}
 
 </style>
 </head>
@@ -829,6 +883,7 @@ header {
     <!-- 添加菜品 -->
 
     <div class="section">
+
     <!-- =========================
          顾客评价
     ========================== -->
@@ -840,11 +895,13 @@ header {
         </div>
 
         <div id="reviewSummary" class="review-summary">
+
             <div class="review-average">
                 暂无
             </div>
 
             <div>
+
                 <div class="review-stars">
                     ☆☆☆☆☆
                 </div>
@@ -852,16 +909,22 @@ header {
                 <div class="review-count">
                     正在读取评价...
                 </div>
+
             </div>
+
         </div>
 
         <div id="reviews">
+
             <div class="empty">
                 ⭐ 正在读取顾客评价...
             </div>
+
         </div>
 
     </div>
+
+
         <div class="section-title">
             ➕ 添加菜品
         </div>
@@ -871,27 +934,55 @@ header {
         </div>
 
         <div class="form-group">
+
             <label>菜品名称</label>
-            <input id="foodName" type="text" placeholder="例如：宫保鸡丁">
+
+            <input
+                id="foodName"
+                type="text"
+                placeholder="例如：宫保鸡丁">
+
         </div>
 
         <div class="form-group">
+
             <label>价格（Ks）</label>
-            <input id="foodPrice" type="number" placeholder="例如：8000">
+
+            <input
+                id="foodPrice"
+                type="number"
+                placeholder="例如：8000">
+
         </div>
 
         <div class="form-group">
+
             <label>菜品描述</label>
-            <textarea id="foodDescription" placeholder="例如：香辣可口，适合下饭"></textarea>
+
+            <textarea
+                id="foodDescription"
+                placeholder="例如：香辣可口，适合下饭">
+            </textarea>
+
         </div>
 
         <div class="form-group">
+
             <label>图片地址</label>
-            <input id="foodImage" type="text" placeholder="粘贴图片 URL（可留空）">
+
+            <input
+                id="foodImage"
+                type="text"
+                placeholder="粘贴图片 URL（可留空）">
+
         </div>
 
-        <button class="add-food-btn" onclick="addFood()">
+        <button
+            class="add-food-btn"
+            onclick="addFood()">
+
             🍜 添加菜品
+
         </button>
 
     </div>
@@ -905,15 +996,21 @@ header {
             🏪 餐厅营业状态
         </div>
 
-        <div id="restaurantStatus" class="restaurant-status">
+        <div
+            id="restaurantStatus"
+            class="restaurant-status">
+
             正在读取...
+
         </div>
 
         <button
             id="restaurantStatusBtn"
             class="add-food-btn"
             onclick="toggleRestaurantStatus()">
+
             正在读取...
+
         </button>
 
     </div>
@@ -928,37 +1025,74 @@ header {
         </div>
 
         <div class="form-group">
+
             <label>餐厅名称</label>
-            <input id="editRestaurantName" type="text" placeholder="例如：四川味道">
+
+            <input
+                id="editRestaurantName"
+                type="text"
+                placeholder="例如：四川味道">
+
         </div>
 
         <div class="form-group">
+
             <label>餐厅分类</label>
-            <input id="editRestaurantCategory" type="text" placeholder="例如：川菜 · 中餐">
+
+            <input
+                id="editRestaurantCategory"
+                type="text"
+                placeholder="例如：川菜 · 中餐">
+
         </div>
 
         <div class="form-group">
+
             <label>餐厅介绍</label>
-            <textarea id="editRestaurantDescription" placeholder="介绍一下你的餐厅"></textarea>
+
+            <textarea
+                id="editRestaurantDescription"
+                placeholder="介绍一下你的餐厅">
+            </textarea>
+
         </div>
 
         <div class="form-group">
+
             <label>餐厅图片 URL</label>
-            <input id="editRestaurantImage" type="text" placeholder="粘贴餐厅图片 URL（可留空）" oninput="previewRestaurantImage()">
+
+            <input
+                id="editRestaurantImage"
+                type="text"
+                placeholder="粘贴餐厅图片 URL（可留空）"
+                oninput="previewRestaurantImage()">
+
         </div>
 
-        <img id="restaurantImagePreview" class="restaurant-preview" alt="餐厅图片预览">
+        <img
+            id="restaurantImagePreview"
+            class="restaurant-preview"
+            alt="餐厅图片预览">
 
         <div class="info-tip">
             💡 保存后，顾客首页会同步显示新的餐厅名称、介绍和图片。
         </div>
 
-        <button class="add-food-btn" onclick="saveRestaurantInfo()">
+        <button
+            class="add-food-btn"
+            onclick="saveRestaurantInfo()">
+
             💾 保存餐厅资料
+
         </button>
 
-        <div id="restaurantSaveMessage" class="success" style="margin-top:12px;">
+        <div
+            id="restaurantSaveMessage"
+            class="success"
+            style="margin-top:12px;">
+
             餐厅资料保存成功！
+
         </div>
 
     </div>
@@ -973,13 +1107,14 @@ header {
         </div>
 
         <div class="food-search-wrap">
+
             <input
                 id="foodSearch"
                 class="search-input"
                 type="text"
                 placeholder="搜索菜品名称 / 描述..."
-                oninput="filterFoods()"
-            >
+                oninput="filterFoods()">
+
         </div>
 
         <div id="foods">
@@ -998,30 +1133,81 @@ header {
         </div>
 
         <div class="toolbar">
+
             <input
                 id="orderSearch"
                 class="search-input"
                 type="text"
                 placeholder="搜索订单号 / 顾客姓名 / 电话..."
-                oninput="renderOrders()"
-            >
-            <button class="refresh-btn" onclick="manualRefresh()">
+                oninput="renderOrders()">
+
+            <button
+                class="refresh-btn"
+                onclick="manualRefresh()">
+
                 🔄 刷新
+
             </button>
-            <button class="refresh-btn" onclick="enableOrderNotification()">
+
+            <button
+                class="refresh-btn"
+                onclick="enableOrderNotification()">
+
                 🔔 开启提醒
+
             </button>
+
         </div>
 
         <div class="filter-buttons">
-            <button id="filter-all" class="active" onclick="setOrderFilter('全部')">全部</button>
-            <button id="filter-pending" onclick="setOrderFilter('待处理')">⏳ 待处理</button>
-            <button id="filter-rider" onclick="setOrderFilter('骑手')">🛵 骑手订单</button>
-            <button id="filter-delivering" onclick="setOrderFilter('配送中')">🚴 配送中</button>
-            <button id="filter-completed" onclick="setOrderFilter('已完成')">✅ 已完成</button>
+
+            <button
+                id="filter-all"
+                class="active"
+                onclick="setOrderFilter('全部')">
+
+                全部
+
+            </button>
+
+            <button
+                id="filter-pending"
+                onclick="setOrderFilter('待处理')">
+
+                ⏳ 待处理
+
+            </button>
+
+            <button
+                id="filter-rider"
+                onclick="setOrderFilter('骑手')">
+
+                🛵 骑手订单
+
+            </button>
+
+            <button
+                id="filter-delivering"
+                onclick="setOrderFilter('配送中')">
+
+                🚴 配送中
+
+            </button>
+
+            <button
+                id="filter-completed"
+                onclick="setOrderFilter('已完成')">
+
+                ✅ 已完成
+
+            </button>
+
         </div>
 
-        <div id="orderFilterCount" class="order-filter-count"></div>
+        <div
+            id="orderFilterCount"
+            class="order-filter-count">
+        </div>
 
         <div id="orders">
             正在加载订单...
@@ -1087,7 +1273,9 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let allOrders = [];
+
 let currentOrderFilter = "全部";
+
 let lastPendingOrderCount = 0;
 
 
@@ -1138,6 +1326,7 @@ function isToday(timestamp) {
     } catch (error) {
 
         return false;
+
     }
 
     const now = new Date();
@@ -1187,10 +1376,6 @@ async function loadStats() {
                 order.status || "待接单";
 
 
-            // ----------------------------
-            // 待处理
-            // ----------------------------
-
             if (
                 status === "待接单" ||
                 status === "商家已接单" ||
@@ -1203,10 +1388,6 @@ async function loadStats() {
             }
 
 
-            // ----------------------------
-            // 配送中
-            // ----------------------------
-
             if (
                 status === "配送中"
             ) {
@@ -1215,10 +1396,6 @@ async function loadStats() {
 
             }
 
-
-            // ----------------------------
-            // 今日数据
-            // ----------------------------
 
             if (
                 isToday(order.created_at)
@@ -1240,11 +1417,14 @@ async function loadStats() {
             pendingOrders > lastPendingOrderCount &&
             lastPendingOrderCount >= 0
         ) {
+
             try {
+
                 if (
                     "Notification" in window &&
                     Notification.permission === "granted"
                 ) {
+
                     new Notification(
                         "MDY FOOD 新订单",
                         {
@@ -1254,13 +1434,19 @@ async function loadStats() {
                                 " 个订单需要处理"
                         }
                     );
+
                 }
+
             } catch (notificationError) {
+
                 console.log(notificationError);
+
             }
+
         }
 
         lastPendingOrderCount = pendingOrders;
+
 
         document.getElementById(
             "todayOrders"
@@ -1323,6 +1509,7 @@ async function loadRestaurant() {
 
             document.getElementById("restaurantName").innerText =
                 "🏪 我的餐厅";
+
         }
 
     } catch (error) {
@@ -1331,6 +1518,7 @@ async function loadRestaurant() {
 
         document.getElementById("restaurantName").innerText =
             "🏪 我的餐厅";
+
     }
 
 }
@@ -1407,6 +1595,7 @@ async function saveRestaurantInfo() {
         alert("请输入餐厅名称");
 
         return;
+
     }
 
     try {
@@ -1429,19 +1618,24 @@ async function saveRestaurantInfo() {
 
             });
 
+
         document.getElementById("restaurantName").innerText =
             "🏪 " + name;
+
 
         const message =
             document.getElementById("restaurantSaveMessage");
 
+
         message.style.display = "block";
+
 
         setTimeout(function() {
 
             message.style.display = "none";
 
         }, 2500);
+
 
     } catch (error) {
 
@@ -1451,10 +1645,10 @@ async function saveRestaurantInfo() {
         );
 
         console.error(error);
+
     }
 
 }
-
 
 
 // ========================================
@@ -1463,34 +1657,45 @@ async function saveRestaurantInfo() {
 
 function previewRestaurantImage() {
 
-    const input = document.getElementById("editRestaurantImage");
-    const preview = document.getElementById("restaurantImagePreview");
+    const input =
+        document.getElementById("editRestaurantImage");
+
+    const preview =
+        document.getElementById("restaurantImagePreview");
 
     if (!input || !preview) {
         return;
     }
 
-    const url = input.value.trim();
+    const url =
+        input.value.trim();
 
     if (!url) {
+
         preview.style.display = "none";
+
         preview.removeAttribute("src");
+
         return;
+
     }
 
     preview.src = url;
+
     preview.style.display = "block";
 
     preview.onerror = function() {
+
         preview.style.display = "none";
+
     };
+
 }
 
 
 // ========================================
 // 餐厅营业状态
 // ========================================
-
 
 async function loadRestaurantStatus() {
 
@@ -1513,6 +1718,7 @@ async function loadRestaurantStatus() {
         const button =
             document.getElementById("restaurantStatusBtn");
 
+
         if (status === "营业中") {
 
             statusElement.innerText =
@@ -1534,6 +1740,7 @@ async function loadRestaurantStatus() {
 
             button.innerText =
                 "🟢 恢复营业";
+
         }
 
     } catch (error) {
@@ -1545,6 +1752,7 @@ async function loadRestaurantStatus() {
 
         document.getElementById("restaurantStatusBtn").innerText =
             "重新读取";
+
     }
 
 }
@@ -1574,6 +1782,7 @@ async function toggleRestaurantStatus() {
                 ? "休息中"
                 : "营业中";
 
+
         await db
             .collection("restaurants")
             .doc(restaurantId)
@@ -1582,6 +1791,7 @@ async function toggleRestaurantStatus() {
                 status: newStatus
 
             });
+
 
         loadRestaurantStatus();
 
@@ -1593,6 +1803,7 @@ async function toggleRestaurantStatus() {
         );
 
         console.error(error);
+
     }
 
 }
@@ -1629,11 +1840,13 @@ async function addFood() {
             .value
             .trim();
 
+
     if (!name) {
 
         alert("请输入菜品名称");
 
         return;
+
     }
 
     if (!price || price <= 0) {
@@ -1641,7 +1854,9 @@ async function addFood() {
         alert("请输入正确的价格");
 
         return;
+
     }
+
 
     try {
 
@@ -1663,6 +1878,7 @@ async function addFood() {
 
             });
 
+
         document.getElementById("foodName").value = "";
 
         document.getElementById("foodPrice").value = "";
@@ -1671,16 +1887,20 @@ async function addFood() {
 
         document.getElementById("foodImage").value = "";
 
+
         const message =
             document.getElementById("successMessage");
 
+
         message.style.display = "block";
+
 
         setTimeout(function() {
 
             message.style.display = "none";
 
         }, 2500);
+
 
         loadFoods();
 
@@ -1692,6 +1912,7 @@ async function addFood() {
         );
 
         console.error(error);
+
     }
 
 }
@@ -1718,6 +1939,7 @@ async function loadFoods() {
         const container =
             document.getElementById("foods");
 
+
         if (snapshot.empty) {
 
             container.innerHTML = `
@@ -1727,60 +1949,93 @@ async function loadFoods() {
             `;
 
             return;
+
         }
+
 
         container.innerHTML = "";
 
         const foodList = [];
 
+
         snapshot.forEach(function(doc) {
+
             foodList.push({
+
                 id: doc.id,
+
                 data: doc.data()
+
             });
+
         });
+
 
         foodList.sort(function(a, b) {
-            const statusA = a.data.status === "营业中" ? 0 : 1;
-            const statusB = b.data.status === "营业中" ? 0 : 1;
+
+            const statusA =
+                a.data.status === "营业中" ? 0 : 1;
+
+            const statusB =
+                b.data.status === "营业中" ? 0 : 1;
+
 
             if (statusA !== statusB) {
+
                 return statusA - statusB;
+
             }
 
-            return String(a.data.name || "").localeCompare(
-                String(b.data.name || ""),
+
+            return String(
+                a.data.name || ""
+            ).localeCompare(
+                String(
+                    b.data.name || ""
+                ),
                 "zh-CN"
             );
+
         });
+
 
         foodList.forEach(function(foodObject) {
 
             const doc = {
+
                 id: foodObject.id,
+
                 data: foodObject.data
+
             };
 
             const food = doc.data;
 
+
             const div =
                 document.createElement("div");
 
+
             div.className = "food";
+
+
             div.dataset.foodSearch =
                 (
                     String(food.name || "") + " " +
                     String(food.description || "")
                 ).toLowerCase();
 
+
             const image =
                 food.image ||
                 "https://via.placeholder.com/90";
+
 
             const statusText =
                 food.status === "营业中"
                     ? "🟢 营业中"
                     : "🔴 已下架";
+
 
             div.innerHTML = `
 
@@ -1813,7 +2068,9 @@ async function loadFoods() {
                         <button
                             class="edit-btn"
                             onclick="showEditFood('${doc.id}')">
+
                             ✏️ 编辑
+
                         </button>
 
                         <button
@@ -1822,20 +2079,25 @@ async function loadFoods() {
                                 '${doc.id}',
                                 '${escapeHtml(food.status || "营业中")}'
                             )">
+
                             ${
                                 food.status === "营业中"
                                     ? "下架"
                                     : "上架"
                             }
+
                         </button>
 
                         <button
                             class="delete-btn"
                             onclick="deleteFood('${doc.id}')">
+
                             🗑️ 删除
+
                         </button>
 
                     </div>
+
 
                     <div
                         id="edit-${doc.id}"
@@ -1848,11 +2110,13 @@ async function loadFoods() {
 
                         <br><br>
 
+
                         <input
                             id="edit-name-${doc.id}"
                             type="text"
                             value="${escapeHtml(food.name || "")}"
                             placeholder="菜品名称">
+
 
                         <input
                             id="edit-price-${doc.id}"
@@ -1860,9 +2124,11 @@ async function loadFoods() {
                             value="${Number(food.price || 0)}"
                             placeholder="价格">
 
+
                         <textarea
                             id="edit-description-${doc.id}"
                             placeholder="菜品描述">${escapeHtml(food.description || "")}</textarea>
+
 
                         <input
                             id="edit-image-${doc.id}"
@@ -1870,18 +2136,24 @@ async function loadFoods() {
                             value="${escapeHtml(food.image || "")}"
                             placeholder="图片 URL">
 
+
                         <div class="edit-buttons">
 
                             <button
                                 class="save-edit-btn"
                                 onclick="saveFoodEdit('${doc.id}')">
+
                                 💾 保存
+
                             </button>
+
 
                             <button
                                 class="cancel-btn"
                                 onclick="cancelFoodEdit('${doc.id}')">
+
                                 取消
+
                             </button>
 
                         </div>
@@ -1891,9 +2163,11 @@ async function loadFoods() {
                 </div>
             `;
 
+
             container.appendChild(div);
 
         });
+
 
         filterFoods();
 
@@ -1920,43 +2194,57 @@ async function loadFoods() {
 }
 
 
-
 // ========================================
 // 菜品搜索
 // ========================================
 
 function filterFoods() {
 
-    const input = document.getElementById("foodSearch");
+    const input =
+        document.getElementById("foodSearch");
 
     if (!input) {
         return;
     }
 
-    const keyword = input.value.trim().toLowerCase();
-    const foodCards = document.querySelectorAll("#foods .food");
+    const keyword =
+        input.value.trim().toLowerCase();
+
+    const foodCards =
+        document.querySelectorAll("#foods .food");
 
     let visibleCount = 0;
 
+
     foodCards.forEach(function(card) {
 
-        const text = card.dataset.foodSearch || "";
+        const text =
+            card.dataset.foodSearch || "";
 
-        if (!keyword || text.includes(keyword)) {
+
+        if (
+            !keyword ||
+            text.includes(keyword)
+        ) {
+
             card.classList.remove("food-hidden");
+
             visibleCount++;
+
         } else {
+
             card.classList.add("food-hidden");
+
         }
 
     });
+
 }
 
 
 // ========================================
 // 打开编辑
 // ========================================
-
 
 function showEditFood(documentId) {
 
@@ -2011,6 +2299,7 @@ async function saveFoodEdit(documentId) {
             .value
             .trim();
 
+
     const price =
         Number(
             document
@@ -2020,6 +2309,7 @@ async function saveFoodEdit(documentId) {
                 .value
         );
 
+
     const description =
         document
             .getElementById(
@@ -2027,6 +2317,7 @@ async function saveFoodEdit(documentId) {
             )
             .value
             .trim();
+
 
     const image =
         document
@@ -2036,19 +2327,24 @@ async function saveFoodEdit(documentId) {
             .value
             .trim();
 
+
     if (!name) {
 
         alert("请输入菜品名称");
 
         return;
+
     }
+
 
     if (!price || price <= 0) {
 
         alert("请输入正确的价格");
 
         return;
+
     }
+
 
     try {
 
@@ -2067,6 +2363,7 @@ async function saveFoodEdit(documentId) {
 
             });
 
+
         alert("菜品修改成功！");
 
         loadFoods();
@@ -2079,6 +2376,7 @@ async function saveFoodEdit(documentId) {
         );
 
         console.error(error);
+
     }
 
 }
@@ -2098,6 +2396,7 @@ async function toggleFoodStatus(
             ? "已下架"
             : "营业中";
 
+
     try {
 
         await db
@@ -2109,6 +2408,7 @@ async function toggleFoodStatus(
 
             });
 
+
         loadFoods();
 
     } catch (error) {
@@ -2119,6 +2419,7 @@ async function toggleFoodStatus(
         );
 
         console.error(error);
+
     }
 
 }
@@ -2137,7 +2438,9 @@ async function deleteFood(documentId) {
     ) {
 
         return;
+
     }
+
 
     try {
 
@@ -2145,6 +2448,7 @@ async function deleteFood(documentId) {
             .collection("foods")
             .doc(documentId)
             .delete();
+
 
         loadFoods();
 
@@ -2156,6 +2460,7 @@ async function deleteFood(documentId) {
         );
 
         console.error(error);
+
     }
 
 }
@@ -2183,8 +2488,10 @@ function getOrderStep(status) {
 
     ];
 
+
     const index =
         steps.indexOf(status);
+
 
     return index >= 0 ? index : 0;
 
@@ -2231,15 +2538,19 @@ function createProgress(status) {
 
     ];
 
+
     const currentStep =
         getOrderStep(status);
+
 
     let html =
         `<div class="progress">`;
 
+
     steps.forEach(function(step, index) {
 
         let className = "";
+
 
         if (index < currentStep) {
 
@@ -2250,6 +2561,7 @@ function createProgress(status) {
             className = "active";
 
         }
+
 
         html += `
 
@@ -2269,7 +2581,9 @@ function createProgress(status) {
 
     });
 
+
     html += `</div>`;
+
 
     return html;
 
@@ -2329,16 +2643,22 @@ async function loadOrders() {
                 )
                 .get();
 
+
         allOrders = [];
+
 
         snapshot.forEach(function(doc) {
 
             allOrders.push({
+
                 id: doc.id,
+
                 data: doc.data()
+
             });
 
         });
+
 
         allOrders.sort(function(a, b) {
 
@@ -2348,15 +2668,18 @@ async function loadOrders() {
                     ? a.data.created_at.toMillis()
                     : 0;
 
+
             const timeB =
                 b.data.created_at &&
                 b.data.created_at.toMillis
                     ? b.data.created_at.toMillis()
                     : 0;
 
+
             return timeB - timeA;
 
         });
+
 
         renderOrders();
 
@@ -2396,62 +2719,97 @@ function setOrderFilter(filter) {
 
     currentOrderFilter = filter;
 
+
     const buttonMap = {
+
         "全部": "filter-all",
+
         "待处理": "filter-pending",
+
         "骑手": "filter-rider",
+
         "配送中": "filter-delivering",
+
         "已完成": "filter-completed"
+
     };
+
 
     Object.keys(buttonMap).forEach(function(key) {
 
         const button =
-            document.getElementById(buttonMap[key]);
+            document.getElementById(
+                buttonMap[key]
+            );
+
 
         if (button) {
+
             button.classList.toggle(
                 "active",
                 key === filter
             );
+
         }
 
     });
 
+
     renderOrders();
+
 }
 
 
 function orderMatchesFilter(order) {
 
-    const status = order.status || "待接单";
+    const status =
+        order.status || "待接单";
+
 
     if (currentOrderFilter === "全部") {
+
         return true;
+
     }
 
+
     if (currentOrderFilter === "待处理") {
+
         return (
             status === "待接单" ||
             status === "商家已接单" ||
             status === "骑手已接单" ||
             status === "外卖好了"
         );
+
     }
+
 
     if (currentOrderFilter === "骑手") {
-        return Boolean(order.deliveryId);
+
+        return Boolean(
+            order.deliveryId
+        );
+
     }
+
 
     if (currentOrderFilter === "配送中") {
+
         return status === "配送中";
+
     }
+
 
     if (currentOrderFilter === "已完成") {
+
         return status === "已完成";
+
     }
 
+
     return true;
+
 }
 
 
@@ -2460,56 +2818,84 @@ function renderOrders() {
     const container =
         document.getElementById("orders");
 
+
     if (!container) {
+
         return;
+
     }
+
 
     const searchInput =
         document.getElementById("orderSearch");
+
 
     const keyword =
         searchInput
             ? searchInput.value.trim().toLowerCase()
             : "";
 
+
     const filteredOrders =
         allOrders.filter(function(orderObject) {
 
-            const order = orderObject.data || {};
+            const order =
+                orderObject.data || {};
+
 
             if (!orderMatchesFilter(order)) {
+
                 return false;
+
             }
+
 
             if (!keyword) {
+
                 return true;
+
             }
 
+
             const searchText = [
+
                 order.order_number || "",
+
                 order.customername || "",
+
                 order.phone || "",
+
                 order.deliveryUsername || "",
+
                 order.status || ""
+
             ]
                 .join(" ")
                 .toLowerCase();
+
 
             return searchText.includes(keyword);
 
         });
 
+
     const countElement =
-        document.getElementById("orderFilterCount");
+        document.getElementById(
+            "orderFilterCount"
+        );
+
 
     if (countElement) {
+
         countElement.innerText =
             "当前显示 " +
             filteredOrders.length +
             " 个订单 / 共 " +
             allOrders.length +
             " 个订单";
+
     }
+
 
     if (filteredOrders.length === 0) {
 
@@ -2528,19 +2914,25 @@ function renderOrders() {
         `;
 
         return;
+
     }
 
+
     container.innerHTML = "";
+
 
     filteredOrders.forEach(function(orderObject) {
 
         const order =
             orderObject.data;
 
+
         const documentId =
             orderObject.id;
 
+
         let createdTime = "暂无";
+
 
         if (
             order.created_at &&
@@ -2554,12 +2946,15 @@ function renderOrders() {
 
         }
 
+
         const status =
             order.status || "待接单";
+
 
         let itemsHTML = "";
 
         let itemCount = 0;
+
 
         if (
             order.items &&
@@ -2573,15 +2968,19 @@ function renderOrders() {
                         item.quantity || 0
                     );
 
+
                 const price =
                     Number(
                         item.price || 0
                     );
 
+
                 const subtotal =
                     price * quantity;
 
+
                 itemCount += quantity;
+
 
                 itemsHTML += `
 
@@ -2612,7 +3011,9 @@ function renderOrders() {
 
         }
 
+
         let buttonHTML = "";
+
 
         if (status === "待接单") {
 
@@ -2785,7 +3186,9 @@ function renderOrders() {
 
         }
 
+
         let riderInfoHTML = "";
+
 
         if (order.deliveryId) {
 
@@ -2820,16 +3223,20 @@ function renderOrders() {
 
         }
 
+
         const newOrderClass =
             status === "待接单"
                 ? "order order-new"
                 : "order";
 
+
         const div =
             document.createElement("div");
 
+
         div.className =
             newOrderClass;
+
 
         div.innerHTML = `
 
@@ -2843,6 +3250,7 @@ function renderOrders() {
 
             </div>
 
+
             <div class="order-restaurant">
 
                 🏪
@@ -2852,6 +3260,7 @@ function renderOrders() {
                 )}
 
             </div>
+
 
             <div class="status ${getStatusClass(status)}">
 
@@ -2873,7 +3282,9 @@ function renderOrders() {
 
             </div>
 
+
             ${createProgress(status)}
+
 
             <div class="customer-box">
 
@@ -2911,6 +3322,7 @@ function renderOrders() {
 
             </div>
 
+
             <div class="items">
 
                 <div class="items-title">
@@ -2933,6 +3345,7 @@ function renderOrders() {
 
             </div>
 
+
             <div class="total">
 
                 总计：
@@ -2943,7 +3356,9 @@ function renderOrders() {
 
             </div>
 
+
             ${riderInfoHTML}
+
 
             <div class="time-info">
 
@@ -2952,6 +3367,7 @@ function renderOrders() {
 
             </div>
 
+
             <div class="buttons">
 
                 ${buttonHTML}
@@ -2959,6 +3375,7 @@ function renderOrders() {
             </div>
 
         `;
+
 
         container.appendChild(div);
 
@@ -2974,19 +3391,30 @@ function renderOrders() {
 async function enableOrderNotification() {
 
     if (!("Notification" in window)) {
+
         alert("当前浏览器不支持网页通知。");
+
         return;
+
     }
+
 
     try {
 
         const permission =
             await Notification.requestPermission();
 
+
         if (permission === "granted") {
+
             alert("新订单提醒已开启！");
+
         } else {
-            alert("浏览器没有允许通知，请在浏览器设置中开启。");
+
+            alert(
+                "浏览器没有允许通知，请在浏览器设置中开启。"
+            );
+
         }
 
     } catch (error) {
@@ -3001,156 +3429,488 @@ async function enableOrderNotification() {
 }
 
 
-
-
 // ========================================
 // 顾客评价
 // ========================================
 
 function getReviewRating(data) {
-    const value = data.rating ?? data.star ?? data.stars ?? data.score ?? data.rate;
-    const number = Number(value);
-    return Number.isFinite(number) ? Math.max(0, Math.min(5, number)) : 0;
+
+    const value =
+        data.rating ??
+        data.star ??
+        data.stars ??
+        data.score ??
+        data.rate;
+
+    const number =
+        Number(value);
+
+    return Number.isFinite(number)
+        ? Math.max(0, Math.min(5, number))
+        : 0;
+
 }
+
 
 function getReviewComment(data) {
-    return data.comment || data.review || data.reviewText || data.content || data.message || data.text || "";
+
+    return (
+        data.comment ||
+        data.review ||
+        data.reviewText ||
+        data.content ||
+        data.message ||
+        data.text ||
+        ""
+    );
+
 }
+
 
 function getReviewUser(data) {
-    return data.customername || data.customerName || data.username || data.userName || data.name || "顾客";
+
+    return (
+        data.customername ||
+        data.customerName ||
+        data.username ||
+        data.userName ||
+        data.name ||
+        "顾客"
+    );
+
 }
+
 
 function getReviewTime(data) {
-    const value = data.created_at || data.createdAt || data.timestamp || data.time;
-    if (!value) return "";
-    try {
-        const date = value.toDate ? value.toDate() : new Date(value);
-        if (Number.isNaN(date.getTime())) return "";
-        return date.toLocaleString("zh-CN");
-    } catch (e) {
+
+    const value =
+        data.created_at ||
+        data.createdAt ||
+        data.timestamp ||
+        data.time;
+
+
+    if (!value) {
         return "";
     }
-}
 
-function isReviewData(data) {
-    const rating = getReviewRating(data);
-    const comment = getReviewComment(data);
-    return rating > 0 || comment.trim() !== "" || data.hasReview === true || data.reviewed === true;
-}
-
-function renderStars(rating) {
-    const rounded = Math.round(Number(rating) || 0);
-    return "★★★★★".split("").map((star, index) => index < rounded ? "★" : "☆").join("");
-}
-
-async function loadReviews() {
-    const summaryBox = document.getElementById("reviewSummary");
-    const box = document.getElementById("reviews");
-    if (!summaryBox || !box) return;
 
     try {
-        const reviewMap = new Map();
 
-        // 先读取独立 reviews 集合（如果项目使用这种结构）
+        const date =
+            value.toDate
+                ? value.toDate()
+                : new Date(value);
+
+
+        if (Number.isNaN(date.getTime())) {
+            return "";
+        }
+
+
+        return date.toLocaleString("zh-CN");
+
+    } catch (e) {
+
+        return "";
+
+    }
+
+}
+
+
+function isReviewData(data) {
+
+    const rating =
+        getReviewRating(data);
+
+    const comment =
+        getReviewComment(data);
+
+
+    return (
+        rating > 0 ||
+        comment.trim() !== "" ||
+        data.hasReview === true ||
+        data.reviewed === true
+    );
+
+}
+
+
+function renderStars(rating) {
+
+    const rounded =
+        Math.round(
+            Number(rating) || 0
+        );
+
+
+    return "★★★★★"
+        .split("")
+        .map(
+            (star, index) =>
+                index < rounded
+                    ? "★"
+                    : "☆"
+        )
+        .join("");
+
+}
+
+
+async function loadReviews() {
+
+    const summaryBox =
+        document.getElementById(
+            "reviewSummary"
+        );
+
+
+    const box =
+        document.getElementById(
+            "reviews"
+        );
+
+
+    if (!summaryBox || !box) {
+        return;
+    }
+
+
+    try {
+
+        const reviewMap =
+            new Map();
+
+
+        // 先读取独立 reviews 集合
+
         try {
-            const reviewSnapshot = await db.collection("reviews")
-                .where("restaurantId", "==", restaurantId)
-                .get();
+
+            const reviewSnapshot =
+                await db
+                    .collection("reviews")
+                    .where(
+                        "restaurantId",
+                        "==",
+                        restaurantId
+                    )
+                    .get();
+
 
             reviewSnapshot.forEach(doc => {
-                const data = doc.data() || {};
+
+                const data =
+                    doc.data() || {};
+
+
                 if (isReviewData(data)) {
-                    reviewMap.set("review:" + doc.id, { id: doc.id, ...data });
+
+                    reviewMap.set(
+                        "review:" + doc.id,
+                        {
+                            id: doc.id,
+                            ...data
+                        }
+                    );
+
                 }
+
             });
+
         } catch (reviewError) {
-            console.log("独立 reviews 集合读取失败，继续检查订单评价：", reviewError);
+
+            console.log(
+                "独立 reviews 集合读取失败，继续检查订单评价：",
+                reviewError
+            );
+
         }
+
 
         // 再检查订单里是否直接保存了评价
+
         try {
-            const orderSnapshot = await db.collection("orders")
-                .where("restaurantId", "==", restaurantId)
-                .get();
+
+            const orderSnapshot =
+                await db
+                    .collection("orders")
+                    .where(
+                        "restaurantId",
+                        "==",
+                        restaurantId
+                    )
+                    .get();
+
 
             orderSnapshot.forEach(doc => {
-                const data = doc.data() || {};
+
+                const data =
+                    doc.data() || {};
+
+
                 if (isReviewData(data)) {
-                    reviewMap.set("order:" + doc.id, {
-                        id: doc.id,
-                        orderId: doc.id,
-                        ...data
-                    });
+
+                    reviewMap.set(
+                        "order:" + doc.id,
+                        {
+                            id: doc.id,
+                            orderId: doc.id,
+                            ...data
+                        }
+                    );
+
                 }
+
             });
+
         } catch (orderReviewError) {
-            console.log("订单评价读取失败：", orderReviewError);
+
+            console.log(
+                "订单评价读取失败：",
+                orderReviewError
+            );
+
         }
 
-        const reviews = Array.from(reviewMap.values());
+
+        const reviews =
+            Array.from(
+                reviewMap.values()
+            );
+
+
         reviews.sort((a, b) => {
-            const aValue = a.created_at?.seconds || a.createdAt?.seconds || 0;
-            const bValue = b.created_at?.seconds || b.createdAt?.seconds || 0;
+
+            const aValue =
+                a.created_at?.seconds ||
+                a.createdAt?.seconds ||
+                0;
+
+
+            const bValue =
+                b.created_at?.seconds ||
+                b.createdAt?.seconds ||
+                0;
+
+
             return bValue - aValue;
+
         });
 
-        const rated = reviews.filter(item => getReviewRating(item) > 0);
-        const average = rated.length
-            ? rated.reduce((sum, item) => sum + getReviewRating(item), 0) / rated.length
-            : 0;
+
+        const rated =
+            reviews.filter(
+                item =>
+                    getReviewRating(item) > 0
+            );
+
+
+        const average =
+            rated.length
+                ? rated.reduce(
+                    (sum, item) =>
+                        sum +
+                        getReviewRating(item),
+                    0
+                ) / rated.length
+                : 0;
+
 
         summaryBox.innerHTML = `
-            <div class="review-average">${average ? average.toFixed(1) : "暂无"}</div>
-            <div>
-                <div class="review-stars">${average ? renderStars(average) : "☆☆☆☆☆"}</div>
-                <div class="review-count">共 ${reviews.length} 条评价${rated.length ? " · " + rated.length + " 条有评分" : ""}</div>
+
+            <div class="review-average">
+
+                ${average ? average.toFixed(1) : "暂无"}
+
             </div>
+
+            <div>
+
+                <div class="review-stars">
+
+                    ${
+                        average
+                            ? renderStars(average)
+                            : "☆☆☆☆☆"
+                    }
+
+                </div>
+
+                <div class="review-count">
+
+                    共 ${reviews.length} 条评价
+                    ${
+                        rated.length
+                            ? " · " +
+                              rated.length +
+                              " 条有评分"
+                            : ""
+                    }
+
+                </div>
+
+            </div>
+
         `;
 
+
         if (!reviews.length) {
+
             box.innerHTML = `
-                <div class="empty" style="padding:20px;text-align:center;color:#888;">
+
+                <div
+                    class="empty"
+                    style="
+                        padding:20px;
+                        text-align:center;
+                        color:#888;
+                    ">
+
                     ⭐ 暂时还没有顾客评价
+
                 </div>
+
             `;
+
             return;
+
         }
+
 
         box.innerHTML = "";
 
-        reviews.forEach(review => {
-            const rating = getReviewRating(review);
-            const comment = getReviewComment(review);
-            const user = getReviewUser(review);
-            const time = getReviewTime(review);
-            const orderNumber = review.order_number || review.orderNumber || review.orderId || "";
 
-            const div = document.createElement("div");
-            div.className = "review-card";
+        reviews.forEach(review => {
+
+            const rating =
+                getReviewRating(review);
+
+
+            const comment =
+                getReviewComment(review);
+
+
+            const user =
+                getReviewUser(review);
+
+
+            const time =
+                getReviewTime(review);
+
+
+            const orderNumber =
+                review.order_number ||
+                review.orderNumber ||
+                review.orderId ||
+                "";
+
+
+            const div =
+                document.createElement("div");
+
+
+            div.className =
+                "review-card";
+
+
             div.innerHTML = `
+
                 <div class="review-top">
-                    <div class="review-user">👤 ${escapeHtml(user)}</div>
-                    <div class="review-time">${escapeHtml(time)}</div>
+
+                    <div class="review-user">
+
+                        👤
+                        ${escapeHtml(user)}
+
+                    </div>
+
+                    <div class="review-time">
+
+                        ${escapeHtml(time)}
+
+                    </div>
+
                 </div>
+
+
                 <div class="review-stars">
-                    ${rating ? renderStars(rating) + " " + rating + "/5" : "暂无评分"}
+
+                    ${
+                        rating
+                            ? renderStars(rating) +
+                              " " +
+                              rating +
+                              "/5"
+                            : "暂无评分"
+                    }
+
                 </div>
-                ${comment ? `<div class="review-comment">${escapeHtml(comment)}</div>` : ""}
-                ${orderNumber ? `<div class="review-order">📦 订单：${escapeHtml(orderNumber)}</div>` : ""}
+
+
+                ${
+                    comment
+                        ? `
+                            <div class="review-comment">
+
+                                ${escapeHtml(comment)}
+
+                            </div>
+                        `
+                        : ""
+                }
+
+
+                ${
+                    orderNumber
+                        ? `
+                            <div class="review-order">
+
+                                📦 订单：
+                                ${escapeHtml(orderNumber)}
+
+                            </div>
+                        `
+                        : ""
+                }
+
             `;
+
+
             box.appendChild(div);
+
         });
 
+
     } catch (error) {
-        console.error("读取评价失败：", error);
-        summaryBox.innerHTML = "⭐ 评价统计暂时无法读取";
+
+        console.error(
+            "读取评价失败：",
+            error
+        );
+
+
+        summaryBox.innerHTML =
+            "⭐ 评价统计暂时无法读取";
+
+
         box.innerHTML = `
+
             <div class="error">
-                ❌ 读取评价失败<br><br>${escapeHtml(error.message)}
+
+                ❌ 读取评价失败
+
+                <br><br>
+
+                ${escapeHtml(error.message)}
+
             </div>
+
         `;
+
     }
+
 }
 
 
@@ -3163,28 +3923,46 @@ async function manualRefresh() {
     const button =
         document.querySelector(".refresh-btn");
 
+
     if (button) {
+
         button.disabled = true;
-        button.innerText = "⏳ 刷新中...";
+
+        button.innerText =
+            "⏳ 刷新中...";
+
     }
 
+
     await Promise.all([
+
         loadRestaurant(),
+
         loadRestaurantStatus(),
+
         loadRestaurantInfo(),
+
         loadFoods(),
+
         loadOrders(),
+
         loadStats(),
+
         loadReviews()
+
     ]);
 
+
     if (button) {
+
         button.disabled = false;
-        button.innerText = "🔄 刷新";
+
+        button.innerText =
+            "🔄 刷新";
+
     }
 
 }
-
 
 
 // ========================================
@@ -3216,6 +3994,7 @@ async function changeStatus(
         );
 
         return;
+
     }
 
 
@@ -3236,6 +4015,7 @@ async function changeStatus(
             alert("订单不存在");
 
             return;
+
         }
 
 
@@ -3256,6 +4036,7 @@ async function changeStatus(
                 );
 
                 return;
+
             }
 
         }
@@ -3275,6 +4056,7 @@ async function changeStatus(
                 );
 
                 return;
+
             }
 
         }
@@ -3299,6 +4081,7 @@ async function changeStatus(
         );
 
         console.error(error);
+
     }
 
 }
@@ -3314,13 +4097,16 @@ function logout() {
         "merchantLogin"
     );
 
+
     localStorage.removeItem(
         "merchantUsername"
     );
 
+
     localStorage.removeItem(
         "merchantRestaurantId"
     );
+
 
     window.location.href =
         "admin-login.html";
@@ -3347,19 +4133,8 @@ loadStats();
 loadReviews();
 
 
-// ========================================
-// 每 3 秒自动刷新
-// ========================================
-
-setInterval(function() {
-
-    loadOrders();
-
-    loadStats();
-
-    loadReviews();
-
-}, 3000);
+// 注意：这里已经删除 3 秒自动刷新
+// 不再每 3 秒重复读取 Firestore
 
 </script>
 
