@@ -14,9 +14,7 @@
 
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 
@@ -36,7 +34,7 @@ body {
 header {
     background: #ff5a1f;
     color: white;
-    padding: 20px 15px;
+    padding: 18px 15px;
     text-align: center;
     font-size: 22px;
     font-weight: bold;
@@ -55,6 +53,49 @@ header {
     text-decoration: none;
     font-weight: bold;
 }
+
+
+/* =========================
+   顶部操作栏
+========================= */
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.refresh-button,
+.notification-button {
+    flex: 1;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.refresh-button {
+    background: #ff5a1f;
+    color: white;
+}
+
+.notification-button {
+    background: white;
+    color: #ff5a1f;
+    border: 1px solid #ff5a1f;
+}
+
+.refresh-button:active,
+.notification-button:active {
+    transform: scale(0.98);
+}
+
+
+/* =========================
+   登录
+========================= */
 
 .login-box {
     background: white;
@@ -91,6 +132,11 @@ header {
     font-weight: bold;
 }
 
+
+/* =========================
+   实时状态
+========================= */
+
 .live-box {
     background: white;
     border-radius: 10px;
@@ -108,6 +154,11 @@ header {
     background: #2e9d55;
     margin-right: 6px;
 }
+
+
+/* =========================
+   订单
+========================= */
 
 .order {
     background: white;
@@ -274,6 +325,169 @@ header {
     color: #ff5a1f;
 }
 
+
+/* =========================
+   评价按钮
+========================= */
+
+.review-area {
+    margin-top: 16px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.review-button {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    background: #ff5a1f;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.review-button:active {
+    transform: scale(0.98);
+}
+
+.reviewed-box {
+    background: #fff8e8;
+    border-radius: 10px;
+    padding: 13px;
+    color: #c98a00;
+    text-align: center;
+    font-weight: bold;
+}
+
+
+/* =========================
+   评价弹窗
+========================= */
+
+.review-modal {
+    display: none;
+    position: fixed;
+    z-index: 99999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.55);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.review-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.review-modal-box {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+}
+
+.review-modal-title {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.review-modal-restaurant {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.star-selector {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 18px 0;
+}
+
+.star-button {
+    border: none;
+    background: transparent;
+    font-size: 38px;
+    color: #ccc;
+    cursor: pointer;
+    padding: 3px;
+    width: auto;
+}
+
+.star-button.active {
+    color: #ffb000;
+}
+
+.rating-text {
+    text-align: center;
+    color: #ff5a1f;
+    font-weight: bold;
+    min-height: 22px;
+    margin-bottom: 15px;
+}
+
+.review-textarea {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 13px;
+    font-size: 15px;
+    font-family: Arial, "Microsoft YaHei", sans-serif;
+    outline: none;
+}
+
+.review-textarea:focus {
+    border-color: #ff5a1f;
+}
+
+.review-modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.review-cancel-button,
+.review-submit-button {
+    flex: 1;
+    border: none;
+    border-radius: 10px;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.review-cancel-button {
+    background: #eee;
+    color: #555;
+}
+
+.review-submit-button {
+    background: #ff5a1f;
+    color: white;
+}
+
+.review-submit-button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   空订单
+========================= */
+
 .empty {
     background: white;
     padding: 45px 20px;
@@ -323,10 +537,85 @@ header {
     font-size: 13px;
 }
 
+
+/* =========================
+   弹出提醒
+========================= */
+
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: #333;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    z-index: 999999;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+
+/* =========================
+   新订单闪烁
+========================= */
+
+.order.new-order {
+    animation: newOrderFlash 1s ease 3;
+}
+
+@keyframes newOrderFlash {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+}
+
+
 @media (max-width: 480px) {
 
     .order {
         padding: 15px;
+    }
+
+    .toolbar {
+        gap: 8px;
+    }
+
+    .refresh-button,
+    .notification-button {
+        font-size: 14px;
+    }
+
+    .review-modal {
+        padding: 12px;
+    }
+
+    .review-modal-box {
+        padding: 18px;
+    }
+
+    .star-button {
+        font-size: 32px;
     }
 
 }
@@ -398,6 +687,29 @@ header {
     style="display:none;"
 >
 
+
+    <!-- 操作按钮 -->
+
+    <div class="toolbar">
+
+        <button
+            class="refresh-button"
+            onclick="manualRefresh()"
+        >
+            🔄 刷新订单
+        </button>
+
+
+        <button
+            class="notification-button"
+            onclick="enableNotifications()"
+        >
+            🔔 开启提醒
+        </button>
+
+    </div>
+
+
     <div class="live-box">
 
         <span class="live-dot"></span>
@@ -421,6 +733,133 @@ header {
 </div>
 
 
+<!-- =========================
+     评价弹窗
+========================= -->
+
+<div
+    id="reviewModal"
+    class="review-modal"
+>
+
+    <div class="review-modal-box">
+
+        <div class="review-modal-title">
+            ⭐ 评价订单
+        </div>
+
+        <div
+            id="reviewRestaurant"
+            class="review-modal-restaurant"
+        >
+            餐厅
+        </div>
+
+
+        <div class="star-selector">
+
+            <button
+                type="button"
+                class="star-button"
+                data-rating="1"
+                onclick="selectRating(1)"
+            >
+                ★
+            </button>
+
+            <button
+                type="button"
+                class="star-button"
+                data-rating="2"
+                onclick="selectRating(2)"
+            >
+                ★
+            </button>
+
+            <button
+                type="button"
+                class="star-button"
+                data-rating="3"
+                onclick="selectRating(3)"
+            >
+                ★
+            </button>
+
+            <button
+                type="button"
+                class="star-button"
+                data-rating="4"
+                onclick="selectRating(4)"
+            >
+                ★
+            </button>
+
+            <button
+                type="button"
+                class="star-button"
+                data-rating="5"
+                onclick="selectRating(5)"
+            >
+                ★
+            </button>
+
+        </div>
+
+
+        <div
+            id="ratingText"
+            class="rating-text"
+        >
+            请选择评分
+        </div>
+
+
+        <textarea
+            id="reviewComment"
+            class="review-textarea"
+            placeholder="写下你对这次订单的评价吧～（可选）"
+            maxlength="500"
+        ></textarea>
+
+
+        <div class="review-modal-buttons">
+
+            <button
+                type="button"
+                class="review-cancel-button"
+                onclick="closeReviewModal()"
+            >
+                取消
+            </button>
+
+            <button
+                type="button"
+                id="submitReviewButton"
+                class="review-submit-button"
+                onclick="submitReview()"
+            >
+                提交评价
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     提醒
+========================= -->
+
+<div
+    id="toast"
+    class="toast"
+>
+    🔔 订单状态发生变化
+</div>
+
+
 <script>
 
 
@@ -431,7 +870,7 @@ header {
 const firebaseConfig = {
 
     apiKey:
-        "AIzaSyA84W7Xx-yNWAWWqwmcbeHzKCRsqxv5X7Q",
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
 
     authDomain:
         "mdy-food.firebaseapp.com",
@@ -472,6 +911,45 @@ let currentUser = null;
 let unsubscribeOrders = null;
 
 
+/*
+    第一次加载订单时不提醒。
+    后面订单发生变化才提醒。
+*/
+
+let firstSnapshot = true;
+
+let previousOrders = {};
+
+
+/*
+    当前订单
+*/
+
+let currentOrders = [];
+
+
+/*
+    已评价订单 ID
+*/
+
+let reviewedOrderIds = new Set();
+
+
+/*
+    当前正在评价的订单
+*/
+
+let currentReviewOrder = null;
+
+
+/*
+    当前选择的星级
+*/
+
+let selectedRating = 0;
+
+
+
 // ========================================
 // HTML 安全
 // ========================================
@@ -498,7 +976,9 @@ function escapeHTML(value) {
         .replace(/"/g, "&quot;")
 
         .replace(/'/g, "&#039;");
+
 }
+
 
 
 // ========================================
@@ -535,7 +1015,9 @@ function getStatusClass(status) {
     }
 
     return "";
+
 }
+
 
 
 // ========================================
@@ -576,7 +1058,9 @@ function getStatusIcon(status) {
     }
 
     return "📦";
+
 }
+
 
 
 // ========================================
@@ -605,6 +1089,7 @@ function formatTime(createdAt) {
                         minute: "2-digit"
                     }
                 );
+
         }
 
 
@@ -615,6 +1100,7 @@ function formatTime(createdAt) {
             ).toLocaleString(
                 "zh-CN"
             );
+
         }
 
     }
@@ -626,7 +1112,9 @@ function formatTime(createdAt) {
     }
 
     return "暂无";
+
 }
+
 
 
 // ========================================
@@ -640,6 +1128,7 @@ function formatMoney(number) {
     ).toLocaleString();
 
 }
+
 
 
 // ========================================
@@ -692,7 +1181,9 @@ function renderRiderInfo(order) {
         </div>
 
     `;
+
 }
+
 
 
 // ========================================
@@ -706,7 +1197,6 @@ function renderStatusInfo(order) {
         "待接单";
 
 
-    // 待接单
     if (status === "待接单") {
 
         return `
@@ -722,10 +1212,10 @@ function renderStatusInfo(order) {
             </div>
 
         `;
+
     }
 
 
-    // 商家已接单
     if (status === "商家已接单") {
 
         return `
@@ -741,10 +1231,10 @@ function renderStatusInfo(order) {
             </div>
 
         `;
+
     }
 
 
-    // 骑手已接单
     if (status === "骑手已接单") {
 
         return `
@@ -760,10 +1250,10 @@ function renderStatusInfo(order) {
             </div>
 
         `;
+
     }
 
 
-    // 外卖好了
     if (status === "外卖好了") {
 
         return `
@@ -779,10 +1269,10 @@ function renderStatusInfo(order) {
             </div>
 
         `;
+
     }
 
 
-    // 配送中
     if (status === "配送中") {
 
         return `
@@ -798,10 +1288,10 @@ function renderStatusInfo(order) {
             </div>
 
         `;
+
     }
 
 
-    // 已完成
     if (status === "已完成") {
 
         return `
@@ -817,10 +1307,10 @@ function renderStatusInfo(order) {
             </div>
 
         `;
+
     }
 
 
-    // 已取消
     if (
         status === "已取消" ||
         status === "取消"
@@ -835,12 +1325,14 @@ function renderStatusInfo(order) {
             </div>
 
         `;
+
     }
 
 
     return "";
 
 }
+
 
 
 // ========================================
@@ -924,6 +1416,70 @@ function renderItems(order) {
 }
 
 
+
+// ========================================
+// 评价区域
+// ========================================
+
+function renderReviewArea(
+    order,
+    orderId
+) {
+
+    if (
+        order.status !== "已完成"
+    ) {
+
+        return "";
+
+    }
+
+
+    if (
+        reviewedOrderIds.has(orderId)
+    ) {
+
+        return `
+
+            <div class="review-area">
+
+                <div class="reviewed-box">
+
+                    ⭐ 已评价
+
+                    <br>
+
+                    感谢你的反馈 ❤️
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    return `
+
+        <div class="review-area">
+
+            <button
+                type="button"
+                class="review-button"
+                onclick="openReviewModal('${orderId}')"
+            >
+                ⭐ 去评价
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+
 // ========================================
 // 显示订单
 // ========================================
@@ -997,6 +1553,22 @@ function renderOrders(orders) {
                 "order";
 
 
+            /*
+                如果是刚刚变化的订单，
+                给它加闪烁效果
+            */
+
+            if (
+                orderObject.isChanged
+            ) {
+
+                div.classList.add(
+                    "new-order"
+                );
+
+            }
+
+
             div.innerHTML = `
 
                 <div class="order-number">
@@ -1023,8 +1595,6 @@ function renderOrders(orders) {
                 </div>
 
 
-                <!-- 状态 -->
-
                 <div
                     class="status
                     ${getStatusClass(status)}"
@@ -1037,17 +1607,11 @@ function renderOrders(orders) {
                 </div>
 
 
-                <!-- 状态说明 -->
-
                 ${renderStatusInfo(order)}
 
 
-                <!-- 骑手信息 -->
-
                 ${renderRiderInfo(order)}
 
-
-                <!-- 顾客信息 -->
 
                 <div class="info">
 
@@ -1105,8 +1669,6 @@ function renderOrders(orders) {
                 </div>
 
 
-                <!-- 商品 -->
-
                 <div class="items">
 
                     <div class="items-title">
@@ -1120,8 +1682,6 @@ function renderOrders(orders) {
 
                 </div>
 
-
-                <!-- 总金额 -->
 
                 <div class="total">
 
@@ -1142,6 +1702,12 @@ function renderOrders(orders) {
 
                 </div>
 
+
+                ${renderReviewArea(
+                    order,
+                    orderObject.id
+                )}
+
             `;
 
 
@@ -1153,6 +1719,939 @@ function renderOrders(orders) {
     );
 
 }
+
+
+
+// ========================================
+// 读取顾客评价
+// ========================================
+
+async function loadMyReviews() {
+
+    reviewedOrderIds =
+        new Set();
+
+
+    if (!currentUser) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("reviews")
+                .where(
+                    "customerId",
+                    "==",
+                    currentUser.uid
+                )
+                .get();
+
+
+        snapshot.forEach(
+            function(doc) {
+
+                const data =
+                    doc.data() || {};
+
+
+                if (
+                    data.orderId
+                ) {
+
+                    reviewedOrderIds.add(
+                        data.orderId
+                    );
+
+                }
+
+            }
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "读取评价失败：",
+            error
+        );
+
+    }
+
+
+    /*
+        重新显示订单，
+        让“去评价 / 已评价”立即更新
+    */
+
+    if (
+        currentOrders.length > 0
+    ) {
+
+        renderOrders(
+            currentOrders
+        );
+
+    }
+
+}
+
+
+
+// ========================================
+// 打开评价弹窗
+// ========================================
+
+function openReviewModal(orderId) {
+
+    if (!currentUser) {
+
+        alert(
+            "请先登录账号。"
+        );
+
+        return;
+
+    }
+
+
+    const orderObject =
+        currentOrders.find(
+            function(item) {
+
+                return item.id === orderId;
+
+            }
+        );
+
+
+    if (!orderObject) {
+
+        alert(
+            "找不到这个订单，请刷新页面后重试。"
+        );
+
+        return;
+
+    }
+
+
+    const order =
+        orderObject.data;
+
+
+    if (
+        order.status !== "已完成"
+    ) {
+
+        alert(
+            "只有已经完成的订单才能评价。"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        reviewedOrderIds.has(orderId)
+    ) {
+
+        alert(
+            "这个订单已经评价过了。"
+        );
+
+        return;
+
+    }
+
+
+    currentReviewOrder = {
+
+        id:
+            orderId,
+
+        data:
+            order
+
+    };
+
+
+    selectedRating =
+        0;
+
+
+    document.getElementById(
+        "reviewRestaurant"
+    ).innerText =
+        "🏪 " +
+        (
+            order.restaurantName ||
+            "MDY FOOD 餐厅"
+        );
+
+
+    document.getElementById(
+        "reviewComment"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "ratingText"
+    ).innerText =
+        "请选择评分";
+
+
+    updateStarButtons();
+
+
+    document.getElementById(
+        "submitReviewButton"
+    ).disabled =
+        false;
+
+
+    document.getElementById(
+        "submitReviewButton"
+    ).innerText =
+        "提交评价";
+
+
+    document.getElementById(
+        "reviewModal"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+
+
+// ========================================
+// 关闭评价弹窗
+// ========================================
+
+function closeReviewModal() {
+
+    document.getElementById(
+        "reviewModal"
+    ).classList.remove(
+        "show"
+    );
+
+
+    currentReviewOrder =
+        null;
+
+
+    selectedRating =
+        0;
+
+}
+
+
+
+// ========================================
+// 选择星级
+// ========================================
+
+function selectRating(rating) {
+
+    selectedRating =
+        Number(rating) || 0;
+
+
+    updateStarButtons();
+
+
+    const texts = {
+
+        1:
+            "⭐ 非常不满意",
+
+        2:
+            "⭐⭐ 不太满意",
+
+        3:
+            "⭐⭐⭐ 一般",
+
+        4:
+            "⭐⭐⭐⭐ 满意",
+
+        5:
+            "⭐⭐⭐⭐⭐ 非常满意"
+
+    };
+
+
+    document.getElementById(
+        "ratingText"
+    ).innerText =
+        texts[selectedRating] ||
+        "请选择评分";
+
+}
+
+
+
+// ========================================
+// 更新星星
+// ========================================
+
+function updateStarButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".star-button"
+        );
+
+
+    buttons.forEach(
+        function(button) {
+
+            const rating =
+                Number(
+                    button.dataset.rating
+                );
+
+
+            if (
+                rating <= selectedRating
+            ) {
+
+                button.classList.add(
+                    "active"
+                );
+
+            }
+
+            else {
+
+                button.classList.remove(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+
+// ========================================
+// 提交评价
+// ========================================
+
+async function submitReview() {
+
+    if (!currentUser) {
+
+        alert(
+            "请先登录账号。"
+        );
+
+        return;
+
+    }
+
+
+    if (!currentReviewOrder) {
+
+        alert(
+            "评价订单不存在，请重新打开。"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        selectedRating < 1 ||
+        selectedRating > 5
+    ) {
+
+        alert(
+            "请选择 1～5 星评分。"
+        );
+
+        return;
+
+    }
+
+
+    const orderId =
+        currentReviewOrder.id;
+
+
+    const order =
+        currentReviewOrder.data;
+
+
+    const comment =
+        document
+            .getElementById(
+                "reviewComment"
+            )
+            .value
+            .trim();
+
+
+    const submitButton =
+        document.getElementById(
+            "submitReviewButton"
+        );
+
+
+    submitButton.disabled =
+        true;
+
+
+    submitButton.innerText =
+        "正在提交...";
+
+
+    try {
+
+        /*
+            使用订单 Firebase 文档 ID
+            作为评价文档 ID。
+
+            这样同一个订单只能存在一条评价，
+            可以防止重复评价。
+        */
+
+        await db
+            .collection("reviews")
+            .doc(orderId)
+            .set({
+
+                orderId:
+                    orderId,
+
+                order_number:
+                    order.order_number ||
+                    orderId,
+
+                restaurantId:
+                    order.restaurantId ||
+                    "",
+
+                restaurantName:
+                    order.restaurantName ||
+                    "MDY FOOD 餐厅",
+
+                customerId:
+                    currentUser.uid,
+
+                customerEmail:
+                    currentUser.email ||
+                    "",
+
+                customername:
+                    order.customername ||
+                    "",
+
+                customerName:
+                    order.customername ||
+                    "",
+
+                rating:
+                    selectedRating,
+
+                comment:
+                    comment,
+
+                createdAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp(),
+
+                created_at:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        /*
+            本地立即标记为已评价
+        */
+
+        reviewedOrderIds.add(
+            orderId
+        );
+
+
+        /*
+            关闭弹窗
+        */
+
+        closeReviewModal();
+
+
+        /*
+            刷新订单显示
+        */
+
+        renderOrders(
+            currentOrders
+        );
+
+
+        showToast(
+            "⭐ 评价提交成功！感谢你的反馈 ❤️"
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "提交评价失败：",
+            error
+        );
+
+
+        alert(
+            "评价提交失败：\n" +
+            error.message
+        );
+
+
+        submitButton.disabled =
+            false;
+
+
+        submitButton.innerText =
+            "提交评价";
+
+    }
+
+}
+
+
+
+// ========================================
+// 点击弹窗背景关闭
+// ========================================
+
+document.getElementById(
+    "reviewModal"
+).addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            event.target ===
+            this
+        ) {
+
+            closeReviewModal();
+
+        }
+
+    }
+);
+
+
+
+// ========================================
+// 声音提醒
+// ========================================
+
+function playNotificationSound() {
+
+    try {
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+
+        if (!AudioContext) {
+            return;
+        }
+
+
+        const audioContext =
+            new AudioContext();
+
+
+        const oscillator =
+            audioContext.createOscillator();
+
+
+        const gain =
+            audioContext.createGain();
+
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            audioContext.destination
+        );
+
+
+        oscillator.frequency.value =
+            880;
+
+
+        oscillator.type =
+            "sine";
+
+
+        gain.gain.setValueAtTime(
+            0.001,
+            audioContext.currentTime
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.25,
+            audioContext.currentTime + 0.05
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioContext.currentTime + 0.6
+        );
+
+
+        oscillator.start();
+
+        oscillator.stop(
+            audioContext.currentTime + 0.6
+        );
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "声音提醒失败",
+            error
+        );
+
+    }
+
+}
+
+
+
+// ========================================
+// 页面弹窗提醒
+// ========================================
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        function() {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+        3500
+    );
+
+}
+
+
+
+// ========================================
+// 浏览器通知
+// ========================================
+
+function sendBrowserNotification(
+    title,
+    message
+) {
+
+    if (
+        !("Notification" in window)
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        Notification.permission !==
+        "granted"
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        new Notification(
+            title,
+            {
+                body: message,
+                icon: "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/firebase-logo.png"
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "浏览器通知失败",
+            error
+        );
+
+    }
+
+}
+
+
+
+// ========================================
+// 开启通知
+// ========================================
+
+async function enableNotifications() {
+
+    if (
+        !("Notification" in window)
+    ) {
+
+        showToast(
+            "❌ 当前浏览器不支持通知"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const permission =
+            await Notification.requestPermission();
+
+
+        if (
+            permission === "granted"
+        ) {
+
+            showToast(
+                "🔔 订单提醒已开启"
+            );
+
+
+            sendBrowserNotification(
+                "MDY FOOD",
+                "订单提醒已经开启！"
+            );
+
+        }
+
+        else {
+
+            showToast(
+                "⚠️ 你没有允许浏览器通知"
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+
+// ========================================
+// 订单变化提醒
+// ========================================
+
+function checkOrderChanges(
+    orders
+) {
+
+    /*
+        第一次加载：
+        只保存数据，不提醒
+    */
+
+    if (firstSnapshot) {
+
+        previousOrders = {};
+
+
+        orders.forEach(
+            function(orderObject) {
+
+                previousOrders[
+                    orderObject.id
+                ] =
+                    orderObject.data.status ||
+                    "待接单";
+
+            }
+        );
+
+
+        firstSnapshot = false;
+
+        return;
+
+    }
+
+
+    orders.forEach(
+        function(orderObject) {
+
+            const id =
+                orderObject.id;
+
+
+            const status =
+                orderObject.data.status ||
+                "待接单";
+
+
+            const oldStatus =
+                previousOrders[id];
+
+
+            /*
+                新订单
+            */
+
+            if (
+                oldStatus === undefined
+            ) {
+
+                orderObject.isChanged =
+                    true;
+
+
+                showToast(
+                    "🆕 收到新的订单！"
+                );
+
+
+                playNotificationSound();
+
+
+                sendBrowserNotification(
+                    "🆕 MDY FOOD 新订单",
+                    "你有一个新的订单，请查看订单详情。"
+                );
+
+            }
+
+
+            /*
+                订单状态改变
+            */
+
+            else if (
+                oldStatus !== status
+            ) {
+
+                orderObject.isChanged =
+                    true;
+
+
+                showToast(
+                    "🔔 订单状态：" +
+                    status
+                );
+
+
+                playNotificationSound();
+
+
+                sendBrowserNotification(
+                    "🔔 MDY FOOD 订单更新",
+                    "订单状态已经变更为：" +
+                    status
+                );
+
+            }
+
+
+            previousOrders[id] =
+                status;
+
+        }
+    );
+
+
+    /*
+        删除的订单
+    */
+
+    Object.keys(
+        previousOrders
+    ).forEach(
+        function(id) {
+
+            const exists =
+                orders.some(
+                    function(orderObject) {
+
+                        return (
+                            orderObject.id === id
+                        );
+
+                    }
+                );
+
+
+            if (!exists) {
+
+                delete previousOrders[id];
+
+            }
+
+        }
+    );
+
+}
+
 
 
 // ========================================
@@ -1178,6 +2677,11 @@ function listenMyOrders() {
     }
 
 
+    firstSnapshot = true;
+
+    previousOrders = {};
+
+
     unsubscribeOrders =
 
         db
@@ -1192,7 +2696,7 @@ function listenMyOrders() {
 
             .onSnapshot(
 
-                function(snapshot) {
+                async function(snapshot) {
 
                     let orders = [];
 
@@ -1214,7 +2718,9 @@ function listenMyOrders() {
                     );
 
 
-                    // 最新订单在最上面
+                    /*
+                        最新订单在最上面
+                    */
 
                     orders.sort(
                         function(a, b) {
@@ -1254,9 +2760,37 @@ function listenMyOrders() {
                     );
 
 
+                    /*
+                        保存当前订单
+                    */
+
+                    currentOrders =
+                        orders;
+
+
+                    /*
+                        检查变化
+                    */
+
+                    checkOrderChanges(
+                        orders
+                    );
+
+
+                    /*
+                        先显示订单
+                    */
+
                     renderOrders(
                         orders
                     );
+
+
+                    /*
+                        再读取已经评价的订单
+                    */
+
+                    await loadMyReviews();
 
                 },
 
@@ -1292,6 +2826,44 @@ function listenMyOrders() {
             );
 
 }
+
+
+
+// ========================================
+// 手动刷新
+// ========================================
+
+function manualRefresh() {
+
+    const button =
+        document.querySelector(
+            ".refresh-button"
+        );
+
+
+    button.textContent =
+        "⏳ 刷新中...";
+
+
+    listenMyOrders();
+
+
+    setTimeout(
+        function() {
+
+            button.textContent =
+                "🔄 刷新订单";
+
+            showToast(
+                "✅ 订单已刷新"
+            );
+
+        },
+        700
+    );
+
+}
+
 
 
 // ========================================
@@ -1343,6 +2915,14 @@ auth.onAuthStateChanged(
                     null;
 
             }
+
+
+            currentOrders =
+                [];
+
+
+            reviewedOrderIds =
+                new Set();
 
 
             loginBox.style.display =
