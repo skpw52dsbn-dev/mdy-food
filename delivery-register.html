@@ -12,9 +12,13 @@
 
 <title>MDY FOOD - 配送员注册</title>
 
-<!-- Firebase -->
+
+<!-- =====================================================
+     Firebase
+===================================================== -->
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 
@@ -24,12 +28,18 @@
     box-sizing: border-box;
 }
 
+
 body {
+
     margin: 0;
+
+    padding: 0;
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
+        "Microsoft YaHei",
         Arial,
         sans-serif;
 
@@ -37,74 +47,151 @@ body {
         linear-gradient(
             135deg,
             #fff7ed,
-            #fef3c7
+            #f8fafc
         );
+
+    color: #1f2937;
 
     min-height: 100vh;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 20px;
 }
+
 
 .container {
 
     width: 100%;
-    max-width: 520px;
+
+    max-width: 680px;
+
+    margin: 0 auto;
+
+    padding: 30px 18px 50px;
+
+}
+
+
+.header {
+
+    text-align: center;
+
+    margin-bottom: 25px;
+
+}
+
+
+.logo {
+
+    width: 76px;
+
+    height: 76px;
+
+    margin: 0 auto 14px;
+
+    border-radius: 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 40px;
+
+    background: #fff;
+
+    box-shadow:
+        0 10px 30px rgba(
+            0,
+            0,
+            0,
+            0.08
+        );
+
+}
+
+
+.header h1 {
+
+    margin: 0;
+
+    font-size: 28px;
+
+    color: #111827;
+
+}
+
+
+.header p {
+
+    margin: 8px 0 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+}
+
+
+.card {
 
     background: #ffffff;
 
     border-radius: 20px;
 
-    padding: 30px;
+    padding: 25px;
 
     box-shadow:
-        0 10px 35px rgba(0, 0, 0, 0.10);
+        0 15px 40px rgba(
+            0,
+            0,
+            0,
+            0.08
+        );
+
 }
 
-.logo {
 
-    text-align: center;
+.section-title {
 
-    font-size: 30px;
+    font-size: 18px;
 
-    font-weight: 800;
+    font-weight: 700;
 
-    color: #f97316;
+    margin: 0 0 18px;
 
-    margin-bottom: 5px;
+    color: #111827;
+
 }
 
-.subtitle {
-
-    text-align: center;
-
-    color: #666;
-
-    margin-bottom: 25px;
-
-    font-size: 15px;
-}
 
 .form-group {
 
-    margin-bottom: 16px;
+    margin-bottom: 17px;
+
 }
 
-label {
+
+.form-group label {
 
     display: block;
 
-    margin-bottom: 7px;
+    font-size: 14px;
 
     font-weight: 600;
 
-    color: #333;
+    margin-bottom: 7px;
 
-    font-size: 14px;
+    color: #374151;
+
 }
+
+
+.required {
+
+    color: #ef4444;
+
+}
+
 
 input,
 select,
@@ -112,20 +199,26 @@ textarea {
 
     width: 100%;
 
+    border: 1px solid #d1d5db;
+
+    border-radius: 11px;
+
     padding: 13px 14px;
-
-    border: 1px solid #ddd;
-
-    border-radius: 10px;
 
     font-size: 15px;
 
     outline: none;
 
-    transition: 0.2s;
+    background: #fff;
 
-    font-family: inherit;
+    color: #111827;
+
+    transition:
+        border-color .2s,
+        box-shadow .2s;
+
 }
+
 
 input:focus,
 select:focus,
@@ -134,22 +227,59 @@ textarea:focus {
     border-color: #f97316;
 
     box-shadow:
-        0 0 0 3px rgba(249, 115, 22, 0.10);
+        0 0 0 3px rgba(
+            249,
+            115,
+            22,
+            0.12
+        );
+
 }
+
 
 textarea {
 
-    min-height: 90px;
+    min-height: 100px;
 
     resize: vertical;
+
 }
 
-.required {
 
-    color: #ef4444;
+.grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 15px;
+
 }
 
-button {
+
+.info-box {
+
+    background: #fff7ed;
+
+    border: 1px solid #fed7aa;
+
+    border-radius: 12px;
+
+    padding: 14px;
+
+    margin-bottom: 20px;
+
+    color: #9a3412;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+}
+
+
+.submit-btn {
 
     width: 100%;
 
@@ -157,11 +287,11 @@ button {
 
     border-radius: 12px;
 
-    padding: 14px;
+    padding: 15px;
 
     background: #f97316;
 
-    color: white;
+    color: #ffffff;
 
     font-size: 16px;
 
@@ -169,99 +299,174 @@ button {
 
     cursor: pointer;
 
-    margin-top: 8px;
+    transition:
+        opacity .2s,
+        transform .1s;
 
-    transition: 0.2s;
 }
 
-button:hover {
 
-    background: #ea580c;
+.submit-btn:hover {
+
+    opacity: .92;
+
 }
 
-button:disabled {
 
-    background: #aaa;
+.submit-btn:active {
+
+    transform: scale(.99);
+
+}
+
+
+.submit-btn:disabled {
+
+    opacity: .55;
 
     cursor: not-allowed;
+
 }
 
-.message {
+
+.status-box {
 
     display: none;
 
-    margin-top: 18px;
+    margin-top: 20px;
 
-    padding: 13px;
+    border-radius: 14px;
 
-    border-radius: 10px;
+    padding: 18px;
 
-    text-align: center;
+    line-height: 1.7;
 
-    font-size: 14px;
-
-    line-height: 1.6;
 }
 
-.success {
+
+.status-box.success {
 
     display: block;
 
     background: #ecfdf5;
 
-    color: #047857;
-
     border: 1px solid #a7f3d0;
+
+    color: #065f46;
+
 }
 
-.error {
+
+.status-box.error {
 
     display: block;
 
     background: #fef2f2;
 
-    color: #b91c1c;
-
     border: 1px solid #fecaca;
+
+    color: #991b1b;
+
 }
 
-.back {
 
-    display: block;
+.success-icon {
+
+    font-size: 38px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.application-id {
+
+    display: inline-block;
+
+    margin-top: 8px;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    border: 1px solid #a7f3d0;
+
+    font-weight: 700;
+
+    word-break: break-all;
+
+}
+
+
+.footer {
 
     text-align: center;
 
+    color: #9ca3af;
+
+    font-size: 12px;
+
     margin-top: 20px;
 
-    color: #666;
+}
+
+
+.back-link {
+
+    display: inline-block;
+
+    margin-top: 15px;
+
+    color: #f97316;
 
     text-decoration: none;
 
     font-size: 14px;
+
+    font-weight: 600;
+
 }
 
-.back:hover {
 
-    color: #f97316;
-}
+@media (
+    max-width: 600px
+) {
 
-.notice {
+    .container {
 
-    background: #fff7ed;
+        padding:
+            20px 12px 40px;
 
-    border: 1px solid #fed7aa;
+    }
 
-    color: #9a3412;
 
-    border-radius: 10px;
+    .card {
 
-    padding: 12px;
+        padding: 20px 16px;
 
-    margin-bottom: 20px;
+        border-radius: 16px;
 
-    font-size: 13px;
+    }
 
-    line-height: 1.6;
+
+    .grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap: 0;
+
+    }
+
+
+    .header h1 {
+
+        font-size: 24px;
+
+    }
+
 }
 
 </style>
@@ -274,260 +479,316 @@ button:disabled {
 
 <div class="container">
 
-    <div class="logo">
-        🛵 MDY FOOD
+
+    <!-- =================================================
+         顶部
+    ================================================== -->
+
+    <div class="header">
+
+        <div class="logo">
+            🛵
+        </div>
+
+        <h1>
+            MDY FOOD
+        </h1>
+
+        <p>
+            配送员申请注册
+        </p>
+
     </div>
 
-    <div class="subtitle">
-        配送员注册申请
-    </div>
 
 
-    <div class="notice">
-
-        提交申请后，需要等待 MDY FOOD 管理员审核。
-        <br>
-        审核通过后，您就可以登录配送员后台接单。
-
-    </div>
-
-
-    <form id="deliveryForm">
-
-
-        <!-- 姓名 -->
-
-        <div class="form-group">
-
-            <label>
-                配送员姓名
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="name"
-                placeholder="请输入真实姓名"
-                required
-            >
-
-        </div>
-
-
-        <!-- 手机 -->
-
-        <div class="form-group">
-
-            <label>
-                手机号码
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="tel"
-                id="phone"
-                placeholder="请输入手机号码"
-                required
-            >
-
-        </div>
-
-
-        <!-- 邮箱 -->
-
-        <div class="form-group">
-
-            <label>
-                登录邮箱
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="email"
-                id="email"
-                placeholder="请输入邮箱"
-                required
-            >
-
-        </div>
-
-
-        <!-- 密码 -->
-
-        <div class="form-group">
-
-            <label>
-                登录密码
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="password"
-                id="password"
-                placeholder="至少 6 位密码"
-                minlength="6"
-                required
-            >
-
-        </div>
-
-
-        <!-- 确认密码 -->
-
-        <div class="form-group">
-
-            <label>
-                确认密码
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="password"
-                id="confirmPassword"
-                placeholder="请再次输入密码"
-                minlength="6"
-                required
-            >
-
-        </div>
-
-
-        <!-- 身份证 -->
-
-        <div class="form-group">
-
-            <label>
-                身份证 / 证件号码
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="idNumber"
-                placeholder="请输入身份证或证件号码"
-                required
-            >
-
-        </div>
-
-
-        <!-- 交通工具 -->
-
-        <div class="form-group">
-
-            <label>
-                配送交通工具
-                <span class="required">*</span>
-            </label>
-
-            <select id="vehicleType" required>
-
-                <option value="">
-                    请选择交通工具
-                </option>
-
-                <option value="摩托车">
-                    🛵 摩托车
-                </option>
-
-                <option value="自行车">
-                    🚲 自行车
-                </option>
-
-                <option value="汽车">
-                    🚗 汽车
-                </option>
-
-                <option value="其他">
-                    其他
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <!-- 车牌 -->
-
-        <div class="form-group">
-
-            <label>
-                车牌号码
-            </label>
-
-            <input
-                type="text"
-                id="vehicleNumber"
-                placeholder="如有车辆，请填写车牌号码"
-            >
-
-        </div>
-
-
-        <!-- 配送区域 -->
-
-        <div class="form-group">
-
-            <label>
-                常用配送区域
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="deliveryArea"
-                placeholder="例如：Mandalay 市区"
-                required
-            >
-
-        </div>
-
-
-        <!-- 备注 -->
-
-        <div class="form-group">
-
-            <label>
-                其他说明
-            </label>
-
-            <textarea
-                id="description"
-                placeholder="可以填写其他需要说明的信息"
-            ></textarea>
-
-        </div>
-
-
-        <button
-            type="submit"
-            id="submitBtn"
-        >
-            🛵 提交配送员申请
-        </button>
-
-
-    </form>
-
+    <!-- =================================================
+         注册表单
+    ================================================== -->
 
     <div
-        id="message"
-        class="message"
-    ></div>
-
-
-    <a
-        href="index.html"
-        class="back"
+        class="card"
+        id="registerCard"
     >
-        ← 返回 MDY FOOD 首页
-    </a>
+
+        <h2 class="section-title">
+            🛵 配送员资料
+        </h2>
+
+
+        <div class="info-box">
+
+            📌 提交申请后，您的资料会进入
+            <b>管理员审核</b>。<br>
+
+            📌 审核通过后，您才会成为 MDY FOOD
+            的正式配送员。<br>
+
+            📌 请填写真实、有效的信息，方便管理员联系您。
+
+        </div>
+
+
+        <form id="deliveryForm">
+
+
+            <!-- =========================================
+                 姓名
+            ========================================== -->
+
+            <div class="form-group">
+
+                <label>
+                    姓名
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="请输入您的姓名"
+                    maxlength="100"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- =========================================
+                 电话 / 邮箱
+            ========================================== -->
+
+            <div class="grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        手机号码
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="例如：09xxxxxxxxx"
+                        maxlength="30"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        邮箱
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="example@email.com"
+                        maxlength="150"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================================
+                 身份证
+            ========================================== -->
+
+            <div class="form-group">
+
+                <label>
+                    身份证号码
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="idNumber"
+                    placeholder="请输入身份证号码"
+                    maxlength="100"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- =========================================
+                 交通工具
+            ========================================== -->
+
+            <div class="grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        交通工具
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="vehicleType"
+                        required
+                    >
+
+                        <option value="">
+                            请选择
+                        </option>
+
+                        <option value="摩托车">
+                            🛵 摩托车
+                        </option>
+
+                        <option value="自行车">
+                            🚲 自行车
+                        </option>
+
+                        <option value="汽车">
+                            🚗 汽车
+                        </option>
+
+                        <option value="电动车">
+                            🛵 电动车
+                        </option>
+
+                        <option value="其他">
+                            其他
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        车牌号码
+                    </label>
+
+                    <input
+                        type="text"
+                        id="vehicleNumber"
+                        placeholder="没有车牌可留空"
+                        maxlength="50"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================================
+                 配送区域
+            ========================================== -->
+
+            <div class="form-group">
+
+                <label>
+                    配送区域
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="deliveryArea"
+                    placeholder="例如：Mandalay / Chanayethazan"
+                    maxlength="200"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- =========================================
+                 个人说明
+            ========================================== -->
+
+            <div class="form-group">
+
+                <label>
+                    个人说明
+                </label>
+
+                <textarea
+                    id="description"
+                    placeholder="可以填写您的配送经验、工作时间、其他信息等"
+                    maxlength="1000"
+                ></textarea>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 提交
+            ========================================== -->
+
+            <button
+                type="submit"
+                class="submit-btn"
+                id="submitBtn"
+            >
+
+                🛵 提交配送员申请
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- =============================================
+             状态提示
+        ============================================== -->
+
+        <div
+            id="statusBox"
+            class="status-box"
+        ></div>
+
+
+    </div>
+
+
+
+    <div class="footer">
+
+        MDY FOOD 配送员申请系统
+
+        <br>
+
+        <a
+            href="index.html"
+            class="back-link"
+        >
+            ← 返回 MDY FOOD
+        </a>
+
+    </div>
+
 
 </div>
 
 
 
 <script>
+
 
 /* =========================================================
    Firebase 配置
@@ -559,359 +820,607 @@ const firebaseConfig = {
 };
 
 
+if (
+    !firebase.apps.length
+) {
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+}
+
+
+const db =
+    firebase.firestore();
+
+
+
 /* =========================================================
-   初始化 Firebase
+   DOM
 ========================================================= */
 
-firebase.initializeApp(firebaseConfig);
+const form =
+    document.getElementById(
+        "deliveryForm"
+    );
 
-const auth = firebase.auth();
 
-const db = firebase.firestore();
+const submitBtn =
+    document.getElementById(
+        "submitBtn"
+    );
+
+
+const statusBox =
+    document.getElementById(
+        "statusBox"
+    );
+
+
+
+/* =========================================================
+   工具
+========================================================= */
+
+function cleanValue(value) {
+
+    return String(
+        value || ""
+    ).trim();
+
+}
+
+
+function showError(message) {
+
+    statusBox.className =
+        "status-box error";
+
+    statusBox.innerHTML =
+
+        `
+            ❌ <b>提交失败</b>
+
+            <br><br>
+
+            ${escapeHtml(message)}
+        `;
+
+}
+
+
+function showSuccess(
+    applicationId
+) {
+
+    statusBox.className =
+        "status-box success";
+
+    statusBox.innerHTML =
+
+        `
+            <div class="success-icon">
+                ✅
+            </div>
+
+            <b>
+                配送员申请提交成功！
+            </b>
+
+            <br><br>
+
+            您的申请已经进入
+            <b>管理员审核</b>。
+
+            <br>
+
+            请耐心等待审核结果。
+
+            <br><br>
+
+            申请编号：
+
+            <br>
+
+            <span class="application-id">
+                ${escapeHtml(
+                    applicationId
+                )}
+            </span>
+
+            <br><br>
+
+            <small>
+                请保存这个申请编号，
+                后续查询申请状态时可以使用。
+            </small>
+        `;
+
+}
+
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
 
 
 /* =========================================================
    表单提交
 ========================================================= */
 
-document
-    .getElementById("deliveryForm")
-    .addEventListener("submit", async function(event) {
+form.addEventListener(
+    "submit",
+    async function(event) {
 
         event.preventDefault();
 
 
-        const submitBtn =
-            document.getElementById("submitBtn");
-
-        const message =
-            document.getElementById("message");
-
-
-        /* -------------------------
-           获取表单
-        ------------------------- */
-
-        const name =
-            document
-                .getElementById("name")
-                .value
-                .trim();
-
-        const phone =
-            document
-                .getElementById("phone")
-                .value
-                .trim();
-
-        const email =
-            document
-                .getElementById("email")
-                .value
-                .trim();
-
-        const password =
-            document
-                .getElementById("password")
-                .value;
-
-        const confirmPassword =
-            document
-                .getElementById("confirmPassword")
-                .value;
-
-        const idNumber =
-            document
-                .getElementById("idNumber")
-                .value
-                .trim();
-
-        const vehicleType =
-            document
-                .getElementById("vehicleType")
-                .value;
-
-        const vehicleNumber =
-            document
-                .getElementById("vehicleNumber")
-                .value
-                .trim();
-
-        const deliveryArea =
-            document
-                .getElementById("deliveryArea")
-                .value
-                .trim();
-
-        const description =
-            document
-                .getElementById("description")
-                .value
-                .trim();
-
-
-        /* -------------------------
-           基础检查
-        ------------------------- */
+        /*
+         * 防止重复点击
+         */
 
         if (
-            !name ||
-            !phone ||
-            !email ||
-            !password ||
-            !confirmPassword ||
-            !idNumber ||
-            !vehicleType ||
-            !deliveryArea
+            submitBtn.disabled
         ) {
 
-            showMessage(
-                "请填写所有必填项目。",
-                "error"
-            );
-
             return;
+
         }
 
 
-        if (password.length < 6) {
+        /* ================================================
+           获取数据
+        ================================================ */
 
-            showMessage(
-                "密码至少需要 6 位。",
-                "error"
+        const name =
+            cleanValue(
+                document.getElementById(
+                    "name"
+                ).value
+            );
+
+
+        const phone =
+            cleanValue(
+                document.getElementById(
+                    "phone"
+                ).value
+            );
+
+
+        const email =
+            cleanValue(
+                document.getElementById(
+                    "email"
+                ).value
+            );
+
+
+        const idNumber =
+            cleanValue(
+                document.getElementById(
+                    "idNumber"
+                ).value
+            );
+
+
+        const vehicleType =
+            cleanValue(
+                document.getElementById(
+                    "vehicleType"
+                ).value
+            );
+
+
+        const vehicleNumber =
+            cleanValue(
+                document.getElementById(
+                    "vehicleNumber"
+                ).value
+            );
+
+
+        const deliveryArea =
+            cleanValue(
+                document.getElementById(
+                    "deliveryArea"
+                ).value
+            );
+
+
+        const description =
+            cleanValue(
+                document.getElementById(
+                    "description"
+                ).value
+            );
+
+
+
+        /* ================================================
+           基础验证
+        ================================================ */
+
+        if (!name) {
+
+            showError(
+                "请输入您的姓名。"
             );
 
             return;
+
         }
 
 
-        if (password !== confirmPassword) {
+        if (!phone) {
 
-            showMessage(
-                "两次输入的密码不一致。",
-                "error"
+            showError(
+                "请输入手机号码。"
             );
 
             return;
+
         }
 
 
-        /* -------------------------
-           禁用按钮
-        ------------------------- */
+        if (!idNumber) {
 
-        submitBtn.disabled = true;
+            showError(
+                "请输入身份证号码。"
+            );
+
+            return;
+
+        }
+
+
+        if (!vehicleType) {
+
+            showError(
+                "请选择交通工具。"
+            );
+
+            return;
+
+        }
+
+
+        if (!deliveryArea) {
+
+            showError(
+                "请输入配送区域。"
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * 手机号码长度检查
+         */
+
+        if (
+            phone.length < 6
+        ) {
+
+            showError(
+                "请输入正确的手机号码。"
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * 邮箱如果填写则检查格式
+         */
+
+        if (
+            email &&
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                .test(email)
+        ) {
+
+            showError(
+                "请输入正确的邮箱地址。"
+            );
+
+            return;
+
+        }
+
+
+
+        /* ================================================
+           确认
+        ================================================ */
+
+        const confirmed =
+            confirm(
+
+                "确认提交配送员申请吗？\n\n" +
+
+                "姓名：" +
+                name +
+                "\n\n" +
+
+                "电话：" +
+                phone +
+                "\n\n" +
+
+                "配送区域：" +
+                deliveryArea
+
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+
+        /* ================================================
+           Loading
+        ================================================ */
+
+        submitBtn.disabled =
+            true;
 
         submitBtn.innerText =
-            "正在提交申请...";
+            "⏳ 正在提交...";
+
+
+        statusBox.className =
+            "status-box";
+
+        statusBox.innerHTML =
+            "";
+
 
 
         try {
 
 
-            /* =================================================
-               1. 创建 Firebase Auth 账号
-            ================================================= */
+            /* ============================================
+               检查是否存在相同身份证申请
+            ============================================ */
 
-            const userCredential =
-                await auth.createUserWithEmailAndPassword(
+            const duplicateSnapshot =
+                await db
+                    .collection(
+                        "deliveryApplications"
+                    )
+                    .where(
+                        "idNumber",
+                        "==",
+                        idNumber
+                    )
+                    .limit(1)
+                    .get();
+
+
+            if (
+                !duplicateSnapshot.empty
+            ) {
+
+                const existing =
+                    duplicateSnapshot
+                        .docs[0]
+                        .data() || {};
+
+
+                const existingStatus =
+                    existing.status ||
+                    "pending";
+
+
+                if (
+                    existingStatus ===
+                    "pending"
+                ) {
+
+                    throw new Error(
+                        "您已经提交过配送员申请，目前正在审核中，请不要重复提交。"
+                    );
+
+                }
+
+
+                if (
+                    existingStatus ===
+                    "approved"
+                ) {
+
+                    throw new Error(
+                        "该身份证已经注册为正式配送员。"
+                    );
+
+                }
+
+            }
+
+
+
+            /* ============================================
+               创建配送员申请
+            ============================================ */
+
+            const applicationRef =
+                db
+                    .collection(
+                        "deliveryApplications"
+                    )
+                    .doc();
+
+
+            await applicationRef.set({
+
+                /*
+                 * 基本身份
+                 */
+
+                uid:
+                    applicationRef.id,
+
+                name:
+                    name,
+
+                phone:
+                    phone,
+
+                email:
                     email,
-                    password
-                );
+
+                idNumber:
+                    idNumber,
 
 
-            const user =
-                userCredential.user;
+                /*
+                 * 交通工具
+                 */
+
+                vehicleType:
+                    vehicleType,
+
+                vehicleNumber:
+                    vehicleNumber,
 
 
-            /* =================================================
-               2. 保存配送员申请
-            ================================================= */
+                /*
+                 * 配送区域
+                 */
 
-            await db
-                .collection("deliveryApplications")
-                .doc(user.uid)
-                .set({
-
-                    uid:
-                        user.uid,
-
-                    name:
-                        name,
-
-                    phone:
-                        phone,
-
-                    email:
-                        email,
-
-                    idNumber:
-                        idNumber,
-
-                    vehicleType:
-                        vehicleType,
-
-                    vehicleNumber:
-                        vehicleNumber,
-
-                    deliveryArea:
-                        deliveryArea,
-
-                    description:
-                        description,
-
-                    status:
-                        "pending",
-
-                    createdAt:
-                        firebase.firestore
-                            .FieldValue
-                            .serverTimestamp()
-
-                });
+                deliveryArea:
+                    deliveryArea,
 
 
-            /* =================================================
-               3. 退出当前账号
-            ================================================= */
+                /*
+                 * 个人说明
+                 */
 
-            await auth.signOut();
+                description:
+                    description,
 
 
-            /* =================================================
-               4. 显示成功
-            ================================================= */
+                /*
+                 * 审核状态
+                 */
 
-            showMessage(
-                "✅ 配送员申请提交成功！<br><br>" +
-                "您的申请正在等待管理员审核。<br>" +
-                "审核通过后即可登录配送员后台。",
-                "success"
+                status:
+                    "pending",
+
+
+                /*
+                 * 创建时间
+                 */
+
+                createdAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+
+            /* ============================================
+               成功
+            ============================================ */
+
+            showSuccess(
+                applicationRef.id
             );
 
 
-            document
-                .getElementById("deliveryForm")
-                .reset();
+            /*
+             * 清空表单
+             */
 
+            form.reset();
+
+
+            /*
+             * 禁止再次提交
+             */
+
+            submitBtn.disabled =
+                true;
 
             submitBtn.innerText =
-                "申请已提交";
+                "✅ 申请已提交";
 
 
-            /* 3 秒后回首页 */
+        }
 
-            setTimeout(function() {
-
-                window.location.href =
-                    "index.html";
-
-            }, 3000);
-
-
-        } catch (error) {
+        catch (error) {
 
             console.error(
-                "配送员注册失败:",
+                "配送员申请提交失败:",
                 error
             );
 
 
-            let errorMessage =
-                "注册失败，请稍后再试。";
-
-
-            if (
-                error.code ===
-                "auth/email-already-in-use"
-            ) {
-
-                errorMessage =
-                    "这个邮箱已经注册过账号。";
-
-            }
-            else if (
-                error.code ===
-                "auth/invalid-email"
-            ) {
-
-                errorMessage =
-                    "邮箱格式不正确。";
-
-            }
-            else if (
-                error.code ===
-                "auth/weak-password"
-            ) {
-
-                errorMessage =
-                    "密码强度不足，请使用至少 6 位密码。";
-
-            }
-            else if (
-                error.code ===
-                "auth/network-request-failed"
-            ) {
-
-                errorMessage =
-                    "网络连接失败，请检查网络后重试。";
-
-            }
-            else if (
-                error.code ===
-                "permission-denied"
-            ) {
-
-                errorMessage =
-                    "没有权限写入配送员申请，请检查 Firestore Rules。";
-
-            }
-            else if (error.message) {
-
-                errorMessage =
-                    error.message;
-
-            }
-
-
-            showMessage(
-                "❌ " + errorMessage,
-                "error"
+            showError(
+                error.message ||
+                "提交失败，请稍后再试。"
             );
 
 
-            submitBtn.disabled = false;
+            submitBtn.disabled =
+                false;
 
             submitBtn.innerText =
                 "🛵 提交配送员申请";
 
         }
 
-    });
+    }
+);
 
-
-
-/* =========================================================
-   显示消息
-========================================================= */
-
-function showMessage(
-    text,
-    type
-) {
-
-    const message =
-        document.getElementById("message");
-
-
-    message.innerHTML =
-        text;
-
-
-    message.className =
-        "message " + type;
-
-}
 
 </script>
 
