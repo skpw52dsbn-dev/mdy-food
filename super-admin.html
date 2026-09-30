@@ -118,7 +118,7 @@ header p {
     display: grid;
 
     grid-template-columns:
-        repeat(5, minmax(0, 1fr));
+        repeat(6, minmax(0, 1fr));
 
     gap: 15px;
 }
@@ -497,6 +497,73 @@ header p {
 
 
 /* =========================
+   配送员
+========================= */
+
+.delivery-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+}
+
+.delivery-summary-card {
+    background: white;
+
+    border: 1px solid #eee;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    box-shadow:
+        0 2px 10px rgba(0,0,0,.05);
+}
+
+.delivery-summary-card .icon {
+    font-size: 27px;
+
+    margin-bottom: 7px;
+}
+
+.delivery-summary-card .label {
+    color: #777;
+
+    font-size: 13px;
+}
+
+.delivery-summary-card .value {
+    margin-top: 7px;
+
+    font-size: 24px;
+
+    font-weight: bold;
+}
+
+.delivery-section-note {
+    background: #eff6ff;
+
+    border: 1px solid #bfdbfe;
+
+    color: #1e40af;
+
+    padding: 12px 15px;
+
+    border-radius: 10px;
+
+    margin-bottom: 15px;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
    搜索
 ========================= */
 
@@ -741,6 +808,11 @@ tr:last-child td {
             repeat(2, minmax(0, 1fr));
     }
 
+    .delivery-summary {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
 }
 
 @media (max-width: 700px) {
@@ -769,12 +841,14 @@ tr:last-child td {
 
     .stats-grid,
     .finance-grid,
-    .merchant-finance-grid {
+    .merchant-finance-grid,
+    .delivery-summary {
         grid-template-columns: 1fr;
     }
 
     .finance-setting {
         align-items: flex-start;
+
         flex-direction: column;
     }
 
@@ -805,7 +879,7 @@ tr:last-child td {
         </h1>
 
         <p>
-            平台管理中心 · 财务 · 商家 · 订单 · 评价
+            平台管理中心 · 财务 · 商家 · 配送员 · 订单 · 评价
         </p>
 
     </div>
@@ -919,6 +993,26 @@ tr:last-child td {
             <div
                 class="value"
                 id="pendingRestaurants"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="icon">
+                🛵
+            </div>
+
+            <div class="label">
+                待审核配送员
+            </div>
+
+            <div
+                class="value"
+                id="pendingDeliveries"
             >
                 0
             </div>
@@ -1288,6 +1382,163 @@ tr:last-child td {
 
 
 <!-- =====================================================
+     配送员管理
+===================================================== -->
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h2>
+            🛵 配送员管理
+        </h2>
+
+        <span>
+            配送员申请审核中心
+        </span>
+
+    </div>
+
+
+    <div class="delivery-summary">
+
+
+        <div class="delivery-summary-card">
+
+            <div class="icon">
+                🛵
+            </div>
+
+            <div class="label">
+                配送员总申请
+            </div>
+
+            <div
+                class="value"
+                id="deliveryTotal"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="delivery-summary-card">
+
+            <div class="icon">
+                ⏳
+            </div>
+
+            <div class="label">
+                待审核
+            </div>
+
+            <div
+                class="value"
+                id="deliveryPending"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="delivery-summary-card">
+
+            <div class="icon">
+                ✅
+            </div>
+
+            <div class="label">
+                已通过
+            </div>
+
+            <div
+                class="value"
+                id="deliveryApproved"
+            >
+                0
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="delivery-section-note">
+
+        🛵 配送员提交申请后会进入「待审核」。
+        <br>
+        管理员审核通过后，系统会自动创建正式配送员资料。
+        后续配送员登录和接单系统将使用这份资料。
+
+    </div>
+
+
+    <input
+        type="text"
+        class="search-box"
+        id="deliverySearch"
+        placeholder="🔎 搜索配送员姓名 / 电话 / 邮箱 / 配送区域..."
+        oninput="renderDeliveries()"
+    >
+
+
+    <div class="filters">
+
+
+        <button
+            class="filter-btn active"
+            onclick="setDeliveryFilter('all', this)"
+        >
+            全部
+        </button>
+
+
+        <button
+            class="filter-btn"
+            onclick="setDeliveryFilter('pending', this)"
+        >
+            待审核
+        </button>
+
+
+        <button
+            class="filter-btn"
+            onclick="setDeliveryFilter('approved', this)"
+        >
+            已通过
+        </button>
+
+
+        <button
+            class="filter-btn"
+            onclick="setDeliveryFilter('rejected', this)"
+        >
+            已拒绝
+        </button>
+
+
+    </div>
+
+
+    <div
+        id="deliveriesList"
+        class="table-wrap"
+    >
+
+        <div class="loading">
+            正在读取配送员申请...
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
      商家申请
 ===================================================== -->
 
@@ -1303,6 +1554,7 @@ tr:last-child td {
 
 
     <div class="filters">
+
 
         <button
             class="filter-btn active"
@@ -1334,6 +1586,7 @@ tr:last-child td {
         >
             已拒绝
         </button>
+
 
     </div>
 
@@ -1418,6 +1671,7 @@ tr:last-child td {
 
     <div class="filters">
 
+
         <button
             class="filter-btn active"
             onclick="setOrderFilter('all', this)"
@@ -1456,6 +1710,7 @@ tr:last-child td {
         >
             已完成
         </button>
+
 
     </div>
 
@@ -1575,28 +1830,15 @@ let allApplications = [];
 
 let allRestaurants = [];
 
-/*
- * 商家结算记录：
- *
- * merchantSettlements/{restaurantId}
- *
- * 例如：
- *
- * {
- *   restaurantId: "xxx",
- *   restaurantName: "四川饭馆",
- *   settledAmount: 351900,
- *   lastSettlementAmount: 351900,
- *   lastSettlementAt: timestamp,
- *   updatedAt: timestamp
- * }
- */
+let allDeliveries = [];
 
 let allSettlements = {};
 
 let applicationFilter = "all";
 
 let orderFilter = "all";
+
+let deliveryFilter = "all";
 
 let commissionRate = 10;
 
@@ -1791,7 +2033,7 @@ function isCompletedOrder(order) {
 
 
 /* =========================================================
-   读取云端平台抽成
+   读取平台抽成
 ========================================================= */
 
 async function loadCommissionRate() {
@@ -1882,7 +2124,7 @@ async function loadCommissionRate() {
 
 
 /* =========================================================
-   保存云端抽成
+   保存平台抽成
 ========================================================= */
 
 async function saveCommissionRate() {
@@ -1992,7 +2234,7 @@ async function saveCommissionRate() {
 
 
 /* =========================================================
-   读取商家结算记录
+   读取商家结算
 ========================================================= */
 
 async function loadSettlements() {
@@ -2447,6 +2689,107 @@ async function loadRestaurants() {
 
 
 /* =========================================================
+   读取配送员申请
+========================================================= */
+
+async function loadDeliveries() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "deliveryApplications"
+                )
+                .get();
+
+
+        allDeliveries = [];
+
+
+        snapshot.forEach(
+            function(doc) {
+
+                allDeliveries.push({
+
+                    id: doc.id,
+
+                    ...doc.data()
+
+                });
+
+            }
+        );
+
+
+        allDeliveries.sort(
+            function(a, b) {
+
+                const dateA =
+                    getDateValue(
+                        a.createdAt
+                    );
+
+                const dateB =
+                    getDateValue(
+                        b.createdAt
+                    );
+
+
+                return
+                    (
+                        dateB?.getTime() ||
+                        0
+                    )
+                    -
+                    (
+                        dateA?.getTime() ||
+                        0
+                    );
+
+            }
+        );
+
+
+        renderDeliveries();
+
+        updateDeliveryStats();
+
+        updatePlatformStats();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "读取配送员申请失败:",
+            error
+        );
+
+
+        document.getElementById(
+            "deliveriesList"
+        ).innerHTML =
+
+            `<div class="empty">
+
+                ❌ 读取配送员申请失败
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
+            </div>`;
+
+    }
+
+}
+
+
+
+/* =========================================================
    平台概况
 ========================================================= */
 
@@ -2507,6 +2850,19 @@ function updatePlatformStats() {
         ).length;
 
 
+    const pendingDeliveries =
+        allDeliveries.filter(
+            function(item) {
+
+                return (
+                    item.status ===
+                    "pending"
+                );
+
+            }
+        ).length;
+
+
     document.getElementById(
         "approvedRestaurants"
     ).innerText =
@@ -2520,9 +2876,821 @@ function updatePlatformStats() {
 
 
     document.getElementById(
+        "pendingDeliveries"
+    ).innerText =
+        pendingDeliveries;
+
+
+    document.getElementById(
         "totalReviews"
     ).innerText =
         allReviews.length;
+
+}
+
+
+
+/* =========================================================
+   配送员统计
+========================================================= */
+
+function updateDeliveryStats() {
+
+    const total =
+        allDeliveries.length;
+
+
+    const pending =
+        allDeliveries.filter(
+            function(item) {
+
+                return (
+                    item.status ===
+                    "pending"
+                );
+
+            }
+        ).length;
+
+
+    const approved =
+        allDeliveries.filter(
+            function(item) {
+
+                return (
+                    item.status ===
+                    "approved"
+                );
+
+            }
+        ).length;
+
+
+    document.getElementById(
+        "deliveryTotal"
+    ).innerText =
+        total;
+
+
+    document.getElementById(
+        "deliveryPending"
+    ).innerText =
+        pending;
+
+
+    document.getElementById(
+        "deliveryApproved"
+    ).innerText =
+        approved;
+
+
+    document.getElementById(
+        "pendingDeliveries"
+    ).innerText =
+        pending;
+
+}
+
+
+
+/* =========================================================
+   配送员筛选
+========================================================= */
+
+function setDeliveryFilter(
+    filter,
+    button
+) {
+
+    deliveryFilter =
+        filter;
+
+
+    const parent =
+        button.parentElement;
+
+
+    parent
+        .querySelectorAll(
+            ".filter-btn"
+        )
+        .forEach(
+            function(btn) {
+
+                btn.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    renderDeliveries();
+
+}
+
+
+
+/* =========================================================
+   配送员列表
+========================================================= */
+
+function renderDeliveries() {
+
+    const container =
+        document.getElementById(
+            "deliveriesList"
+        );
+
+
+    const search =
+        (
+            document.getElementById(
+                "deliverySearch"
+            )?.value || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    let list =
+        allDeliveries;
+
+
+    if (
+        deliveryFilter !==
+        "all"
+    ) {
+
+        list =
+            list.filter(
+                function(item) {
+
+                    return (
+                        item.status ===
+                        deliveryFilter
+                    );
+
+                }
+            );
+
+    }
+
+
+    if (search) {
+
+        list =
+            list.filter(
+                function(item) {
+
+                    const text =
+
+                        (
+                            item.name ||
+                            ""
+                        )
+
+                        + " " +
+
+                        (
+                            item.phone ||
+                            ""
+                        )
+
+                        + " " +
+
+                        (
+                            item.email ||
+                            ""
+                        )
+
+                        + " " +
+
+                        (
+                            item.deliveryArea ||
+                            ""
+                        )
+
+                        + " " +
+
+                        (
+                            item.vehicleType ||
+                            ""
+                        )
+
+                        + " " +
+
+                        (
+                            item.vehicleNumber ||
+                            ""
+                        );
+
+
+                    return text
+                        .toLowerCase()
+                        .includes(search);
+
+                }
+            );
+
+    }
+
+
+    if (!list.length) {
+
+        container.innerHTML =
+
+            `<div class="empty">
+
+                暂无配送员申请
+
+            </div>`;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        配送员
+                    </th>
+
+                    <th>
+                        联系方式
+                    </th>
+
+                    <th>
+                        证件号码
+                    </th>
+
+                    <th>
+                        交通工具
+                    </th>
+
+                    <th>
+                        车牌
+                    </th>
+
+                    <th>
+                        配送区域
+                    </th>
+
+                    <th>
+                        状态
+                    </th>
+
+                    <th>
+                        申请时间
+                    </th>
+
+                    <th>
+                        操作
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+
+    list.forEach(
+        function(item) {
+
+            const status =
+                item.status ||
+                "pending";
+
+
+            let statusText =
+                "待审核";
+
+
+            let statusClass =
+                "pending";
+
+
+            if (
+                status ===
+                "approved"
+            ) {
+
+                statusText =
+                    "审核通过";
+
+                statusClass =
+                    "approved";
+
+            }
+
+
+            if (
+                status ===
+                "rejected"
+            ) {
+
+                statusText =
+                    "已拒绝";
+
+                statusClass =
+                    "rejected";
+
+            }
+
+
+            let buttons = "";
+
+
+            if (
+                status !==
+                "approved"
+            ) {
+
+                buttons += `
+
+                    <button
+                        class="action-btn approve-btn"
+                        onclick="approveDelivery('${escapeHtml(item.id)}')"
+                    >
+                        ✅
+                        ${
+                            status ===
+                            "rejected"
+
+                                ?
+
+                                "重新通过"
+
+                                :
+
+                                "审核通过"
+                        }
+                    </button>
+
+                `;
+
+            }
+
+
+            if (
+                status !==
+                "approved" &&
+                status !==
+                "rejected"
+            ) {
+
+                buttons += `
+
+                    <button
+                        class="action-btn reject-btn"
+                        onclick="rejectDelivery('${escapeHtml(item.id)}')"
+                    >
+                        ❌ 拒绝申请
+                    </button>
+
+                `;
+
+            }
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+
+                        <b>
+                            🛵
+                            ${escapeHtml(
+                                item.name ||
+                                ""
+                            )}
+                        </b>
+
+                        <br>
+
+                        <small>
+                            UID：
+                            ${escapeHtml(
+                                item.uid ||
+                                item.id
+                            )}
+                        </small>
+
+                    </td>
+
+
+                    <td>
+
+                        📱
+                        ${escapeHtml(
+                            item.phone ||
+                            ""
+                        )}
+
+                        <br>
+
+                        ✉️
+                        ${escapeHtml(
+                            item.email ||
+                            ""
+                        )}
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHtml(
+                            item.idNumber ||
+                            ""
+                        )}
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHtml(
+                            item.vehicleType ||
+                            ""
+                        )}
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHtml(
+                            item.vehicleNumber ||
+                            "无"
+                        )}
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHtml(
+                            item.deliveryArea ||
+                            ""
+                        )}
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="status ${statusClass}"
+                        >
+                            ${statusText}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        ${formatDate(
+                            item.createdAt
+                        )}
+
+                    </td>
+
+
+                    <td>
+
+                        ${buttons}
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+    `;
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+
+/* =========================================================
+   配送员审核通过
+========================================================= */
+
+async function approveDelivery(id) {
+
+    const application =
+        allDeliveries.find(
+            function(item) {
+
+                return item.id === id;
+
+            }
+        );
+
+
+    if (!application) {
+
+        alert(
+            "找不到配送员申请。"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !confirm(
+
+            "确定要通过这个配送员吗？\n\n" +
+
+            "姓名：" +
+            (
+                application.name ||
+                ""
+            ) +
+
+            "\n\n" +
+
+            "电话：" +
+            (
+                application.phone ||
+                ""
+            )
+
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        /*
+         * 1.
+         * 更新申请状态
+         */
+
+        await db
+            .collection(
+                "deliveryApplications"
+            )
+            .doc(id)
+            .update({
+
+                status:
+                    "approved",
+
+                approvedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        /*
+         * 2.
+         * 创建正式配送员资料
+         */
+
+        await db
+            .collection(
+                "delivery"
+            )
+            .doc(id)
+            .set({
+
+                uid:
+                    application.uid ||
+                    id,
+
+                name:
+                    application.name ||
+                    "",
+
+                phone:
+                    application.phone ||
+                    "",
+
+                email:
+                    application.email ||
+                    "",
+
+                idNumber:
+                    application.idNumber ||
+                    "",
+
+                vehicleType:
+                    application.vehicleType ||
+                    "",
+
+                vehicleNumber:
+                    application.vehicleNumber ||
+                    "",
+
+                deliveryArea:
+                    application.deliveryArea ||
+                    "",
+
+                description:
+                    application.description ||
+                    "",
+
+                status:
+                    "approved",
+
+                online:
+                    false,
+
+                available:
+                    true,
+
+                enabled:
+                    true,
+
+                createdAt:
+                    application.createdAt ||
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp(),
+
+                approvedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            }, {
+
+                merge: true
+
+            });
+
+
+        alert(
+            "配送员审核通过！\n\n" +
+            "已创建正式配送员资料。"
+        );
+
+
+        await refreshAll();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "审核配送员失败:",
+            error
+        );
+
+
+        alert(
+            "操作失败：\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   拒绝配送员
+========================================================= */
+
+async function rejectDelivery(id) {
+
+    const application =
+        allDeliveries.find(
+            function(item) {
+
+                return item.id === id;
+
+            }
+        );
+
+
+    if (!application) {
+
+        alert(
+            "找不到配送员申请。"
+        );
+
+        return;
+
+    }
+
+
+    const reason =
+        prompt(
+            "请输入拒绝原因："
+        );
+
+
+    if (
+        reason === null
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        reason.trim() === ""
+    ) {
+
+        alert(
+            "请输入拒绝原因。"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await db
+            .collection(
+                "deliveryApplications"
+            )
+            .doc(id)
+            .update({
+
+                status:
+                    "rejected",
+
+                rejectionReason:
+                    reason.trim(),
+
+                rejectedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        alert(
+            "已拒绝该配送员申请。"
+        );
+
+
+        await refreshAll();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "拒绝配送员失败:",
+            error
+        );
+
+
+        alert(
+            "操作失败：\n" +
+            error.message
+        );
+
+    }
 
 }
 
@@ -2715,10 +3883,6 @@ function renderMerchantFinance() {
         .toLowerCase();
 
 
-    /*
-     * 建立正式商家列表
-     */
-
     const merchantMap =
         new Map();
 
@@ -2759,14 +3923,6 @@ function renderMerchantFinance() {
         }
     );
 
-
-    /*
-     * 检查所有已完成订单。
-     *
-     * 如果存在订单对应的商家
-     * 不在 restaurants 中，
-     * 也显示出来方便管理员检查。
-     */
 
     allOrders.forEach(
         function(order) {
@@ -2862,10 +4018,6 @@ function renderMerchantFinance() {
             let completedAmount = 0;
 
 
-            /*
-             * 计算当前商家的已完成订单
-             */
-
             allOrders.forEach(
                 function(order) {
 
@@ -2895,28 +4047,16 @@ function renderMerchantFinance() {
             );
 
 
-            /*
-             * 平台抽成
-             */
-
             const platformIncome =
                 completedAmount *
                 commissionRate /
                 100;
 
 
-            /*
-             * 商家累计应结算
-             */
-
             const settlement =
                 completedAmount -
                 platformIncome;
 
-
-            /*
-             * 读取历史已结算金额
-             */
 
             const settlementRecord =
                 allSettlements[
@@ -2930,10 +4070,6 @@ function renderMerchantFinance() {
                 ) || 0;
 
 
-            /*
-             * 待结算金额
-             */
-
             const pendingSettlement =
                 Math.max(
                     0,
@@ -2941,10 +4077,6 @@ function renderMerchantFinance() {
                     settledAmount
                 );
 
-
-            /*
-             * 评价
-             */
 
             let reviewCount = 0;
 
@@ -3016,12 +4148,6 @@ function renderMerchantFinance() {
                 settlementRecord
                     .lastSettlementAt;
 
-
-            /*
-             * 判断是否为真实商家。
-             *
-             * unknown 不允许结算。
-             */
 
             const isRealMerchant =
                 restaurantId !==
@@ -3343,10 +4469,6 @@ async function settleMerchant(
     restaurantId
 ) {
 
-    /*
-     * 防止 unknown 商家结算
-     */
-
     if (
         !restaurantId ||
         restaurantId ===
@@ -3361,10 +4483,6 @@ async function settleMerchant(
 
     }
 
-
-    /*
-     * 找商家
-     */
 
     const restaurant =
         allRestaurants.find(
@@ -3413,10 +4531,6 @@ async function settleMerchant(
     }
 
 
-    /*
-     * 重新计算当前商家已完成金额
-     */
-
     let completedAmount = 0;
 
 
@@ -3447,28 +4561,16 @@ async function settleMerchant(
     );
 
 
-    /*
-     * 当前商家平台抽成
-     */
-
     const platformIncome =
         completedAmount *
         commissionRate /
         100;
 
 
-    /*
-     * 当前累计应结算
-     */
-
     const merchantSettlement =
         completedAmount -
         platformIncome;
 
-
-    /*
-     * 当前历史已结算
-     */
 
     const oldRecord =
         allSettlements[
@@ -3481,10 +4583,6 @@ async function settleMerchant(
             oldRecord.settledAmount
         ) || 0;
 
-
-    /*
-     * 当前真正待结算
-     */
 
     const pendingAmount =
         Math.max(
@@ -3507,11 +4605,6 @@ async function settleMerchant(
     }
 
 
-    /*
-     * 找到按钮并暂时禁用
-     * 防止用户连续点击。
-     */
-
     const button =
         document.getElementById(
             "settle-btn-" +
@@ -3528,10 +4621,6 @@ async function settleMerchant(
 
     }
 
-
-    /*
-     * 二次确认
-     */
 
     const confirmed =
         confirm(
@@ -3574,13 +4663,6 @@ async function settleMerchant(
 
     try {
 
-        /*
-         * Firestore Transaction
-         *
-         * 防止连续点击时，
-         * 多次覆盖已结算金额。
-         */
-
         await db.runTransaction(
             async function(transaction) {
 
@@ -3611,11 +4693,6 @@ async function settleMerchant(
                         data.settledAmount
                     ) || 0;
 
-
-                /*
-                 * 根据当前页面订单数据
-                 * 重新计算最终待结算金额。
-                 */
 
                 const currentPending =
                     Math.max(
@@ -3676,10 +4753,6 @@ async function settleMerchant(
             }
         );
 
-
-        /*
-         * 本地立即更新。
-         */
 
         const old =
             allSettlements[
@@ -3859,37 +4932,21 @@ function renderApplications() {
 
                 <tr>
 
-                    <th>
-                        商家
-                    </th>
+                    <th>商家</th>
 
-                    <th>
-                        类型
-                    </th>
+                    <th>类型</th>
 
-                    <th>
-                        联系人
-                    </th>
+                    <th>联系人</th>
 
-                    <th>
-                        电话
-                    </th>
+                    <th>电话</th>
 
-                    <th>
-                        地址
-                    </th>
+                    <th>地址</th>
 
-                    <th>
-                        状态
-                    </th>
+                    <th>状态</th>
 
-                    <th>
-                        时间
-                    </th>
+                    <th>时间</th>
 
-                    <th>
-                        操作
-                    </th>
+                    <th>操作</th>
 
                 </tr>
 
@@ -4092,7 +5149,7 @@ function renderApplications() {
 
 
 /* =========================================================
-   审核通过
+   商家审核通过
 ========================================================= */
 
 async function approveRestaurant(id) {
@@ -4434,41 +5491,23 @@ function renderRestaurants() {
 
                 <tr>
 
-                    <th>
-                        商家
-                    </th>
+                    <th>商家</th>
 
-                    <th>
-                        状态
-                    </th>
+                    <th>状态</th>
 
-                    <th>
-                        地址
-                    </th>
+                    <th>地址</th>
 
-                    <th>
-                        电话
-                    </th>
+                    <th>电话</th>
 
-                    <th>
-                        订单
-                    </th>
+                    <th>订单</th>
 
-                    <th>
-                        销售额
-                    </th>
+                    <th>销售额</th>
 
-                    <th>
-                        评分
-                    </th>
+                    <th>评分</th>
 
-                    <th>
-                        评价
-                    </th>
+                    <th>评价</th>
 
-                    <th>
-                        操作
-                    </th>
+                    <th>操作</th>
 
                 </tr>
 
@@ -4964,45 +6003,25 @@ function renderOrders() {
 
                 <tr>
 
-                    <th>
-                        订单号
-                    </th>
+                    <th>订单号</th>
 
-                    <th>
-                        商家
-                    </th>
+                    <th>商家</th>
 
-                    <th>
-                        客户
-                    </th>
+                    <th>客户</th>
 
-                    <th>
-                        电话
-                    </th>
+                    <th>电话</th>
 
-                    <th>
-                        地址
-                    </th>
+                    <th>地址</th>
 
-                    <th>
-                        支付
-                    </th>
+                    <th>支付</th>
 
-                    <th>
-                        状态
-                    </th>
+                    <th>状态</th>
 
-                    <th>
-                        商品
-                    </th>
+                    <th>商品</th>
 
-                    <th>
-                        金额
-                    </th>
+                    <th>金额</th>
 
-                    <th>
-                        时间
-                    </th>
+                    <th>时间</th>
 
                 </tr>
 
@@ -5252,25 +6271,15 @@ function renderReviews() {
 
                 <tr>
 
-                    <th>
-                        评分
-                    </th>
+                    <th>评分</th>
 
-                    <th>
-                        商家
-                    </th>
+                    <th>商家</th>
 
-                    <th>
-                        客户
-                    </th>
+                    <th>客户</th>
 
-                    <th>
-                        评价内容
-                    </th>
+                    <th>评价内容</th>
 
-                    <th>
-                        时间
-                    </th>
+                    <th>时间</th>
 
                 </tr>
 
@@ -5369,7 +6378,7 @@ async function refreshAll() {
 
         /*
          * 1.
-         * 读取平台抽成
+         * 平台抽成
          */
 
         await loadCommissionRate();
@@ -5377,7 +6386,7 @@ async function refreshAll() {
 
         /*
          * 2.
-         * 读取历史结算记录
+         * 商家结算
          */
 
         await loadSettlements();
@@ -5385,7 +6394,7 @@ async function refreshAll() {
 
         /*
          * 3.
-         * 读取其他数据
+         * 所有主要数据
          */
 
         await Promise.all([
@@ -5396,22 +6405,27 @@ async function refreshAll() {
 
             loadApplications(),
 
-            loadRestaurants()
+            loadRestaurants(),
+
+            loadDeliveries()
 
         ]);
 
 
         /*
          * 4.
-         * 所有数据完成后
-         * 最后统一渲染商家财务
+         * 最后统一渲染
          */
 
         renderMerchantFinance();
 
+        renderDeliveries();
+
         updateFinanceCenter();
 
         updatePlatformStats();
+
+        updateDeliveryStats();
 
     }
 
