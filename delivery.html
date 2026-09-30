@@ -2,281 +2,735 @@
 <html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MDY FOOD - 配送员</title>
+<meta charset="UTF-8">
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>MDY FOOD - 骑手工作台</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, "Microsoft YaHei", sans-serif;
-            background: #f5f5f5;
-            color: #333;
-        }
 
-        .header {
-            background: #ff6b00;
-            color: white;
-            padding: 18px;
-            text-align: center;
-        }
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-        .container {
-            max-width: 700px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
 
-        .card {
-            background: white;
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-        }
+<style>
 
-        .rider-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .rider-name {
-            font-size: 22px;
-            font-weight: bold;
-        }
 
-        .online {
-            color: #16a34a;
-            font-weight: bold;
-        }
+body {
 
-        .offline {
-            color: #999;
-            font-weight: bold;
-        }
+    margin: 0;
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 18px;
-        }
+    background: #f5f6f8;
 
-        .stat {
-            background: #f7f7f7;
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-        }
+    font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
 
-        .stat-number {
-            font-size: 22px;
-            font-weight: bold;
-        }
+    color: #222;
 
-        .stat-label {
-            font-size: 13px;
-            color: #777;
-            margin-top: 5px;
-        }
+}
 
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
 
-        .order-card {
-            border: 1px solid #eee;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 14px;
-        }
+button,
+input {
 
-        .order-id {
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 8px;
-        }
+    font-family: inherit;
 
-        .status {
-            display: inline-block;
-            padding: 6px 10px;
-            border-radius: 8px;
-            background: #fff1e6;
-            color: #ff6b00;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
+}
 
-        .restaurant {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
 
-        .info {
-            line-height: 1.8;
-            font-size: 15px;
-        }
+.topbar {
 
-        .total {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 12px;
-        }
+    background: #ff6b00;
 
-        button {
-            width: 100%;
-            border: none;
-            border-radius: 10px;
-            padding: 13px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 12px;
-        }
+    color: white;
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+    padding: 15px 18px;
 
-        .btn-orange {
-            background: #ff6b00;
-            color: white;
-        }
+    display: flex;
 
-        .btn-green {
-            background: #16a34a;
-            color: white;
-        }
+    justify-content: space-between;
 
-        .btn-red {
-            background: #dc2626;
-            color: white;
-        }
+    align-items: center;
 
-        .btn-gray {
-            background: #eee;
-            color: #555;
-        }
+    position: sticky;
 
-        .empty {
-            text-align: center;
-            color: #999;
-            padding: 25px 10px;
-        }
+    top: 0;
 
-        .waiting {
-            background: #fff8e8;
-            color: #a16207;
-            padding: 13px;
-            border-radius: 10px;
-            margin-top: 12px;
-            line-height: 1.6;
-        }
+    z-index: 100;
 
-        .ready {
-            background: #ecfdf5;
-            color: #15803d;
-            padding: 13px;
-            border-radius: 10px;
-            margin-top: 12px;
-            line-height: 1.6;
-        }
+}
 
-        .delivery {
-            background: #eff6ff;
-            color: #1d4ed8;
-            padding: 13px;
-            border-radius: 10px;
-            margin-top: 12px;
-            line-height: 1.6;
-        }
 
-        .logout {
-            text-align: center;
-            margin: 20px 0 30px;
-        }
+.logo {
 
-        .logout button {
-            width: auto;
-            padding: 10px 25px;
-            background: #ddd;
-            color: #444;
-        }
+    font-size: 21px;
 
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #888;
-        }
+    font-weight: bold;
 
-        @media (max-width: 500px) {
+}
 
-            .container {
-                padding: 0 10px;
-            }
 
-            .stats {
-                gap: 6px;
-            }
+.rider-mini {
 
-            .stat {
-                padding: 10px 5px;
-            }
-        }
-    </style>
+    text-align: right;
+
+    font-size: 13px;
+
+}
+
+
+.container {
+
+    width: 94%;
+
+    max-width: 1100px;
+
+    margin: 18px auto 40px;
+
+}
+
+
+.card {
+
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 18px;
+
+    margin-bottom: 15px;
+
+    box-shadow:
+        0 3px 14px
+        rgba(0,0,0,0.06);
+
+}
+
+
+.profile {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+}
+
+
+.profile-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+}
+
+
+.avatar {
+
+    width: 58px;
+
+    height: 58px;
+
+    border-radius: 50%;
+
+    background: #fff1e7;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 30px;
+
+}
+
+
+.profile-name {
+
+    font-size: 19px;
+
+    font-weight: bold;
+
+}
+
+
+.profile-info {
+
+    color: #777;
+
+    font-size: 13px;
+
+    margin-top: 5px;
+
+}
+
+
+.online-btn {
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 11px 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.online {
+
+    background: #e9f9ef;
+
+    color: #159447;
+
+}
+
+
+.offline {
+
+    background: #f1f1f1;
+
+    color: #666;
+
+}
+
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+
+}
+
+
+.stat {
+
+    background: #fafafa;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    text-align: center;
+
+}
+
+
+.stat-number {
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    color: #ff6b00;
+
+}
+
+
+.stat-label {
+
+    color: #777;
+
+    font-size: 13px;
+
+    margin-top: 5px;
+
+}
+
+
+.section-title {
+
+    font-size: 19px;
+
+    font-weight: bold;
+
+    margin-bottom: 14px;
+
+}
+
+
+.order-card {
+
+    border: 1px solid #eee;
+
+    border-radius: 13px;
+
+    padding: 15px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.order-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.order-number {
+
+    font-weight: bold;
+
+    font-size: 16px;
+
+}
+
+
+.status {
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+}
+
+
+.status-pending {
+
+    background: #fff4e8;
+
+    color: #f27b00;
+
+}
+
+
+.status-accepted {
+
+    background: #eaf4ff;
+
+    color: #1671d9;
+
+}
+
+
+.status-delivering {
+
+    background: #eaf9ef;
+
+    color: #168c45;
+
+}
+
+
+.status-completed {
+
+    background: #eeeeee;
+
+    color: #666;
+
+}
+
+
+.order-row {
+
+    margin-top: 10px;
+
+    line-height: 1.6;
+
+    font-size: 14px;
+
+}
+
+
+.order-label {
+
+    color: #888;
+
+}
+
+
+.order-items {
+
+    background: #fafafa;
+
+    padding: 10px;
+
+    border-radius: 9px;
+
+    margin-top: 10px;
+
+    line-height: 1.7;
+
+}
+
+
+.order-actions {
+
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    margin-top: 13px;
+
+}
+
+
+.action-btn {
+
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 10px 14px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+}
+
+
+.accept-btn {
+
+    background: #ff6b00;
+
+    color: white;
+
+}
+
+
+.start-btn {
+
+    background: #1671d9;
+
+    color: white;
+
+}
+
+
+.complete-btn {
+
+    background: #159447;
+
+    color: white;
+
+}
+
+
+.call-btn {
+
+    background: #edf7ff;
+
+    color: #1671d9;
+
+}
+
+
+.map-btn {
+
+    background: #f3f3f3;
+
+    color: #444;
+
+}
+
+
+.logout-btn {
+
+    background: white;
+
+    color: #ff6b00;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 8px 12px;
+
+    cursor: pointer;
+
+}
+
+
+.empty {
+
+    text-align: center;
+
+    color: #888;
+
+    padding: 35px 10px;
+
+}
+
+
+.loading {
+
+    text-align: center;
+
+    color: #888;
+
+    padding: 30px;
+
+}
+
+
+.message {
+
+    display: none;
+
+    padding: 12px;
+
+    border-radius: 9px;
+
+    margin-bottom: 15px;
+
+    line-height: 1.5;
+
+}
+
+
+.error {
+
+    background: #fff0f0;
+
+    color: #d33;
+
+}
+
+
+.success {
+
+    background: #edf9f1;
+
+    color: #168a43;
+
+}
+
+
+.refresh-text {
+
+    color: #999;
+
+    font-size: 12px;
+
+    text-align: right;
+
+    margin-top: 8px;
+
+}
+
+
+.history-card {
+
+    border-top: 1px solid #eee;
+
+    padding: 13px 0;
+
+}
+
+
+.history-card:first-child {
+
+    border-top: none;
+
+}
+
+
+.history-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+}
+
+
+.history-money {
+
+    font-weight: bold;
+
+    color: #ff6b00;
+
+}
+
+
+@media (max-width: 650px) {
+
+    .stats {
+
+        grid-template-columns:
+            1fr 1fr 1fr;
+
+        gap: 7px;
+
+    }
+
+    .stat {
+
+        padding: 12px 5px;
+
+    }
+
+    .stat-number {
+
+        font-size: 19px;
+
+    }
+
+    .profile {
+
+        align-items: flex-start;
+
+    }
+
+    .profile {
+
+        flex-direction: column;
+
+    }
+
+    .online-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<div class="header">
-    <h1>🛵 MDY FOOD 配送员</h1>
+
+<div class="topbar">
+
+    <div class="logo">
+        🛵 MDY FOOD
+    </div>
+
+    <div class="rider-mini">
+
+        <div id="topRiderName">
+            骑手
+        </div>
+
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+            退出登录
+        </button>
+
+    </div>
+
 </div>
+
 
 <div class="container">
 
-    <!-- 骑手信息 -->
+
+    <div
+        id="errorMessage"
+        class="message error"
+    ></div>
+
+
+    <div
+        id="successMessage"
+        class="message success"
+    ></div>
+
+
+    <!-- 骑手资料 -->
+
     <div class="card">
 
-        <div class="rider-top">
+        <div class="profile">
 
-            <div>
+            <div class="profile-left">
 
-                <div class="rider-name" id="riderName">
-                    配送员
+                <div class="avatar">
+                    🛵
                 </div>
 
-                <div style="margin-top:5px;color:#777;">
-                    账号：
-                    <span id="riderUsername">-</span>
+                <div>
+
+                    <div
+                        class="profile-name"
+                        id="riderName"
+                    >
+                        骑手
+                    </div>
+
+                    <div
+                        class="profile-info"
+                        id="riderPhone"
+                    >
+                        电话：
+                    </div>
+
+                    <div
+                        class="profile-info"
+                        id="riderArea"
+                    >
+                        配送区域：
+                    </div>
+
                 </div>
 
             </div>
 
-            <div id="riderStatus" class="online">
-                🟢 在线
-            </div>
+
+            <button
+                id="onlineBtn"
+                class="online-btn offline"
+                onclick="toggleOnline()"
+            >
+                🔴 当前下线
+            </button>
 
         </div>
 
+    </div>
+
+
+    <!-- 数据统计 -->
+
+    <div class="card">
 
         <div class="stats">
 
@@ -284,13 +738,13 @@
 
                 <div
                     class="stat-number"
-                    id="completedOrders"
+                    id="todayOrders"
                 >
                     0
                 </div>
 
                 <div class="stat-label">
-                    已完成
+                    今日完成
                 </div>
 
             </div>
@@ -300,13 +754,13 @@
 
                 <div
                     class="stat-number"
-                    id="availableCount"
+                    id="todayAmount"
                 >
-                    0
+                    0 Ks
                 </div>
 
                 <div class="stat-label">
-                    可抢订单
+                    今日订单金额
                 </div>
 
             </div>
@@ -316,37 +770,15 @@
 
                 <div
                     class="stat-number"
-                    id="currentState"
+                    id="totalOrders"
                 >
-                    空闲
+                    0
                 </div>
 
                 <div class="stat-label">
-                    当前状态
+                    累计完成
                 </div>
 
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- 可抢订单 -->
-
-    <div
-        class="card"
-        id="availableSection"
-    >
-
-        <div class="section-title">
-            📦 可抢订单
-        </div>
-
-        <div id="availableOrders">
-
-            <div class="loading">
-                正在加载订单...
             </div>
 
         </div>
@@ -356,19 +788,16 @@
 
     <!-- 当前订单 -->
 
-    <div
-        class="card"
-        id="currentSection"
-    >
+    <div class="card">
 
         <div class="section-title">
-            📦 我的订单
+            📦 当前配送订单
         </div>
 
         <div id="currentOrder">
 
             <div class="empty">
-                🛵 目前没有配送中的订单
+                当前没有配送订单
             </div>
 
         </div>
@@ -376,18 +805,57 @@
     </div>
 
 
-    <div class="logout">
+    <!-- 可接订单 -->
 
-        <button onclick="logout()">
-            退出登录
-        </button>
+    <div class="card">
+
+        <div class="section-title">
+            🔔 待配送订单
+        </div>
+
+        <div id="availableOrders">
+
+            <div class="loading">
+                正在读取订单...
+            </div>
+
+        </div>
+
+        <div class="refresh-text">
+            每 10 秒自动刷新
+        </div>
 
     </div>
+
+
+    <!-- 配送记录 -->
+
+    <div class="card">
+
+        <div class="section-title">
+            📋 我的配送记录
+        </div>
+
+        <div id="historyOrders">
+
+            <div class="loading">
+                正在读取记录...
+            </div>
+
+        </div>
+
+    </div>
+
 
 </div>
 
 
 <script>
+
+
+/* =========================================================
+   Firebase
+========================================================= */
 
 const firebaseConfig = {
 
@@ -412,27 +880,41 @@ const firebaseConfig = {
 };
 
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(
+    firebaseConfig
+);
 
 
 const db =
     firebase.firestore();
 
 
-// ===============================
-// 登录信息
-// ===============================
+/* =========================================================
+   登录检查
+========================================================= */
 
-let deliveryId =
-    localStorage.getItem("deliveryId");
+const deliveryLogin =
+    localStorage.getItem(
+        "deliveryLogin"
+    );
 
-let deliveryUsername =
-    localStorage.getItem("deliveryUsername");
+
+const deliveryId =
+    localStorage.getItem(
+        "deliveryId"
+    );
 
 
-// 没登录直接回登录页面
+const deliveryUsername =
+    localStorage.getItem(
+        "deliveryUsername"
+    );
 
-if (!deliveryUsername) {
+
+if (
+    deliveryLogin !== "true" ||
+    !deliveryId
+) {
 
     window.location.href =
         "delivery-login.html";
@@ -440,92 +922,350 @@ if (!deliveryUsername) {
 }
 
 
-// ===============================
-// 骑手数据
-// ===============================
+/* =========================================================
+   全局变量
+========================================================= */
 
-let riderData = null;
+let rider = null;
+
+let availableOrders = [];
 
 let currentOrder = null;
 
+let historyOrders = [];
 
-// ===============================
-// 实时监听
-// ===============================
-
-let unsubscribeRider = null;
-
-let unsubscribeCurrentOrder = null;
-
-let unsubscribeAvailableOrders = null;
+let refreshTimer = null;
 
 
-// ===============================
-// 防止重复操作
-// ===============================
+/* =========================================================
+   工具
+========================================================= */
 
-let actionLoading = false;
+function escapeHtml(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
 
 
-// ===============================
-// 初始化
-// ===============================
+function formatMoney(value) {
 
-async function init() {
+    const number =
+        Number(value) || 0;
+
+    return (
+        number.toLocaleString(
+            "en-US"
+        )
+        +
+        " Ks"
+    );
+
+}
+
+
+function formatDate(value) {
+
+    if (!value) {
+
+        return "-";
+
+    }
+
+
+    let date;
+
+
+    if (
+        value &&
+        typeof value.toDate ===
+        "function"
+    ) {
+
+        date =
+            value.toDate();
+
+    }
+
+    else if (
+        value instanceof Date
+    ) {
+
+        date =
+            value;
+
+    }
+
+    else {
+
+        date =
+            new Date(value);
+
+    }
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "-";
+
+    }
+
+
+    return date.toLocaleString(
+        "zh-CN",
+        {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+function showError(message) {
+
+    const box =
+        document.getElementById(
+            "errorMessage"
+        );
+
+    box.textContent =
+        message;
+
+    box.style.display =
+        "block";
+
+
+    setTimeout(
+        function() {
+
+            box.style.display =
+                "none";
+
+        },
+        4000
+    );
+
+}
+
+
+function showSuccess(message) {
+
+    const box =
+        document.getElementById(
+            "successMessage"
+        );
+
+    box.textContent =
+        message;
+
+    box.style.display =
+        "block";
+
+
+    setTimeout(
+        function() {
+
+            box.style.display =
+                "none";
+
+        },
+        3000
+    );
+
+}
+
+
+/* =========================================================
+   状态判断
+========================================================= */
+
+function getOrderStatus(order) {
+
+    return String(
+        order.status || ""
+    ).toLowerCase();
+
+}
+
+
+function isPendingOrder(order) {
+
+    const status =
+        getOrderStatus(order);
+
+
+    return (
+
+        status === "pending" ||
+
+        status === "待配送" ||
+
+        status === "new" ||
+
+        status === "已接单" && false
+
+    );
+
+}
+
+
+function isAcceptedByMe(order) {
+
+    const riderId =
+        order.deliveryId ||
+        order.riderId ||
+        order.driverId ||
+        order.deliveryPersonId ||
+        "";
+
+
+    return (
+        String(riderId) ===
+        String(deliveryId)
+    );
+
+}
+
+
+function isCompleted(order) {
+
+    const status =
+        getOrderStatus(order);
+
+
+    return (
+
+        status === "completed" ||
+
+        status === "complete" ||
+
+        status === "已完成" ||
+
+        status === "配送完成"
+
+    );
+
+}
+
+
+/* =========================================================
+   读取骑手
+========================================================= */
+
+async function loadRider() {
 
     try {
 
-        // 如果没有 deliveryId
-        // 根据 username 找真正的骑手文档
-
-        if (!deliveryId) {
-
-            const snap =
-                await db
-                    .collection("delivery")
-                    .where(
-                        "username",
-                        "==",
-                        deliveryUsername
-                    )
-                    .limit(1)
-                    .get();
+        const doc =
+            await db
+                .collection("delivery")
+                .doc(deliveryId)
+                .get();
 
 
-            if (snap.empty) {
+        if (!doc.exists) {
 
-                alert(
-                    "找不到配送员账号"
-                );
-
-                logout();
-
-                return;
-            }
-
-
-            deliveryId =
-                snap.docs[0].id;
-
-
-            localStorage.setItem(
-                "deliveryId",
-                deliveryId
+            showError(
+                "骑手资料不存在，请重新登录。"
             );
+
+            logout();
+
+            return;
+
         }
 
 
-        // 开始实时监听骑手
+        rider = {
 
-        listenToRider();
+            id: doc.id,
+
+            ...doc.data()
+
+        };
 
 
-    } catch (error) {
+        document.getElementById(
+            "riderName"
+        ).textContent =
+            rider.name ||
+            rider.username ||
+            deliveryUsername ||
+            "骑手";
 
-        console.error(error);
 
-        alert(
-            "加载失败：" +
+        document.getElementById(
+            "topRiderName"
+        ).textContent =
+            rider.name ||
+            rider.username ||
+            deliveryUsername ||
+            "骑手";
+
+
+        document.getElementById(
+            "riderPhone"
+        ).textContent =
+            "电话：" +
+            (
+                rider.phone ||
+                "暂无"
+            );
+
+
+        document.getElementById(
+            "riderArea"
+        ).textContent =
+            "配送区域：" +
+            (
+                rider.deliveryArea ||
+                "暂无"
+            );
+
+
+        updateOnlineButton();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "读取骑手失败：",
+            error
+        );
+
+        showError(
+            "读取骑手资料失败：" +
             error.message
         );
 
@@ -534,770 +1274,275 @@ async function init() {
 }
 
 
-// ===============================
-// 实时监听骑手
-// ===============================
+/* =========================================================
+   上线 / 下线
+========================================================= */
 
-function listenToRider() {
+function isRiderOnline() {
 
-    // 防止重复监听
+    if (!rider) {
 
-    if (unsubscribeRider) {
+        return false;
 
-        unsubscribeRider();
-
-        unsubscribeRider = null;
     }
 
-
-    unsubscribeRider =
-        db
-            .collection("delivery")
-            .doc(deliveryId)
-            .onSnapshot(
-
-                async function(doc) {
-
-                    if (!doc.exists) {
-
-                        alert(
-                            "配送员不存在"
-                        );
-
-                        logout();
-
-                        return;
-                    }
-
-
-                    riderData =
-                        doc.data();
-
-
-                    renderRider();
-
-
-                    const orderId =
-                        riderData.currentOrderId ||
-                        "";
-
-
-                    // 当前订单变化
-
-                    await setupCurrentOrderListener(
-                        orderId
-                    );
-
-
-                    // 根据当前状态监听可抢订单
-
-                    setupAvailableOrdersListener();
-
-                },
-
-                function(error) {
-
-                    console.error(
-                        "骑手实时监听失败：",
-                        error
-                    );
-
-                }
-            );
-
-}
-
-
-// ===============================
-// 显示骑手资料
-// ===============================
-
-function renderRider() {
-
-    document.getElementById(
-        "riderName"
-    ).innerText =
-        "🛵 " +
-        (
-            riderData.name ||
-            "配送员"
-        );
-
-
-    document.getElementById(
-        "riderUsername"
-    ).innerText =
-        riderData.username ||
-        deliveryUsername;
-
-
-    document.getElementById(
-        "completedOrders"
-    ).innerText =
-        riderData.completedOrders ||
-        0;
-
-
-    const status =
-        riderData.status ||
-        "在线";
-
-
-    if (status === "已接单") {
-
-        document.getElementById(
-            "riderStatus"
-        ).innerHTML =
-            "🟠 已接单";
-
-
-        document.getElementById(
-            "riderStatus"
-        ).className =
-            "online";
-
-
-        document.getElementById(
-            "currentState"
-        ).innerText =
-            "已接单";
-
-    } else {
-
-        document.getElementById(
-            "riderStatus"
-        ).innerHTML =
-            "🟢 在线";
-
-
-        document.getElementById(
-            "riderStatus"
-        ).className =
-            "online";
-
-
-        document.getElementById(
-            "currentState"
-        ).innerText =
-            "空闲";
-    }
-
-}
-
-
-// ===============================
-// 当前订单监听
-// ===============================
-
-async function setupCurrentOrderListener(
-    orderId
-) {
-
-    // 取消旧监听
-
-    if (unsubscribeCurrentOrder) {
-
-        unsubscribeCurrentOrder();
-
-        unsubscribeCurrentOrder = null;
-    }
-
-
-    // 没有当前订单
-
-    if (!orderId) {
-
-        currentOrder = null;
-
-        renderCurrentOrder();
-
-        return;
-    }
-
-
-    // 实时监听当前订单
-
-    unsubscribeCurrentOrder =
-        db
-            .collection("orders")
-            .doc(orderId)
-            .onSnapshot(
-
-                async function(doc) {
-
-                    if (!doc.exists) {
-
-                        currentOrder = null;
-
-                        renderCurrentOrder();
-
-                        return;
-                    }
-
-
-                    const order =
-                        doc.data();
-
-
-                    currentOrder = {
-
-                        id: doc.id,
-
-                        ...order
-
-                    };
-
-
-                    // 订单完成后自动释放
-
-                    if (
-                        order.status ===
-                        "已完成"
-                    ) {
-
-                        currentOrder = null;
-
-                        renderCurrentOrder();
-
-                        return;
-                    }
-
-
-                    renderCurrentOrder();
-
-                },
-
-                function(error) {
-
-                    console.error(
-                        "当前订单监听失败：",
-                        error
-                    );
-
-                }
-            );
-
-}
-
-
-// ===============================
-// 可抢订单实时监听
-// ===============================
-
-function setupAvailableOrdersListener() {
-
-    // 取消旧监听
-
-    if (unsubscribeAvailableOrders) {
-
-        unsubscribeAvailableOrders();
-
-        unsubscribeAvailableOrders = null;
-    }
-
-
-    // 如果骑手已经有订单
-    // 不需要监听可抢订单
 
     if (
-        riderData &&
-        riderData.currentOrderId
+        rider.online === true
     ) {
 
-        document.getElementById(
-            "availableCount"
-        ).innerText =
-            "0";
+        return true;
 
-
-        document.getElementById(
-            "availableOrders"
-        ).innerHTML = `
-
-            <div class="empty">
-
-                🛵 你目前已有配送订单<br>
-
-                完成当前订单后才能继续抢单
-
-            </div>
-
-        `;
-
-        return;
     }
 
-
-    // 监听「商家已接单」订单
-
-    unsubscribeAvailableOrders =
-        db
-            .collection("orders")
-            .where(
-                "status",
-                "==",
-                "商家已接单"
-            )
-            .onSnapshot(
-
-                function(snapshot) {
-
-                    const orders = [];
-
-
-                    snapshot.forEach(
-                        function(doc) {
-
-                            const order =
-                                doc.data();
-
-
-                            // 只显示没有骑手的订单
-
-                            if (
-                                !order.deliveryId
-                            ) {
-
-                                orders.push({
-
-                                    id: doc.id,
-
-                                    ...order
-
-                                });
-
-                            }
-
-                        }
-                    );
-
-
-                    // 最新订单在前
-
-                    orders.sort(
-                        function(a, b) {
-
-                            const aTime =
-                                a.created_at?.seconds ||
-                                0;
-
-                            const bTime =
-                                b.created_at?.seconds ||
-                                0;
-
-                            return bTime - aTime;
-
-                        }
-                    );
-
-
-                    document.getElementById(
-                        "availableCount"
-                    ).innerText =
-                        orders.length;
-
-
-                    renderAvailableOrders(
-                        orders
-                    );
-
-                },
-
-                function(error) {
-
-                    console.error(
-                        "可抢订单监听失败：",
-                        error
-                    );
-
-
-                    document.getElementById(
-                        "availableOrders"
-                    ).innerHTML = `
-
-                        <div class="empty">
-
-                            加载订单失败
-
-                        </div>
-
-                    `;
-
-                }
-            );
-
-}
-
-
-// ===============================
-// 显示可抢订单
-// ===============================
-
-function renderAvailableOrders(
-    orders
-) {
-
-    const box =
-        document.getElementById(
-            "availableOrders"
-        );
-
-
-    // 如果当前已经有订单
 
     if (
-        riderData &&
-        riderData.currentOrderId
+        rider.status === "在线"
     ) {
 
-        box.innerHTML = `
+        return true;
 
-            <div class="empty">
-
-                🛵 你目前已有配送订单<br>
-
-                完成当前订单后才能继续抢单
-
-            </div>
-
-        `;
-
-        return;
     }
 
 
-    if (orders.length === 0) {
-
-        box.innerHTML = `
-
-            <div class="empty">
-
-                🛵 暂时没有可以抢的订单
-
-            </div>
-
-        `;
-
-        return;
-    }
-
-
-    box.innerHTML = "";
-
-
-    orders.forEach(
-        function(order) {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.className =
-                "order-card";
-
-
-            div.innerHTML = `
-
-                <div class="order-id">
-
-                    订单 #${escapeHtml(order.id)}
-
-                </div>
-
-
-                <div class="status">
-
-                    🟠 商家已接单
-
-                </div>
-
-
-                <div class="restaurant">
-
-                    🍽️
-                    ${escapeHtml(
-                        order.restaurantName ||
-                        "餐厅"
-                    )}
-
-                </div>
-
-
-                <div class="info">
-
-                    顾客：
-                    ${escapeHtml(
-                        order.customername ||
-                        order.customerName ||
-                        "-"
-                    )}
-
-                    <br>
-
-
-                    电话：
-                    ${escapeHtml(
-                        order.phone ||
-                        "-"
-                    )}
-
-                    <br>
-
-
-                    地址：
-                    ${escapeHtml(
-                        order.address ||
-                        order.adress ||
-                        "-"
-                    )}
-
-                </div>
-
-
-                <div class="total">
-
-                    💰
-                    ${formatMoney(
-                        order.total ||
-                        0
-                    )}
-                    MMK
-
-                </div>
-
-
-                <button
-                    class="btn-orange"
-                    onclick="claimOrder('${escapeJs(order.id)}')"
-                >
-
-                    🛵 抢单
-
-                </button>
-
-            `;
-
-
-            box.appendChild(div);
-
-        }
-    );
+    return false;
 
 }
 
 
-// ===============================
-// 抢单
-// ===============================
+function updateOnlineButton() {
 
-async function claimOrder(
-    orderId
-) {
-
-    if (actionLoading) {
-
-        return;
-    }
-
-
-    if (!deliveryId) {
-
-        alert(
-            "配送员登录信息不存在"
+    const button =
+        document.getElementById(
+            "onlineBtn"
         );
 
+
+    if (
+        isRiderOnline()
+    ) {
+
+        button.className =
+            "online-btn online";
+
+        button.textContent =
+            "🟢 当前在线";
+
+    }
+
+    else {
+
+        button.className =
+            "online-btn offline";
+
+        button.textContent =
+            "🔴 当前下线";
+
+    }
+
+}
+
+
+async function toggleOnline() {
+
+    if (!rider) {
+
         return;
+
     }
 
 
-    actionLoading = true;
+    const online =
+        !isRiderOnline();
 
 
     try {
 
-        await db.runTransaction(
-            async function(transaction) {
+        await db
+            .collection("delivery")
+            .doc(deliveryId)
+            .update({
 
-                const riderRef =
-                    db
-                        .collection("delivery")
-                        .doc(deliveryId);
+                online:
+                    online,
 
+                status:
+                    online
+                        ? "在线"
+                        : "离线"
 
-                const orderRef =
-                    db
-                        .collection("orders")
-                        .doc(orderId);
-
-
-                const riderSnap =
-                    await transaction.get(
-                        riderRef
-                    );
+            });
 
 
-                const orderSnap =
-                    await transaction.get(
-                        orderRef
-                    );
+        rider.online =
+            online;
+
+        rider.status =
+            online
+                ? "在线"
+                : "离线";
 
 
-                if (!riderSnap.exists) {
-
-                    throw new Error(
-                        "配送员不存在"
-                    );
-
-                }
+        updateOnlineButton();
 
 
-                if (!orderSnap.exists) {
-
-                    throw new Error(
-                        "订单已经不存在"
-                    );
-
-                }
+        showSuccess(
+            online
+                ? "你已经上线，可以接收订单。"
+                : "你已经下线。"
+        );
 
 
-                const rider =
-                    riderSnap.data();
+        await loadOrders();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "修改在线状态失败：",
+            error
+        );
+
+        showError(
+            "操作失败：" +
+            error.message
+        );
+
+    }
+
+}
 
 
-                const order =
-                    orderSnap.data();
+/* =========================================================
+   读取订单
+========================================================= */
+
+async function loadOrders() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("orders")
+                .get();
 
 
-                // 骑手已经有订单
-
-                if (
-                    rider.currentOrderId
-                ) {
-
-                    throw new Error(
-                        "你已经有一个配送订单了"
-                    );
-
-                }
+        const all = [];
 
 
-                // 订单必须是商家已接单
+        snapshot.forEach(
+            function(doc) {
 
-                if (
-                    order.status !==
-                    "商家已接单"
-                ) {
+                all.push({
 
-                    throw new Error(
-                        "这个订单已经被其他骑手抢走了"
-                    );
+                    id: doc.id,
 
-                }
+                    ...doc.data()
 
-
-                // 已经有骑手
-
-                if (
-                    order.deliveryId
-                ) {
-
-                    throw new Error(
-                        "这个订单已经被其他骑手抢走了"
-                    );
-
-                }
-
-
-                // 订单改成骑手已接单
-
-                transaction.update(
-                    orderRef,
-                    {
-
-                        status:
-                            "骑手已接单",
-
-                        deliveryId:
-                            deliveryId,
-
-                        deliveryUsername:
-                            rider.username ||
-                            deliveryUsername,
-
-                        deliveryName:
-                            rider.name ||
-                            "配送员",
-
-                        deliveryPhone:
-                            rider.phone ||
-                            "",
-
-                        riderAcceptedAt:
-                            firebase.firestore
-                                .FieldValue
-                                .serverTimestamp()
-
-                    }
-                );
-
-
-                // 骑手绑定订单
-
-                transaction.update(
-                    riderRef,
-                    {
-
-                        currentOrderId:
-                            orderId,
-
-                        previousStatus:
-                            rider.status ||
-                            "在线",
-
-                        status:
-                            "已接单"
-
-                    }
-                );
+                });
 
             }
         );
 
 
-        alert(
-            "🛵 抢单成功！\n\n" +
-            "等待商家做好外卖"
+        availableOrders =
+            all.filter(
+                function(order) {
+
+                    const assigned =
+                        order.deliveryId ||
+                        order.riderId ||
+                        order.driverId ||
+                        order.deliveryPersonId;
+
+
+                    return (
+
+                        !assigned &&
+
+                        isPendingOrder(
+                            order
+                        )
+
+                    );
+
+                }
+            );
+
+
+        const myOrders =
+            all.filter(
+                function(order) {
+
+                    return isAcceptedByMe(
+                        order
+                    );
+
+                }
+            );
+
+
+        currentOrder =
+            myOrders.find(
+                function(order) {
+
+                    return !isCompleted(
+                        order
+                    );
+
+                }
+            ) || null;
+
+
+        historyOrders =
+            myOrders.filter(
+                function(order) {
+
+                    return isCompleted(
+                        order
+                    );
+
+                }
+            );
+
+
+        renderCurrentOrder();
+
+        renderAvailableOrders();
+
+        renderHistory();
+
+        updateStats(
+            historyOrders
         );
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
-        console.error(error);
-
-
-        alert(
-            error.message ||
-            "抢单失败"
+        console.error(
+            "读取订单失败：",
+            error
         );
 
-    } finally {
-
-        actionLoading = false;
+        showError(
+            "读取订单失败：" +
+            error.message
+        );
 
     }
 
 }
 
 
-// ===============================
-// 当前订单显示
-// ===============================
+/* =========================================================
+   当前订单
+========================================================= */
 
 function renderCurrentOrder() {
 
-    const box =
+    const container =
         document.getElementById(
             "currentOrder"
         );
@@ -1305,642 +1550,611 @@ function renderCurrentOrder() {
 
     if (!currentOrder) {
 
-        box.innerHTML = `
+        container.innerHTML = `
 
             <div class="empty">
 
-                🛵 目前没有配送中的订单
+                🛵 当前没有正在配送的订单
+
+                <br><br>
+
+                ${
+                    isRiderOnline()
+                        ? "你现在在线，可以接收新订单。"
+                        : "请先上线，然后接收订单。"
+                }
 
             </div>
 
         `;
 
         return;
+
     }
 
 
-    const order =
-        currentOrder;
+    container.innerHTML =
+        createOrderHtml(
+            currentOrder,
+            true
+        );
+
+}
 
 
-    let html = `
+/* =========================================================
+   待接订单
+========================================================= */
 
-        <div class="order-card">
+function renderAvailableOrders() {
 
-            <div class="order-id">
-
-                订单 #${escapeHtml(order.id)}
-
-            </div>
-
-
-            <div class="status">
-
-                ${getStatusIcon(order.status)}
-
-                ${escapeHtml(
-                    order.status ||
-                    "未知状态"
-                )}
-
-            </div>
+    const container =
+        document.getElementById(
+            "availableOrders"
+        );
 
 
-            <div class="restaurant">
+    if (!isRiderOnline()) {
 
-                🍽️
-                ${escapeHtml(
-                    order.restaurantName ||
-                    "餐厅"
-                )}
+        container.innerHTML = `
 
-            </div>
+            <div class="empty">
 
+                🔴 你目前处于下线状态
 
-            <div class="info">
+                <br><br>
 
-                顾客：
-                ${escapeHtml(
-                    order.customername ||
-                    order.customerName ||
-                    "-"
-                )}
-
-                <br>
-
-
-                电话：
-                ${escapeHtml(
-                    order.phone ||
-                    "-"
-                )}
-
-                <br>
-
-
-                地址：
-                ${escapeHtml(
-                    order.address ||
-                    order.adress ||
-                    "-"
-                )}
+                请点击上方
+                「当前下线」
+                按钮上线后接收订单。
 
             </div>
 
+        `;
 
-            ${renderItems(order)}
+        return;
+
+    }
 
 
-            <div class="total">
+    if (!availableOrders.length) {
 
-                💰
-                ${formatMoney(
-                    order.total ||
-                    0
-                )}
-                MMK
+        container.innerHTML = `
+
+            <div class="empty">
+
+                📦 暂时没有新的配送订单
 
             </div>
 
-    `;
+        `;
+
+        return;
+
+    }
 
 
-    // 骑手已接单
+    container.innerHTML =
+        availableOrders
+            .map(
+                function(order) {
+
+                    return createOrderHtml(
+                        order,
+                        false
+                    );
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   创建订单 HTML
+========================================================= */
+
+function createOrderHtml(
+    order,
+    mine
+) {
+
+    const status =
+        getOrderStatus(order);
+
+
+    let statusText =
+        order.status ||
+        "待配送";
+
+
+    let statusClass =
+        "status-pending";
+
 
     if (
-        order.status ===
-        "骑手已接单"
+        status === "accepted" ||
+        status === "已接单"
     ) {
 
-        html += `
+        statusText =
+            "已接单";
 
-            <div class="waiting">
-
-                🛵 抢单成功<br>
-
-                <strong>
-                    等待商家做好外卖
-                </strong>
-                <br>
-
-                商家做好后，你就可以取餐。
-
-            </div>
-
-
-            <button
-                class="btn-red"
-                onclick="cancelClaim('${escapeJs(order.id)}')"
-            >
-
-                ❌ 取消抢单
-
-            </button>
-
-        `;
+        statusClass =
+            "status-accepted";
 
     }
 
 
-    // 外卖好了
-
-    else if (
-        order.status ===
-        "外卖好了"
+    if (
+        status === "delivering" ||
+        status === "配送中"
     ) {
 
-        html += `
+        statusText =
+            "配送中";
 
-            <div class="ready">
-
-                🍱 外卖已经做好！<br>
-
-                可以去餐厅取餐。
-
-            </div>
-
-
-            <button
-                class="btn-green"
-                onclick="pickupOrder('${escapeJs(order.id)}')"
-            >
-
-                ✓ 已取餐，开始配送
-
-            </button>
-
-        `;
+        statusClass =
+            "status-delivering";
 
     }
 
 
-    // 配送中
-
-    else if (
-        order.status ===
-        "配送中"
+    if (
+        isCompleted(order)
     ) {
 
-        html += `
+        statusText =
+            "已完成";
 
-            <div class="delivery">
-
-                🛵 已取餐<br>
-
-                🚴 正在配送中
-
-            </div>
-
-
-            <button
-                class="btn-green"
-                onclick="completeOrder('${escapeJs(order.id)}')"
-            >
-
-                ✓ 确认送达
-
-            </button>
-
-        `;
+        statusClass =
+            "status-completed";
 
     }
 
 
-    // 已完成
+    let itemsHtml =
+        "";
 
-    else if (
-        order.status ===
-        "已完成"
+
+    if (
+        Array.isArray(
+            order.items
+        )
     ) {
 
-        html += `
+        itemsHtml =
+            order.items
+                .map(
+                    function(item) {
 
-            <div class="ready">
+                        return (
 
-                ✅ 订单已经完成
+                            escapeHtml(
+                                item.name ||
+                                item.title ||
+                                "商品"
+                            )
 
-            </div>
+                            +
 
-        `;
+                            " × "
+
+                            +
+
+                            (
+                                item.quantity ||
+                                item.qty ||
+                                1
+                            )
+
+                        );
+
+                    }
+                )
+                .join("<br>");
 
     }
-
 
     else {
 
-        html += `
+        itemsHtml =
+            "商品信息暂无";
 
-            <div class="waiting">
+    }
 
-                当前状态：
+
+    let buttons =
+        "";
+
+
+    if (!mine) {
+
+        buttons += `
+
+            <button
+                class="action-btn accept-btn"
+                onclick="acceptOrder('${escapeHtml(order.id)}')"
+            >
+                ✅ 接受订单
+            </button>
+
+        `;
+
+    }
+
+    else {
+
+        const statusLower =
+            getOrderStatus(order);
+
+
+        if (
+            statusLower !== "delivering" &&
+            statusLower !== "配送中"
+        ) {
+
+            buttons += `
+
+                <button
+                    class="action-btn start-btn"
+                    onclick="startDelivery('${escapeHtml(order.id)}')"
+                >
+                    🚚 开始配送
+                </button>
+
+            `;
+
+        }
+
+        else {
+
+            buttons += `
+
+                <button
+                    class="action-btn complete-btn"
+                    onclick="completeOrder('${escapeHtml(order.id)}')"
+                >
+                    ✅ 完成配送
+                </button>
+
+            `;
+
+        }
+
+    }
+
+
+    const phone =
+        order.phone ||
+        order.customerPhone ||
+        order.customer_phone ||
+        "";
+
+
+    const address =
+        order.adress ||
+        order.address ||
+        order.deliveryAddress ||
+        "";
+
+
+    const restaurantName =
+        order.restaurantName ||
+        "未知商家";
+
+
+    return `
+
+        <div class="order-card">
+
+            <div class="order-header">
+
+                <div class="order-number">
+
+                    📦
+                    ${escapeHtml(
+                        order.order_number ||
+                        order.id
+                    )}
+
+                </div>
+
+                <span
+                    class="status ${statusClass}"
+                >
+                    ${escapeHtml(
+                        statusText
+                    )}
+                </span>
+
+            </div>
+
+
+            <div class="order-row">
+
+                <span class="order-label">
+                    🏪 商家：
+                </span>
+
+                <b>
+                    ${escapeHtml(
+                        restaurantName
+                    )}
+                </b>
+
+            </div>
+
+
+            <div class="order-row">
+
+                <span class="order-label">
+                    👤 客户：
+                </span>
+
                 ${escapeHtml(
-                    order.status ||
+                    order.customername ||
+                    order.customerName ||
                     "未知"
                 )}
 
             </div>
 
-        `;
 
-    }
+            <div class="order-row">
 
+                <span class="order-label">
+                    📍 地址：
+                </span>
 
-    html += `
+                ${escapeHtml(
+                    address ||
+                    "暂无地址"
+                )}
 
-        </div>
-
-    `;
-
-
-    box.innerHTML =
-        html;
-
-}
+            </div>
 
 
-// ===============================
-// 显示商品
-// ===============================
+            <div class="order-row">
 
-function renderItems(order) {
+                <span class="order-label">
+                    💰 订单金额：
+                </span>
 
-    if (
-        !order.items ||
-        !Array.isArray(order.items)
-    ) {
+                <b>
+                    ${formatMoney(
+                        order.total
+                    )}
+                </b>
 
-        return "";
-
-    }
-
-
-    let html = `
-
-        <div
-            style="
-                margin-top:12px;
-                line-height:1.8;
-            "
-        >
-
-    `;
+            </div>
 
 
-    order.items.forEach(
-        function(item) {
+            <div class="order-items">
 
-            const name =
-                item.name ||
-                item.foodName ||
-                "商品";
+                <b>
+                    🍱 商品：
+                </b>
 
-
-            const quantity =
-                item.quantity ||
-                item.qty ||
-                1;
-
-
-            html += `
-
-                🍽️
-                ${escapeHtml(name)}
-                × ${quantity}
                 <br>
 
-            `;
+                ${itemsHtml}
 
-        }
-    );
+            </div>
 
 
-    html += `
+            ${
+                order.created_at
+
+                    ?
+
+                    `
+                    <div class="order-row">
+
+                        <span class="order-label">
+                            🕐 下单时间：
+                        </span>
+
+                        ${formatDate(
+                            order.created_at
+                        )}
+
+                    </div>
+                    `
+
+                    :
+
+                    ""
+            }
+
+
+            <div class="order-actions">
+
+                ${buttons}
+
+
+                ${
+                    phone
+
+                        ?
+
+                        `
+                        <button
+                            class="action-btn call-btn"
+                            onclick="callCustomer('${escapeHtml(phone)}')"
+                        >
+                            📞 联系客户
+                        </button>
+                        `
+
+                        :
+
+                        ""
+                }
+
+
+                ${
+                    address
+
+                        ?
+
+                        `
+                        <button
+                            class="action-btn map-btn"
+                            onclick="openMap('${escapeHtml(address)}')"
+                        >
+                            📍 导航
+                        </button>
+                        `
+
+                        :
+
+                        ""
+                }
+
+            </div>
 
         </div>
 
     `;
 
-
-    return html;
-
 }
 
 
-// ===============================
-// 取消抢单
-// ===============================
+/* =========================================================
+   接单
+========================================================= */
 
-async function cancelClaim(
+async function acceptOrder(
     orderId
 ) {
 
-    const ok =
-        confirm(
-            "确定要取消抢单吗？\n\n" +
-            "取消后，这个订单会重新回到「可抢订单」。"
+    if (!isRiderOnline()) {
+
+        showError(
+            "请先上线后再接单。"
         );
 
+        return;
 
-    if (!ok) {
+    }
+
+
+    if (currentOrder) {
+
+        showError(
+            "你已经有一个正在配送的订单，请先完成当前订单。"
+        );
 
         return;
 
     }
 
 
-    if (actionLoading) {
+    if (
+        !confirm(
+            "确定要接受这个配送订单吗？"
+        )
+    ) {
 
         return;
 
     }
-
-
-    actionLoading = true;
 
 
     try {
 
+        const orderRef =
+            db
+                .collection("orders")
+                .doc(orderId);
+
+
         await db.runTransaction(
-            async function(transaction) {
+            async function(
+                transaction
+            ) {
 
-                const riderRef =
-                    db
-                        .collection("delivery")
-                        .doc(deliveryId);
-
-
-                const orderRef =
-                    db
-                        .collection("orders")
-                        .doc(orderId);
-
-
-                const riderSnap =
-                    await transaction.get(
-                        riderRef
-                    );
-
-
-                const orderSnap =
+                const snapshot =
                     await transaction.get(
                         orderRef
                     );
 
 
-                if (!riderSnap.exists) {
+                if (!snapshot.exists) {
 
                     throw new Error(
-                        "配送员不存在"
+                        "订单不存在。"
                     );
 
                 }
-
-
-                if (!orderSnap.exists) {
-
-                    throw new Error(
-                        "订单不存在"
-                    );
-
-                }
-
-
-                const rider =
-                    riderSnap.data();
 
 
                 const order =
-                    orderSnap.data();
+                    snapshot.data();
 
 
-                if (
-                    rider.currentOrderId !==
-                    orderId
-                ) {
+                const assigned =
+                    order.deliveryId ||
+                    order.riderId ||
+                    order.driverId ||
+                    order.deliveryPersonId;
+
+
+                if (assigned) {
 
                     throw new Error(
-                        "这个订单不是你当前的订单"
+                        "这个订单已经被其他骑手接走了。"
                     );
 
                 }
 
 
+                const status =
+                    String(
+                        order.status ||
+                        ""
+                    ).toLowerCase();
+
+
                 if (
-                    order.status !==
-                    "骑手已接单"
+                    status !== "pending" &&
+                    status !== "待配送" &&
+                    status !== "new"
                 ) {
 
                     throw new Error(
-                        "现在已经不能取消抢单了"
+                        "这个订单当前已经不能接单。"
                     );
 
                 }
 
-
-                // 恢复订单
 
                 transaction.update(
                     orderRef,
                     {
-
-                        status:
-                            "商家已接单",
 
                         deliveryId:
-                            firebase.firestore
-                                .FieldValue
-                                .delete(),
+                            deliveryId,
 
-                        deliveryUsername:
-                            firebase.firestore
-                                .FieldValue
-                                .delete(),
+                        riderId:
+                            deliveryId,
 
                         deliveryName:
-                            firebase.firestore
-                                .FieldValue
-                                .delete(),
+                            rider.name ||
+                            rider.username ||
+                            deliveryUsername ||
+                            "",
 
                         deliveryPhone:
-                            firebase.firestore
-                                .FieldValue
-                                .delete(),
-
-                        riderAcceptedAt:
-                            firebase.firestore
-                                .FieldValue
-                                .delete()
-
-                    }
-                );
-
-
-                // 释放骑手
-
-                transaction.update(
-                    riderRef,
-                    {
-
-                        currentOrderId:
-                            "",
-
-                        previousStatus:
+                            rider.phone ||
                             "",
 
                         status:
-                            "在线"
+                            "accepted",
 
-                    }
-                );
-
-            }
-        );
-
-
-        alert(
-            "已取消抢单。\n\n" +
-            "订单已经重新进入可抢订单。"
-        );
-
-
-    } catch (error) {
-
-        console.error(error);
-
-
-        alert(
-            error.message ||
-            "取消抢单失败"
-        );
-
-    } finally {
-
-        actionLoading = false;
-
-    }
-
-}
-
-
-// ===============================
-// 取餐
-// ===============================
-
-async function pickupOrder(
-    orderId
-) {
-
-    const ok =
-        confirm(
-            "确认你已经从餐厅取到外卖了吗？\n\n" +
-            "确认后订单会进入「配送中」。"
-        );
-
-
-    if (!ok) {
-
-        return;
-
-    }
-
-
-    if (actionLoading) {
-
-        return;
-
-    }
-
-
-    actionLoading = true;
-
-
-    try {
-
-        await db.runTransaction(
-            async function(transaction) {
-
-                const riderRef =
-                    db
-                        .collection("delivery")
-                        .doc(deliveryId);
-
-
-                const orderRef =
-                    db
-                        .collection("orders")
-                        .doc(orderId);
-
-
-                const riderSnap =
-                    await transaction.get(
-                        riderRef
-                    );
-
-
-                const orderSnap =
-                    await transaction.get(
-                        orderRef
-                    );
-
-
-                if (!riderSnap.exists) {
-
-                    throw new Error(
-                        "配送员不存在"
-                    );
-
-                }
-
-
-                if (!orderSnap.exists) {
-
-                    throw new Error(
-                        "订单不存在"
-                    );
-
-                }
-
-
-                const rider =
-                    riderSnap.data();
-
-
-                const order =
-                    orderSnap.data();
-
-
-                if (
-                    rider.currentOrderId !==
-                    orderId
-                ) {
-
-                    throw new Error(
-                        "这不是你的当前订单"
-                    );
-
-                }
-
-
-                if (
-                    order.status !==
-                    "外卖好了"
-                ) {
-
-                    throw new Error(
-                        "商家还没有把外卖标记为做好"
-                    );
-
-                }
-
-
-                transaction.update(
-                    orderRef,
-                    {
-
-                        status:
-                            "配送中",
-
-                        pickedUpAt:
+                        acceptedAt:
                             firebase.firestore
                                 .FieldValue
                                 .serverTimestamp()
@@ -1952,180 +2166,220 @@ async function pickupOrder(
         );
 
 
-        alert(
-            "🛵 已取餐！\n\n" +
-            "现在开始配送。"
+        await db
+            .collection("delivery")
+            .doc(deliveryId)
+            .update({
+
+                currentOrderId:
+                    orderId,
+
+                previousStatus:
+                    rider.status ||
+                    "在线"
+
+            });
+
+
+        showSuccess(
+            "接单成功！"
         );
 
 
-    } catch (error) {
+        await loadRider();
 
-        console.error(error);
+        await loadOrders();
 
+    }
 
-        alert(
-            error.message ||
-            "取餐失败"
+    catch (error) {
+
+        console.error(
+            "接单失败：",
+            error
         );
 
-    } finally {
+        showError(
+            "接单失败：" +
+            error.message
+        );
 
-        actionLoading = false;
+        await loadOrders();
 
     }
 
 }
 
 
-// ===============================
-// 完成订单
-// ===============================
+/* =========================================================
+   开始配送
+========================================================= */
+
+async function startDelivery(
+    orderId
+) {
+
+    if (!isAcceptedByMe(
+        currentOrder || {}
+    ) &&
+        (!currentOrder ||
+        currentOrder.id !== orderId)
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !confirm(
+            "确定开始配送这个订单吗？"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        await db
+            .collection("orders")
+            .doc(orderId)
+            .update({
+
+                status:
+                    "delivering",
+
+                deliveringAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        await db
+            .collection("delivery")
+            .doc(deliveryId)
+            .update({
+
+                status:
+                    "配送中",
+
+                currentOrderId:
+                    orderId
+
+            });
+
+
+        showSuccess(
+            "订单已进入配送中状态。"
+        );
+
+
+        await loadRider();
+
+        await loadOrders();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "开始配送失败：",
+            error
+        );
+
+        showError(
+            "开始配送失败：" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   完成配送
+========================================================= */
 
 async function completeOrder(
     orderId
 ) {
 
-    const ok =
-        confirm(
-            "确认已经把外卖送到顾客手里了吗？\n\n" +
-            "确认后订单会变成「已完成」。"
-        );
-
-
-    if (!ok) {
+    if (
+        !confirm(
+            "确定客户已经收到订单，并完成配送吗？"
+        )
+    ) {
 
         return;
 
     }
-
-
-    if (actionLoading) {
-
-        return;
-
-    }
-
-
-    actionLoading = true;
 
 
     try {
 
+        const orderRef =
+            db
+                .collection("orders")
+                .doc(orderId);
+
+
         await db.runTransaction(
-            async function(transaction) {
+            async function(
+                transaction
+            ) {
 
-                const riderRef =
-                    db
-                        .collection("delivery")
-                        .doc(deliveryId);
-
-
-                const orderRef =
-                    db
-                        .collection("orders")
-                        .doc(orderId);
-
-
-                const riderSnap =
-                    await transaction.get(
-                        riderRef
-                    );
-
-
-                const orderSnap =
+                const snapshot =
                     await transaction.get(
                         orderRef
                     );
 
 
-                if (!riderSnap.exists) {
+                if (!snapshot.exists) {
 
                     throw new Error(
-                        "配送员不存在"
+                        "订单不存在。"
                     );
 
                 }
-
-
-                if (!orderSnap.exists) {
-
-                    throw new Error(
-                        "订单不存在"
-                    );
-
-                }
-
-
-                const rider =
-                    riderSnap.data();
 
 
                 const order =
-                    orderSnap.data();
+                    snapshot.data();
 
 
                 if (
-                    rider.currentOrderId !==
-                    orderId
+                    !isAcceptedByMe(
+                        order
+                    )
                 ) {
 
                     throw new Error(
-                        "这不是你的当前订单"
+                        "这个订单不属于当前骑手。"
                     );
 
                 }
 
-
-                if (
-                    order.status !==
-                    "配送中"
-                ) {
-
-                    throw new Error(
-                        "订单当前不是配送中"
-                    );
-
-                }
-
-
-                // 订单完成
 
                 transaction.update(
                     orderRef,
                     {
 
                         status:
-                            "已完成",
+                            "completed",
 
                         completedAt:
                             firebase.firestore
                                 .FieldValue
-                                .serverTimestamp()
+                                .serverTimestamp(),
 
-                    }
-                );
-
-
-                // 骑手释放
-
-                transaction.update(
-                    riderRef,
-                    {
-
-                        currentOrderId:
-                            "",
-
-                        previousStatus:
-                            "",
-
-                        status:
-                            "在线",
-
-                        completedOrders:
-                            (
-                                rider.completedOrders ||
-                                0
-                            ) + 1
+                        deliveryCompletedBy:
+                            deliveryId
 
                     }
                 );
@@ -2134,208 +2388,409 @@ async function completeOrder(
         );
 
 
-        alert(
-            "🎉 订单完成！\n\n" +
-            "你现在已经恢复空闲，可以继续抢单。"
+        await db
+            .collection("delivery")
+            .doc(deliveryId)
+            .update({
+
+                currentOrderId:
+                    "",
+
+                status:
+                    "在线",
+
+                online:
+                    true,
+
+                lastCompletedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        showSuccess(
+            "配送完成！订单已经完成。"
         );
 
 
-        currentOrder = null;
+        await loadRider();
 
+        await loadOrders();
 
-    } catch (error) {
+    }
 
-        console.error(error);
+    catch (error) {
 
-
-        alert(
-            error.message ||
-            "完成订单失败"
+        console.error(
+            "完成配送失败：",
+            error
         );
 
-    } finally {
-
-        actionLoading = false;
+        showError(
+            "完成配送失败：" +
+            error.message
+        );
 
     }
 
 }
 
 
-// ===============================
-// 状态图标
-// ===============================
+/* =========================================================
+   统计
+========================================================= */
 
-function getStatusIcon(
-    status
+function updateStats(
+    orders
 ) {
 
-    if (
-        status ===
-        "骑手已接单"
-    ) {
-
-        return "🛵";
-
-    }
+    const today =
+        new Date();
 
 
-    if (
-        status ===
-        "外卖好了"
-    ) {
-
-        return "🍱";
-
-    }
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
 
 
-    if (
-        status ===
-        "配送中"
-    ) {
+    let todayCount = 0;
 
-        return "🚴";
-
-    }
+    let todayAmount = 0;
 
 
-    if (
-        status ===
-        "已完成"
-    ) {
+    orders.forEach(
+        function(order) {
 
-        return "✅";
+            const date =
+                getOrderDate(
+                    order
+                );
 
-    }
+
+            const amount =
+                Number(
+                    order.total
+                ) || 0;
 
 
-    return "📦";
+            if (
+                date &&
+                date.getTime() >=
+                today.getTime()
+            ) {
+
+                todayCount++;
+
+                todayAmount +=
+                    amount;
+
+            }
+
+        }
+    );
+
+
+    document.getElementById(
+        "todayOrders"
+    ).textContent =
+        todayCount;
+
+
+    document.getElementById(
+        "todayAmount"
+    ).textContent =
+        formatMoney(
+            todayAmount
+        );
+
+
+    document.getElementById(
+        "totalOrders"
+    ).textContent =
+        orders.length;
 
 }
 
 
-// ===============================
-// 金额格式
-// ===============================
-
-function formatMoney(
-    number
+function getOrderDate(
+    order
 ) {
 
-    return Number(
-        number || 0
-    ).toLocaleString(
-        "en-US"
+    return getDateValue(
+        order.completedAt ||
+        order.completed_at ||
+        order.created_at
     );
 
 }
 
 
-// ===============================
-// HTML 安全处理
-// ===============================
-
-function escapeHtml(
+function getDateValue(
     value
 ) {
 
-    if (
-        value === null ||
-        value === undefined
-    ) {
+    if (!value) {
 
-        return "";
+        return null;
 
     }
 
 
-    return String(value)
+    if (
+        value &&
+        typeof value.toDate ===
+        "function"
+    ) {
 
-        .replace(
-            /&/g,
-            "&amp;"
+        return value.toDate();
+
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        isNaN(
+            date.getTime()
         )
+    ) {
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+        return null;
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
+    }
 
-        .replace(
-            /"/g,
-            "&quot;"
-        )
 
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+    return date;
 
 }
 
 
-// ===============================
-// JS 字符串安全处理
-// ===============================
+/* =========================================================
+   配送历史
+========================================================= */
 
-function escapeJs(
-    value
+function renderHistory() {
+
+    const container =
+        document.getElementById(
+            "historyOrders"
+        );
+
+
+    if (!historyOrders.length) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                暂无配送记录
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const list =
+        [...historyOrders]
+            .sort(
+                function(a, b) {
+
+                    const da =
+                        getOrderDate(a);
+
+                    const dbDate =
+                        getOrderDate(b);
+
+
+                    return (
+                        (
+                            dbDate?.getTime() ||
+                            0
+                        )
+                        -
+                        (
+                            da?.getTime() ||
+                            0
+                        )
+                    );
+
+                }
+            )
+            .slice(
+                0,
+                30
+            );
+
+
+    container.innerHTML =
+        list
+            .map(
+                function(order) {
+
+                    return `
+
+                        <div
+                            class="history-card"
+                        >
+
+                            <div
+                                class="history-top"
+                            >
+
+                                <b>
+                                    📦
+                                    ${escapeHtml(
+                                        order.order_number ||
+                                        order.id
+                                    )}
+                                </b>
+
+                                <span
+                                    class="history-money"
+                                >
+                                    ${formatMoney(
+                                        order.total
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="order-row"
+                            >
+
+                                🏪
+                                ${escapeHtml(
+                                    order.restaurantName ||
+                                    "未知商家"
+                                )}
+
+                            </div>
+
+
+                            <div
+                                class="order-row"
+                            >
+
+                                👤
+                                ${escapeHtml(
+                                    order.customername ||
+                                    order.customerName ||
+                                    "未知客户"
+                                )}
+
+                            </div>
+
+
+                            <div
+                                class="order-row"
+                            >
+
+                                🕐
+                                ${formatDate(
+                                    order.completedAt ||
+                                    order.completed_at ||
+                                    order.created_at
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   电话
+========================================================= */
+
+function callCustomer(
+    phone
 ) {
 
-    return String(value)
-        .replace(
-            /\\/g,
-            "\\\\"
-        )
-        .replace(
-            /'/g,
-            "\\'"
-        )
-        .replace(
-            /"/g,
-            '\\"'
+    if (!phone) {
+
+        showError(
+            "没有客户电话号码。"
         );
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "tel:" +
+        phone;
 
 }
 
 
-// ===============================
-// 退出登录
-// ===============================
+/* =========================================================
+   地图导航
+========================================================= */
+
+function openMap(
+    address
+) {
+
+    if (!address) {
+
+        showError(
+            "没有客户地址。"
+        );
+
+        return;
+
+    }
+
+
+    const url =
+        "https://www.google.com/maps/search/?api=1&query=" +
+        encodeURIComponent(
+            address
+        );
+
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+/* =========================================================
+   退出
+========================================================= */
 
 function logout() {
 
-    // 取消实时监听
+    if (
+        !confirm(
+            "确定要退出骑手账号吗？"
+        )
+    ) {
 
-    if (unsubscribeRider) {
-
-        unsubscribeRider();
-
-        unsubscribeRider = null;
-
-    }
-
-
-    if (unsubscribeCurrentOrder) {
-
-        unsubscribeCurrentOrder();
-
-        unsubscribeCurrentOrder = null;
-
-    }
-
-
-    if (unsubscribeAvailableOrders) {
-
-        unsubscribeAvailableOrders();
-
-        unsubscribeAvailableOrders = null;
+        return;
 
     }
 
@@ -2359,45 +2814,45 @@ function logout() {
 }
 
 
-// ===============================
-// 页面关闭时取消监听
-// ===============================
+/* =========================================================
+   初始化
+========================================================= */
 
-window.addEventListener(
-    "beforeunload",
-    function() {
+async function init() {
 
-        if (unsubscribeRider) {
+    await loadRider();
 
-            unsubscribeRider();
-
-        }
+    await loadOrders();
 
 
-        if (unsubscribeCurrentOrder) {
+    if (refreshTimer) {
 
-            unsubscribeCurrentOrder();
-
-        }
-
-
-        if (unsubscribeAvailableOrders) {
-
-            unsubscribeAvailableOrders();
-
-        }
+        clearInterval(
+            refreshTimer
+        );
 
     }
-);
 
 
-// ===============================
-// 启动
-// ===============================
+    refreshTimer =
+        setInterval(
+            async function() {
+
+                await loadOrders();
+
+            },
+            10000
+        );
+
+}
+
 
 init();
 
+
 </script>
 
+
 </body>
+
 </html>
