@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -7,16 +7,17 @@
 <meta charset="UTF-8">
 
 <meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
-
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
 >
 
-<title>MDY FOOD - 管理员后台</title>
+<title>MDY FOOD - 超级管理员后台</title>
+
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 
 <style>
 
@@ -41,7 +42,7 @@ header {
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: auto;
     padding: 15px;
 }
@@ -55,7 +56,7 @@ header {
 }
 
 .title {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: bold;
 }
 
@@ -63,6 +64,11 @@ header {
     color: #888;
     font-size: 14px;
     margin-top: 5px;
+}
+
+.top-buttons {
+    display: flex;
+    gap: 8px;
 }
 
 button {
@@ -86,9 +92,14 @@ button {
     background: #333;
 }
 
+
+/* =========================
+   数据统计
+========================= */
+
 .stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 12px;
     margin-bottom: 20px;
 }
@@ -102,27 +113,40 @@ button {
 }
 
 .stat-number {
-    font-size: 28px;
+    font-size: 27px;
     font-weight: bold;
 }
 
 .stat-label {
     color: #888;
     font-size: 14px;
-    margin-top: 5px;
+    margin-top: 6px;
 }
 
-.pending-number {
-    color: #d88700;
+.orange {
+    color: #ff5a1f;
 }
 
-.approved-number {
+.green {
     color: #2e8b57;
 }
 
-.rejected-number {
+.blue {
+    color: #1677ff;
+}
+
+.red {
     color: #d33;
 }
+
+.gold {
+    color: #d88700;
+}
+
+
+/* =========================
+   区块
+========================= */
 
 .section {
     background: white;
@@ -137,6 +161,11 @@ button {
     font-weight: bold;
     margin-bottom: 15px;
 }
+
+
+/* =========================
+   标签按钮
+========================= */
 
 .filter-buttons {
     display: flex;
@@ -158,6 +187,25 @@ button {
     border-color: #ff5a1f;
     color: white;
 }
+
+
+/* =========================
+   搜索
+========================= */
+
+.search-box {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+
+
+/* =========================
+   商家申请
+========================= */
 
 .application {
     border: 1px solid #e5e5e5;
@@ -271,21 +319,162 @@ button {
     background: #1677ff;
 }
 
-.empty {
-    padding: 35px;
-    text-align: center;
-    color: #888;
-    background: #fafafa;
-    border-radius: 10px;
+
+/* =========================
+   商家列表
+========================= */
+
+.restaurant-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
 }
 
-.error {
-    background: #fff0f0;
-    color: #c00;
-    padding: 15px;
-    border-radius: 10px;
-    line-height: 1.6;
+.restaurant-card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
 }
+
+.restaurant-card-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.restaurant-card-info {
+    color: #666;
+    line-height: 1.8;
+}
+
+.restaurant-actions {
+    margin-top: 12px;
+}
+
+.restaurant-actions button {
+    border: none;
+    padding: 9px 13px;
+    border-radius: 7px;
+    color: white;
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+.disable-btn {
+    background: #d33;
+}
+
+.enable-btn {
+    background: #2e8b57;
+}
+
+
+/* =========================
+   订单
+========================= */
+
+.order-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 12px;
+}
+
+.order-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.order-number {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.order-status {
+    padding: 6px 10px;
+    border-radius: 15px;
+    background: #fff3d6;
+    color: #a56500;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.order-info {
+    background: #fafafa;
+    padding: 12px;
+    border-radius: 9px;
+    line-height: 1.9;
+}
+
+.order-items {
+    margin-top: 10px;
+    color: #555;
+    line-height: 1.8;
+}
+
+.order-total {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff5a1f;
+}
+
+
+/* =========================
+   评价
+========================= */
+
+.review-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 12px;
+}
+
+.review-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.review-rating {
+    font-size: 18px;
+}
+
+.review-time {
+    color: #999;
+    font-size: 12px;
+}
+
+.review-restaurant {
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.review-customer {
+    color: #777;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.review-comment {
+    background: #fafafa;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 10px;
+    line-height: 1.7;
+}
+
+
+/* =========================
+   提示
+========================= */
 
 .success {
     background: #effff4;
@@ -296,10 +485,39 @@ button {
     display: none;
 }
 
+.error {
+    background: #fff0f0;
+    color: #c00;
+    padding: 15px;
+    border-radius: 10px;
+    line-height: 1.6;
+}
+
+.empty {
+    padding: 35px;
+    text-align: center;
+    color: #888;
+    background: #fafafa;
+    border-radius: 10px;
+}
+
+
+/* =========================
+   手机
+========================= */
+
+@media (max-width: 900px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
 @media (max-width: 600px) {
 
     .stats {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 
     .top {
@@ -307,8 +525,20 @@ button {
         align-items: stretch;
     }
 
-    .application-top {
+    .top-buttons {
+        width: 100%;
+    }
+
+    .top-buttons button {
+        flex: 1;
+    }
+
+    .application-top,
+    .restaurant-card-top,
+    .order-top,
+    .review-top {
         flex-direction: column;
+        align-items: flex-start;
     }
 
 }
@@ -317,45 +547,52 @@ button {
 
 </head>
 
+
 <body>
 
+
 <header>
-    👑 MDY FOOD 管理员后台
+    👑 MDY FOOD 超级管理员后台
 </header>
+
 
 <div class="container">
 
-```
+
+<!-- =========================
+     顶部
+========================= -->
+
 <div class="top">
 
     <div>
 
         <div class="title">
-            🛡️ 商家入驻审核
+            🛡️ 平台管理中心
         </div>
 
         <div class="subtitle">
-            管理所有商家入驻申请
+            管理 MDY FOOD 商家、订单和评价
         </div>
 
     </div>
 
-    <div style="display:flex;gap:8px;">
+
+    <div class="top-buttons">
 
         <button
             class="refresh-btn"
-            onclick="loadApplications()">
-
-            🔄 刷新
-
+            onclick="refreshAll()"
+        >
+            🔄 刷新全部
         </button>
+
 
         <button
             class="logout-btn"
-            onclick="logout()">
-
+            onclick="logout()"
+        >
             退出
-
         </button>
 
     </div>
@@ -363,16 +600,68 @@ button {
 </div>
 
 
+<!-- =========================
+     平台统计
+========================= -->
+
 <div class="stats">
+
 
     <div class="stat-card">
 
         <div
-            id="pendingCount"
-            class="stat-number pending-number">
-
+            id="totalOrders"
+            class="stat-number orange"
+        >
             0
+        </div>
 
+        <div class="stat-label">
+            📦 总订单
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div
+            id="totalRevenue"
+            class="stat-number green"
+        >
+            0 Ks
+        </div>
+
+        <div class="stat-label">
+            💰 总订单金额
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div
+            id="approvedRestaurants"
+            class="stat-number blue"
+        >
+            0
+        </div>
+
+        <div class="stat-label">
+            🏪 已通过商家
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div
+            id="pendingRestaurants"
+            class="stat-number gold"
+        >
+            0
         </div>
 
         <div class="stat-label">
@@ -385,102 +674,230 @@ button {
     <div class="stat-card">
 
         <div
-            id="approvedCount"
-            class="stat-number approved-number">
-
+            id="totalReviews"
+            class="stat-number red"
+        >
             0
-
         </div>
 
         <div class="stat-label">
-            ✅ 已通过
+            ⭐ 总评价
         </div>
 
     </div>
 
-
-    <div class="stat-card">
-
-        <div
-            id="rejectedCount"
-            class="stat-number rejected-number">
-
-            0
-
-        </div>
-
-        <div class="stat-label">
-            ❌ 已拒绝
-        </div>
-
-    </div>
 
 </div>
 
 
-<div class="section">
+<!-- =========================
+     提示
+========================= -->
 
-    <div
-        id="successMessage"
-        class="success">
-    </div>
+<div
+    id="successMessage"
+    class="success"
+></div>
+
+
+<!-- =========================
+     商家申请
+========================= -->
+
+<div class="section">
 
 
     <div class="section-title">
-        🏪 商家申请
+        🏪 商家入驻审核
     </div>
 
 
     <div class="filter-buttons">
 
+
         <button
             id="filter-all"
             class="active"
-            onclick="setFilter('全部')">
-
+            onclick="setApplicationFilter('全部')"
+        >
             全部
-
         </button>
+
 
         <button
             id="filter-pending"
-            onclick="setFilter('待审核')">
-
+            onclick="setApplicationFilter('待审核')"
+        >
             ⏳ 待审核
-
         </button>
+
 
         <button
             id="filter-approved"
-            onclick="setFilter('已通过')">
-
+            onclick="setApplicationFilter('已通过')"
+        >
             ✅ 已通过
-
         </button>
+
 
         <button
             id="filter-rejected"
-            onclick="setFilter('已拒绝')">
-
+            onclick="setApplicationFilter('已拒绝')"
+        >
             ❌ 已拒绝
-
         </button>
+
 
     </div>
 
 
     <div id="applications">
-
         正在读取商家申请...
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     已上线商家
+========================= -->
+
+<div class="section">
+
+
+    <div class="section-title">
+        🏪 已上线商家
+    </div>
+
+
+    <input
+        id="restaurantSearch"
+        class="search-box"
+        type="text"
+        placeholder="搜索餐厅名称、地址、电话..."
+        oninput="renderRestaurants()"
+    >
+
+
+    <div id="restaurants">
+        正在读取餐厅...
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     全平台订单
+========================= -->
+
+<div class="section">
+
+
+    <div class="section-title">
+        📦 全平台订单
+    </div>
+
+
+    <input
+        id="orderSearch"
+        class="search-box"
+        type="text"
+        placeholder="搜索订单号、餐厅、顾客、电话..."
+        oninput="renderOrders()"
+    >
+
+
+    <div class="filter-buttons">
+
+
+        <button
+            id="order-filter-all"
+            class="active"
+            onclick="setOrderFilter('全部')"
+        >
+            全部
+        </button>
+
+
+        <button
+            id="order-filter-pending"
+            onclick="setOrderFilter('待接单')"
+        >
+            ⏳ 待接单
+        </button>
+
+
+        <button
+            id="order-filter-accepted"
+            onclick="setOrderFilter('已接单')"
+        >
+            ✅ 已接单
+        </button>
+
+
+        <button
+            id="order-filter-delivering"
+            onclick="setOrderFilter('配送中')"
+        >
+            🚴 配送中
+        </button>
+
+
+        <button
+            id="order-filter-completed"
+            onclick="setOrderFilter('已完成')"
+        >
+            🎉 已完成
+        </button>
+
 
     </div>
 
-</div>
-```
+
+    <div id="orders">
+        正在读取订单...
+    </div>
+
 
 </div>
+
+
+<!-- =========================
+     全平台评价
+========================= -->
+
+<div class="section">
+
+
+    <div class="section-title">
+        ⭐ 全平台评价
+    </div>
+
+
+    <input
+        id="reviewSearch"
+        class="search-box"
+        type="text"
+        placeholder="搜索餐厅、顾客、评价内容..."
+        oninput="renderReviews()"
+    >
+
+
+    <div id="reviews">
+        正在读取评价...
+    </div>
+
+
+</div>
+
+
+</div>
+
 
 <script>
+
 
 // ========================================
 // Firebase
@@ -508,19 +925,35 @@ const firebaseConfig = {
 
 };
 
-firebase.initializeApp(firebaseConfig);
+
+firebase.initializeApp(
+    firebaseConfig
+);
+
 
 const db =
     firebase.firestore();
 
 
+// ========================================
+// 数据
+// ========================================
+
 let applications = [];
 
-let currentFilter = "全部";
+let restaurants = [];
+
+let orders = [];
+
+let reviews = [];
+
+let applicationFilter = "全部";
+
+let orderFilter = "全部";
 
 
 // ========================================
-// 防止特殊字符
+// HTML 安全
 // ========================================
 
 function escapeHtml(value) {
@@ -536,12 +969,62 @@ function escapeHtml(value) {
 
 
 // ========================================
-// 获取状态
+// 时间
 // ========================================
 
-function getStatus(data) {
+function getTimestamp(data) {
 
-    return data.status || "pending";
+    const value =
+        data.createdAt ||
+        data.created_at ||
+        data.approvedAt ||
+        data.rejectedAt;
+
+
+    if (!value) {
+        return 0;
+    }
+
+
+    try {
+
+        if (value.toMillis) {
+            return value.toMillis();
+        }
+
+        if (value.seconds) {
+            return value.seconds * 1000;
+        }
+
+        const date =
+            new Date(value);
+
+        return date.getTime() || 0;
+
+    }
+
+    catch (error) {
+
+        return 0;
+
+    }
+
+}
+
+
+function formatTime(data) {
+
+    const timestamp =
+        getTimestamp(data);
+
+
+    if (!timestamp) {
+        return "";
+    }
+
+
+    return new Date(timestamp)
+        .toLocaleString("zh-CN");
 
 }
 
@@ -556,28 +1039,22 @@ function statusText(status) {
         status === "approved" ||
         status === "已通过"
     ) {
-
         return "已通过";
-
     }
+
 
     if (
         status === "rejected" ||
         status === "已拒绝"
     ) {
-
         return "已拒绝";
-
     }
+
 
     return "待审核";
 
 }
 
-
-// ========================================
-// 状态 CSS
-// ========================================
 
 function statusClass(status) {
 
@@ -585,19 +1062,17 @@ function statusClass(status) {
         status === "approved" ||
         status === "已通过"
     ) {
-
         return "status-approved";
-
     }
+
 
     if (
         status === "rejected" ||
         status === "已拒绝"
     ) {
-
         return "status-rejected";
-
     }
+
 
     return "status-pending";
 
@@ -605,81 +1080,10 @@ function statusClass(status) {
 
 
 // ========================================
-// 时间
-// ========================================
-
-function getTimestamp(data) {
-
-    const value =
-        data.createdAt ||
-        data.created_at;
-
-    if (!value) {
-
-        return 0;
-
-    }
-
-    try {
-
-        if (value.toMillis) {
-
-            return value.toMillis();
-
-        }
-
-        if (value.seconds) {
-
-            return value.seconds * 1000;
-
-        }
-
-        const date =
-            new Date(value);
-
-        return date.getTime() || 0;
-
-    } catch (error) {
-
-        return 0;
-
-    }
-
-}
-
-
-function getTime(data) {
-
-    const timestamp =
-        getTimestamp(data);
-
-    if (!timestamp) {
-
-        return "";
-
-    }
-
-    return new Date(timestamp)
-        .toLocaleString("zh-CN");
-
-}
-
-
-// ========================================
-// 读取申请
+// 读取商家申请
 // ========================================
 
 async function loadApplications() {
-
-    const container =
-        document.getElementById(
-            "applications"
-        );
-
-
-    container.innerHTML =
-        `<div class="empty">⏳ 正在读取...</div>`;
-
 
     try {
 
@@ -716,20 +1120,26 @@ async function loadApplications() {
         });
 
 
-        updateStats();
+        updateApplicationStats();
 
         renderApplications();
 
+        updatePlatformStats();
 
-    } catch (error) {
+
+    }
+
+    catch (error) {
 
         console.error(
-            "读取商家申请失败：",
+            "读取商家申请失败:",
             error
         );
 
 
-        container.innerHTML = `
+        document.getElementById(
+            "applications"
+        ).innerHTML = `
 
             <div class="error">
 
@@ -738,11 +1148,6 @@ async function loadApplications() {
                 <br><br>
 
                 ${escapeHtml(error.message)}
-
-                <br><br>
-
-                请检查 Firebase Firestore Rules
-                是否允许读取 merchantApplications。
 
             </div>
 
@@ -754,10 +1159,10 @@ async function loadApplications() {
 
 
 // ========================================
-// 更新统计
+// 商家申请统计
 // ========================================
 
-function updateStats() {
+function updateApplicationStats() {
 
     let pending = 0;
 
@@ -769,60 +1174,47 @@ function updateStats() {
     applications.forEach(function(item) {
 
         const status =
-            getStatus(item.data);
+            item.data.status ||
+            "pending";
 
 
-        if (
-            status === "approved" ||
-            status === "已通过"
-        ) {
-
+        if (status === "approved") {
             approved++;
-
         }
 
-        else if (
-            status === "rejected" ||
-            status === "已拒绝"
-        ) {
-
+        else if (status === "rejected") {
             rejected++;
-
         }
 
         else {
-
             pending++;
-
         }
 
     });
 
 
     document.getElementById(
-        "pendingCount"
-    ).innerText = pending;
+        "approvedRestaurants"
+    ).innerText =
+        approved;
 
 
     document.getElementById(
-        "approvedCount"
-    ).innerText = approved;
-
-
-    document.getElementById(
-        "rejectedCount"
-    ).innerText = rejected;
+        "pendingRestaurants"
+    ).innerText =
+        pending;
 
 }
 
 
 // ========================================
-// 筛选
+// 商家申请筛选
 // ========================================
 
-function setFilter(filter) {
+function setApplicationFilter(filter) {
 
-    currentFilter = filter;
+    applicationFilter =
+        filter;
 
 
     const map = {
@@ -845,6 +1237,7 @@ function setFilter(filter) {
                 map[key]
             );
 
+
         if (button) {
 
             button.classList.toggle(
@@ -862,51 +1255,48 @@ function setFilter(filter) {
 }
 
 
-// ========================================
-// 筛选判断
-// ========================================
-
-function matchesFilter(data) {
+function matchesApplicationFilter(data) {
 
     const status =
-        getStatus(data);
+        data.status ||
+        "pending";
 
 
-    if (currentFilter === "全部") {
-
+    if (
+        applicationFilter ===
+        "全部"
+    ) {
         return true;
+    }
+
+
+    if (
+        applicationFilter ===
+        "待审核"
+    ) {
+
+        return status !== "approved" &&
+               status !== "rejected";
 
     }
 
 
-    if (currentFilter === "待审核") {
+    if (
+        applicationFilter ===
+        "已通过"
+    ) {
 
-        return !(
-            status === "approved" ||
-            status === "已通过" ||
-            status === "rejected" ||
-            status === "已拒绝"
-        );
+        return status === "approved";
 
     }
 
 
-    if (currentFilter === "已通过") {
+    if (
+        applicationFilter ===
+        "已拒绝"
+    ) {
 
-        return (
-            status === "approved" ||
-            status === "已通过"
-        );
-
-    }
-
-
-    if (currentFilter === "已拒绝") {
-
-        return (
-            status === "rejected" ||
-            status === "已拒绝"
-        );
+        return status === "rejected";
 
     }
 
@@ -931,7 +1321,9 @@ function renderApplications() {
     const list =
         applications.filter(function(item) {
 
-            return matchesFilter(item.data);
+            return matchesApplicationFilter(
+                item.data
+            );
 
         });
 
@@ -958,12 +1350,17 @@ function renderApplications() {
 
     list.forEach(function(item) {
 
-        const data = item.data;
+        const data =
+            item.data;
 
-        const id = item.id;
+
+        const id =
+            item.id;
+
 
         const status =
-            getStatus(data);
+            data.status ||
+            "pending";
 
 
         const name =
@@ -1001,12 +1398,10 @@ function renderApplications() {
             "暂无餐厅介绍";
 
 
-        const time =
-            getTime(data);
-
-
         const div =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         div.className =
@@ -1026,17 +1421,17 @@ function renderApplications() {
 
 
         if (
-            status !== "approved"
+            status !==
+            "approved"
         ) {
 
             buttons += `
 
                 <button
                     class="approve-btn"
-                    onclick="approveRestaurant('${id}')">
-
+                    onclick="approveRestaurant('${escapeHtml(id)}')"
+                >
                     ✅ 通过审核
-
                 </button>
 
             `;
@@ -1045,17 +1440,17 @@ function renderApplications() {
 
 
         if (
-            status !== "rejected"
+            status !==
+            "rejected"
         ) {
 
             buttons += `
 
                 <button
                     class="reject-btn"
-                    onclick="rejectRestaurant('${id}')">
-
+                    onclick="rejectRestaurant('${escapeHtml(id)}')"
+                >
                     ❌ 拒绝申请
-
                 </button>
 
             `;
@@ -1064,17 +1459,17 @@ function renderApplications() {
 
 
         if (
-            status === "rejected"
+            status ===
+            "rejected"
         ) {
 
             buttons += `
 
                 <button
                     class="reopen-btn"
-                    onclick="approveRestaurant('${id}')">
-
+                    onclick="approveRestaurant('${escapeHtml(id)}')"
+                >
                     🔄 重新通过
-
                 </button>
 
             `;
@@ -1105,7 +1500,8 @@ function renderApplications() {
 
 
                 <div
-                    class="status ${statusClass(status)}">
+                    class="status ${statusClass(status)}"
+                >
 
                     ${statusText(status)}
 
@@ -1156,13 +1552,24 @@ function renderApplications() {
             </div>
 
 
-            ${
-                time
-                    ? `
-                        <div class="time">
+            <div class="time">
 
-                            🕒 申请时间：
-                            ${escapeHtml(time)}
+                🕒 申请时间：
+                ${escapeHtml(formatTime(data))}
+
+            </div>
+
+
+            ${
+                status === "rejected" &&
+                data.rejectionReason
+                    ? `
+                        <div class="info">
+
+                            ❌ 拒绝原因：
+                            ${escapeHtml(
+                                data.rejectionReason
+                            )}
 
                         </div>
                     `
@@ -1179,7 +1586,9 @@ function renderApplications() {
         `;
 
 
-        container.appendChild(div);
+        container.appendChild(
+            div
+        );
 
     });
 
@@ -1187,7 +1596,7 @@ function renderApplications() {
 
 
 // ========================================
-// 通过审核
+// 通过商家
 // ========================================
 
 async function approveRestaurant(id) {
@@ -1233,9 +1642,8 @@ async function approveRestaurant(id) {
 
     try {
 
-        // ========================================
+
         // 1. 更新申请状态
-        // ========================================
 
         await db
             .collection(
@@ -1255,9 +1663,7 @@ async function approveRestaurant(id) {
             });
 
 
-        // ========================================
         // 2. 创建正式餐厅
-        // ========================================
 
         await db
             .collection(
@@ -1270,48 +1676,64 @@ async function approveRestaurant(id) {
                     id,
 
                 merchantId:
-                    data.uid || id,
+                    data.uid ||
+                    id,
 
                 uid:
-                    data.uid || id,
+                    data.uid ||
+                    id,
 
                 name:
-                    data.restaurantName || "",
+                    data.restaurantName ||
+                    "",
 
                 restaurantName:
-                    data.restaurantName || "",
+                    data.restaurantName ||
+                    "",
 
                 category:
-                    data.restaurantType || "",
+                    data.restaurantType ||
+                    "",
 
                 restaurantType:
-                    data.restaurantType || "",
+                    data.restaurantType ||
+                    "",
 
                 address:
-                    data.restaurantAddress || "",
+                    data.restaurantAddress ||
+                    "",
 
                 restaurantAddress:
-                    data.restaurantAddress || "",
+                    data.restaurantAddress ||
+                    "",
 
                 description:
-                    data.restaurantDescription || "",
+                    data.restaurantDescription ||
+                    "",
 
                 restaurantDescription:
-                    data.restaurantDescription || "",
+                    data.restaurantDescription ||
+                    "",
 
                 ownerName:
-                    data.ownerName || "",
+                    data.ownerName ||
+                    "",
 
                 phone:
-                    data.phone || "",
+                    data.phone ||
+                    "",
 
                 email:
-                    data.email || "",
+                    data.email ||
+                    "",
 
                 approvalStatus:
                     "approved",
 
                 approved:
+                    true,
+
+                enabled:
                     true,
 
                 createdAt:
@@ -1331,17 +1753,19 @@ async function approveRestaurant(id) {
         showSuccess(
             "✅ " +
             name +
-            " 已通过审核，并已正式上线！"
+            " 已通过审核并正式上线！"
         );
 
 
-        await loadApplications();
+        await refreshAll();
+
+    }
 
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
-            "审核失败：",
+            "审核失败:",
             error
         );
 
@@ -1357,7 +1781,7 @@ async function approveRestaurant(id) {
 
 
 // ========================================
-// 拒绝申请
+// 拒绝商家
 // ========================================
 
 async function rejectRestaurant(id) {
@@ -1391,9 +1815,7 @@ async function rejectRestaurant(id) {
 
 
     if (reason === null) {
-
         return;
-
     }
 
 
@@ -1436,17 +1858,19 @@ async function rejectRestaurant(id) {
         showSuccess(
             "❌ " +
             name +
-            " 已拒绝。"
+            " 已拒绝"
         );
 
 
         await loadApplications();
 
+    }
 
-    } catch (error) {
+
+    catch (error) {
 
         console.error(
-            "拒绝失败：",
+            "拒绝失败:",
             error
         );
 
@@ -1457,6 +1881,1204 @@ async function rejectRestaurant(id) {
         );
 
     }
+
+}
+
+
+// ========================================
+// 读取正式餐厅
+// ========================================
+
+async function loadRestaurants() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "restaurants"
+                )
+                .get();
+
+
+        restaurants = [];
+
+
+        snapshot.forEach(function(doc) {
+
+            restaurants.push({
+
+                id:
+                    doc.id,
+
+                data:
+                    doc.data() || {}
+
+            });
+
+        });
+
+
+        restaurants.sort(function(a, b) {
+
+            return getTimestamp(b.data)
+                -
+                getTimestamp(a.data);
+
+        });
+
+
+        renderRestaurants();
+
+        updatePlatformStats();
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "读取餐厅失败:",
+            error
+        );
+
+
+        document.getElementById(
+            "restaurants"
+        ).innerHTML = `
+
+            <div class="error">
+
+                ❌ 读取餐厅失败
+
+                <br><br>
+
+                ${escapeHtml(error.message)}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// 显示正式餐厅
+// ========================================
+
+function renderRestaurants() {
+
+    const container =
+        document.getElementById(
+            "restaurants"
+        );
+
+
+    const search =
+        (
+            document.getElementById(
+                "restaurantSearch"
+            ).value || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const list =
+        restaurants.filter(function(item) {
+
+            const data =
+                item.data;
+
+
+            const text =
+                (
+                    (data.name || "") +
+                    " " +
+                    (data.restaurantName || "") +
+                    " " +
+                    (data.address || "") +
+                    " " +
+                    (data.restaurantAddress || "") +
+                    " " +
+                    (data.phone || "")
+                )
+                .toLowerCase();
+
+
+            return text.includes(search);
+
+        });
+
+
+    if (!list.length) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                📭 没有找到餐厅
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    list.forEach(function(item) {
+
+        const data =
+            item.data;
+
+
+        const enabled =
+            data.enabled !== false;
+
+
+        const name =
+            data.name ||
+            data.restaurantName ||
+            "未命名餐厅";
+
+
+        const category =
+            data.category ||
+            data.restaurantType ||
+            "未分类";
+
+
+        const address =
+            data.address ||
+            data.restaurantAddress ||
+            "未填写";
+
+
+        const phone =
+            data.phone ||
+            "未填写";
+
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+
+        div.className =
+            "restaurant-card";
+
+
+        div.innerHTML = `
+
+            <div class="restaurant-card-top">
+
+                <div>
+
+                    <div class="restaurant-card-name">
+
+                        🏪
+                        ${escapeHtml(name)}
+
+                    </div>
+
+                    <div class="restaurant-category">
+
+                        ${escapeHtml(category)}
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="status ${
+                        enabled
+                            ? "status-approved"
+                            : "status-rejected"
+                    }"
+                >
+
+                    ${
+                        enabled
+                            ? "营业中"
+                            : "已暂停"
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="restaurant-card-info">
+
+                📍 地址：
+                ${escapeHtml(address)}
+
+                <br>
+
+                📞 电话：
+                ${escapeHtml(phone)}
+
+                <br>
+
+                🆔 餐厅ID：
+                ${escapeHtml(item.id)}
+
+            </div>
+
+
+            <div class="restaurant-actions">
+
+                ${
+                    enabled
+                        ? `
+                            <button
+                                class="disable-btn"
+                                onclick="disableRestaurant('${escapeHtml(item.id)}')"
+                            >
+                                🚫 暂停商家
+                            </button>
+                        `
+                        : `
+                            <button
+                                class="enable-btn"
+                                onclick="enableRestaurant('${escapeHtml(item.id)}')"
+                            >
+                                🟢 恢复商家
+                            </button>
+                        `
+                }
+
+            </div>
+
+        `;
+
+
+        container.appendChild(
+            div
+        );
+
+    });
+
+}
+
+
+// ========================================
+// 暂停商家
+// ========================================
+
+async function disableRestaurant(id) {
+
+    if (
+        !confirm(
+            "确定暂停这个商家吗？\n暂停后建议同时在首页隐藏该餐厅。"
+        )
+    ) {
+        return;
+    }
+
+
+    try {
+
+        await db
+            .collection(
+                "restaurants"
+            )
+            .doc(id)
+            .update({
+
+                enabled:
+                    false,
+
+                disabledAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        showSuccess(
+            "🚫 商家已暂停"
+        );
+
+
+        await loadRestaurants();
+
+    }
+
+
+    catch (error) {
+
+        alert(
+            "暂停失败：" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// ========================================
+// 恢复商家
+// ========================================
+
+async function enableRestaurant(id) {
+
+    try {
+
+        await db
+            .collection(
+                "restaurants"
+            )
+            .doc(id)
+            .update({
+
+                enabled:
+                    true,
+
+                enabledAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        showSuccess(
+            "🟢 商家已恢复"
+        );
+
+
+        await loadRestaurants();
+
+    }
+
+
+    catch (error) {
+
+        alert(
+            "恢复失败：" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// ========================================
+// 读取订单
+// ========================================
+
+async function loadOrders() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "orders"
+                )
+                .get();
+
+
+        orders = [];
+
+
+        snapshot.forEach(function(doc) {
+
+            orders.push({
+
+                id:
+                    doc.id,
+
+                data:
+                    doc.data() || {}
+
+            });
+
+        });
+
+
+        orders.sort(function(a, b) {
+
+            return getTimestamp(b.data)
+                -
+                getTimestamp(a.data);
+
+        });
+
+
+        updatePlatformStats();
+
+        renderOrders();
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "读取订单失败:",
+            error
+        );
+
+
+        document.getElementById(
+            "orders"
+        ).innerHTML = `
+
+            <div class="error">
+
+                ❌ 读取订单失败
+
+                <br><br>
+
+                ${escapeHtml(error.message)}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// 订单筛选
+// ========================================
+
+function setOrderFilter(filter) {
+
+    orderFilter =
+        filter;
+
+
+    const map = {
+
+        "全部":
+            "order-filter-all",
+
+        "待接单":
+            "order-filter-pending",
+
+        "已接单":
+            "order-filter-accepted",
+
+        "配送中":
+            "order-filter-delivering",
+
+        "已完成":
+            "order-filter-completed"
+
+    };
+
+
+    Object.keys(map).forEach(function(key) {
+
+        const button =
+            document.getElementById(
+                map[key]
+            );
+
+
+        if (button) {
+
+            button.classList.toggle(
+                "active",
+                key === filter
+            );
+
+        }
+
+    });
+
+
+    renderOrders();
+
+}
+
+
+// ========================================
+// 显示订单
+// ========================================
+
+function renderOrders() {
+
+    const container =
+        document.getElementById(
+            "orders"
+        );
+
+
+    const search =
+        (
+            document.getElementById(
+                "orderSearch"
+            ).value || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const list =
+        orders.filter(function(item) {
+
+            const data =
+                item.data;
+
+
+            const status =
+                data.status ||
+                "";
+
+
+            if (
+                orderFilter !==
+                "全部"
+            ) {
+
+                if (
+                    status !==
+                    orderFilter
+                ) {
+
+                    return false;
+
+                }
+
+            }
+
+
+            const text =
+                (
+                    (data.order_number || "") +
+                    " " +
+                    (data.restaurantName || "") +
+                    " " +
+                    (data.customername || "") +
+                    " " +
+                    (data.customerEmail || "") +
+                    " " +
+                    (data.phone || "")
+                )
+                .toLowerCase();
+
+
+            return text.includes(
+                search
+            );
+
+        });
+
+
+    if (!list.length) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                📭 没有找到订单
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    list.forEach(function(item) {
+
+        const data =
+            item.data;
+
+
+        const orderNumber =
+            data.order_number ||
+            item.id;
+
+
+        const restaurant =
+            data.restaurantName ||
+            "未知餐厅";
+
+
+        const customer =
+            data.customername ||
+            "未填写";
+
+
+        const phone =
+            data.phone ||
+            "未填写";
+
+
+        const address =
+            data.adress ||
+            data.address ||
+            "未填写";
+
+
+        const payment =
+            data.payment ||
+            "未填写";
+
+
+        const status =
+            data.status ||
+            "未知";
+
+
+        const total =
+            Number(
+                data.total
+            ) || 0;
+
+
+        let itemsHtml = "";
+
+
+        if (
+            Array.isArray(
+                data.items
+            )
+        ) {
+
+            data.items.forEach(
+                function(itemData) {
+
+                    itemsHtml += `
+
+                        ${escapeHtml(
+                            itemData.name ||
+                            "菜品"
+                        )}
+
+                        ×
+                        ${
+                            Number(
+                                itemData.quantity
+                            ) || 0
+                        }
+
+                        <br>
+
+                    `;
+
+                }
+            );
+
+        }
+
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+
+        div.className =
+            "order-card";
+
+
+        div.innerHTML = `
+
+            <div class="order-top">
+
+                <div class="order-number">
+
+                    📦
+                    ${escapeHtml(
+                        orderNumber
+                    )}
+
+                </div>
+
+
+                <div class="order-status">
+
+                    ${escapeHtml(status)}
+
+                </div>
+
+            </div>
+
+
+            <div class="order-info">
+
+                🏪 餐厅：
+                ${escapeHtml(restaurant)}
+
+                <br>
+
+                👤 顾客：
+                ${escapeHtml(customer)}
+
+                <br>
+
+                📞 电话：
+                ${escapeHtml(phone)}
+
+                <br>
+
+                📍 地址：
+                ${escapeHtml(address)}
+
+                <br>
+
+                💳 付款：
+                ${escapeHtml(payment)}
+
+                <br>
+
+                🕒 时间：
+                ${escapeHtml(
+                    formatTime(data)
+                )}
+
+            </div>
+
+
+            <div class="order-items">
+
+                <b>🍜 菜品：</b>
+
+                <br>
+
+                ${
+                    itemsHtml ||
+                    "暂无菜品信息"
+                }
+
+            </div>
+
+
+            <div class="order-total">
+
+                💰
+                ${total.toLocaleString()}
+                Ks
+
+            </div>
+
+        `;
+
+
+        container.appendChild(
+            div
+        );
+
+    });
+
+}
+
+
+// ========================================
+// 读取评价
+// ========================================
+
+async function loadReviews() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "reviews"
+                )
+                .get();
+
+
+        reviews = [];
+
+
+        snapshot.forEach(function(doc) {
+
+            reviews.push({
+
+                id:
+                    doc.id,
+
+                data:
+                    doc.data() || {}
+
+            });
+
+        });
+
+
+        reviews.sort(function(a, b) {
+
+            return getTimestamp(b.data)
+                -
+                getTimestamp(a.data);
+
+        });
+
+
+        updatePlatformStats();
+
+        renderReviews();
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "读取评价失败:",
+            error
+        );
+
+
+        document.getElementById(
+            "reviews"
+        ).innerHTML = `
+
+            <div class="error">
+
+                ❌ 读取评价失败
+
+                <br><br>
+
+                ${escapeHtml(error.message)}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ========================================
+// 显示评价
+// ========================================
+
+function renderReviews() {
+
+    const container =
+        document.getElementById(
+            "reviews"
+        );
+
+
+    const search =
+        (
+            document.getElementById(
+                "reviewSearch"
+            ).value || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const list =
+        reviews.filter(function(item) {
+
+            const data =
+                item.data;
+
+
+            const text =
+                (
+                    (data.restaurantName || "") +
+                    " " +
+                    (data.customerName || "") +
+                    " " +
+                    (data.customername || "") +
+                    " " +
+                    (data.comment || "")
+                )
+                .toLowerCase();
+
+
+            return text.includes(
+                search
+            );
+
+        });
+
+
+    if (!list.length) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                📭 暂无评价
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    list.forEach(function(item) {
+
+        const data =
+            item.data;
+
+
+        const rating =
+            Number(
+                data.rating ||
+                data.star ||
+                data.stars ||
+                data.score ||
+                0
+            );
+
+
+        const customer =
+            data.customerName ||
+            data.customername ||
+            data.customerEmail ||
+            "匿名顾客";
+
+
+        const restaurant =
+            data.restaurantName ||
+            "未知餐厅";
+
+
+        const comment =
+            data.comment ||
+            "没有填写评价";
+
+
+        let stars = "";
+
+
+        for (
+            let i = 1;
+            i <= 5;
+            i++
+        ) {
+
+            stars +=
+                i <= rating
+                    ? "⭐"
+                    : "☆";
+
+        }
+
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+
+        div.className =
+            "review-card";
+
+
+        div.innerHTML = `
+
+            <div class="review-top">
+
+                <div class="review-rating">
+
+                    ${stars}
+
+                    <span>
+                        ${rating}/5
+                    </span>
+
+                </div>
+
+
+                <div class="review-time">
+
+                    ${escapeHtml(
+                        formatTime(data)
+                    )}
+
+                </div>
+
+            </div>
+
+
+            <div class="review-restaurant">
+
+                🏪
+                ${escapeHtml(
+                    restaurant
+                )}
+
+            </div>
+
+
+            <div class="review-customer">
+
+                👤
+                ${escapeHtml(
+                    customer
+                )}
+
+            </div>
+
+
+            <div class="review-comment">
+
+                ${escapeHtml(
+                    comment
+                )}
+
+            </div>
+
+        `;
+
+
+        container.appendChild(
+            div
+        );
+
+    });
+
+}
+
+
+// ========================================
+// 平台统计
+// ========================================
+
+function updatePlatformStats() {
+
+    const totalOrderCount =
+        orders.length;
+
+
+    let revenue = 0;
+
+
+    orders.forEach(function(item) {
+
+        revenue +=
+            Number(
+                item.data.total
+            ) || 0;
+
+    });
+
+
+    document.getElementById(
+        "totalOrders"
+    ).innerText =
+        totalOrderCount;
+
+
+    document.getElementById(
+        "totalRevenue"
+    ).innerText =
+        revenue.toLocaleString() +
+        " Ks";
+
+
+    document.getElementById(
+        "totalReviews"
+    ).innerText =
+        reviews.length;
+
+
+    let approved = 0;
+
+    let pending = 0;
+
+
+    applications.forEach(function(item) {
+
+        const status =
+            item.data.status ||
+            "pending";
+
+
+        if (
+            status ===
+            "approved"
+        ) {
+
+            approved++;
+
+        }
+
+        else if (
+            status !==
+            "rejected"
+        ) {
+
+            pending++;
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "approvedRestaurants"
+    ).innerText =
+        approved;
+
+
+    document.getElementById(
+        "pendingRestaurants"
+    ).innerText =
+        pending;
+
+}
+
+
+// ========================================
+// 刷新全部
+// ========================================
+
+async function refreshAll() {
+
+    showSuccess(
+        "🔄 正在刷新平台数据..."
+    );
+
+
+    await Promise.all([
+
+        loadApplications(),
+
+        loadRestaurants(),
+
+        loadOrders(),
+
+        loadReviews()
+
+    ]);
+
+
+    showSuccess(
+        "✅ 平台数据已刷新"
+    );
 
 }
 
@@ -1486,7 +3108,7 @@ function showSuccess(message) {
         box.style.display =
             "none";
 
-    }, 4000);
+    }, 3000);
 
 }
 
@@ -1501,6 +3123,7 @@ function logout() {
         "superAdminLogin"
     );
 
+
     window.location.href =
         "index.html";
 
@@ -1511,7 +3134,8 @@ function logout() {
 // 启动
 // ========================================
 
-loadApplications();
+refreshAll();
+
 
 </script>
 
