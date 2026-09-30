@@ -26,7 +26,7 @@ content="width=device-width, initial-scale=1.0"
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: Arial, "Microsoft YaHei", sans-serif;
     background: #f5f5f5;
     color: #333;
 }
@@ -65,13 +65,16 @@ header {
     margin-top: 5px;
 }
 
+button {
+    cursor: pointer;
+}
+
 .refresh-btn,
 .logout-btn {
     border: none;
     color: white;
     padding: 10px 15px;
     border-radius: 8px;
-    cursor: pointer;
     font-weight: bold;
 }
 
@@ -101,12 +104,12 @@ header {
 .stat-number {
     font-size: 28px;
     font-weight: bold;
-    margin-bottom: 5px;
 }
 
 .stat-label {
     color: #888;
     font-size: 14px;
+    margin-top: 5px;
 }
 
 .pending-number {
@@ -148,7 +151,6 @@ header {
     color: #555;
     padding: 8px 13px;
     border-radius: 20px;
-    cursor: pointer;
 }
 
 .filter-buttons button.active {
@@ -218,14 +220,6 @@ header {
     color: #c00;
 }
 
-.restaurant-image {
-    width: 100%;
-    max-height: 220px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 14px;
-}
-
 .info {
     background: #fafafa;
     border-radius: 9px;
@@ -242,7 +236,6 @@ header {
 .description {
     color: #555;
     line-height: 1.7;
-    margin-top: 8px;
 }
 
 .time {
@@ -263,7 +256,6 @@ header {
     color: white;
     padding: 10px 14px;
     border-radius: 7px;
-    cursor: pointer;
     font-weight: bold;
 }
 
@@ -319,10 +311,6 @@ header {
         flex-direction: column;
     }
 
-    .restaurant-name {
-        font-size: 18px;
-    }
-
 }
 
 </style>
@@ -347,7 +335,7 @@ header {
         </div>
 
         <div class="subtitle">
-            只有管理员审核通过的商家才正式上线
+            管理所有商家入驻申请
         </div>
 
     </div>
@@ -500,23 +488,30 @@ header {
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+    apiKey:
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
 
-    authDomain: "mdy-food.firebaseapp.com",
+    authDomain:
+        "mdy-food.firebaseapp.com",
 
-    projectId: "mdy-food",
+    projectId:
+        "mdy-food",
 
-    storageBucket: "mdy-food.firebasestorage.app",
+    storageBucket:
+        "mdy-food.firebasestorage.app",
 
-    messagingSenderId: "498327590625",
+    messagingSenderId:
+        "498327590625",
 
-    appId: "1:498327590625:web:cceafb7febb689e7ad09a0"
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0"
 
 };
 
 firebase.initializeApp(firebaseConfig);
 
-const db = firebase.firestore();
+const db =
+    firebase.firestore();
 
 
 let applications = [];
@@ -546,46 +541,7 @@ function escapeHtml(value) {
 
 function getStatus(data) {
 
-    return data.approvalStatus ||
-           data.status ||
-           "待审核";
-
-}
-
-
-// ========================================
-// 获取时间
-// ========================================
-
-function getTime(data) {
-
-    const value =
-        data.createdAt ||
-        data.created_at ||
-        data.timestamp;
-
-    if (!value) {
-        return "";
-    }
-
-    try {
-
-        const date =
-            value.toDate
-                ? value.toDate()
-                : new Date(value);
-
-        if (Number.isNaN(date.getTime())) {
-            return "";
-        }
-
-        return date.toLocaleString("zh-CN");
-
-    } catch (error) {
-
-        return "";
-
-    }
+    return data.status || "pending";
 
 }
 
@@ -649,13 +605,77 @@ function statusClass(status) {
 
 
 // ========================================
-// 读取商家申请
+// 时间
+// ========================================
+
+function getTimestamp(data) {
+
+    const value =
+        data.createdAt ||
+        data.created_at;
+
+    if (!value) {
+
+        return 0;
+
+    }
+
+    try {
+
+        if (value.toMillis) {
+
+            return value.toMillis();
+
+        }
+
+        if (value.seconds) {
+
+            return value.seconds * 1000;
+
+        }
+
+        const date =
+            new Date(value);
+
+        return date.getTime() || 0;
+
+    } catch (error) {
+
+        return 0;
+
+    }
+
+}
+
+
+function getTime(data) {
+
+    const timestamp =
+        getTimestamp(data);
+
+    if (!timestamp) {
+
+        return "";
+
+    }
+
+    return new Date(timestamp)
+        .toLocaleString("zh-CN");
+
+}
+
+
+// ========================================
+// 读取申请
 // ========================================
 
 async function loadApplications() {
 
     const container =
-        document.getElementById("applications");
+        document.getElementById(
+            "applications"
+        );
+
 
     container.innerHTML =
         `<div class="empty">⏳ 正在读取...</div>`;
@@ -663,16 +683,11 @@ async function loadApplications() {
 
     try {
 
-        /*
-         * 这里读取 restaurants 集合。
-         *
-         * 商家申请提交后，
-         * 我们后面会让它保存到这里。
-         */
-
         const snapshot =
             await db
-                .collection("restaurants")
+                .collection(
+                    "merchantApplications"
+                )
                 .get();
 
 
@@ -694,13 +709,9 @@ async function loadApplications() {
 
         applications.sort(function(a, b) {
 
-            const timeA =
+            return getTimestamp(b.data)
+                -
                 getTimestamp(a.data);
-
-            const timeB =
-                getTimestamp(b.data);
-
-            return timeB - timeA;
 
         });
 
@@ -730,57 +741,12 @@ async function loadApplications() {
 
                 <br><br>
 
-                如果这里显示
-                "Missing or insufficient permissions"，
-                说明 Firebase Firestore Rules
-                还需要调整。
+                请检查 Firebase Firestore Rules
+                是否允许读取 merchantApplications。
 
             </div>
 
         `;
-
-    }
-
-}
-
-
-// ========================================
-// 获取时间戳
-// ========================================
-
-function getTimestamp(data) {
-
-    const value =
-        data.createdAt ||
-        data.created_at ||
-        data.timestamp;
-
-    if (!value) {
-        return 0;
-    }
-
-    try {
-
-        if (value.toMillis) {
-
-            return value.toMillis();
-
-        }
-
-        if (value.seconds) {
-
-            return value.seconds * 1000;
-
-        }
-
-        const date =
-            new Date(value);
-
-        return date.getTime() || 0;
-
-    } catch (error) {
-
-        return 0;
 
     }
 
@@ -851,7 +817,7 @@ function updateStats() {
 
 
 // ========================================
-// 设置筛选
+// 筛选
 // ========================================
 
 function setFilter(filter) {
@@ -897,7 +863,7 @@ function setFilter(filter) {
 
 
 // ========================================
-// 判断是否符合筛选
+// 筛选判断
 // ========================================
 
 function matchesFilter(data) {
@@ -957,7 +923,9 @@ function matchesFilter(data) {
 function renderApplications() {
 
     const container =
-        document.getElementById("applications");
+        document.getElementById(
+            "applications"
+        );
 
 
     const list =
@@ -998,54 +966,38 @@ function renderApplications() {
             getStatus(data);
 
 
-        const displayStatus =
-            statusText(status);
-
-
-        const image =
-            data.image ||
-            data.restaurantImage ||
-            data.logo ||
-            "";
-
-
         const name =
-            data.name ||
             data.restaurantName ||
             "未填写餐厅名称";
 
 
-        const category =
-            data.category ||
-            data.restaurantCategory ||
-            "未填写分类";
+        const type =
+            data.restaurantType ||
+            "未填写";
+
+
+        const address =
+            data.restaurantAddress ||
+            "未填写";
 
 
         const owner =
             data.ownerName ||
-            data.username ||
-            data.merchantName ||
-            data.name ||
             "未填写";
 
 
         const phone =
             data.phone ||
-            data.mobile ||
-            data.telephone ||
             "未填写";
 
 
-        const address =
-            data.address ||
-            data.adress ||
-            data.location ||
+        const email =
+            data.email ||
             "未填写";
 
 
         const description =
-            data.description ||
-            data.introduction ||
+            data.restaurantDescription ||
             "暂无餐厅介绍";
 
 
@@ -1057,15 +1009,27 @@ function renderApplications() {
             document.createElement("div");
 
 
-        let actionButtons = "";
+        div.className =
+            "application " +
+            (
+                status === "approved"
+                    ? "approved"
+                    :
+                status === "rejected"
+                    ? "rejected"
+                    :
+                    "pending"
+            );
+
+
+        let buttons = "";
 
 
         if (
-            status !== "approved" &&
-            status !== "已通过"
+            status !== "approved"
         ) {
 
-            actionButtons += `
+            buttons += `
 
                 <button
                     class="approve-btn"
@@ -1081,11 +1045,10 @@ function renderApplications() {
 
 
         if (
-            status !== "rejected" &&
-            status !== "已拒绝"
+            status !== "rejected"
         ) {
 
-            actionButtons += `
+            buttons += `
 
                 <button
                     class="reject-btn"
@@ -1101,11 +1064,10 @@ function renderApplications() {
 
 
         if (
-            status === "rejected" ||
-            status === "已拒绝"
+            status === "rejected"
         ) {
 
-            actionButtons += `
+            buttons += `
 
                 <button
                     class="reopen-btn"
@@ -1118,19 +1080,6 @@ function renderApplications() {
             `;
 
         }
-
-
-        div.className =
-            "application " +
-            (
-                status === "approved" ||
-                status === "已通过"
-                    ? "approved"
-                    : status === "rejected" ||
-                      status === "已拒绝"
-                    ? "rejected"
-                    : "pending"
-            );
 
 
         div.innerHTML = `
@@ -1148,7 +1097,7 @@ function renderApplications() {
 
                     <div class="restaurant-category">
 
-                        ${escapeHtml(category)}
+                        ${escapeHtml(type)}
 
                     </div>
 
@@ -1158,25 +1107,11 @@ function renderApplications() {
                 <div
                     class="status ${statusClass(status)}">
 
-                    ${displayStatus}
+                    ${statusText(status)}
 
                 </div>
 
             </div>
-
-
-            ${
-                image
-                    ? `
-                        <img
-                            class="restaurant-image"
-                            src="${escapeHtml(image)}"
-                            alt="${escapeHtml(name)}"
-                            onerror="this.style.display='none'"
-                        >
-                    `
-                    : ""
-            }
 
 
             <div class="info">
@@ -1185,13 +1120,18 @@ function renderApplications() {
                     👤 商家信息
                 </div>
 
-                👤 商家：
+                👤 负责人：
                 ${escapeHtml(owner)}
 
                 <br>
 
                 📞 电话：
                 ${escapeHtml(phone)}
+
+                <br>
+
+                📧 邮箱：
+                ${escapeHtml(email)}
 
                 <br>
 
@@ -1232,7 +1172,7 @@ function renderApplications() {
 
             <div class="buttons">
 
-                ${actionButtons}
+                ${buttons}
 
             </div>
 
@@ -1262,16 +1202,19 @@ async function approveRestaurant(id) {
 
     if (!item) {
 
-        alert("找不到这个商家申请");
+        alert("找不到这个申请");
 
         return;
 
     }
 
 
+    const data =
+        item.data;
+
+
     const name =
-        item.data.name ||
-        item.data.restaurantName ||
+        data.restaurantName ||
         "这个餐厅";
 
 
@@ -1290,25 +1233,105 @@ async function approveRestaurant(id) {
 
     try {
 
+        // ========================================
+        // 1. 更新申请状态
+        // ========================================
+
         await db
-            .collection("restaurants")
+            .collection(
+                "merchantApplications"
+            )
             .doc(id)
             .update({
 
-                approvalStatus: "approved",
-
-                approved: true,
+                status:
+                    "approved",
 
                 approvedAt:
-                    firebase.firestore.FieldValue.serverTimestamp()
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        // ========================================
+        // 2. 创建正式餐厅
+        // ========================================
+
+        await db
+            .collection(
+                "restaurants"
+            )
+            .doc(id)
+            .set({
+
+                restaurantId:
+                    id,
+
+                merchantId:
+                    data.uid || id,
+
+                uid:
+                    data.uid || id,
+
+                name:
+                    data.restaurantName || "",
+
+                restaurantName:
+                    data.restaurantName || "",
+
+                category:
+                    data.restaurantType || "",
+
+                restaurantType:
+                    data.restaurantType || "",
+
+                address:
+                    data.restaurantAddress || "",
+
+                restaurantAddress:
+                    data.restaurantAddress || "",
+
+                description:
+                    data.restaurantDescription || "",
+
+                restaurantDescription:
+                    data.restaurantDescription || "",
+
+                ownerName:
+                    data.ownerName || "",
+
+                phone:
+                    data.phone || "",
+
+                email:
+                    data.email || "",
+
+                approvalStatus:
+                    "approved",
+
+                approved:
+                    true,
+
+                createdAt:
+                    data.createdAt ||
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp(),
+
+                approvedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
 
             });
 
 
         showSuccess(
-            "✅ 「" +
+            "✅ " +
             name +
-            "」已通过审核！"
+            " 已通过审核，并已正式上线！"
         );
 
 
@@ -1317,12 +1340,16 @@ async function approveRestaurant(id) {
 
     } catch (error) {
 
-        alert(
-            "审核通过失败：" +
-            error.message
+        console.error(
+            "审核失败：",
+            error
         );
 
-        console.error(error);
+
+        alert(
+            "审核失败：" +
+            error.message
+        );
 
     }
 
@@ -1345,7 +1372,7 @@ async function rejectRestaurant(id) {
 
     if (!item) {
 
-        alert("找不到这个商家申请");
+        alert("找不到这个申请");
 
         return;
 
@@ -1353,14 +1380,13 @@ async function rejectRestaurant(id) {
 
 
     const name =
-        item.data.name ||
         item.data.restaurantName ||
         "这个餐厅";
 
 
     const reason =
         prompt(
-            "请输入拒绝原因（可选）："
+            "请输入拒绝原因："
         );
 
 
@@ -1375,7 +1401,7 @@ async function rejectRestaurant(id) {
         !confirm(
             "确定拒绝「" +
             name +
-            "」的商家入驻申请吗？"
+            "」吗？"
         )
     ) {
 
@@ -1387,27 +1413,30 @@ async function rejectRestaurant(id) {
     try {
 
         await db
-            .collection("restaurants")
+            .collection(
+                "merchantApplications"
+            )
             .doc(id)
             .update({
 
-                approvalStatus: "rejected",
-
-                approved: false,
+                status:
+                    "rejected",
 
                 rejectionReason:
                     reason.trim(),
 
                 rejectedAt:
-                    firebase.firestore.FieldValue.serverTimestamp()
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
 
             });
 
 
         showSuccess(
-            "❌ 「" +
+            "❌ " +
             name +
-            "」已拒绝。"
+            " 已拒绝。"
         );
 
 
@@ -1416,12 +1445,16 @@ async function rejectRestaurant(id) {
 
     } catch (error) {
 
-        alert(
-            "拒绝申请失败：" +
-            error.message
+        console.error(
+            "拒绝失败：",
+            error
         );
 
-        console.error(error);
+
+        alert(
+            "拒绝失败：" +
+            error.message
+        );
 
     }
 
@@ -1440,16 +1473,20 @@ function showSuccess(message) {
         );
 
 
-    box.innerText = message;
+    box.innerText =
+        message;
 
-    box.style.display = "block";
+
+    box.style.display =
+        "block";
 
 
     setTimeout(function() {
 
-        box.style.display = "none";
+        box.style.display =
+            "none";
 
-    }, 3000);
+    }, 4000);
 
 }
 
@@ -1459,12 +1496,6 @@ function showSuccess(message) {
 // ========================================
 
 function logout() {
-
-    /*
-     * 这里暂时只清除管理员页面标记。
-     * 后面我们正式做管理员登录时，
-     * 再接入 Firebase Authentication。
-     */
 
     localStorage.removeItem(
         "superAdminLogin"
