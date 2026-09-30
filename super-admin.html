@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -392,6 +391,71 @@ header p {
 
 .finance-row span:last-child {
     font-weight: bold;
+}
+
+
+/* =========================
+   结算按钮
+========================= */
+
+.settlement-area {
+    margin-top: 14px;
+
+    padding-top: 14px;
+
+    border-top: 1px dashed #ddd;
+}
+
+.settlement-btn {
+    width: 100%;
+
+    border: none;
+
+    background: #16a34a;
+
+    color: white;
+
+    padding: 10px 14px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    font-size: 13px;
+
+    transition: .2s;
+}
+
+.settlement-btn:hover {
+    background: #15803d;
+}
+
+.settlement-btn:disabled {
+    background: #d1d5db;
+
+    color: #777;
+
+    cursor: not-allowed;
+}
+
+.settlement-time {
+    margin-top: 8px;
+
+    color: #999;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+.settled-value {
+    color: #16a34a;
+}
+
+.pending-value {
+    color: #dc2626;
 }
 
 
@@ -1113,6 +1177,13 @@ tr:last-child td {
         • 商家应结算 =
         已完成订单金额 − 平台收入。<br>
 
+        • 商家“待结算” =
+        商家应结算 − 已结算。<br>
+
+        • 结算记录保存在 Firebase 的
+        <b>merchantSettlements</b>
+        集合中。<br>
+
         • 当前数据属于平台经营统计，
         不代表真实银行余额或实际支付流水。
 
@@ -1453,6 +1524,18 @@ let allApplications = [];
 
 let allRestaurants = [];
 
+/*
+ * merchantSettlements 使用：
+ *
+ * merchantSettlements/{restaurantId}
+ *
+ * 保存：
+ * settledAmount
+ * lastSettlementAmount
+ * lastSettlementAt
+ */
+let allSettlements = {};
+
 let applicationFilter = "all";
 
 let orderFilter = "all";
@@ -1648,7 +1731,6 @@ function isCompletedOrder(order) {
 }
 
 
-
 /* =========================================================
    读取云端平台抽成
 ========================================================= */
@@ -1703,10 +1785,6 @@ async function loadCommissionRate() {
             error
         );
 
-        /*
-         * 如果云端还没有设置，
-         * 第一次使用时默认 10%
-         */
 
         commissionRate = 10;
 
@@ -1833,6 +1911,92 @@ async function saveCommissionRate() {
             "保存失败：\n" +
             error.message
         );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   读取商家结算记录
+========================================================= */
+
+async function loadSettlements() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "merchantSettlements"
+                )
+                .get();
+
+
+        allSettlements = {};
+
+
+        snapshot.forEach(
+            function(doc) {
+
+                const data =
+                    doc.data() || {};
+
+
+                const restaurantId =
+                    data.restaurantId ||
+                    doc.id;
+
+
+                allSettlements[
+                    restaurantId
+                ] = {
+
+                    restaurantId:
+                        restaurantId,
+
+                    restaurantName:
+                        data.restaurantName ||
+                        "",
+
+                    settledAmount:
+                        Number(
+                            data.settledAmount
+                        ) || 0,
+
+                    lastSettlementAmount:
+                        Number(
+                            data.lastSettlementAmount
+                        ) || 0,
+
+                    lastSettlementAt:
+                        data.lastSettlementAt ||
+                        null
+
+                };
+
+            }
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "读取商家结算记录失败:",
+            error
+        );
+
+
+        allSettlements = {};
+
+
+        /*
+         * 不让结算记录读取失败
+         * 影响整个后台其他功能。
+         */
 
     }
 
@@ -2531,10 +2695,6 @@ function renderMerchantFinance() {
 
     /*
      * 再检查所有已完成订单。
-     *
-     * 如果某个订单的 restaurantId
-     * 在 restaurants 集合里不存在，
-     * 也创建一个“未知餐厅”财务项目。
      */
 
     allOrders.forEach(
@@ -2671,6 +2831,34 @@ function renderMerchantFinance() {
                 platformIncome;
 
 
+            /*
+             * 读取该商家的历史已结算金额
+             */
+
+            const settlementRecord =
+                allSettlements[
+                    restaurantId
+                ] || {};
+
+
+            const settledAmount =
+                Number(
+                    settlementRecord.settledAmount
+                ) || 0;
+
+
+            /*
+             * 待结算 = 应结算 - 已结算
+             */
+
+            const pendingSettlement =
+                Math.max(
+                    0,
+                    settlement -
+                    settledAmount
+                );
+
+
             let reviewCount = 0;
 
             let ratingTotal = 0;
@@ -2735,6 +2923,11 @@ function renderMerchantFinance() {
                     :
 
                     "暂无";
+
+
+            const lastSettlementAt =
+                settlementRecord
+                    .lastSettlementAt;
 
 
             html += `
@@ -2832,6 +3025,44 @@ function renderMerchantFinance() {
                     >
 
                         <span>
+                            💵 已结算
+                        </span>
+
+                        <span
+                            class="settled-value"
+                        >
+                            ${formatMoney(
+                                settledAmount
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="finance-row"
+                    >
+
+                        <span>
+                            ⏳ 待结算
+                        </span>
+
+                        <span
+                            class="pending-value"
+                        >
+                            ${formatMoney(
+                                pendingSettlement
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="finance-row"
+                    >
+
+                        <span>
                             ⭐ 平均评分
                         </span>
 
@@ -2853,6 +3084,61 @@ function renderMerchantFinance() {
                         <span>
                             ${reviewCount}
                         </span>
+
+                    </div>
+
+
+                    <div
+                        class="settlement-area"
+                    >
+
+                        <button
+                            class="settlement-btn"
+                            ${
+                                pendingSettlement <= 0
+                                    ? "disabled"
+                                    : ""
+                            }
+                            onclick="settleMerchant('${escapeHtml(restaurantId)}')"
+                        >
+
+                            ${
+                                pendingSettlement > 0
+
+                                    ?
+
+                                    "🟢 结算当前金额 " +
+                                    formatMoney(
+                                        pendingSettlement
+                                    )
+
+                                    :
+
+                                    "✅ 当前暂无待结算"
+
+                            }
+
+                        </button>
+
+
+                        ${
+                            lastSettlementAt
+
+                                ?
+
+                                `<div class="settlement-time">
+                                    🕐 最后结算：
+                                    ${formatDate(
+                                        lastSettlementAt
+                                    )}
+                                </div>`
+
+                                :
+
+                                `<div class="settlement-time">
+                                    🕐 暂无结算记录
+                                </div>`
+                        }
 
                     </div>
 
@@ -2879,6 +3165,368 @@ function renderMerchantFinance() {
 
     container.innerHTML =
         html;
+
+}
+
+
+
+/* =========================================================
+   商家结算
+========================================================= */
+
+async function settleMerchant(
+    restaurantId
+) {
+
+    /*
+     * 找商家名称
+     */
+
+    const restaurant =
+        allRestaurants.find(
+            function(item) {
+
+                return (
+                    (
+                        item.restaurantId ||
+                        item.id
+                    ) ===
+                    restaurantId
+                );
+
+            }
+        );
+
+
+    let restaurantName =
+        restaurant?.name ||
+        restaurant?.restaurantName ||
+        "";
+
+
+    if (!restaurantName) {
+
+        const order =
+            allOrders.find(
+                function(item) {
+
+                    return (
+                        (
+                            item.restaurantId ||
+                            "unknown"
+                        ) ===
+                        restaurantId
+                    );
+
+                }
+            );
+
+
+        restaurantName =
+            order?.restaurantName ||
+            "未知餐厅";
+
+    }
+
+
+    /*
+     * 重新计算当前商家已完成金额
+     */
+
+    let completedAmount = 0;
+
+
+    allOrders.forEach(
+        function(order) {
+
+            const orderRestaurantId =
+                order.restaurantId ||
+                "unknown";
+
+
+            if (
+                orderRestaurantId ===
+                restaurantId &&
+                isCompletedOrder(
+                    order
+                )
+            ) {
+
+                completedAmount +=
+                    Number(
+                        order.total
+                    ) || 0;
+
+            }
+
+        }
+    );
+
+
+    /*
+     * 当前商家应结算金额
+     */
+
+    const platformIncome =
+        completedAmount *
+        commissionRate /
+        100;
+
+
+    const merchantSettlement =
+        completedAmount -
+        platformIncome;
+
+
+    /*
+     * 读取已经结算金额
+     */
+
+    const oldRecord =
+        allSettlements[
+            restaurantId
+        ] || {};
+
+
+    const oldSettledAmount =
+        Number(
+            oldRecord.settledAmount
+        ) || 0;
+
+
+    /*
+     * 当前真正还需要结算的钱
+     */
+
+    const pendingAmount =
+        Math.max(
+            0,
+            merchantSettlement -
+            oldSettledAmount
+        );
+
+
+    if (
+        pendingAmount <= 0
+    ) {
+
+        alert(
+            "该商家目前没有待结算金额。"
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * 二次确认
+     */
+
+    const confirmed =
+        confirm(
+
+            "确定要结算这个商家吗？\n\n" +
+
+            "商家：" +
+            restaurantName +
+            "\n\n" +
+
+            "本次结算：" +
+            formatMoney(
+                pendingAmount
+            ) +
+            "\n\n" +
+
+            "结算后待结算金额将变为 0 Ks。"
+
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    try {
+
+        /*
+         * 使用 Firestore Transaction
+         * 避免连续点击导致简单覆盖。
+         */
+
+        await db.runTransaction(
+            async function(transaction) {
+
+                const ref =
+                    db
+                        .collection(
+                            "merchantSettlements"
+                        )
+                        .doc(
+                            restaurantId
+                        );
+
+
+                const snapshot =
+                    await transaction.get(
+                        ref
+                    );
+
+
+                const data =
+                    snapshot.exists
+                        ? snapshot.data() || {}
+                        : {};
+
+
+                const currentSettled =
+                    Number(
+                        data.settledAmount
+                    ) || 0;
+
+
+                /*
+                 * 重新计算最终待结算。
+                 */
+
+                const currentPending =
+                    Math.max(
+                        0,
+                        merchantSettlement -
+                        currentSettled
+                    );
+
+
+                if (
+                    currentPending <= 0
+                ) {
+
+                    throw new Error(
+                        "该商家已经没有待结算金额，可能刚刚已经完成结算。"
+                    );
+
+                }
+
+
+                const newSettled =
+                    currentSettled +
+                    currentPending;
+
+
+                transaction.set(
+                    ref,
+                    {
+
+                        restaurantId:
+                            restaurantId,
+
+                        restaurantName:
+                            restaurantName,
+
+                        settledAmount:
+                            newSettled,
+
+                        lastSettlementAmount:
+                            currentPending,
+
+                        lastSettlementAt:
+                            firebase.firestore
+                                .FieldValue
+                                .serverTimestamp(),
+
+                        updatedAt:
+                            firebase.firestore
+                                .FieldValue
+                                .serverTimestamp()
+
+                    },
+                    {
+                        merge: true
+                    }
+                );
+
+            }
+        );
+
+
+        /*
+         * 本地立即更新，
+         * 不需要等待页面刷新才能看到。
+         */
+
+        const old =
+            allSettlements[
+                restaurantId
+            ] || {};
+
+
+        allSettlements[
+            restaurantId
+        ] = {
+
+            restaurantId:
+                restaurantId,
+
+            restaurantName:
+                restaurantName,
+
+            settledAmount:
+                (
+                    Number(
+                        old.settledAmount
+                    ) || 0
+                ) +
+                pendingAmount,
+
+            lastSettlementAmount:
+                pendingAmount,
+
+            lastSettlementAt:
+                new Date()
+
+        };
+
+
+        renderMerchantFinance();
+
+
+        alert(
+
+            "商家结算成功！\n\n" +
+
+            "商家：" +
+            restaurantName +
+            "\n\n" +
+
+            "本次结算：" +
+            formatMoney(
+                pendingAmount
+            ) +
+            "\n\n" +
+
+            "已保存到 Firebase 云端。"
+
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "商家结算失败:",
+            error
+        );
+
+
+        alert(
+            "结算失败：\n" +
+            error.message
+        );
+
+    }
 
 }
 
@@ -4493,11 +5141,29 @@ async function refreshAll() {
     try {
 
         /*
-         * 抽成比例也从 Firebase 云端读取。
+         * 第一步：
+         * 读取平台抽成。
          */
 
         await loadCommissionRate();
 
+
+        /*
+         * 第二步：
+         * 读取商家历史结算。
+         *
+         * 必须在订单读取前完成，
+         * 这样商家财务第一次渲染时
+         * 就可以正确显示已结算/待结算。
+         */
+
+        await loadSettlements();
+
+
+        /*
+         * 第三步：
+         * 读取其他全部数据。
+         */
 
         await Promise.all([
 
@@ -4510,6 +5176,15 @@ async function refreshAll() {
             loadRestaurants()
 
         ]);
+
+
+        /*
+         * 最后再统一渲染一次商家财务，
+         * 确保所有数据都已经准备完成。
+         */
+
+        renderMerchantFinance();
+
 
     }
 
@@ -4539,4 +5214,3 @@ refreshAll();
 </body>
 
 </html>
-
