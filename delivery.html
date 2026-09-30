@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 
 <head>
@@ -6,17 +7,16 @@
 <meta charset="UTF-8">
 
 <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
 >
 
 <title>MDY FOOD - 骑手工作台</title>
 
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 
 <style>
 
@@ -352,6 +352,22 @@ input {
     line-height: 1.5;
 }
 
+.restaurant-tag {
+    display: inline-block;
+    background: #fff1e7;
+    color: #ff6b00;
+    border-radius: 6px;
+    padding: 3px 7px;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.debug-info {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #aaa;
+}
+
 @media (max-width: 650px) {
 
     .stats {
@@ -386,232 +402,230 @@ input {
 
 </head>
 
-
 <body>
-
 
 <div class="topbar">
 
-    <div class="logo">
-        🛵 MDY FOOD
+```
+<div class="logo">
+    🛵 MDY FOOD
+</div>
+
+<div class="rider-mini">
+
+    <div id="topRiderName">
+        骑手
     </div>
 
-    <div class="rider-mini">
+    <button
+        class="logout-btn"
+        onclick="logout()"
+    >
+        退出登录
+    </button>
 
-        <div id="topRiderName">
-            骑手
+</div>
+```
+
+</div>
+
+<div class="container">
+
+```
+<div
+    id="errorMessage"
+    class="message error"
+></div>
+
+
+<div
+    id="successMessage"
+    class="message success"
+></div>
+
+
+<!-- 骑手资料 -->
+
+<div class="card">
+
+    <div class="profile">
+
+        <div class="profile-left">
+
+            <div class="avatar">
+                🛵
+            </div>
+
+            <div>
+
+                <div
+                    class="profile-name"
+                    id="riderName"
+                >
+                    骑手
+                </div>
+
+                <div
+                    class="profile-info"
+                    id="riderPhone"
+                >
+                    电话：
+                </div>
+
+                <div
+                    class="profile-info"
+                    id="riderArea"
+                >
+                    配送区域：
+                </div>
+
+            </div>
+
         </div>
 
+
         <button
-            class="logout-btn"
-            onclick="logout()"
+            id="onlineBtn"
+            class="online-btn offline"
+            onclick="toggleOnline()"
         >
-            退出登录
+            🔴 当前下线
         </button>
 
     </div>
 
+
+    <div class="online-tip">
+
+        💡 上线后可以看到并接受新的配送订单。
+        <br>
+        每个骑手同时只能配送一个订单。
+
+    </div>
+
 </div>
 
 
-<div class="container">
+<!-- 数据统计 -->
 
+<div class="card">
 
-    <div
-        id="errorMessage"
-        class="message error"
-    ></div>
+    <div class="stats">
 
+        <div class="stat">
 
-    <div
-        id="successMessage"
-        class="message success"
-    ></div>
-
-
-    <!-- 骑手资料 -->
-
-    <div class="card">
-
-        <div class="profile">
-
-            <div class="profile-left">
-
-                <div class="avatar">
-                    🛵
-                </div>
-
-                <div>
-
-                    <div
-                        class="profile-name"
-                        id="riderName"
-                    >
-                        骑手
-                    </div>
-
-                    <div
-                        class="profile-info"
-                        id="riderPhone"
-                    >
-                        电话：
-                    </div>
-
-                    <div
-                        class="profile-info"
-                        id="riderArea"
-                    >
-                        配送区域：
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <button
-                id="onlineBtn"
-                class="online-btn offline"
-                onclick="toggleOnline()"
+            <div
+                class="stat-number"
+                id="todayOrders"
             >
-                🔴 当前下线
-            </button>
+                0
+            </div>
+
+            <div class="stat-label">
+                今日完成
+            </div>
 
         </div>
 
 
-        <div class="online-tip">
+        <div class="stat">
 
-            💡 上线后可以看到并接受新的配送订单。
-            <br>
-            每个骑手同时只能配送一个订单。
+            <div
+                class="stat-number"
+                id="todayAmount"
+            >
+                0 Ks
+            </div>
+
+            <div class="stat-label">
+                今日订单金额
+            </div>
 
         </div>
 
-    </div>
 
+        <div class="stat">
 
-    <!-- 数据统计 -->
-
-    <div class="card">
-
-        <div class="stats">
-
-            <div class="stat">
-
-                <div
-                    class="stat-number"
-                    id="todayOrders"
-                >
-                    0
-                </div>
-
-                <div class="stat-label">
-                    今日完成
-                </div>
-
+            <div
+                class="stat-number"
+                id="totalOrders"
+            >
+                0
             </div>
 
-
-            <div class="stat">
-
-                <div
-                    class="stat-number"
-                    id="todayAmount"
-                >
-                    0 Ks
-                </div>
-
-                <div class="stat-label">
-                    今日订单金额
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div
-                    class="stat-number"
-                    id="totalOrders"
-                >
-                    0
-                </div>
-
-                <div class="stat-label">
-                    累计完成
-                </div>
-
+            <div class="stat-label">
+                累计完成
             </div>
 
         </div>
 
     </div>
-
-
-    <!-- 当前订单 -->
-
-    <div class="card">
-
-        <div class="section-title">
-            📦 当前配送订单
-        </div>
-
-        <div id="currentOrder">
-
-            <div class="empty">
-                当前没有配送订单
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- 可接订单 -->
-
-    <div class="card">
-
-        <div class="section-title">
-            🔔 待配送订单
-        </div>
-
-        <div id="availableOrders">
-
-            <div class="loading">
-                正在读取订单...
-            </div>
-
-        </div>
-
-        <div class="refresh-text">
-            每 10 秒自动刷新
-        </div>
-
-    </div>
-
-
-    <!-- 配送记录 -->
-
-    <div class="card">
-
-        <div class="section-title">
-            📋 我的配送记录
-        </div>
-
-        <div id="historyOrders">
-
-            <div class="loading">
-                正在读取记录...
-            </div>
-
-        </div>
-
-    </div>
-
 
 </div>
 
+
+<!-- 当前订单 -->
+
+<div class="card">
+
+    <div class="section-title">
+        📦 当前配送订单
+    </div>
+
+    <div id="currentOrder">
+
+        <div class="empty">
+            当前没有配送订单
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- 可接订单 -->
+
+<div class="card">
+
+    <div class="section-title">
+        🔔 待配送订单
+    </div>
+
+    <div id="availableOrders">
+
+        <div class="loading">
+            正在读取订单...
+        </div>
+
+    </div>
+
+    <div class="refresh-text">
+        每 10 秒自动刷新
+    </div>
+
+</div>
+
+
+<!-- 配送记录 -->
+
+<div class="card">
+
+    <div class="section-title">
+        📋 我的配送记录
+    </div>
+
+    <div id="historyOrders">
+
+        <div class="loading">
+            正在读取记录...
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
 
 <script>
 
@@ -623,7 +637,7 @@ input {
 const firebaseConfig = {
 
     apiKey:
-        "AIzaSyA84W7Xx-yNWAWWqwmcbeHzKCRsqxv5X7Q",
+        "AIzaSyA84W7Xx-yNWAWWqwmcbeHzKCRsqv5X7Q",
 
     authDomain:
         "mdy-food.firebaseapp.com",
@@ -690,6 +704,8 @@ if (
 ========================================================= */
 
 let rider = null;
+
+let allOrders = [];
 
 let availableOrders = [];
 
@@ -855,7 +871,7 @@ function showSuccess(message) {
 
 
 /* =========================================================
-   订单状态
+   标准化订单状态
 ========================================================= */
 
 function normalizeStatus(order) {
@@ -869,87 +885,8 @@ function normalizeStatus(order) {
 }
 
 
-/*
- * 客户下单时：
- * status = 待接单
- *
- * 所以这里必须支持待接单。
- */
-
-function isWaitingForDelivery(order) {
-
-    const status =
-        normalizeStatus(order);
-
-    return (
-
-        status === "待接单" ||
-
-        status === "待配送" ||
-
-        status === "pending" ||
-
-        status === "new"
-
-    );
-
-}
-
-
-function isOrderCompleted(order) {
-
-    const status =
-        normalizeStatus(order);
-
-    return (
-
-        status === "completed" ||
-
-        status === "complete" ||
-
-        status === "已完成" ||
-
-        status === "配送完成"
-
-    );
-
-}
-
-
-function isOrderDelivering(order) {
-
-    const status =
-        normalizeStatus(order);
-
-    return (
-
-        status === "delivering" ||
-
-        status === "配送中"
-
-    );
-
-}
-
-
-function isOrderAccepted(order) {
-
-    const status =
-        normalizeStatus(order);
-
-    return (
-
-        status === "accepted" ||
-
-        status === "已接单"
-
-    );
-
-}
-
-
 /* =========================================================
-   判断是不是我的订单
+   判断是否已经分配骑手
 ========================================================= */
 
 function getAssignedRiderId(order) {
@@ -964,21 +901,235 @@ function getAssignedRiderId(order) {
 
         order.deliveryPersonId ||
 
+        order.delivery_person_id ||
+
+        order.rider_id ||
+
         ""
+
+    ).trim();
+
+}
+
+
+/* =========================================================
+   判断是否我的订单
+========================================================= */
+
+function isMine(order) {
+
+    const assigned =
+        getAssignedRiderId(order);
+
+
+    return (
+
+        assigned !== "" &&
+
+        assigned ===
+        String(deliveryId)
 
     );
 
 }
 
 
-function isMine(order) {
+/* =========================================================
+   完成状态
+========================================================= */
+
+function isOrderCompleted(order) {
+
+    const status =
+        normalizeStatus(order);
 
     return (
 
-        getAssignedRiderId(order) ===
-        String(deliveryId)
+        status === "completed" ||
+
+        status === "complete" ||
+
+        status === "已完成" ||
+
+        status === "配送完成" ||
+
+        status === "订单完成" ||
+
+        status === "finished" ||
+
+        status === "done"
 
     );
+
+}
+
+
+/* =========================================================
+   取消状态
+========================================================= */
+
+function isOrderCancelled(order) {
+
+    const status =
+        normalizeStatus(order);
+
+    return (
+
+        status === "cancelled" ||
+
+        status === "canceled" ||
+
+        status === "取消" ||
+
+        status === "已取消" ||
+
+        status === "rejected" ||
+
+        status === "已拒绝"
+
+    );
+
+}
+
+
+/* =========================================================
+   配送中
+========================================================= */
+
+function isOrderDelivering(order) {
+
+    const status =
+        normalizeStatus(order);
+
+    return (
+
+        status === "delivering" ||
+
+        status === "配送中" ||
+
+        status === "配送中..." ||
+
+        status === "out_for_delivery"
+
+    );
+
+}
+
+
+/* =========================================================
+   已接单
+========================================================= */
+
+function isOrderAccepted(order) {
+
+    const status =
+        normalizeStatus(order);
+
+    return (
+
+        status === "accepted" ||
+
+        status === "已接单" ||
+
+        status === "接单" ||
+
+        status === "rider_accepted"
+
+    );
+
+}
+
+
+/* =========================================================
+   判断是否等待骑手
+========================================================= */
+
+/*
+ * 这里是这次最重要的修改。
+ *
+ * 不再只认：
+ * 待接单 / 待配送 / pending / new
+ *
+ * 而是：
+ *
+ * 只要订单：
+ * 1. 没有骑手
+ * 2. 没完成
+ * 3. 没取消
+ *
+ * 就允许进入骑手待配送列表。
+ *
+ * 这样新商家使用不同 status
+ * 也不会导致订单消失。
+ */
+
+function isWaitingForDelivery(order) {
+
+    const assigned =
+        getAssignedRiderId(order);
+
+
+    if (assigned) {
+
+        return false;
+
+    }
+
+
+    if (
+        isOrderCompleted(order)
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        isOrderCancelled(order)
+    ) {
+
+        return false;
+
+    }
+
+
+    const status =
+        normalizeStatus(order);
+
+
+    /*
+     * 明确属于已经进入其他配送流程的状态，
+     * 不重复显示。
+     */
+
+    if (
+
+        status === "delivering" ||
+
+        status === "配送中" ||
+
+        status === "out_for_delivery" ||
+
+        status === "accepted" ||
+
+        status === "已接单" ||
+
+        status === "rider_accepted"
+
+    ) {
+
+        return false;
+
+    }
+
+
+    /*
+     * 其他未分配骑手的订单
+     * 默认允许骑手看到。
+     */
+
+    return true;
 
 }
 
@@ -1098,7 +1249,9 @@ async function loadRider() {
 function isRiderOnline() {
 
     if (!rider) {
+
         return false;
+
     }
 
     return rider.online === true;
@@ -1144,14 +1297,11 @@ function updateOnlineButton() {
 async function toggleOnline() {
 
     if (!rider) {
+
         return;
+
     }
 
-
-    /*
-     * 如果当前正在配送订单，
-     * 不允许直接下线。
-     */
 
     if (
         isRiderOnline() &&
@@ -1246,7 +1396,7 @@ async function toggleOnline() {
 
 
 /* =========================================================
-   读取订单
+   读取所有订单
 ========================================================= */
 
 async function loadOrders() {
@@ -1259,13 +1409,13 @@ async function loadOrders() {
                 .get();
 
 
-        const all = [];
+        allOrders = [];
 
 
         snapshot.forEach(
             function(doc) {
 
-                all.push({
+                allOrders.push({
 
                     id: doc.id,
 
@@ -1278,31 +1428,19 @@ async function loadOrders() {
 
 
         /*
-         * 待接订单
+         * 待配送订单
          *
-         * 必须：
-         * 1. 没有骑手
-         * 2. 状态是待接单
+         * 不再根据 restaurantId 判断。
+         *
+         * 所有商家统一进入这里。
          */
 
         availableOrders =
-            all.filter(
+            allOrders.filter(
                 function(order) {
 
-                    const assigned =
-                        getAssignedRiderId(
-                            order
-                        );
-
-
-                    return (
-
-                        !assigned &&
-
-                        isWaitingForDelivery(
-                            order
-                        )
-
+                    return isWaitingForDelivery(
+                        order
                     );
 
                 }
@@ -1310,11 +1448,11 @@ async function loadOrders() {
 
 
         /*
-         * 当前骑手的全部订单
+         * 我的订单
          */
 
         const myOrders =
-            all.filter(
+            allOrders.filter(
                 function(order) {
 
                     return isMine(order);
@@ -1324,7 +1462,7 @@ async function loadOrders() {
 
 
         /*
-         * 当前正在处理的订单
+         * 当前订单
          */
 
         currentOrder =
@@ -1332,7 +1470,15 @@ async function loadOrders() {
                 function(order) {
 
                     return (
-                        !isOrderCompleted(order)
+
+                        !isOrderCompleted(
+                            order
+                        ) &&
+
+                        !isOrderCancelled(
+                            order
+                        )
+
                     );
 
                 }
@@ -1363,6 +1509,24 @@ async function loadOrders() {
 
         updateStats(
             historyOrders
+        );
+
+
+        console.log(
+            "MDY FOOD 订单读取完成",
+            {
+                allOrders:
+                    allOrders.length,
+
+                availableOrders:
+                    availableOrders.length,
+
+                currentOrder:
+                    currentOrder,
+
+                historyOrders:
+                    historyOrders.length
+            }
         );
 
     }
@@ -1542,7 +1706,7 @@ function createOrderHtml(
 
     let statusText =
         order.status ||
-        "待接单";
+        "待配送";
 
 
     let statusClass =
@@ -1550,8 +1714,7 @@ function createOrderHtml(
 
 
     if (
-        status === "accepted" ||
-        status === "已接单"
+        isOrderAccepted(order)
     ) {
 
         statusText =
@@ -1564,8 +1727,7 @@ function createOrderHtml(
 
 
     if (
-        status === "delivering" ||
-        status === "配送中"
+        isOrderDelivering(order)
     ) {
 
         statusText =
@@ -1648,6 +1810,9 @@ function createOrderHtml(
 
     const restaurantName =
         order.restaurantName ||
+        order.restaurant_name ||
+        order.shopName ||
+        order.shop_name ||
         "未知商家";
 
 
@@ -1660,7 +1825,7 @@ function createOrderHtml(
 
             <button
                 class="action-btn accept-btn"
-                onclick="acceptOrder('${order.id}')"
+                onclick="acceptOrder('${escapeHtml(order.id)}')"
             >
                 ✅ 接受订单
             </button>
@@ -1679,7 +1844,7 @@ function createOrderHtml(
 
                 <button
                     class="action-btn start-btn"
-                    onclick="startDelivery('${order.id}')"
+                    onclick="startDelivery('${escapeHtml(order.id)}')"
                 >
                     🚚 开始配送
                 </button>
@@ -1696,7 +1861,7 @@ function createOrderHtml(
 
                 <button
                     class="action-btn complete-btn"
-                    onclick="completeOrder('${order.id}')"
+                    onclick="completeOrder('${escapeHtml(order.id)}')"
                 >
                     ✅ 完成配送
                 </button>
@@ -1714,7 +1879,7 @@ function createOrderHtml(
 
             <button
                 class="action-btn call-btn"
-                onclick="callCustomer('${phone}')"
+                onclick="callCustomer('${escapeHtml(phone)}')"
             >
                 📞 联系客户
             </button>
@@ -1730,7 +1895,7 @@ function createOrderHtml(
 
             <button
                 class="action-btn map-btn"
-                onclick="openMap('${address}')"
+                onclick="openMap('${escapeHtml(address)}')"
             >
                 📍 导航
             </button>
@@ -1751,6 +1916,7 @@ function createOrderHtml(
                     📦
                     ${escapeHtml(
                         order.order_number ||
+                        order.orderNumber ||
                         order.id
                     )}
 
@@ -1793,6 +1959,7 @@ function createOrderHtml(
                 ${escapeHtml(
                     order.customername ||
                     order.customerName ||
+                    order.customer_name ||
                     "未知"
                 )}
 
@@ -1856,7 +2023,8 @@ function createOrderHtml(
 
 
             ${
-                order.created_at
+                order.created_at ||
+                order.createdAt
 
                 ?
 
@@ -1869,7 +2037,8 @@ function createOrderHtml(
                     </span>
 
                     ${formatDate(
-                        order.created_at
+                        order.created_at ||
+                        order.createdAt
                     )}
 
                 </div>
@@ -1967,10 +2136,6 @@ async function acceptOrder(
                     snapshot.data();
 
 
-                /*
-                 * 再次检查有没有其他骑手抢走
-                 */
-
                 const assigned =
                     getAssignedRiderId(
                         order
@@ -1985,10 +2150,6 @@ async function acceptOrder(
 
                 }
 
-
-                /*
-                 * 再次检查状态
-                 */
 
                 if (
                     !isWaitingForDelivery(
@@ -2382,7 +2543,8 @@ function updateStats(
                 getDateValue(
                     order.completedAt ||
                     order.completed_at ||
-                    order.created_at
+                    order.created_at ||
+                    order.createdAt
                 );
 
 
@@ -2525,6 +2687,7 @@ function renderHistory() {
                                     📦
                                     ${escapeHtml(
                                         order.order_number ||
+                                        order.orderNumber ||
                                         order.id
                                     )}
 
@@ -2550,6 +2713,7 @@ function renderHistory() {
                                 🏪
                                 ${escapeHtml(
                                     order.restaurantName ||
+                                    order.restaurant_name ||
                                     "未知商家"
                                 )}
 
@@ -2592,7 +2756,8 @@ function renderHistory() {
                                 ${formatDate(
                                     order.completedAt ||
                                     order.completed_at ||
-                                    order.created_at
+                                    order.created_at ||
+                                    order.createdAt
                                 )}
 
                             </div>
@@ -2751,13 +2916,14 @@ async function init() {
     }
 
 
-    /*
-     * 每 10 秒刷新一次订单。
-     */
-
     refreshTimer =
         setInterval(
             async function() {
+
+                /*
+                 * 只重新读取订单。
+                 * 不重复读取骑手资料。
+                 */
 
                 await loadOrders();
 
@@ -2772,7 +2938,6 @@ init();
 
 
 </script>
-
 
 </body>
 
