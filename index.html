@@ -1207,15 +1207,10 @@ async function loadRestaurant(
 
 
         // 评分
-
-        document.getElementById(
-            "rating-" + key
-        ).innerText =
-            "⭐ " +
-            (
-                restaurant.rating ||
-                "暂无评分"
-            );
+await loadRestaurantRating(
+    restaurantId,
+    key
+);
 
 
         // 图片
@@ -1264,7 +1259,99 @@ async function loadRestaurant(
 
 }
 
+// =========================
+// 读取餐厅评价
+// =========================
 
+async function loadRestaurantRating(
+    restaurantId,
+    key
+) {
+
+    const ratingElement =
+        document.getElementById(
+            "rating-" + key
+        );
+
+    if (!ratingElement) {
+        return;
+    }
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("reviews")
+                .where(
+                    "restaurantId",
+                    "==",
+                    restaurantId
+                )
+                .get();
+
+        let totalRating = 0;
+        let count = 0;
+
+        snapshot.forEach(
+            function(doc) {
+
+                const review =
+                    doc.data() || {};
+
+                const rating =
+                    Number(
+                        review.rating ||
+                        review.star ||
+                        review.stars ||
+                        review.score ||
+                        0
+                    );
+
+                if (
+                    rating > 0 &&
+                    rating <= 5
+                ) {
+
+                    totalRating += rating;
+                    count++;
+
+                }
+
+            }
+        );
+
+        if (count === 0) {
+
+            ratingElement.innerText =
+                "⭐ 暂无评价";
+
+            return;
+
+        }
+
+        const average =
+            totalRating / count;
+
+        ratingElement.innerText =
+            "⭐ " +
+            average.toFixed(1) +
+            " · " +
+            count +
+            "条评价";
+
+    } catch (error) {
+
+        console.error(
+            "读取餐厅评价失败:",
+            error
+        );
+
+        ratingElement.innerText =
+            "⭐ 暂无评价";
+
+    }
+
+}
 // =========================
 // 菜品数量
 // =========================
