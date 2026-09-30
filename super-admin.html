@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -855,8 +856,6 @@ tr:last-child td {
     </div>
 
 
-    <!-- 抽成设置 -->
-
     <div class="finance-setting">
 
         <div class="finance-setting-left">
@@ -1458,41 +1457,7 @@ let applicationFilter = "all";
 
 let orderFilter = "all";
 
-
-/* =========================================================
-   平台抽成
-========================================================= */
-
-let commissionRate =
-    Number(
-        localStorage.getItem(
-            "mdyFoodCommissionRate"
-        )
-    );
-
-
-if (
-    isNaN(commissionRate) ||
-    commissionRate < 0 ||
-    commissionRate > 100
-) {
-
-    commissionRate = 10;
-
-}
-
-
-document.getElementById(
-    "commissionRateInput"
-).value =
-    commissionRate;
-
-
-document.getElementById(
-    "financeCommissionRate"
-).innerText =
-    commissionRate + "%";
-
+let commissionRate = 10;
 
 
 /* =========================================================
@@ -1685,10 +1650,89 @@ function isCompletedOrder(order) {
 
 
 /* =========================================================
-   保存抽成
+   读取云端平台抽成
 ========================================================= */
 
-function saveCommissionRate() {
+async function loadCommissionRate() {
+
+    try {
+
+        const doc =
+            await db
+                .collection("settings")
+                .doc("platform")
+                .get();
+
+
+        if (
+            doc.exists
+        ) {
+
+            const data =
+                doc.data() || {};
+
+
+            const value =
+                Number(
+                    data.commissionRate
+                );
+
+
+            if (
+                !isNaN(value) &&
+                value >= 0 &&
+                value <= 100
+            ) {
+
+                commissionRate =
+                    Math.round(
+                        value * 10
+                    ) / 10;
+
+            }
+
+        }
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "读取平台抽成失败:",
+            error
+        );
+
+        /*
+         * 如果云端还没有设置，
+         * 第一次使用时默认 10%
+         */
+
+        commissionRate = 10;
+
+    }
+
+
+    document.getElementById(
+        "commissionRateInput"
+    ).value =
+        commissionRate;
+
+
+    document.getElementById(
+        "financeCommissionRate"
+    ).innerText =
+        commissionRate + "%";
+
+}
+
+
+
+/* =========================================================
+   保存云端抽成
+========================================================= */
+
+async function saveCommissionRate() {
 
     const input =
         document.getElementById(
@@ -1726,32 +1770,71 @@ function saveCommissionRate() {
         ) / 10;
 
 
-    commissionRate =
-        value;
+    try {
+
+        await db
+            .collection("settings")
+            .doc("platform")
+            .set({
+
+                commissionRate:
+                    value,
+
+                updatedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            }, {
+
+                merge: true
+
+            });
 
 
-    localStorage.setItem(
-        "mdyFoodCommissionRate",
-        commissionRate
-    );
+        commissionRate =
+            value;
 
 
-    document.getElementById(
-        "financeCommissionRate"
-    ).innerText =
-        commissionRate + "%";
+        document.getElementById(
+            "commissionRateInput"
+        ).value =
+            commissionRate;
 
 
-    updateFinanceCenter();
+        document.getElementById(
+            "financeCommissionRate"
+        ).innerText =
+            commissionRate + "%";
 
-    renderMerchantFinance();
+
+        updateFinanceCenter();
+
+        renderMerchantFinance();
 
 
-    alert(
-        "平台抽成已设置为 " +
-        commissionRate +
-        "%"
-    );
+        alert(
+            "平台抽成已保存为 " +
+            commissionRate +
+            "%\n\n已保存到 Firebase 云端。"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "保存平台抽成失败:",
+            error
+        );
+
+
+        alert(
+            "保存失败：\n" +
+            error.message
+        );
+
+    }
 
 }
 
@@ -2401,22 +2484,12 @@ function renderMerchantFinance() {
         .toLowerCase();
 
 
-    if (
-        !allRestaurants.length
-    ) {
+    /*
+     * 先建立正式商家列表
+     */
 
-        container.innerHTML =
-
-            `<div class="empty">
-                暂无商家数据
-            </div>`;
-
-        return;
-
-    }
-
-
-    let html = "";
+    const merchantMap =
+        new Map();
 
 
     allRestaurants.forEach(
@@ -2427,10 +2500,118 @@ function renderMerchantFinance() {
                 restaurant.id;
 
 
+            if (!restaurantId) {
+
+                return;
+
+            }
+
+
+            merchantMap.set(
+                restaurantId,
+                {
+
+                    restaurantId:
+                        restaurantId,
+
+                    restaurantName:
+                        restaurant.name ||
+                        restaurant.restaurantName ||
+                        "未知餐厅",
+
+                    restaurant:
+                        restaurant
+
+                }
+            );
+
+        }
+    );
+
+
+    /*
+     * 再检查所有已完成订单。
+     *
+     * 如果某个订单的 restaurantId
+     * 在 restaurants 集合里不存在，
+     * 也创建一个“未知餐厅”财务项目。
+     */
+
+    allOrders.forEach(
+        function(order) {
+
+            if (
+                !isCompletedOrder(
+                    order
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            const restaurantId =
+                order.restaurantId ||
+                "unknown";
+
+
+            if (
+                !merchantMap.has(
+                    restaurantId
+                )
+            ) {
+
+                merchantMap.set(
+                    restaurantId,
+                    {
+
+                        restaurantId:
+                            restaurantId,
+
+                        restaurantName:
+                            order.restaurantName ||
+                            "未知餐厅",
+
+                        restaurant:
+                            null
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+
+    if (
+        merchantMap.size === 0
+    ) {
+
+        container.innerHTML =
+
+            `<div class="empty">
+                暂无商家财务数据
+            </div>`;
+
+        return;
+
+    }
+
+
+    let html = "";
+
+
+    merchantMap.forEach(
+        function(merchant) {
+
+            const restaurantId =
+                merchant.restaurantId;
+
+
             const restaurantName =
-                restaurant.name ||
-                restaurant.restaurantName ||
-                "未知餐厅";
+                merchant.restaurantName;
 
 
             if (
@@ -2453,8 +2634,13 @@ function renderMerchantFinance() {
             allOrders.forEach(
                 function(order) {
 
+                    const orderRestaurantId =
+                        order.restaurantId ||
+                        "unknown";
+
+
                     if (
-                        order.restaurantId ===
+                        orderRestaurantId ===
                         restaurantId &&
                         isCompletedOrder(
                             order
@@ -2489,12 +2675,19 @@ function renderMerchantFinance() {
 
             let ratingTotal = 0;
 
+            let ratingCount = 0;
+
 
             allReviews.forEach(
                 function(review) {
 
+                    const reviewRestaurantId =
+                        review.restaurantId ||
+                        "unknown";
+
+
                     if (
-                        review.restaurantId ===
+                        reviewRestaurantId ===
                         restaurantId
                     ) {
 
@@ -2512,11 +2705,14 @@ function renderMerchantFinance() {
 
 
                         if (
-                            rating > 0
+                            rating > 0 &&
+                            rating <= 5
                         ) {
 
                             ratingTotal +=
                                 rating;
+
+                            ratingCount++;
 
                         }
 
@@ -2527,13 +2723,13 @@ function renderMerchantFinance() {
 
 
             const averageRating =
-                reviewCount > 0
+                ratingCount > 0
 
                     ?
 
                     (
                         ratingTotal /
-                        reviewCount
+                        ratingCount
                     ).toFixed(1)
 
                     :
@@ -4296,6 +4492,13 @@ async function refreshAll() {
 
     try {
 
+        /*
+         * 抽成比例也从 Firebase 云端读取。
+         */
+
+        await loadCommissionRate();
+
+
         await Promise.all([
 
             loadOrders(),
@@ -4336,3 +4539,4 @@ refreshAll();
 </body>
 
 </html>
+
