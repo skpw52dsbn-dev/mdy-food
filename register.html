@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 
 <head>
@@ -211,6 +212,79 @@
 
         }
 
+
+        /* ========================================
+           商家入驻
+        ======================================== */
+
+        .merchant-box {
+
+            margin-top: 25px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid #eee;
+
+            text-align: center;
+
+        }
+
+
+        .merchant-title {
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        .merchant-desc {
+
+            font-size: 13px;
+
+            color: #888;
+
+            line-height: 1.6;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .merchant-btn {
+
+            display: block;
+
+            width: 100%;
+
+            padding: 13px;
+
+            border:
+                1px solid #ff5a36;
+
+            border-radius: 10px;
+
+            color: #ff5a36;
+
+            background: white;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+        }
+
+
+        .merchant-btn:hover {
+
+            background: #fff5f2;
+
+        }
+
     </style>
 
 </head>
@@ -357,6 +431,42 @@
         <div id="message"></div>
 
 
+        <!-- ========================================
+             商家入驻入口
+        ======================================== -->
+
+        <div class="merchant-box">
+
+            <div class="merchant-title">
+
+                🍜 我是商家
+
+            </div>
+
+
+            <div class="merchant-desc">
+
+                想让你的餐厅加入 MDY FOOD？
+
+                <br>
+
+                点击下面申请商家入驻
+
+            </div>
+
+
+            <a
+                href="merchant-register.html"
+                class="merchant-btn"
+            >
+
+                🏪 商家入驻
+
+            </a>
+
+        </div>
+
+
     </div>
 
 
@@ -384,7 +494,7 @@
 const firebaseConfig = {
 
     apiKey:
-        "AIzaSyA84W7Xx-yNWAWWqwmcbeHzKCRsqxv5X7Q",
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
 
     authDomain:
         "mdy-food.firebaseapp.com",
@@ -463,7 +573,7 @@ function showMessage(
 
 
 /* ========================================
-   注册
+   顾客注册
 ======================================== */
 
 async function register() {
