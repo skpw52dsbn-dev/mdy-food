@@ -7,6 +7,14 @@
 
     <title>购物车 - Mandalay Food</title>
 
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <!-- MDY FOOD 全站语言系统 -->
+    <script src="language.js"></script>
+
     <style>
         body {
             margin: 0;
@@ -48,6 +56,7 @@
             align-items: center;
             padding: 15px 0;
             border-bottom: 1px solid #eee;
+            gap: 15px;
         }
 
         .item-name {
@@ -64,6 +73,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .quantity button {
@@ -75,6 +86,13 @@
             border-radius: 6px;
             font-size: 18px;
             cursor: pointer;
+        }
+
+        .quantity .delete-btn {
+            width: auto;
+            padding: 0 12px;
+            background: #555;
+            font-size: 14px;
         }
 
         .summary {
@@ -113,6 +131,34 @@
             color: #777;
             padding: 40px 0;
         }
+
+        @media (max-width: 600px) {
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .cart-box {
+                padding: 16px;
+            }
+
+            .cart-item {
+                align-items: flex-start;
+            }
+
+            .quantity {
+                gap: 6px;
+            }
+
+            .quantity button {
+                width: 30px;
+                height: 30px;
+            }
+
+            .quantity .delete-btn {
+                padding: 0 8px;
+            }
+        }
     </style>
 </head>
 
@@ -120,7 +166,11 @@
 
     <header>
 
-        <a class="back" href="menu.html">
+        <a
+            class="back"
+            href="menu.html"
+            data-i18n="backToRestaurant"
+        >
             ← 返回菜单
         </a>
 
@@ -131,7 +181,9 @@
 
         <div class="cart-box">
 
-            <h1>🛒 我的购物车</h1>
+            <h1 data-i18n="shoppingCart">
+                🛒 我的购物车
+            </h1>
 
             <div id="cartItems"></div>
 
@@ -139,21 +191,49 @@
             <div class="summary">
 
                 <div class="row">
-                    <span>商品小计</span>
-                    <span id="subtotal">0 Ks</span>
+
+                    <span data-i18n="subtotal">
+                        商品小计
+                    </span>
+
+                    <span id="subtotal">
+                        0 Ks
+                    </span>
+
                 </div>
+
 
                 <div class="row">
-                    <span>配送费</span>
-                    <span id="delivery">2,000 Ks</span>
+
+                    <span data-i18n="deliveryFee">
+                        配送费
+                    </span>
+
+                    <span id="delivery">
+                        2,000 Ks
+                    </span>
+
                 </div>
+
 
                 <div class="row total">
-                    <span>总计</span>
-                    <span id="total">2,000 Ks</span>
+
+                    <span data-i18n="total">
+                        总计
+                    </span>
+
+                    <span id="total">
+                        2,000 Ks
+                    </span>
+
                 </div>
 
-                <button class="checkout" onclick="checkout()">
+
+                <button
+                    class="checkout"
+                    onclick="checkout()"
+                    data-i18n="checkout"
+                >
                     去结算
                 </button>
 
@@ -166,156 +246,354 @@
 
     <script>
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        /* =========================================
+           Firebase
+        ========================================= */
+
+        const firebaseConfig = {
+            apiKey:
+                "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+
+            authDomain:
+                "mdy-food.firebaseapp.com",
+
+            projectId:
+                "mdy-food",
+
+            storageBucket:
+                "mdy-food.firebasestorage.app",
+
+            messagingSenderId:
+                "498327590625",
+
+            appId:
+                "1:498327590625:web:cceafb7febb689e7ad09a0",
+
+            measurementId:
+                "G-6Q5G2862XQ"
+        };
 
 
-    function showCart() {
-
-        const cartItems = document.getElementById("cartItems");
-
-        if (cart.length === 0) {
-
-            cartItems.innerHTML =
-                '<div class="empty">购物车还是空的</div>';
-
-            document.getElementById("subtotal").innerText = "0 Ks";
-
-            document.getElementById("total").innerText = "2,000 Ks";
-
-            return;
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
 
 
-        cartItems.innerHTML = "";
-
-        let subtotal = 0;
-
-
-        cart.forEach(function(item, index) {
-
-            subtotal += item.price * item.quantity;
+        const db = firebase.firestore();
+        const auth = firebase.auth();
 
 
-            const div = document.createElement("div");
+        /* =========================================
+           语言
+        ========================================= */
 
-            div.className = "cart-item";
+        function t(key, fallback) {
+
+            if (
+                window.MDYLanguage &&
+                typeof MDYLanguage.t === "function"
+            ) {
+
+                const result = MDYLanguage.t(
+                    key,
+                    {},
+                    fallback
+                );
+
+                if (result && result !== key) {
+                    return result;
+                }
+
+            }
+
+            return fallback || key;
+        }
 
 
-            div.innerHTML = `
+        function updatePageLanguage() {
 
-                <div>
+            if (
+                window.MDYLanguage &&
+                typeof MDYLanguage.apply === "function"
+            ) {
+                MDYLanguage.apply(
+                    MDYLanguage.getLanguage()
+                );
+            }
 
-                    <div class="item-name">
-                        ${item.name}
+            showCart();
+
+            document.title =
+                t(
+                    "shoppingCart",
+                    "购物车 - Mandalay Food"
+                );
+
+        }
+
+
+        window.addEventListener(
+            "mdyLanguageChanged",
+            function () {
+
+                updatePageLanguage();
+
+            }
+        );
+
+
+        /* =========================================
+           购物车
+        ========================================= */
+
+        let cart =
+            JSON.parse(
+                localStorage.getItem("cart")
+            ) || [];
+
+
+        function showCart() {
+
+            const cartItems =
+                document.getElementById("cartItems");
+
+
+            if (cart.length === 0) {
+
+                cartItems.innerHTML =
+                    `
+                    <div class="empty">
+                        ${t(
+                            "emptyCart",
+                            "购物车还是空的"
+                        )}
                     </div>
-
-                    <div class="item-price">
-                        ${(item.price * item.quantity).toLocaleString()} Ks
-                    </div>
-
-                </div>
+                    `;
 
 
-                <div class="quantity">
-
-                    <button onclick="changeQuantity(${index}, -1)">
-                        −
-                    </button>
-
-                    <span>
-                        ${item.quantity}
-                    </span>
-
-                    <button onclick="changeQuantity(${index}, 1)">
-                        +
-                    </button>
-
-                    <button
-                        type="button"
-                        onclick="deleteItem(${index})"
-                        style="background:#555;"
-                    >
-                        删除
-                    </button>
-
-                </div>
-
-            `;
+                document.getElementById(
+                    "subtotal"
+                ).innerText = "0 Ks";
 
 
-            cartItems.appendChild(div);
-
-        });
-
-
-        document.getElementById("subtotal").innerText =
-            subtotal.toLocaleString() + " Ks";
+                document.getElementById(
+                    "delivery"
+                ).innerText = "2,000 Ks";
 
 
-        document.getElementById("total").innerText =
-            (subtotal + 2000).toLocaleString() + " Ks";
-
-    }
-
-
-    function changeQuantity(index, change) {
-
-        cart[index].quantity += change;
+                document.getElementById(
+                    "total"
+                ).innerText = "2,000 Ks";
 
 
-        if (cart[index].quantity <= 0) {
+                return;
+
+            }
+
+
+            cartItems.innerHTML = "";
+
+
+            let subtotal = 0;
+
+
+            cart.forEach(
+                function (item, index) {
+
+                    subtotal +=
+                        item.price *
+                        item.quantity;
+
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    div.className =
+                        "cart-item";
+
+
+                    div.innerHTML = `
+
+                        <div>
+
+                            <div class="item-name">
+                                ${item.name}
+                            </div>
+
+                            <div class="item-price">
+                                ${(
+                                    item.price *
+                                    item.quantity
+                                ).toLocaleString()} Ks
+                            </div>
+
+                        </div>
+
+
+                        <div class="quantity">
+
+                            <button
+                                type="button"
+                                onclick="changeQuantity(${index}, -1)"
+                            >
+                                −
+                            </button>
+
+
+                            <span>
+                                ${item.quantity}
+                            </span>
+
+
+                            <button
+                                type="button"
+                                onclick="changeQuantity(${index}, 1)"
+                            >
+                                +
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="delete-btn"
+                                onclick="deleteItem(${index})"
+                            >
+                                ${t(
+                                    "delete",
+                                    "删除"
+                                )}
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    cartItems.appendChild(div);
+
+                }
+            );
+
+
+            document.getElementById(
+                "subtotal"
+            ).innerText =
+                subtotal.toLocaleString() +
+                " Ks";
+
+
+            document.getElementById(
+                "delivery"
+            ).innerText =
+                "2,000 Ks";
+
+
+            document.getElementById(
+                "total"
+            ).innerText =
+                (
+                    subtotal + 2000
+                ).toLocaleString() +
+                " Ks";
+
+        }
+
+
+        /* =========================================
+           修改数量
+        ========================================= */
+
+        function changeQuantity(
+            index,
+            change
+        ) {
+
+            cart[index].quantity += change;
+
+
+            if (
+                cart[index].quantity <= 0
+            ) {
+
+                cart.splice(index, 1);
+
+            }
+
+
+            localStorage.setItem(
+                "cart",
+                JSON.stringify(cart)
+            );
+
+
+            showCart();
+
+        }
+
+
+        /* =========================================
+           删除商品
+        ========================================= */
+
+        function deleteItem(index) {
 
             cart.splice(index, 1);
 
-        }
+
+            localStorage.setItem(
+                "cart",
+                JSON.stringify(cart)
+            );
 
 
-        localStorage.setItem(
-            "cart",
-            JSON.stringify(cart)
-        );
-
-
-        showCart();
-
-    }
-
-
-    function deleteItem(index) {
-
-        cart.splice(index, 1);
-
-
-        localStorage.setItem(
-            "cart",
-            JSON.stringify(cart)
-        );
-
-
-        showCart();
-
-    }
-
-
-    function checkout() {
-
-        if (cart.length === 0) {
-
-            alert("购物车是空的");
-
-            return;
+            showCart();
 
         }
 
 
-        window.location.href = "checkout.html";
+        /* =========================================
+           去结算
+        ========================================= */
 
-    }
+        function checkout() {
+
+            if (cart.length === 0) {
+
+                alert(
+                    t(
+                        "cartEmptyAlert",
+                        "购物车是空的"
+                    )
+                );
+
+                return;
+
+            }
 
 
-    showCart();
+            window.location.href =
+                "checkout.html";
 
-</script>
+        }
+
+
+        /* =========================================
+           初始化
+        ========================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                updatePageLanguage();
+
+            }
+        );
+
+    </script>
 
 </body>
 
