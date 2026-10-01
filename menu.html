@@ -648,6 +648,7 @@
                 id="restaurantRating"
                 class="rating"
             >
+                ⭐ 暂无评分
             </p>
 
 
@@ -893,6 +894,13 @@ const defaultFoodImage =
 
 
 // =========================
+// 当前餐厅评价监听
+// =========================
+
+let reviewsUnsubscribe = null;
+
+
+// =========================
 // 没有餐厅 ID
 // =========================
 
@@ -974,16 +982,29 @@ function loadRestaurant() {
                     "";
 
 
-                // 评分
+                // 这里先显示餐厅原本保存的评分
+                // 后面 loadReviews() 会根据真实评价自动更新
 
-                document.getElementById(
-                    "restaurantRating"
-                ).innerText =
-                    "⭐ " +
-                    (
-                        data.rating ||
-                        "暂无评分"
-                    );
+                if (
+                    data.rating !== undefined &&
+                    data.rating !== null &&
+                    data.rating !== ""
+                ) {
+
+                    document.getElementById(
+                        "restaurantRating"
+                    ).innerText =
+                        "⭐ " +
+                        data.rating;
+
+                } else {
+
+                    document.getElementById(
+                        "restaurantRating"
+                    ).innerText =
+                        "⭐ 暂无评分";
+
+                }
 
 
                 // 营业状态
@@ -1016,7 +1037,10 @@ function loadRestaurant() {
         .catch(
             function(error) {
 
-                console.error(error);
+                console.error(
+                    "读取餐厅失败:",
+                    error
+                );
 
 
                 document.getElementById(
@@ -1031,7 +1055,7 @@ function loadRestaurant() {
 
 
 // =========================
-// 餐厅评价
+// 读取当前餐厅评价
 // =========================
 
 function loadReviews() {
@@ -1050,70 +1074,175 @@ function loadReviews() {
         `;
 
 
-    db.collection("reviews")
-        .where(
-            "restaurantId",
-            "==",
-            restaurantId
-        )
-        .onSnapshot(
+    /*
+     * 关键逻辑：
+     *
+     * reviews 集合中每条评价都有 restaurantId。
+     *
+     * 这里使用当前页面的 restaurantId 查询，
+     * 因此每一家餐厅只会显示属于自己的评价。
+     *
+     * 例如：
+     *
+     * 四川饭馆 ID
+     * → 只读取四川饭馆评价
+     *
+     * 缅甸烧烤 ID
+     * → 只读取缅甸烧烤评价
+     *
+     * 其他餐厅同样自动适用。
+     */
 
-            function(snapshot) {
+    reviewsUnsubscribe =
+        db.collection("reviews")
+            .where(
+                "restaurantId",
+                "==",
+                restaurantId
+            )
+            .onSnapshot(
 
-                const reviews = [];
+                function(snapshot) {
+
+                    const reviews = [];
 
 
-                snapshot.forEach(
-                    function(doc) {
+                    snapshot.forEach(
+                        function(doc) {
 
-                        reviews.push({
+                            reviews.push({
 
-                            id: doc.id,
+                                id: doc.id,
 
-                            ...doc.data()
+                                ...doc.data()
 
-                        });
+                            });
 
-                    }
+                        }
+                    );
+
+
+                    // 最新评价排前面
+
+                    reviews.sort(
+                        function(a, b) {
+
+                            return (
+                                getReviewTime(b) -
+                                getReviewTime(a)
+                            );
+
+                        }
+                    );
+
+
+                    renderReviews(
+                        reviews
+                    );
+
+
+                    // 同时更新顶部餐厅评分
+
+                    updateRestaurantRating(
+                        reviews
+                    );
+
+                },
+
+                function(error) {
+
+                    console.error(
+                        "读取评价失败:",
+                        error
+                    );
+
+
+                    reviewList.innerHTML =
+                        `
+                        <div class="review-error">
+                            评价加载失败，请检查网络
+                        </div>
+                        `;
+
+                }
+
+            );
+
+}
+
+
+// =========================
+// 根据真实评价更新餐厅评分
+// =========================
+
+function updateRestaurantRating(
+    reviews
+) {
+
+    let totalRating = 0;
+
+    let validRatingCount = 0;
+
+
+    reviews.forEach(
+        function(review) {
+
+            const rating =
+                Number(
+                    review.rating
                 );
 
 
-                reviews.sort(
-                    function(a, b) {
+            if (
+                rating >= 1 &&
+                rating <= 5
+            ) {
 
-                        return (
-                            getReviewTime(b) -
-                            getReviewTime(a)
-                        );
+                totalRating +=
+                    rating;
 
-                    }
-                );
-
-
-                renderReviews(
-                    reviews
-                );
-
-            },
-
-            function(error) {
-
-                console.error(
-                    "读取评价失败:",
-                    error
-                );
-
-
-                reviewList.innerHTML =
-                    `
-                    <div class="review-error">
-                        评价加载失败，请检查网络
-                    </div>
-                    `;
+                validRatingCount++;
 
             }
 
+        }
+    );
+
+
+    const element =
+        document.getElementById(
+            "restaurantRating"
         );
+
+
+    if (!element) {
+        return;
+    }
+
+
+    if (
+        validRatingCount === 0
+    ) {
+
+        element.innerText =
+            "⭐ 暂无评分";
+
+        return;
+
+    }
+
+
+    const average =
+        totalRating /
+        validRatingCount;
+
+
+    element.innerText =
+        "⭐ " +
+        average.toFixed(1) +
+        " · " +
+        validRatingCount +
+        "条评价";
 
 }
 
@@ -1482,7 +1611,8 @@ function maskCustomerName(
     }
 
 
-    // 中文姓名
+    // 两个字：
+    // 彭康 → 彭*
 
     if (
         value.length === 2
@@ -1495,6 +1625,9 @@ function maskCustomerName(
 
     }
 
+
+    // 三个字以上：
+    // 彭定康 → 彭*康
 
     if (
         value.length >= 3
@@ -1798,6 +1931,7 @@ function loadFoods() {
             function(error) {
 
                 console.error(
+                    "读取菜品失败:",
                     error
                 );
 
