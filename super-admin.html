@@ -638,6 +638,26 @@ th {
     word-break: break-word;
 }
 
+
+/* =========================
+   配送员结算记录
+========================= */
+.delivery-settlement-history-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-bottom:18px}
+.delivery-settlement-history-card{border:1px solid #eee;border-radius:12px;padding:18px;background:#fafafa}
+.delivery-settlement-history-card .label{color:#777;font-size:13px;margin-bottom:8px}
+.delivery-settlement-history-card .value{font-size:23px;font-weight:bold}
+.delivery-settlement-history-list{display:grid;gap:12px}
+.delivery-settlement-history-item{border:1px solid #eee;border-radius:12px;padding:18px;background:white}
+.delivery-settlement-history-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.delivery-settlement-history-name{font-size:17px;font-weight:bold}
+.delivery-settlement-history-phone{color:#777;font-size:13px;margin-top:4px}
+.delivery-settlement-history-amount{font-size:20px;font-weight:bold}
+.delivery-settlement-history-row{display:flex;justify-content:space-between;gap:15px;padding:7px 0;border-bottom:1px solid #f1f1f1;font-size:13px}
+.delivery-settlement-history-row:last-child{border-bottom:none}
+.delivery-settlement-history-row span:first-child{color:#777}
+.delivery-settlement-history-total{margin-top:12px;padding-top:12px;border-top:1px dashed #ddd;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.delivery-settlement-history-empty{padding:35px 20px;text-align:center;color:#999;background:#fafafa;border-radius:10px}
+
 /* =========================
    响应式
 ========================= */
@@ -1102,6 +1122,39 @@ th {
             <strong>deliverySettlements</strong>
             记录，并减少当前待结算金额。
 
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         配送员结算记录
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <div>
+                <h2>🧾 配送员结算记录</h2>
+                <p>查看配送员历史结算金额、订单数量与结算时间</p>
+            </div>
+        </div>
+
+        <div class="delivery-settlement-history-summary">
+            <div class="delivery-settlement-history-card">
+                <div class="label">累计结算金额</div>
+                <div class="value" id="deliverySettlementHistoryTotal">0 Ks</div>
+            </div>
+            <div class="delivery-settlement-history-card">
+                <div class="label">累计结算次数</div>
+                <div class="value" id="deliverySettlementHistoryCount">0</div>
+            </div>
+        </div>
+
+        <input type="text" id="deliverySettlementHistorySearch" class="search-box" placeholder="搜索配送员姓名、电话或配送员ID...">
+
+        <div id="deliverySettlementHistoryList" class="delivery-settlement-history-list">
+            <div class="delivery-settlement-history-empty">正在加载结算记录...</div>
         </div>
 
     </section>
@@ -2031,6 +2084,63 @@ async function loadDeliverySettlements() {
 }
 
 
+
+/* =========================
+   配送员结算记录渲染
+========================= */
+function renderDeliverySettlementHistory(){
+    const list=document.getElementById("deliverySettlementHistoryList");
+    if(!list)return;
+    const input=document.getElementById("deliverySettlementHistorySearch");
+    const keyword=String(input?input.value:"").trim().toLowerCase();
+    const records=allDeliverySettlements.slice().sort((a,b)=>{
+        const da=getDateValue(a.createdAt),db=getDateValue(b.createdAt);
+        return (db?db.getTime():0)-(da?da.getTime():0);
+    });
+    let total=0;
+    records.forEach(r=>{total+=Number(r.amount)||0;});
+    const totalEl=document.getElementById("deliverySettlementHistoryTotal");
+    const countEl=document.getElementById("deliverySettlementHistoryCount");
+    if(totalEl)totalEl.textContent=formatMoney(total);
+    if(countEl)countEl.textContent=records.length;
+    const filtered=records.filter(r=>{
+        if(!keyword)return true;
+        return [r.deliveryName,r.deliveryPhone,r.deliveryId].filter(Boolean).join(" ").toLowerCase().includes(keyword);
+    });
+    if(!filtered.length){
+        list.innerHTML=`<div class="delivery-settlement-history-empty">暂无结算记录</div>`;
+        return;
+    }
+    const totals={};
+    records.forEach(r=>{
+        const id=r.deliveryId||"";
+        if(!totals[id])totals[id]={amount:0,count:0};
+        totals[id].amount+=Number(r.amount)||0;
+        totals[id].count++;
+    });
+    list.innerHTML=filtered.map(r=>{
+        const id=r.deliveryId||"";
+        const t=totals[id]||{amount:0,count:0};
+        return `
+            <div class="delivery-settlement-history-item">
+                <div class="delivery-settlement-history-header">
+                    <div>
+                        <div class="delivery-settlement-history-name">🛵 ${escapeHtml(r.deliveryName||"未命名配送员")}</div>
+                        <div class="delivery-settlement-history-phone">电话：${escapeHtml(r.deliveryPhone||"-")}</div>
+                    </div>
+                    <div class="delivery-settlement-history-amount">${formatMoney(Number(r.amount)||0)}</div>
+                </div>
+                <div class="delivery-settlement-history-row"><span>本次完成订单数</span><strong>${Number(r.completedOrderCount)||0} 单</strong></div>
+                <div class="delivery-settlement-history-row"><span>结算时间</span><strong>${formatDate(getDateValue(r.createdAt))}</strong></div>
+                <div class="delivery-settlement-history-row"><span>配送员ID</span><strong>${escapeHtml(id||"-")}</strong></div>
+                <div class="delivery-settlement-history-total">
+                    <span>该配送员总累计结算：<strong>${formatMoney(t.amount)}</strong></span>
+                    <span>总结算次数：<strong>${t.count} 次</strong></span>
+                </div>
+            </div>`;
+    }).join("");
+}
+
 /* =========================
    订单数据
 ========================= */
@@ -2283,8 +2393,7 @@ async function loadRestaurants() {
         allRestaurants = [];
 
         snapshot.forEach(doc => {
-
-            allRestaurants.push({
+             allRestaurants.push({
 
                 id:
                     doc.id,
@@ -3947,29 +4056,30 @@ function updatePlatformStats() {
 
 function updateDeliveryStats() {
 
-    const approved =
+    // 全部正式配送员
+    const all =
+        allDeliveries.length;
+
+
+    // 在线配送员
+    const online =
         allDeliveries.filter(
             delivery =>
-                delivery.status ===
-                "approved"
+                delivery.online === true &&
+                delivery.enabled !== false
         );
 
 
-    const online =
-        approved.filter(
-            delivery =>
-                delivery.online === true
-        );
-
-
+    // 可接单配送员
     const available =
-        approved.filter(
+        allDeliveries.filter(
             delivery =>
                 delivery.available === true &&
                 delivery.enabled !== false
         );
 
 
+    // 停用配送员
     const disabled =
         allDeliveries.filter(
             delivery =>
@@ -4001,7 +4111,7 @@ function updateDeliveryStats() {
     if (deliveryCount) {
 
         deliveryCount.textContent =
-            approved.length;
+            all;
 
     }
 
@@ -4512,6 +4622,31 @@ function renderDeliveries() {
 
                                     </td>
 
+
+                                    <td>
+
+                                        ${actions}
+
+                                    </td>
+
+                                </tr>
+
+                            `;
+
+                        }
+                    ).join("")
+                }
+
+            </tbody>
+
+        </table>
+
+    `;
+
+}
+
+
+/* ========================
 
                                     <td>
 
@@ -6656,6 +6791,8 @@ async function refreshAll() {
 
         renderDeliveryFinance();
 
+        renderDeliverySettlementHistory();
+
         updateFinanceCenter();
 
         updatePlatformStats();
@@ -6702,6 +6839,19 @@ if (
 
 }
 
+
+const deliverySettlementHistorySearch =
+    document.getElementById(
+        "deliverySettlementHistorySearch"
+    );
+
+if (deliverySettlementHistorySearch) {
+    deliverySettlementHistorySearch
+        .addEventListener(
+            "input",
+            renderDeliverySettlementHistory
+        );
+}
 
 const deliverySearch =
     document.getElementById(
