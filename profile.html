@@ -12,11 +12,13 @@
 
 <title>MDY FOOD - 我的</title>
 
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <script src="language.js"></script>
+
 
 <style>
 
@@ -607,6 +609,7 @@ button {
         <button
             class="back-button"
             onclick="goHome()"
+            aria-label="返回"
         >
             ←
         </button>
@@ -650,7 +653,6 @@ button {
         <div
             id="userName"
             class="user-name"
-            data-i18n="myAccount"
         >
             我的账户
         </div>
@@ -659,7 +661,6 @@ button {
         <div
             id="userEmail"
             class="user-sub"
-            data-i18n="checkingLogin"
         >
             正在读取账户信息...
         </div>
@@ -1164,13 +1165,13 @@ button {
 <script>
 
 /* =========================================================
-   Firebase
+   Firebase 配置
 ========================================================= */
 
 const firebaseConfig = {
 
     apiKey:
-        "AIzaSyDR8dxsbDYA3a6pLaXcJTngcFhNfWPUlv0",
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
 
     authDomain:
         "mdy-food.firebaseapp.com",
@@ -1193,6 +1194,10 @@ const firebaseConfig = {
 };
 
 
+/* =========================================================
+   Firebase 初始化
+========================================================= */
+
 if (!firebase.apps.length) {
 
     firebase.initializeApp(
@@ -1208,6 +1213,32 @@ const db =
 
 const auth =
     firebase.auth();
+
+
+/* =========================================================
+   Firebase 登录持久化
+========================================================= */
+
+auth.setPersistence(
+    firebase.auth.Auth.Persistence.LOCAL
+)
+.catch(function(error) {
+
+    console.warn(
+        "Firebase 登录持久化设置失败:",
+        error
+    );
+
+});
+
+
+/* =========================================================
+   当前登录状态
+========================================================= */
+
+let currentUser = null;
+
+let authReady = false;
 
 
 /* =========================================================
@@ -1238,6 +1269,10 @@ function t(
 }
 
 
+/* =========================================================
+   页面语言
+========================================================= */
+
 function applyPageTranslations() {
 
     document
@@ -1250,10 +1285,15 @@ function applyPageTranslations() {
                 const key =
                     element.dataset.i18n;
 
+
+                const fallback =
+                    element.innerText;
+
+
                 element.innerText =
                     t(
                         key,
-                        element.innerText
+                        fallback
                     );
 
             }
@@ -1267,8 +1307,41 @@ function applyPageTranslations() {
             "我的"
         );
 
-}
 
+    if (
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.getLanguage ===
+            "function"
+    ) {
+
+        const lang =
+            window.MDYLanguage.getLanguage();
+
+
+        if (lang === "my") {
+
+            document.documentElement.lang =
+                "my";
+
+        }
+
+        else if (lang === "en") {
+
+            document.documentElement.lang =
+                "en";
+
+        }
+
+        else {
+
+            document.documentElement.lang =
+                "zh-CN";
+
+        }
+
+    }
+
+}
 
 
 /* =========================================================
@@ -1283,7 +1356,6 @@ function goHome() {
 }
 
 
-
 /* =========================================================
    编辑个人资料
 ========================================================= */
@@ -1296,7 +1368,6 @@ function editProfile() {
 }
 
 
-
 /* =========================================================
    退出登录
 ========================================================= */
@@ -1304,7 +1375,7 @@ function editProfile() {
 async function logout() {
 
     const confirmed =
-        confirm(
+        window.confirm(
             t(
                 "confirmLogout",
                 "确定要退出登录吗？"
@@ -1324,11 +1395,17 @@ async function logout() {
         await auth.signOut();
 
 
+        currentUser =
+            null;
+
+
         window.location.href =
             "index.html";
 
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "退出登录失败:",
@@ -1336,7 +1413,7 @@ async function logout() {
         );
 
 
-        alert(
+        window.alert(
             t(
                 "logoutError",
                 "退出登录失败，请稍后再试"
@@ -1348,140 +1425,238 @@ async function logout() {
 }
 
 
+/* =========================================================
+   更新账户界面
+========================================================= */
+
+function updateUserUI() {
+
+    const userCard =
+        document.getElementById(
+            "userCard"
+        );
+
+
+    const loginCard =
+        document.getElementById(
+            "loginCard"
+        );
+
+
+    const logoutButton =
+        document.getElementById(
+            "logoutButton"
+        );
+
+
+    const userName =
+        document.getElementById(
+            "userName"
+        );
+
+
+    const userEmail =
+        document.getElementById(
+            "userEmail"
+        );
+
+
+    if (!userCard ||
+        !loginCard ||
+        !logoutButton ||
+        !userName ||
+        !userEmail
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+       Firebase 尚未恢复登录状态时，
+       暂时不判断为未登录。
+    */
+
+    if (!authReady) {
+
+        userCard.style.display =
+            "flex";
+
+        loginCard.style.display =
+            "none";
+
+        logoutButton.style.display =
+            "none";
+
+
+        userName.innerText =
+            t(
+                "myAccount",
+                "我的账户"
+            );
+
+
+        userEmail.innerText =
+            t(
+                "checkingLogin",
+                "正在读取账户信息..."
+            );
+
+
+        return;
+
+    }
+
+
+    /* =========================
+       已登录
+    ========================= */
+
+    if (currentUser) {
+
+        userCard.style.display =
+            "flex";
+
+        loginCard.style.display =
+            "none";
+
+        logoutButton.style.display =
+            "block";
+
+
+        let displayName =
+            currentUser.displayName;
+
+
+        if (!displayName) {
+
+            displayName =
+                t(
+                    "defaultUserName",
+                    "MDY FOOD 用户"
+                );
+
+        }
+
+
+        userName.innerText =
+            displayName;
+
+
+        if (currentUser.email) {
+
+            userEmail.innerText =
+                currentUser.email;
+
+        }
+
+        else if (
+            currentUser.phoneNumber
+        ) {
+
+            userEmail.innerText =
+                currentUser.phoneNumber;
+
+        }
+
+        else {
+
+            userEmail.innerText =
+                t(
+                    "loggedIn",
+                    "已登录"
+                );
+
+        }
+
+
+        return;
+
+    }
+
+
+    /* =========================
+       未登录
+    ========================= */
+
+    userCard.style.display =
+        "none";
+
+    loginCard.style.display =
+        "block";
+
+    logoutButton.style.display =
+        "none";
+
+}
+
 
 /* =========================================================
-   登录状态
+   Firebase 登录状态监听
 ========================================================= */
 
 auth.onAuthStateChanged(
     function(user) {
 
-        const userCard =
-            document.getElementById(
-                "userCard"
-            );
+        currentUser =
+            user || null;
 
 
-        const loginCard =
-            document.getElementById(
-                "loginCard"
-            );
+        authReady =
+            true;
 
 
-        const logoutButton =
-            document.getElementById(
-                "logoutButton"
-            );
-
-
-        const userName =
-            document.getElementById(
-                "userName"
-            );
-
-
-        const userEmail =
-            document.getElementById(
-                "userEmail"
-            );
-
-
-        if (user) {
-
-            userCard.style.display =
-                "flex";
-
-            loginCard.style.display =
-                "none";
-
-            logoutButton.style.display =
-                "block";
-
-
-            let displayName =
-                user.displayName;
-
-
-            if (!displayName) {
-
-                displayName =
-                    t(
-                        "defaultUserName",
-                        "MDY FOOD 用户"
-                    );
-
-            }
-
-
-            userName.innerText =
-                displayName;
-
-
-            if (user.email) {
-
-                userEmail.innerText =
-                    user.email;
-
-            } else if (
-                user.phoneNumber
-            ) {
-
-                userEmail.innerText =
-                    user.phoneNumber;
-
-            } else {
-
-                userEmail.innerText =
-                    t(
-                        "loggedIn",
-                        "已登录"
-                    );
-
-            }
-
-
-        } else {
-
-            userCard.style.display =
-                "none";
-
-            loginCard.style.display =
-                "block";
-
-            logoutButton.style.display =
-                "none";
-
-        }
+        updateUserUI();
 
     }
 );
 
 
-
 /* =========================================================
-   language.js
+   语言选择器
 ========================================================= */
 
-if (
-    window.MDYLanguage &&
-    typeof
-    window.MDYLanguage
-        .renderLanguageSelector
-    === "function"
-) {
+function renderLanguageSelector() {
 
-    window.MDYLanguage
-        .renderLanguageSelector(
-            document.getElementById(
-                "languageSelector"
-            )
+    if (
+        !window.MDYLanguage ||
+        typeof window.MDYLanguage.renderLanguageSelector !==
+            "function"
+    ) {
+
+        console.warn(
+            "MDYLanguage.renderLanguageSelector 不存在"
         );
+
+        return;
+
+    }
+
+
+    const selector =
+        document.getElementById(
+            "languageSelector"
+        );
+
+
+    if (!selector) {
+
+        return;
+
+    }
+
+
+    window.MDYLanguage.renderLanguageSelector(
+        selector
+    );
 
 }
 
 
-applyPageTranslations();
-
+/* =========================================================
+   监听语言变化
+========================================================= */
 
 window.addEventListener(
     "mdyLanguageChanged",
@@ -1489,10 +1664,26 @@ window.addEventListener(
 
         applyPageTranslations();
 
+        renderLanguageSelector();
+
+        updateUserUI();
+
     }
 );
 
+
+/* =========================================================
+   初始化
+========================================================= */
+
+applyPageTranslations();
+
+renderLanguageSelector();
+
+updateUserUI();
+
 </script>
+
 
 </body>
 
