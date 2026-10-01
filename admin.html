@@ -311,6 +311,11 @@ header {
     color: #16833b;
 }
 
+.status-cancelled {
+    background: #f3f3f3;
+    color: #888;
+}
+
 .progress {
     display: flex;
     align-items: center;
@@ -476,6 +481,20 @@ header {
     margin-top: 10px;
 }
 
+.order-time-box {
+    margin-top: 12px;
+    padding: 12px;
+    background: #fafafa;
+    border-radius: 9px;
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+.order-time-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
 .empty {
     background: white;
     padding: 30px;
@@ -587,6 +606,11 @@ header {
     font-weight: bold;
 }
 
+.refresh-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .filter-buttons {
     display: flex;
     gap: 7px;
@@ -613,6 +637,63 @@ header {
     color: #888;
     font-size: 13px;
     margin-bottom: 10px;
+}
+
+/* =========================
+   订单金额统计
+========================= */
+
+.order-finance-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.order-finance-card {
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 13px 10px;
+    text-align: center;
+}
+
+.order-finance-card .label {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.order-finance-card .value {
+    font-size: 17px;
+    font-weight: bold;
+    color: #ff5a1f;
+}
+
+.order-finance-card.completed .value {
+    color: #2e8b57;
+}
+
+.order-finance-card.filtered .value {
+    color: #1677ff;
+}
+
+.order-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #2e8b57;
+    background: #effff4;
+    padding: 5px 9px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+}
+
+.order-live-dot {
+    width: 7px;
+    height: 7px;
+    background: #2e8b57;
+    border-radius: 50%;
 }
 
 .restaurant-preview {
@@ -839,6 +920,14 @@ header {
     border-radius: 50%;
 }
 
+@media (max-width: 700px) {
+
+    .order-finance-summary {
+        grid-template-columns: 1fr;
+    }
+
+}
+
 @media (max-width: 600px) {
 
     .toolbar {
@@ -912,6 +1001,7 @@ header {
     .review-average {
         font-size: 30px;
     }
+
 }
 </style>
 </head>
@@ -1364,13 +1454,19 @@ header {
             📦 我的订单
         </div>
 
+        <div class="order-live">
+            <span class="order-live-dot"></span>
+            订单实时更新
+        </div>
+
+
         <div class="toolbar">
 
             <input
                 id="orderSearch"
                 class="search-input"
                 type="text"
-                placeholder="搜索订单号 / 顾客姓名 / 电话..."
+                placeholder="搜索订单号 / 顾客姓名 / 电话 / 骑手..."
                 oninput="renderOrders()">
 
             <button
@@ -1391,6 +1487,7 @@ header {
 
         </div>
 
+
         <div class="filter-buttons">
 
             <button
@@ -1404,17 +1501,33 @@ header {
 
             <button
                 id="filter-pending"
-                onclick="setOrderFilter('待处理')">
+                onclick="setOrderFilter('待接单')">
 
-                ⏳ 待处理
+                ⏳ 待接单
+
+            </button>
+
+            <button
+                id="filter-accepted"
+                onclick="setOrderFilter('商家已接单')">
+
+                👨‍🍳 已接单
 
             </button>
 
             <button
                 id="filter-rider"
-                onclick="setOrderFilter('骑手')">
+                onclick="setOrderFilter('骑手已接单')">
 
-                🛵 骑手订单
+                🛵 骑手已接单
+
+            </button>
+
+            <button
+                id="filter-ready"
+                onclick="setOrderFilter('外卖好了')">
+
+                🍱 外卖好了
 
             </button>
 
@@ -1434,12 +1547,77 @@ header {
 
             </button>
 
+            <button
+                id="filter-cancelled"
+                onclick="setOrderFilter('已取消')">
+
+                ❌ 已取消
+
+            </button>
+
         </div>
+
+
+        <div class="order-finance-summary">
+
+            <div class="order-finance-card filtered">
+
+                <div class="label">
+                    当前筛选订单金额
+                </div>
+
+                <div
+                    id="filteredOrderRevenue"
+                    class="value">
+
+                    0 Ks
+
+                </div>
+
+            </div>
+
+
+            <div class="order-finance-card">
+
+                <div class="label">
+                    今日营业额
+                </div>
+
+                <div
+                    id="orderTodayRevenue"
+                    class="value">
+
+                    0 Ks
+
+                </div>
+
+            </div>
+
+
+            <div class="order-finance-card completed">
+
+                <div class="label">
+                    已完成订单金额
+                </div>
+
+                <div
+                    id="completedOrderRevenue"
+                    class="value">
+
+                    0 Ks
+
+                </div>
+
+            </div>
+
+        </div>
+
 
         <div
             id="orderFilterCount"
             class="order-filter-count">
         </div>
+
 
         <div id="orders">
             正在加载订单...
@@ -1511,6 +1689,8 @@ let currentOrderFilter = "全部";
 
 let lastPendingOrderCount = 0;
 
+let ordersUnsubscribe = null;
+
 
 // ========================================
 // 顾客评价数据
@@ -1540,40 +1720,96 @@ function escapeHtml(value) {
 
 
 // ========================================
+// 获取时间毫秒
+// ========================================
+
+function getTimestampMillis(timestamp) {
+
+    if (!timestamp) {
+        return 0;
+    }
+
+    try {
+
+        if (
+            typeof timestamp.toMillis === "function"
+        ) {
+
+            return timestamp.toMillis();
+
+        }
+
+        if (
+            typeof timestamp.toDate === "function"
+        ) {
+
+            return timestamp.toDate().getTime();
+
+        }
+
+        const date =
+            new Date(timestamp);
+
+        return Number.isNaN(
+            date.getTime()
+        )
+            ? 0
+            : date.getTime();
+
+    } catch (error) {
+
+        return 0;
+
+    }
+
+}
+
+
+// ========================================
+// 格式化时间
+// ========================================
+
+function formatDateTime(timestamp) {
+
+    const millis =
+        getTimestampMillis(timestamp);
+
+    if (!millis) {
+        return "暂无";
+    }
+
+    try {
+
+        return new Date(millis)
+            .toLocaleString("zh-CN");
+
+    } catch (error) {
+
+        return "暂无";
+
+    }
+
+}
+
+
+// ========================================
 // 判断订单是不是今天
 // ========================================
 
 function isToday(timestamp) {
 
-    if (!timestamp) {
+    const millis =
+        getTimestampMillis(timestamp);
+
+    if (!millis) {
         return false;
     }
 
-    let date;
+    const date =
+        new Date(millis);
 
-    try {
-
-        if (timestamp.toDate) {
-
-            date = timestamp.toDate();
-
-        } else if (timestamp instanceof Date) {
-
-            date = timestamp;
-
-        } else {
-
-            return false;
-
-        }
-
-    } catch (error) {
-
-        return false;
-
-    }
-
-    const now = new Date();
+    const now =
+        new Date();
 
     return (
         date.getFullYear() === now.getFullYear() &&
@@ -1588,143 +1824,156 @@ function isToday(timestamp) {
 // 更新商家统计
 // ========================================
 
-async function loadStats() {
+function updateMerchantStats() {
 
-    try {
+    let todayOrders = 0;
 
-        const snapshot =
-            await db
-                .collection("orders")
-                .where(
-                    "restaurantId",
-                    "==",
-                    restaurantId
-                )
-                .get();
+    let todayRevenue = 0;
+
+    let pendingOrders = 0;
+
+    let deliveringOrders = 0;
 
 
-        let todayOrders = 0;
+    allOrders.forEach(function(orderObject) {
 
-        let todayRevenue = 0;
+        const order =
+            orderObject.data || {};
 
-        let pendingOrders = 0;
-
-        let deliveringOrders = 0;
-
-
-        snapshot.forEach(function(doc) {
-
-            const order = doc.data();
-
-            const status =
-                order.status || "待接单";
-
-
-            if (
-                status === "待接单" ||
-                status === "商家已接单" ||
-                status === "骑手已接单" ||
-                status === "外卖好了"
-            ) {
-
-                pendingOrders++;
-
-            }
-
-
-            if (
-                status === "配送中"
-            ) {
-
-                deliveringOrders++;
-
-            }
-
-
-            if (
-                isToday(order.created_at)
-            ) {
-
-                todayOrders++;
-
-                todayRevenue +=
-                    Number(
-                        order.total || 0
-                    );
-
-            }
-
-        });
+        const status =
+            order.status || "待接单";
 
 
         if (
-            pendingOrders > lastPendingOrderCount &&
-            lastPendingOrderCount >= 0
+            status === "待接单" ||
+            status === "商家已接单" ||
+            status === "骑手已接单" ||
+            status === "外卖好了"
         ) {
 
-            try {
-
-                if (
-                    "Notification" in window &&
-                    Notification.permission === "granted"
-                ) {
-
-                    new Notification(
-                        "MDY FOOD 新订单",
-                        {
-                            body:
-                                "你有 " +
-                                pendingOrders +
-                                " 个订单需要处理"
-                        }
-                    );
-
-                }
-
-            } catch (notificationError) {
-
-                console.log(notificationError);
-
-            }
+            pendingOrders++;
 
         }
 
-        lastPendingOrderCount = pendingOrders;
+
+        if (status === "配送中") {
+
+            deliveringOrders++;
+
+        }
 
 
+        if (isToday(order.created_at)) {
+
+            todayOrders++;
+
+            todayRevenue +=
+                Number(order.total || 0);
+
+        }
+
+    });
+
+
+    if (
+        pendingOrders > lastPendingOrderCount &&
+        lastPendingOrderCount >= 0
+    ) {
+
+        try {
+
+            if (
+                "Notification" in window &&
+                Notification.permission === "granted"
+            ) {
+
+                new Notification(
+                    "MDY FOOD 新订单",
+                    {
+                        body:
+                            "你有 " +
+                            pendingOrders +
+                            " 个订单需要处理"
+                    }
+                );
+
+            }
+
+        } catch (notificationError) {
+
+            console.log(
+                notificationError
+            );
+
+        }
+
+    }
+
+
+    lastPendingOrderCount =
+        pendingOrders;
+
+
+    const todayOrdersElement =
         document.getElementById(
             "todayOrders"
-        ).innerText =
-            todayOrders;
+        );
 
-
+    const todayRevenueElement =
         document.getElementById(
             "todayRevenue"
-        ).innerText =
+        );
+
+    const pendingOrdersElement =
+        document.getElementById(
+            "pendingOrders"
+        );
+
+    const deliveringOrdersElement =
+        document.getElementById(
+            "deliveringOrders"
+        );
+
+
+    if (todayOrdersElement) {
+
+        todayOrdersElement.innerText =
+            todayOrders;
+
+    }
+
+    if (todayRevenueElement) {
+
+        todayRevenueElement.innerText =
             todayRevenue.toLocaleString() +
             " Ks";
 
+    }
 
-        document.getElementById(
-            "pendingOrders"
-        ).innerText =
+    if (pendingOrdersElement) {
+
+        pendingOrdersElement.innerText =
             pendingOrders;
 
+    }
 
-        document.getElementById(
-            "deliveringOrders"
-        ).innerText =
+    if (deliveringOrdersElement) {
+
+        deliveringOrdersElement.innerText =
             deliveringOrders;
 
-
-    } catch (error) {
-
-        console.error(
-            "读取统计失败：",
-            error
-        );
-
     }
+
+
+    updateOrderFinanceSummary();
+
+}
+
+
+// 保留旧函数名称，避免其他代码调用时报错
+async function loadStats() {
+
+    updateMerchantStats();
 
 }
 
@@ -2743,6 +2992,28 @@ function getOrderStep(status) {
 
 function createProgress(status) {
 
+    if (status === "已取消") {
+
+        return `
+            <div
+                style="
+                    background:#f5f5f5;
+                    color:#888;
+                    padding:12px;
+                    border-radius:9px;
+                    margin-bottom:15px;
+                    text-align:center;
+                    font-weight:bold;
+                ">
+
+                ❌ 订单已取消
+
+            </div>
+        `;
+
+    }
+
+
     const steps = [
 
         {
@@ -2859,74 +3130,149 @@ function getStatusClass(status) {
         return "status-completed";
     }
 
+    if (status === "已取消") {
+        return "status-cancelled";
+    }
+
     return "status-waiting";
 
 }
 
 
 // ========================================
-// 加载订单
+// 读取订单并实时监听
 // ========================================
 
-async function loadOrders() {
+function loadOrders() {
+
+    const container =
+        document.getElementById("orders");
+
+
+    if (!container) {
+        return;
+    }
+
+
+    if (ordersUnsubscribe) {
+
+        try {
+
+            ordersUnsubscribe();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+        ordersUnsubscribe = null;
+
+    }
+
+
+    container.innerHTML = `
+
+        <div class="empty">
+
+            📦 正在读取订单...
+
+        </div>
+
+    `;
+
 
     try {
 
-        const snapshot =
-            await db
+        ordersUnsubscribe =
+            db
                 .collection("orders")
                 .where(
                     "restaurantId",
                     "==",
                     restaurantId
                 )
-                .get();
+                .onSnapshot(
+
+                    function(snapshot) {
+
+                        allOrders = [];
 
 
-        allOrders = [];
+                        snapshot.forEach(function(doc) {
+
+                            allOrders.push({
+
+                                id: doc.id,
+
+                                data: doc.data()
+
+                            });
+
+                        });
 
 
-        snapshot.forEach(function(doc) {
+                        allOrders.sort(function(a, b) {
 
-            allOrders.push({
+                            const timeA =
+                                getTimestampMillis(
+                                    a.data.created_at
+                                );
 
-                id: doc.id,
-
-                data: doc.data()
-
-            });
-
-        });
-
-
-        allOrders.sort(function(a, b) {
-
-            const timeA =
-                a.data.created_at &&
-                a.data.created_at.toMillis
-                    ? a.data.created_at.toMillis()
-                    : 0;
+                            const timeB =
+                                getTimestampMillis(
+                                    b.data.created_at
+                                );
 
 
-            const timeB =
-                b.data.created_at &&
-                b.data.created_at.toMillis
-                    ? b.data.created_at.toMillis()
-                    : 0;
+                            return timeB - timeA;
+
+                        });
 
 
-            return timeB - timeA;
+                        updateMerchantStats();
 
-        });
+                        renderOrders();
+
+                    },
+
+                    function(error) {
+
+                        console.error(
+                            "实时读取订单失败：",
+                            error
+                        );
 
 
-        renderOrders();
+                        container.innerHTML = `
+
+                            <div class="error">
+
+                                ❌ 读取订单失败
+
+                                <br><br>
+
+                                ${escapeHtml(
+                                    error.message
+                                )}
+
+                                <br><br>
+
+                                如果出现 Quota exceeded，通常是 Firebase 当前配额已经用完。
+
+                            </div>
+
+                        `;
+
+                    }
+
+                );
 
     } catch (error) {
 
         console.error(error);
 
-        document.getElementById("orders").innerHTML = `
+        container.innerHTML = `
 
             <div class="error">
 
@@ -2934,12 +3280,9 @@ async function loadOrders() {
 
                 <br><br>
 
-                ${escapeHtml(error.message)}
-
-                <br><br>
-
-                如果出现 Quota exceeded，通常是 Firebase 当前配额已经用完。
-                代码可以继续开发，等 Firebase 配额恢复后再测试。
+                ${escapeHtml(
+                    error.message
+                )}
 
             </div>
 
@@ -2956,20 +3299,27 @@ async function loadOrders() {
 
 function setOrderFilter(filter) {
 
-    currentOrderFilter = filter;
+    currentOrderFilter =
+        filter;
 
 
     const buttonMap = {
 
         "全部": "filter-all",
 
-        "待处理": "filter-pending",
+        "待接单": "filter-pending",
 
-        "骑手": "filter-rider",
+        "商家已接单": "filter-accepted",
+
+        "骑手已接单": "filter-rider",
+
+        "外卖好了": "filter-ready",
 
         "配送中": "filter-delivering",
 
-        "已完成": "filter-completed"
+        "已完成": "filter-completed",
+
+        "已取消": "filter-cancelled"
 
     };
 
@@ -3012,45 +3362,342 @@ function orderMatchesFilter(order) {
     }
 
 
-    if (currentOrderFilter === "待处理") {
-
-        return (
-            status === "待接单" ||
-            status === "商家已接单" ||
-            status === "骑手已接单" ||
-            status === "外卖好了"
-        );
-
-    }
-
-
-    if (currentOrderFilter === "骑手") {
-
-        return Boolean(
-            order.deliveryId
-        );
-
-    }
-
-
-    if (currentOrderFilter === "配送中") {
-
-        return status === "配送中";
-
-    }
-
-
-    if (currentOrderFilter === "已完成") {
-
-        return status === "已完成";
-
-    }
-
-
-    return true;
+    return status === currentOrderFilter;
 
 }
 
+
+// ========================================
+// 更新订单金额统计
+// ========================================
+
+function updateOrderFinanceSummary() {
+
+    const searchInput =
+        document.getElementById(
+            "orderSearch"
+        );
+
+
+    const keyword =
+        searchInput
+            ? searchInput.value
+                .trim()
+                .toLowerCase()
+            : "";
+
+
+    const filteredOrders =
+        allOrders.filter(function(orderObject) {
+
+            const order =
+                orderObject.data || {};
+
+
+            if (!orderMatchesFilter(order)) {
+
+                return false;
+
+            }
+
+
+            if (!keyword) {
+
+                return true;
+
+            }
+
+
+            const searchText = [
+
+                order.order_number || "",
+
+                order.customername || "",
+
+                order.customerName || "",
+
+                order.phone || "",
+
+                order.deliveryUsername || "",
+
+                order.deliveryName || "",
+
+                order.deliveryPhone || "",
+
+                order.status || ""
+
+            ]
+                .join(" ")
+                .toLowerCase();
+
+
+            return searchText.includes(
+                keyword
+            );
+
+        });
+
+
+    const filteredRevenue =
+        filteredOrders.reduce(
+            function(sum, orderObject) {
+
+                return (
+                    sum +
+                    Number(
+                        orderObject.data.total || 0
+                    )
+                );
+
+            },
+            0
+        );
+
+
+    const todayRevenue =
+        allOrders.reduce(
+            function(sum, orderObject) {
+
+                const order =
+                    orderObject.data || {};
+
+                if (
+                    isToday(order.created_at)
+                ) {
+
+                    return (
+                        sum +
+                        Number(order.total || 0)
+                    );
+
+                }
+
+                return sum;
+
+            },
+            0
+        );
+
+
+    const completedRevenue =
+        allOrders.reduce(
+            function(sum, orderObject) {
+
+                const order =
+                    orderObject.data || {};
+
+                if (
+                    order.status === "已完成"
+                ) {
+
+                    return (
+                        sum +
+                        Number(order.total || 0)
+                    );
+
+                }
+
+                return sum;
+
+            },
+            0
+        );
+
+
+    const filteredElement =
+        document.getElementById(
+            "filteredOrderRevenue"
+        );
+
+    const todayElement =
+        document.getElementById(
+            "orderTodayRevenue"
+        );
+
+    const completedElement =
+        document.getElementById(
+            "completedOrderRevenue"
+        );
+
+
+    if (filteredElement) {
+
+        filteredElement.innerText =
+            filteredRevenue.toLocaleString() +
+            " Ks";
+
+    }
+
+    if (todayElement) {
+
+        todayElement.innerText =
+            todayRevenue.toLocaleString() +
+            " Ks";
+
+    }
+
+    if (completedElement) {
+
+        completedElement.innerText =
+            completedRevenue.toLocaleString() +
+            " Ks";
+
+    }
+
+}
+
+
+// ========================================
+// 获取配送员姓名
+// ========================================
+
+function getDeliveryName(order) {
+
+    return (
+        order.deliveryUsername ||
+        order.deliveryName ||
+        order.deliveryPersonName ||
+        order.riderName ||
+        "配送员"
+    );
+
+}
+
+
+// ========================================
+// 获取配送员电话
+// ========================================
+
+function getDeliveryPhone(order) {
+
+    return (
+        order.deliveryPhone ||
+        order.riderPhone ||
+        order.deliveryPersonPhone ||
+        ""
+    );
+
+}
+
+
+// ========================================
+// 获取配送状态
+// ========================================
+
+function getDeliveryStatusText(order) {
+
+    const status =
+        order.status || "待接单";
+
+
+    if (status === "骑手已接单") {
+
+        return "🟣 已接单，等待取餐";
+
+    }
+
+    if (status === "外卖好了") {
+
+        return "🟠 已做好，等待取餐";
+
+    }
+
+    if (status === "配送中") {
+
+        return "🟢 配送中";
+
+    }
+
+    if (status === "已完成") {
+
+        return "✅ 已完成";
+
+    }
+
+    if (status === "已取消") {
+
+        return "❌ 已取消";
+
+    }
+
+    return "⏳ 等待配送";
+
+}
+
+
+// ========================================
+// 生成订单时间信息
+// ========================================
+
+function createOrderTimeBox(order) {
+
+    const createdTime =
+        formatDateTime(
+            order.created_at
+        );
+
+
+    const acceptedTime =
+        formatDateTime(
+            order.acceptedAt ||
+            order.accepted_at ||
+            order.merchantAcceptedAt ||
+            order.merchant_accepted_at
+        );
+
+
+    const readyTime =
+        formatDateTime(
+            order.readyAt ||
+            order.ready_at ||
+            order.foodReadyAt ||
+            order.food_ready_at
+        );
+
+
+    const completedTime =
+        formatDateTime(
+            order.completedAt ||
+            order.completed_at
+        );
+
+
+    return `
+
+        <div class="order-time-box">
+
+            <div class="order-time-title">
+                🕐 订单时间
+            </div>
+
+            📥 下单时间：
+            ${escapeHtml(createdTime)}
+
+            <br>
+
+            👨‍🍳 商家接单：
+            ${escapeHtml(acceptedTime)}
+
+            <br>
+
+            🍱 外卖做好：
+            ${escapeHtml(readyTime)}
+
+            <br>
+
+            ✅ 完成时间：
+            ${escapeHtml(completedTime)}
+
+        </div>
+
+    `;
+
+}
+
+
+// ========================================
+// 渲染订单
+// ========================================
 
 function renderOrders() {
 
@@ -3102,9 +3749,15 @@ function renderOrders() {
 
                 order.customername || "",
 
+                order.customerName || "",
+
                 order.phone || "",
 
                 order.deliveryUsername || "",
+
+                order.deliveryName || "",
+
+                order.deliveryPhone || "",
 
                 order.status || ""
 
@@ -3116,6 +3769,9 @@ function renderOrders() {
             return searchText.includes(keyword);
 
         });
+
+
+    updateOrderFinanceSummary();
 
 
     const countElement =
@@ -3163,27 +3819,11 @@ function renderOrders() {
     filteredOrders.forEach(function(orderObject) {
 
         const order =
-            orderObject.data;
+            orderObject.data || {};
 
 
         const documentId =
             orderObject.id;
-
-
-        let createdTime = "暂无";
-
-
-        if (
-            order.created_at &&
-            order.created_at.toDate
-        ) {
-
-            createdTime =
-                order.created_at
-                    .toDate()
-                    .toLocaleString();
-
-        }
 
 
         const status =
@@ -3320,14 +3960,10 @@ function renderOrders() {
 
                     <br>
 
-                    ${
-                        order.deliveryUsername
-                            ? "配送员：" +
-                              escapeHtml(
-                                  order.deliveryUsername
-                              )
-                            : "配送员：已接单"
-                    }
+                    👤 配送员：
+                    ${escapeHtml(
+                        getDeliveryName(order)
+                    )}
 
                 </div>
 
@@ -3358,15 +3994,14 @@ function renderOrders() {
                         🍱 外卖已经做好
                     </div>
 
-                    ${
-                        order.deliveryUsername
-                            ? "🛵 配送员：" +
-                              escapeHtml(
-                                  order.deliveryUsername
-                              ) +
-                              "<br>骑手可以来取餐"
-                            : "🛵 正在等待骑手接单"
-                    }
+                    👤 配送员：
+                    ${escapeHtml(
+                        getDeliveryName(order)
+                    )}
+
+                    <br>
+
+                    🛵 骑手可以来取餐
 
                 </div>
 
@@ -3386,14 +4021,10 @@ function renderOrders() {
                         🛵 骑手正在配送
                     </div>
 
-                    ${
-                        order.deliveryUsername
-                            ? "配送员：" +
-                              escapeHtml(
-                                  order.deliveryUsername
-                              )
-                            : "骑手信息读取中"
-                    }
+                    👤 配送员：
+                    ${escapeHtml(
+                        getDeliveryName(order)
+                    )}
 
                     <br>
 
@@ -3425,6 +4056,26 @@ function renderOrders() {
 
         }
 
+        else if (
+            status === "已取消"
+        ) {
+
+            buttonHTML = `
+
+                <div class="delivery-info">
+
+                    <div class="delivery-title">
+                        ❌ 订单已取消
+                    </div>
+
+                    此订单已经取消。
+
+                </div>
+
+            `;
+
+        }
+
 
         let riderInfoHTML = "";
 
@@ -3439,22 +4090,33 @@ function renderOrders() {
                         🛵 配送员信息
                     </div>
 
-                    👤 配送员：
-                    ${
-                        escapeHtml(
-                            order.deliveryUsername ||
-                            "未知"
-                        )
-                    }
+                    👤 姓名：
+                    ${escapeHtml(
+                        getDeliveryName(order)
+                    )}
 
                     ${
-                        order.deliveryPhone
+                        getDeliveryPhone(order)
                             ? "<br>📞 电话：" +
                               escapeHtml(
-                                  order.deliveryPhone
+                                  getDeliveryPhone(order)
                               )
                             : ""
                     }
+
+                    <br>
+
+                    📍 当前状态：
+                    ${escapeHtml(
+                        getDeliveryStatusText(order)
+                    )}
+
+                    <br>
+
+                    🆔 配送员ID：
+                    ${escapeHtml(
+                        order.deliveryId
+                    )}
 
                 </div>
 
@@ -3514,7 +4176,9 @@ function renderOrders() {
                         ? "🟠 "
                         : status === "配送中"
                         ? "🟢 "
-                        : "✅ "
+                        : status === "已完成"
+                        ? "✅ "
+                        : "❌ "
                 }
 
                 ${escapeHtml(status)}
@@ -3533,7 +4197,9 @@ function renderOrders() {
 
                 👤 姓名：
                 ${escapeHtml(
-                    order.customername || ""
+                    order.customername ||
+                    order.customerName ||
+                    ""
                 )}
 
                 <br>
@@ -3580,7 +4246,10 @@ function renderOrders() {
 
                 </div>
 
-                ${itemsHTML}
+                ${
+                    itemsHTML ||
+                    '<div style="color:#999;">暂无商品明细</div>'
+                }
 
             </div>
 
@@ -3599,12 +4268,7 @@ function renderOrders() {
             ${riderInfoHTML}
 
 
-            <div class="time-info">
-
-                🕒 下单时间：
-                ${escapeHtml(createdTime)}
-
-            </div>
+            ${createOrderTimeBox(order)}
 
 
             <div class="buttons">
@@ -4205,59 +4869,67 @@ function updateReviewSummary() {
     );
 
 
-    summaryBox.querySelector(
-        ".review-summary-top"
-    ).innerHTML = `
-
-        <div class="review-average">
-
-            ${
-                average
-                    ? average.toFixed(1)
-                    : "暂无"
-            }
-
-        </div>
+    const top =
+        summaryBox.querySelector(
+            ".review-summary-top"
+        );
 
 
-        <div>
+    if (top) {
 
-            <div class="review-stars">
+        top.innerHTML = `
+
+            <div class="review-average">
 
                 ${
                     average
-                        ? renderStars(average)
-                        : "☆☆☆☆☆"
+                        ? average.toFixed(1)
+                        : "暂无"
                 }
 
             </div>
 
-            <div class="review-count">
 
-                共 ${total} 条评价
+            <div>
 
-                ${
-                    ratedReviews.length
-                        ? " · " +
-                          ratedReviews.length +
-                          " 条有评分"
-                        : ""
-                }
+                <div class="review-stars">
+
+                    ${
+                        average
+                            ? renderStars(average)
+                            : "☆☆☆☆☆"
+                    }
+
+                </div>
+
+                <div class="review-count">
+
+                    共 ${total} 条评价
+
+                    ${
+                        ratedReviews.length
+                            ? " · " +
+                              ratedReviews.length +
+                              " 条有评分"
+                            : ""
+                    }
+
+                </div>
 
             </div>
 
-        </div>
 
+            <div class="review-live">
 
-        <div class="review-live">
+                <span class="review-live-dot"></span>
 
-            <span class="review-live-dot"></span>
+                实时更新
 
-            实时更新
+            </div>
 
-        </div>
+        `;
 
-    `;
+    }
 
 
     if (!distributionBox) {
@@ -4614,7 +5286,9 @@ function renderReviews() {
 async function manualRefresh() {
 
     const button =
-        document.querySelector(".refresh-btn");
+        document.querySelector(
+            ".refresh-btn"
+        );
 
 
     if (button) {
@@ -4627,27 +5301,38 @@ async function manualRefresh() {
     }
 
 
-    await Promise.all([
+    try {
 
-        loadRestaurant(),
+        await Promise.all([
 
-        loadRestaurantStatus(),
+            loadRestaurant(),
 
-        loadRestaurantInfo(),
+            loadRestaurantStatus(),
 
-        loadFoods(),
+            loadRestaurantInfo(),
 
-        loadOrders(),
+            loadFoods()
 
-        loadStats()
-
-    ]);
+        ]);
 
 
-    /*
-       顾客评价使用 onSnapshot 实时监听，
-       所以这里不需要再次读取评价。
-    */
+        /*
+            订单已经使用 onSnapshot 实时监听，
+            不需要手动重新读取。
+        */
+
+        updateMerchantStats();
+
+        renderOrders();
+
+    } catch (error) {
+
+        console.error(
+            "刷新失败：",
+            error
+        );
+
+    }
 
 
     if (button) {
@@ -4736,10 +5421,21 @@ async function changeStatus(
 
             }
 
+
+            await orderRef.update({
+
+                status: newStatus,
+
+                acceptedAt:
+                    firebase.firestore.FieldValue
+                        .serverTimestamp()
+
+            });
+
         }
 
 
-        if (
+        else if (
             newStatus === "外卖好了"
         ) {
 
@@ -4756,19 +5452,24 @@ async function changeStatus(
 
             }
 
+
+            await orderRef.update({
+
+                status: newStatus,
+
+                readyAt:
+                    firebase.firestore.FieldValue
+                        .serverTimestamp()
+
+            });
+
         }
 
 
-        await orderRef.update({
-
-            status: newStatus
-
-        });
-
-
-        await loadOrders();
-
-        await loadStats();
+        /*
+            不再手动 loadOrders。
+            onSnapshot 会自动更新页面。
+        */
 
     } catch (error) {
 
@@ -4789,6 +5490,23 @@ async function changeStatus(
 // ========================================
 
 function logout() {
+
+    if (ordersUnsubscribe) {
+
+        try {
+
+            ordersUnsubscribe();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+        ordersUnsubscribe = null;
+
+    }
+
 
     if (reviewsUnsubscribe) {
 
@@ -4842,15 +5560,13 @@ loadFoods();
 
 loadOrders();
 
-loadStats();
-
 loadReviews();
 
 
 // 注意：
-// 订单仍然使用手动刷新，避免高频 Firestore 读取。
-// 顾客评价使用 onSnapshot 实时监听，
-// 顾客提交新评价后商家后台会自动更新。
+// 订单使用 onSnapshot 实时监听。
+// 顾客评价使用 onSnapshot 实时监听。
+// 其他资料保持手动读取，避免不必要的 Firestore 高频读取。
 
 </script>
 
