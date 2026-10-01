@@ -581,7 +581,6 @@ button {
         class="language-box"
     ></div>
 
-
     <div class="login-card">
 
         <div class="brand">
@@ -605,7 +604,6 @@ button {
             </div>
 
         </div>
-
 
         <!-- =========================
              邮箱登录
@@ -635,7 +633,6 @@ button {
 
             </div>
 
-
             <div class="form-group">
 
                 <label
@@ -655,7 +652,6 @@ button {
 
             </div>
 
-
             <button
                 id="loginButton"
                 class="login-button"
@@ -665,12 +661,10 @@ button {
                 登录
             </button>
 
-
             <div
                 id="emailMessage"
                 class="message"
             ></div>
-
 
             <div class="divider">
 
@@ -686,7 +680,6 @@ button {
                 <div class="divider-line"></div>
 
             </div>
-
 
             <button
                 id="googleButton"
@@ -705,7 +698,6 @@ button {
 
             </button>
 
-
             <button
                 id="phoneButton"
                 class="phone-button"
@@ -716,7 +708,6 @@ button {
             </button>
 
         </div>
-
 
         <!-- =========================
              手机登录
@@ -746,7 +737,6 @@ button {
 
             </div>
 
-
             <div
                 id="phoneHint"
                 style="
@@ -759,7 +749,6 @@ button {
             >
                 请输入国际格式手机号，例如 +959xxxxxxxxx
             </div>
-
 
             <div class="form-group">
 
@@ -787,9 +776,7 @@ button {
 
             </div>
 
-
             <div id="recaptcha-container"></div>
-
 
             <button
                 id="phoneLoginButton"
@@ -800,7 +787,6 @@ button {
                 手机号登录
             </button>
 
-
             <button
                 id="backLoginButton"
                 class="back-login-button"
@@ -810,14 +796,12 @@ button {
                 ← 返回邮箱登录
             </button>
 
-
             <div
                 id="phoneMessage"
                 class="message"
             ></div>
 
         </div>
-
 
         <!-- =========================
              注册
@@ -839,7 +823,6 @@ button {
 
         </div>
 
-
         <div
             id="footerText"
             class="footer"
@@ -851,7 +834,6 @@ button {
 
 </div>
 
-
 <!-- =========================
      Firebase
 ========================== -->
@@ -860,13 +842,11 @@ button {
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
-
 <!-- =========================
      MDY FOOD Language
 ========================== -->
 
 <script src="language.js"></script>
-
 
 <script>
 
@@ -1085,183 +1065,337 @@ function renderLoginLanguage() {
         );
 
 
-    document.getElementById(
-        "brandTitle"
-    ).textContent =
-        t(
-            "brandName",
-            "MDY FOOD"
+    const brandTitle =
+        document.getElementById(
+            "brandTitle"
         );
 
+    if (brandTitle) {
 
-    document.getElementById(
-        "brandSubtitle"
-    ).textContent =
-        t(
-            "brandSubtitle",
-            "Mandalay Food Delivery"
+        brandTitle.textContent =
+            t(
+                "brandName",
+                "MDY FOOD"
+            );
+
+    }
+
+
+    const brandSubtitle =
+        document.getElementById(
+            "brandSubtitle"
         );
 
+    if (brandSubtitle) {
 
-    document.getElementById(
-        "emailLabel"
-    ).textContent =
-        t(
-            "email",
-            "邮箱"
+        brandSubtitle.textContent =
+            t(
+                "brandSubtitle",
+                "Mandalay Food Delivery"
+            );
+
+    }
+
+
+    const emailLabel =
+        document.getElementById(
+            "emailLabel"
         );
 
+    if (emailLabel) {
 
-    document.getElementById(
-        "email"
-    ).placeholder =
-        t(
-            "emailPlaceholder",
-            "请输入邮箱"
+        emailLabel.textContent =
+            t(
+                "email",
+                "邮箱"
+            );
+
+    }
+
+
+    const email =
+        document.getElementById(
+            "email"
         );
 
+    if (email) {
 
-    document.getElementById(
-        "passwordLabel"
-    ).textContent =
-        t(
-            "password",
-            "密码"
+        email.placeholder =
+            t(
+                "emailPlaceholder",
+                "请输入邮箱"
+            );
+
+    }
+
+
+    const passwordLabel =
+        document.getElementById(
+            "passwordLabel"
         );
 
+    if (passwordLabel) {
 
-    document.getElementById(
-        "password"
-    ).placeholder =
-        t(
-            "passwordPlaceholder",
-            "请输入密码"
+        passwordLabel.textContent =
+            t(
+                "password",
+                "密码"
+            );
+
+    }
+
+
+    const password =
+        document.getElementById(
+            "password"
         );
 
+    if (password) {
 
-    document.getElementById(
-        "loginButton"
-    ).textContent =
-        t(
-            "loginButton",
-            "登录"
+        password.placeholder =
+            t(
+                "passwordPlaceholder",
+                "请输入密码"
+            );
+
+    }
+
+
+    const loginButton =
+        document.getElementById(
+            "loginButton"
         );
 
+    if (
+        loginButton &&
+        !loginButton.disabled
+    ) {
 
-    document.getElementById(
-        "orText"
-    ).textContent =
-        t(
-            "or",
-            "或"
+        loginButton.textContent =
+            t(
+                "loginButton",
+                "登录"
+            );
+
+    }
+
+
+    const orText =
+        document.getElementById(
+            "orText"
         );
 
+    if (orText) {
 
-    document.getElementById(
-        "googleText"
-    ).textContent =
-        t(
-            "googleLogin",
-            "使用 Google 登录"
+        orText.textContent =
+            t(
+                "or",
+                "或"
+            );
+
+    }
+
+
+    const googleText =
+        document.getElementById(
+            "googleText"
         );
 
+    if (
+        googleText &&
+        !document.getElementById(
+            "googleButton"
+        ).disabled
+    ) {
 
-    document.getElementById(
-        "phoneButton"
-    ).textContent =
-        "📱 " +
-        t(
-            "phoneLogin",
-            "使用手机号登录"
+        googleText.textContent =
+            t(
+                "googleLogin",
+                "使用 Google 登录"
+            );
+
+    }
+
+
+    const phoneButton =
+        document.getElementById(
+            "phoneButton"
         );
 
+    if (phoneButton) {
 
-    document.getElementById(
-        "phoneLabel"
-    ).textContent =
-        t(
-            "phoneInternationalPlaceholder",
-            "手机号"
+        phoneButton.textContent =
+            "📱 " +
+            t(
+                "phoneLogin",
+                "使用手机号登录"
+            );
+
+    }
+
+
+    const phoneLabel =
+        document.getElementById(
+            "phoneLabel"
         );
 
+    if (phoneLabel) {
 
-    document.getElementById(
-        "phoneNumber"
-    ).placeholder =
-        t(
-            "phoneInternationalPlaceholder",
-            "+95 9xxxxxxxxx"
+        phoneLabel.textContent =
+            t(
+                "phoneInternationalPlaceholder",
+                "手机号"
+            );
+
+    }
+
+
+    const phoneNumber =
+        document.getElementById(
+            "phoneNumber"
         );
 
+    if (phoneNumber) {
 
-    document.getElementById(
-        "phoneHint"
-    ).textContent =
-        t(
-            "phoneInternationalHint",
-            "请输入国际格式手机号，例如 +959xxxxxxxxx"
+        phoneNumber.placeholder =
+            t(
+                "phoneInternationalPlaceholder",
+                "+95 9xxxxxxxxx"
+            );
+
+    }
+
+
+    const phoneHint =
+        document.getElementById(
+            "phoneHint"
         );
 
+    if (phoneHint) {
 
-    document.getElementById(
-        "verificationCode"
-    ).placeholder =
-        t(
-            "verificationCode",
-            "验证码"
+        phoneHint.textContent =
+            t(
+                "phoneInternationalHint",
+                "请输入国际格式手机号，例如 +959xxxxxxxxx"
+            );
+
+    }
+
+
+    const verificationCode =
+        document.getElementById(
+            "verificationCode"
         );
 
+    if (verificationCode) {
 
-    document.getElementById(
-        "codeButton"
-    ).textContent =
-        t(
-            "getVerificationCode",
-            "获取验证码"
+        verificationCode.placeholder =
+            t(
+                "verificationCode",
+                "验证码"
+            );
+
+    }
+
+
+    const codeButton =
+        document.getElementById(
+            "codeButton"
         );
 
+    if (
+        codeButton &&
+        !codeButton.disabled
+    ) {
 
-    document.getElementById(
-        "phoneLoginButton"
-    ).textContent =
-        t(
-            "phoneLoginButton",
-            "手机号登录"
+        codeButton.textContent =
+            t(
+                "getVerificationCode",
+                "获取验证码"
+            );
+
+    }
+
+
+    const phoneLoginButton =
+        document.getElementById(
+            "phoneLoginButton"
         );
 
+    if (
+        phoneLoginButton &&
+        !phoneLoginButton.disabled
+    ) {
 
-    document.getElementById(
-        "backLoginButton"
-    ).textContent =
-        "← " +
-        t(
-            "backToLoginMethods",
-            "返回邮箱登录"
+        phoneLoginButton.textContent =
+            t(
+                "phoneLoginButton",
+                "手机号登录"
+            );
+
+    }
+
+
+    const backLoginButton =
+        document.getElementById(
+            "backLoginButton"
         );
 
+    if (backLoginButton) {
 
-    document.getElementById(
-        "noAccountText"
-    ).textContent =
-        t(
-            "noAccount",
-            "还没有账户？"
+        backLoginButton.textContent =
+            "← " +
+            t(
+                "backToLoginMethods",
+                "返回邮箱登录"
+            );
+
+    }
+
+
+    const noAccountText =
+        document.getElementById(
+            "noAccountText"
         );
 
+    if (noAccountText) {
 
-    document.getElementById(
-        "registerLink"
-    ).textContent =
-        t(
-            "registerNow",
-            "立即注册"
+        noAccountText.textContent =
+            t(
+                "noAccount",
+                "还没有账户？"
+            );
+
+    }
+
+
+    const registerLink =
+        document.getElementById(
+            "registerLink"
         );
 
+    if (registerLink) {
 
-    document.getElementById(
-        "footerText"
-    ).textContent =
-        "MDY FOOD · Mandalay Food Delivery";
+        registerLink.textContent =
+            t(
+                "registerNow",
+                "立即注册"
+            );
+
+    }
+
+
+    const footerText =
+        document.getElementById(
+            "footerText"
+        );
+
+    if (footerText) {
+
+        footerText.textContent =
+            "MDY FOOD · Mandalay Food Delivery";
+
+    }
 
 }
 
@@ -1283,7 +1417,9 @@ function showMessage(
 
 
     if (!element) {
+
         return;
+
     }
 
 
@@ -1313,7 +1449,9 @@ function clearMessage(
 
 
     if (!element) {
+
         return;
+
     }
 
 
@@ -1540,18 +1678,30 @@ async function login() {
     );
 
 
+    const emailElement =
+        document.getElementById(
+            "email"
+        );
+
+
+    const passwordElement =
+        document.getElementById(
+            "password"
+        );
+
+
     const email =
-        document
-            .getElementById("email")
-            .value
-            .trim()
-            .toLowerCase();
+        emailElement
+            ? emailElement.value
+                .trim()
+                .toLowerCase()
+            : "";
 
 
     const password =
-        document
-            .getElementById("password")
-            .value;
+        passwordElement
+            ? passwordElement.value
+            : "";
 
 
     if (!email || !password) {
@@ -1890,7 +2040,9 @@ function createRecaptcha() {
     try {
 
         if (recaptchaVerifier) {
+
             return;
+
         }
 
 
@@ -2384,6 +2536,7 @@ auth.onAuthStateChanged(
 
 /* =========================================================
    语言选择器
+   ★ 本次重点修复
 ========================================================= */
 
 function renderLanguageSelector() {
@@ -2391,16 +2544,56 @@ function renderLanguageSelector() {
     try {
 
         if (
-            window.MDYLanguage &&
-            typeof window.MDYLanguage.renderLanguageSelector ===
+            !window.MDYLanguage ||
+            typeof window.MDYLanguage.renderLanguageSelector !==
                 "function"
         ) {
 
-            window.MDYLanguage.renderLanguageSelector(
+            console.warn(
+                "MDYLanguage.renderLanguageSelector 不存在"
+            );
+
+            return;
+
+        }
+
+
+        const selector =
+            document.getElementById(
                 "languageSelector"
             );
 
+
+        if (!selector) {
+
+            console.warn(
+                "找不到 languageSelector DOM 元素"
+            );
+
+            return;
+
         }
+
+
+        /*
+         * 这里必须传 DOM 元素。
+         *
+         * 以前：
+         *
+         * renderLanguageSelector("languageSelector")
+         *
+         * 会把字符串传进 language.js。
+         *
+         * 现在：
+         *
+         * renderLanguageSelector(selector)
+         *
+         * 直接传真实 DOM。
+         */
+
+        window.MDYLanguage.renderLanguageSelector(
+            selector
+        );
 
     } catch (error) {
 
@@ -2421,6 +2614,11 @@ function renderLanguageSelector() {
 window.addEventListener(
     "mdyLanguageChanged",
     function() {
+
+        /*
+         * language.js 已经负责自己的语言应用。
+         * 这里仅刷新登录页自己的文字和选择器。
+         */
 
         renderLoginLanguage();
 
