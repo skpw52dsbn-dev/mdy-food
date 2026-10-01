@@ -17,6 +17,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
+<!-- 统一语言系统 -->
+<script src="language.js"></script>
+
 
 <style>
 
@@ -54,11 +57,6 @@ header {
     font-weight: bold;
 }
 
-
-/* =========================
-   顶部操作栏
-========================= */
-
 .toolbar {
     display: flex;
     gap: 10px;
@@ -91,11 +89,6 @@ header {
 .notification-button:active {
     transform: scale(0.98);
 }
-
-
-/* =========================
-   登录
-========================= */
 
 .login-box {
     background: white;
@@ -132,11 +125,6 @@ header {
     font-weight: bold;
 }
 
-
-/* =========================
-   实时状态
-========================= */
-
 .live-box {
     background: white;
     border-radius: 10px;
@@ -154,11 +142,6 @@ header {
     background: #2e9d55;
     margin-right: 6px;
 }
-
-
-/* =========================
-   订单
-========================= */
 
 .order {
     background: white;
@@ -180,11 +163,6 @@ header {
     font-size: 14px;
     margin-bottom: 12px;
 }
-
-
-/* =========================
-   状态
-========================= */
 
 .status {
     padding: 12px;
@@ -226,11 +204,6 @@ header {
     background: #fff0f0;
     color: #c33;
 }
-
-
-/* =========================
-   订单状态时间线
-========================= */
 
 .order-timeline {
     margin: 18px 0 20px;
@@ -291,14 +264,13 @@ header {
     margin-right: 12px;
 }
 
-.timeline-item.completed .timeline-dot {
+.timeline-item.completed .timeline-dot,
+.timeline-item.current .timeline-dot {
     background: #ff5a1f;
     color: white;
 }
 
 .timeline-item.current .timeline-dot {
-    background: #ff5a1f;
-    color: white;
     box-shadow: 0 0 0 5px rgba(255,90,31,0.12);
 }
 
@@ -332,11 +304,6 @@ header {
     color: #aaa;
     line-height: 1.5;
 }
-
-
-/* =========================
-   配送信息
-========================= */
 
 .rider-box {
     background: #f7f7f7;
@@ -404,11 +371,6 @@ header {
     font-size: 14px;
 }
 
-
-/* =========================
-   金额明细
-========================= */
-
 .amount-box {
     margin-top: 15px;
     padding: 15px;
@@ -453,11 +415,6 @@ header {
     color: #ff5a1f;
 }
 
-
-/* =========================
-   商品
-========================= */
-
 .items {
     margin-top: 14px;
     padding-top: 14px;
@@ -484,22 +441,6 @@ header {
 .item-price {
     white-space: nowrap;
 }
-
-.total {
-    margin-top: 14px;
-    padding-top: 14px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    font-size: 18px;
-    font-weight: bold;
-    color: #ff5a1f;
-}
-
-
-/* =========================
-   评价按钮
-========================= */
 
 .review-area {
     margin-top: 16px;
@@ -531,11 +472,6 @@ header {
     text-align: center;
     font-weight: bold;
 }
-
-
-/* =========================
-   评价弹窗
-========================= */
 
 .review-modal {
     display: none;
@@ -654,11 +590,6 @@ header {
     cursor: not-allowed;
 }
 
-
-/* =========================
-   空订单
-========================= */
-
 .empty {
     background: white;
     padding: 45px 20px;
@@ -708,11 +639,6 @@ header {
     font-size: 13px;
 }
 
-
-/* =========================
-   弹出提醒
-========================= */
-
 .toast {
     position: fixed;
     top: 20px;
@@ -736,11 +662,6 @@ header {
     transform: translateX(-50%) translateY(0);
 }
 
-
-/* =========================
-   新订单闪烁
-========================= */
-
 .order.new-order {
     animation: newOrderFlash 1s ease 3;
 }
@@ -760,7 +681,6 @@ header {
     }
 
 }
-
 
 @media (max-width: 480px) {
 
@@ -804,7 +724,7 @@ header {
 
 
 <header>
-    📦 我的订单
+    📦 <span id="pageTitle">我的订单</span>
 </header>
 
 
@@ -814,14 +734,11 @@ header {
 <a
     class="back"
     href="index.html"
+    id="backHome"
 >
-    ← 返回首页
+    ← <span id="backHomeText">返回首页</span>
 </a>
 
-
-<!-- =========================
-     未登录
-========================= -->
 
 <div
     id="loginBox"
@@ -833,11 +750,11 @@ header {
         🔐
     </div>
 
-    <h2>
+    <h2 id="loginTitle">
         请先登录
     </h2>
 
-    <p>
+    <p id="loginDescription">
         登录后才能查看你的订单。
         <br>
         订单会自动保存到你的账号。
@@ -846,16 +763,13 @@ header {
     <a
         class="login-button"
         href="login.html"
+        id="loginButton"
     >
         👤 登录 / 注册
     </a>
 
 </div>
 
-
-<!-- =========================
-     已登录
-========================= -->
 
 <div
     id="orderArea"
@@ -868,6 +782,7 @@ header {
         <button
             class="refresh-button"
             onclick="manualRefresh()"
+            id="refreshButton"
         >
             🔄 刷新订单
         </button>
@@ -876,6 +791,7 @@ header {
         <button
             class="notification-button"
             onclick="enableNotifications()"
+            id="notificationButton"
         >
             🔔 开启提醒
         </button>
@@ -887,14 +803,16 @@ header {
 
         <span class="live-dot"></span>
 
-        订单状态实时同步中
+        <span id="liveText">
+            订单状态实时同步中
+        </span>
 
     </div>
 
 
     <div id="orders">
 
-        <div class="loading">
+        <div class="loading" id="initialLoading">
             正在加载订单...
         </div>
 
@@ -906,10 +824,6 @@ header {
 </div>
 
 
-<!-- =========================
-     评价弹窗
-========================= -->
-
 <div
     id="reviewModal"
     class="review-modal"
@@ -918,7 +832,7 @@ header {
     <div class="review-modal-box">
 
         <div class="review-modal-title">
-            ⭐ 评价订单
+            ⭐ <span id="reviewTitle">评价订单</span>
         </div>
 
         <div
@@ -991,6 +905,7 @@ header {
                 type="button"
                 class="review-cancel-button"
                 onclick="closeReviewModal()"
+                id="cancelReviewButton"
             >
                 取消
             </button>
@@ -1011,10 +926,6 @@ header {
 </div>
 
 
-<!-- =========================
-     提醒
-========================= -->
-
 <div
     id="toast"
     class="toast"
@@ -1024,6 +935,30 @@ header {
 
 
 <script>
+
+
+// ========================================
+// 语言
+// ========================================
+
+function t(key, fallback) {
+
+    if (
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t === "function"
+    ) {
+
+        return window.MDYLanguage.t(
+            key,
+            {},
+            fallback || key
+        );
+
+    }
+
+    return fallback || key;
+
+}
 
 
 // ========================================
@@ -1069,24 +1004,6 @@ const auth =
     firebase.auth();
 
 
-// ========================================
-// Firebase Auth 持久化
-//
-// 强制使用 LOCAL，保证：
-//
-// 登录
-// ↓
-// 首页
-// ↓
-// 点餐
-// ↓
-// 下单
-// ↓
-// 我的订单
-//
-// 登录状态不会因为页面跳转而丢失。
-// ========================================
-
 auth.setPersistence(
     firebase.auth.Auth.Persistence.LOCAL
 )
@@ -1118,18 +1035,6 @@ let currentReviewOrder = null;
 
 let selectedRating = 0;
 
-
-// ========================================
-// Auth 初始化状态
-//
-// 非常重要：
-//
-// 页面刚打开的时候 Firebase 可能还没有
-// 完成本地登录状态恢复。
-//
-// 此时不能看到 null 就直接显示“请先登录”。
-// ========================================
-
 let authStateInitialized = false;
 
 let authCheckTimer = null;
@@ -1159,7 +1064,7 @@ function escapeHTML(value) {
 
 
 // ========================================
-// 统一订单状态
+// 状态统一
 // ========================================
 
 function normalizeStatus(status) {
@@ -1176,9 +1081,7 @@ function normalizeStatus(status) {
         value === "pending_order" ||
         value === "waiting"
     ) {
-
         return "待接单";
-
     }
 
 
@@ -1187,9 +1090,7 @@ function normalizeStatus(status) {
         value === "merchant_accepted" ||
         value === "商家已接单"
     ) {
-
         return "商家已接单";
-
     }
 
 
@@ -1199,9 +1100,7 @@ function normalizeStatus(status) {
         value === "骑手已接单" ||
         value === "已接单"
     ) {
-
         return "骑手已接单";
-
     }
 
 
@@ -1212,9 +1111,7 @@ function normalizeStatus(status) {
         value === "已备餐" ||
         value === "ready_for_pickup"
     ) {
-
         return "外卖好了";
-
     }
 
 
@@ -1224,9 +1121,7 @@ function normalizeStatus(status) {
         value === "配送中" ||
         value === "配送"
     ) {
-
         return "配送中";
-
     }
 
 
@@ -1236,9 +1131,7 @@ function normalizeStatus(status) {
         value === "已完成" ||
         value === "完成"
     ) {
-
         return "已完成";
-
     }
 
 
@@ -1250,28 +1143,64 @@ function normalizeStatus(status) {
         value === "已取消" ||
         value === "取消"
     ) {
-
         return "已取消";
-
-    }
-
-
-    if (
-        status === "商家已接单" ||
-        status === "骑手已接单" ||
-        status === "外卖好了" ||
-        status === "配送中" ||
-        status === "已完成" ||
-        status === "已取消" ||
-        status === "待接单"
-    ) {
-
-        return status;
-
     }
 
 
     return "待接单";
+
+}
+
+
+// ========================================
+// 状态翻译
+// ========================================
+
+function translateStatus(status) {
+
+    const normalized =
+        normalizeStatus(status);
+
+
+    if (
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.translateStatus === "function"
+    ) {
+
+        return window.MDYLanguage.translateStatus(
+            normalized
+        );
+
+    }
+
+
+    const map = {
+
+        "待接单":
+            t("pending", "待接单"),
+
+        "商家已接单":
+            t("merchantAccepted", "商家已接单"),
+
+        "骑手已接单":
+            t("riderAccepted", "骑手已接单"),
+
+        "外卖好了":
+            t("ready", "外卖好了"),
+
+        "配送中":
+            t("delivering", "配送中"),
+
+        "已完成":
+            t("completed", "已完成"),
+
+        "已取消":
+            t("cancelled", "已取消")
+
+    };
+
+
+    return map[normalized] || normalized;
 
 }
 
@@ -1286,47 +1215,29 @@ function getStatusClass(status) {
         normalizeStatus(status);
 
 
-    if (
-        normalized === "商家已接单"
-    ) {
+    if (normalized === "商家已接单") {
         return "accepted";
     }
 
-
-    if (
-        normalized === "骑手已接单"
-    ) {
+    if (normalized === "骑手已接单") {
         return "rider";
     }
 
-
-    if (
-        normalized === "外卖好了"
-    ) {
+    if (normalized === "外卖好了") {
         return "ready";
     }
 
-
-    if (
-        normalized === "配送中"
-    ) {
+    if (normalized === "配送中") {
         return "delivery";
     }
 
-
-    if (
-        normalized === "已完成"
-    ) {
+    if (normalized === "已完成") {
         return "completed";
     }
 
-
-    if (
-        normalized === "已取消"
-    ) {
+    if (normalized === "已取消") {
         return "cancelled";
     }
-
 
     return "";
 
@@ -1343,56 +1254,20 @@ function getStatusIcon(status) {
         normalizeStatus(status);
 
 
-    if (
-        normalized === "待接单"
-    ) {
-        return "⏳";
-    }
+    const icons = {
+
+        "待接单": "⏳",
+        "商家已接单": "👨‍🍳",
+        "骑手已接单": "🛵",
+        "外卖好了": "🍱",
+        "配送中": "🚴",
+        "已完成": "✅",
+        "已取消": "❌"
+
+    };
 
 
-    if (
-        normalized === "商家已接单"
-    ) {
-        return "👨‍🍳";
-    }
-
-
-    if (
-        normalized === "骑手已接单"
-    ) {
-        return "🛵";
-    }
-
-
-    if (
-        normalized === "外卖好了"
-    ) {
-        return "🍱";
-    }
-
-
-    if (
-        normalized === "配送中"
-    ) {
-        return "🚴";
-    }
-
-
-    if (
-        normalized === "已完成"
-    ) {
-        return "✅";
-    }
-
-
-    if (
-        normalized === "已取消"
-    ) {
-        return "❌";
-    }
-
-
-    return "📦";
+    return icons[normalized] || "📦";
 
 }
 
@@ -1404,7 +1279,12 @@ function getStatusIcon(status) {
 function formatTime(createdAt) {
 
     if (!createdAt) {
-        return "暂无";
+
+        return t(
+            "timeUnknown",
+            "暂无"
+        );
+
     }
 
 
@@ -1412,29 +1292,48 @@ function formatTime(createdAt) {
 
         if (createdAt.toDate) {
 
-            return createdAt
-                .toDate()
-                .toLocaleString(
-                    "zh-CN",
-                    {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    }
+            const date =
+                createdAt.toDate();
+
+
+            if (
+                window.MDYLanguage &&
+                typeof window.MDYLanguage.formatDateTime === "function"
+            ) {
+
+                return window.MDYLanguage.formatDateTime(
+                    date
                 );
+
+            }
+
+
+            return date.toLocaleString("zh-CN");
 
         }
 
 
         if (createdAt.seconds) {
 
-            return new Date(
-                createdAt.seconds * 1000
-            ).toLocaleString(
-                "zh-CN"
-            );
+            const date =
+                new Date(
+                    createdAt.seconds * 1000
+                );
+
+
+            if (
+                window.MDYLanguage &&
+                typeof window.MDYLanguage.formatDateTime === "function"
+            ) {
+
+                return window.MDYLanguage.formatDateTime(
+                    date
+                );
+
+            }
+
+
+            return date.toLocaleString("zh-CN");
 
         }
 
@@ -1447,7 +1346,10 @@ function formatTime(createdAt) {
     }
 
 
-    return "暂无";
+    return t(
+        "timeUnknown",
+        "暂无"
+    );
 
 }
 
@@ -1466,7 +1368,7 @@ function formatMoney(number) {
 
 
 // ========================================
-// 获取配送费
+// 配送费
 // ========================================
 
 function getDeliveryFee(order) {
@@ -1493,7 +1395,7 @@ function getDeliveryFee(order) {
 
 
 // ========================================
-// 获取商品金额
+// 商品金额
 // ========================================
 
 function getFoodSubtotal(order) {
@@ -1579,7 +1481,7 @@ function getFoodSubtotal(order) {
 
 
 // ========================================
-// 获取订单总金额
+// 订单总金额
 // ========================================
 
 function getOrderTotal(order) {
@@ -1609,7 +1511,7 @@ function getOrderTotal(order) {
 
 
 // ========================================
-// 获取当前配送员状态
+// 配送员状态
 // ========================================
 
 function getRiderStatusText(order) {
@@ -1620,43 +1522,50 @@ function getRiderStatusText(order) {
         );
 
 
-    if (
-        status === "骑手已接单"
-    ) {
+    if (status === "骑手已接单") {
 
-        return "已接单，等待取餐";
-
-    }
-
-
-    if (
-        status === "外卖好了"
-    ) {
-
-        return "等待骑手取餐";
+        return t(
+            "riderAcceptedWaitingPickup",
+            "已接单，等待取餐"
+        );
 
     }
 
 
-    if (
-        status === "配送中"
-    ) {
+    if (status === "外卖好了") {
 
-        return "正在配送";
-
-    }
-
-
-    if (
-        status === "已完成"
-    ) {
-
-        return "配送已完成";
+        return t(
+            "waitingRiderPickup",
+            "等待骑手取餐"
+        );
 
     }
 
 
-    return "配送信息已同步";
+    if (status === "配送中") {
+
+        return t(
+            "riderDelivering",
+            "正在配送"
+        );
+
+    }
+
+
+    if (status === "已完成") {
+
+        return t(
+            "deliveryCompleted",
+            "配送已完成"
+        );
+
+    }
+
+
+    return t(
+        "deliveryInfoSynced",
+        "配送信息已同步"
+    );
 
 }
 
@@ -1676,7 +1585,7 @@ function renderRiderInfo(order) {
         escapeHTML(
             order.deliveryName ||
             order.deliveryUsername ||
-            "配送员"
+            t("rider", "配送员")
         );
 
 
@@ -1698,17 +1607,23 @@ function renderRiderInfo(order) {
         <div class="rider-box">
 
             <div class="rider-title">
-                🛵 配送员信息
+                🛵 ${escapeHTML(
+                    t("riderInfo", "配送员信息")
+                )}
             </div>
 
-            👤 配送员：
+            👤 ${escapeHTML(
+                t("rider", "配送员")
+            )}：
             ${riderName}
 
             <br>
 
             ${
                 riderPhone
-                ? `📱 电话：${riderPhone}<br>`
+                ? `📱 ${escapeHTML(
+                    t("phoneLabel", "电话")
+                )}：${riderPhone}<br>`
                 : ""
             }
 
@@ -1735,16 +1650,16 @@ function renderOrderTimeline(order) {
         );
 
 
-    if (
-        status === "已取消"
-    ) {
+    if (status === "已取消") {
 
         return `
 
             <div class="order-timeline">
 
                 <div class="timeline-title">
-                    📍 订单状态
+                    📍 ${escapeHTML(
+                        t("orderStatus", "订单状态")
+                    )}
                 </div>
 
                 <div class="timeline">
@@ -1758,11 +1673,21 @@ function renderOrderTimeline(order) {
                         <div class="timeline-content">
 
                             <div class="timeline-label">
-                                订单已取消
+                                ${escapeHTML(
+                                    t(
+                                        "orderCancelled",
+                                        "订单已取消"
+                                    )
+                                )}
                             </div>
 
                             <div class="timeline-sub">
-                                本订单已经取消
+                                ${escapeHTML(
+                                    t(
+                                        "orderCancelledSub",
+                                        "本订单已经取消"
+                                    )
+                                )}
                             </div>
 
                         </div>
@@ -1783,43 +1708,79 @@ function renderOrderTimeline(order) {
         {
             key: "待接单",
             icon: "⏳",
-            text: "等待商家接单",
-            sub: "订单已经提交"
+            text: t(
+                "waitingMerchantAccept",
+                "等待商家接单"
+            ),
+            sub: t(
+                "orderSubmitted",
+                "订单已经提交"
+            )
         },
 
         {
             key: "商家已接单",
             icon: "👨‍🍳",
-            text: "商家已接单",
-            sub: "商家正在准备你的订单"
+            text: t(
+                "merchantAccepted",
+                "商家已接单"
+            ),
+            sub: t(
+                "merchantPreparing",
+                "商家正在准备你的订单"
+            )
         },
 
         {
             key: "骑手已接单",
             icon: "🛵",
-            text: "骑手已接单",
-            sub: "配送员已经接单"
+            text: t(
+                "riderAccepted",
+                "骑手已接单"
+            ),
+            sub: t(
+                "riderAcceptedSub",
+                "配送员已经接单"
+            )
         },
 
         {
             key: "外卖好了",
             icon: "🍱",
-            text: "外卖做好",
-            sub: "订单已经准备完成"
+            text: t(
+                "ready",
+                "外卖做好"
+            ),
+            sub: t(
+                "orderReadySub",
+                "订单已经准备完成"
+            )
         },
 
         {
             key: "配送中",
             icon: "🚴",
-            text: "配送中",
-            sub: "骑手已经取餐，正在送往你的地址"
+            text: t(
+                "delivering",
+                "配送中"
+            ),
+            sub: t(
+                "deliveringSub",
+                "骑手已经取餐，正在送往你的地址"
+            )
         },
 
         {
             key: "已完成",
             icon: "✅",
-            text: "已完成",
-            sub: "外卖已经送达"
+            text: t(
+                "completed",
+                "已完成"
+            ),
+            sub: t(
+                "completedSub",
+                "外卖已经送达"
+            )
         }
 
     ];
@@ -1839,9 +1800,7 @@ function renderOrderTimeline(order) {
         currentIndex;
 
 
-    if (
-        activeIndex < 0
-    ) {
+    if (activeIndex < 0) {
 
         activeIndex = 0;
 
@@ -1853,7 +1812,9 @@ function renderOrderTimeline(order) {
         <div class="order-timeline">
 
             <div class="timeline-title">
-                📍 订单进度
+                📍 ${escapeHTML(
+                    t("orderProgress", "订单进度")
+                )}
             </div>
 
             <div class="timeline">
@@ -1867,21 +1828,15 @@ function renderOrderTimeline(order) {
             let stateClass = "";
 
 
-            if (
-                index < activeIndex
-            ) {
+            if (index < activeIndex) {
 
-                stateClass =
-                    "completed";
+                stateClass = "completed";
 
             }
 
-            else if (
-                index === activeIndex
-            ) {
+            else if (index === activeIndex) {
 
-                stateClass =
-                    "current";
+                stateClass = "current";
 
             }
 
@@ -1890,6 +1845,37 @@ function renderOrderTimeline(order) {
                 index < steps.length - 1
                 ? `<div class="timeline-line"></div>`
                 : "";
+
+
+            let subText = "";
+
+
+            if (index === activeIndex) {
+
+                subText =
+                    step.sub;
+
+            }
+
+            else if (index < activeIndex) {
+
+                subText =
+                    t(
+                        "completed",
+                        "已完成"
+                    );
+
+            }
+
+            else {
+
+                subText =
+                    t(
+                        "waiting",
+                        "等待中"
+                    );
+
+            }
 
 
             html += `
@@ -1920,15 +1906,9 @@ function renderOrderTimeline(order) {
 
                         <div class="timeline-sub">
 
-                            ${
-                                index === activeIndex
-                                ? escapeHTML(step.sub)
-                                : (
-                                    index < activeIndex
-                                    ? "已完成"
-                                    : "等待中"
-                                )
-                            }
+                            ${escapeHTML(
+                                subText
+                            )}
 
                         </div>
 
@@ -1968,19 +1948,27 @@ function renderStatusInfo(order) {
         );
 
 
-    if (
-        status === "待接单"
-    ) {
+    if (status === "待接单") {
 
         return `
 
             <div class="waiting-box">
 
-                ⏳ 商家正在确认你的订单
+                ⏳ ${escapeHTML(
+                    t(
+                        "merchantConfirmingOrder",
+                        "商家正在确认你的订单"
+                    )
+                )}
 
                 <br>
 
-                请稍等一下。
+                ${escapeHTML(
+                    t(
+                        "pleaseWait",
+                        "请稍等一下。"
+                    )
+                )}
 
             </div>
 
@@ -1989,19 +1977,27 @@ function renderStatusInfo(order) {
     }
 
 
-    if (
-        status === "商家已接单"
-    ) {
+    if (status === "商家已接单") {
 
         return `
 
             <div class="waiting-box">
 
-                👨‍🍳 商家已经接单
+                👨‍🍳 ${escapeHTML(
+                    t(
+                        "merchantAlreadyAccepted",
+                        "商家已经接单"
+                    )
+                )}
 
                 <br>
 
-                🛵 正在等待骑手接单。
+                🛵 ${escapeHTML(
+                    t(
+                        "waitingRiderAccept",
+                        "正在等待骑手接单。"
+                    )
+                )}
 
             </div>
 
@@ -2010,19 +2006,27 @@ function renderStatusInfo(order) {
     }
 
 
-    if (
-        status === "骑手已接单"
-    ) {
+    if (status === "骑手已接单") {
 
         return `
 
             <div class="waiting-box">
 
-                🛵 骑手已经接单
+                🛵 ${escapeHTML(
+                    t(
+                        "riderAlreadyAccepted",
+                        "骑手已经接单"
+                    )
+                )}
 
                 <br>
 
-                🍱 正在等待商家做好外卖。
+                🍱 ${escapeHTML(
+                    t(
+                        "waitingMerchantPrepare",
+                        "正在等待商家做好外卖。"
+                    )
+                )}
 
             </div>
 
@@ -2031,19 +2035,27 @@ function renderStatusInfo(order) {
     }
 
 
-    if (
-        status === "外卖好了"
-    ) {
+    if (status === "外卖好了") {
 
         return `
 
             <div class="ready-box">
 
-                🍱 外卖已经做好！
+                🍱 ${escapeHTML(
+                    t(
+                        "foodReady",
+                        "外卖已经做好！"
+                    )
+                )}
 
                 <br>
 
-                🛵 骑手可以去餐厅取餐。
+                🛵 ${escapeHTML(
+                    t(
+                        "riderCanPickup",
+                        "骑手可以去餐厅取餐。"
+                    )
+                )}
 
             </div>
 
@@ -2052,19 +2064,27 @@ function renderStatusInfo(order) {
     }
 
 
-    if (
-        status === "配送中"
-    ) {
+    if (status === "配送中") {
 
         return `
 
             <div class="delivery-box">
 
-                🛵 骑手已取餐
+                🛵 ${escapeHTML(
+                    t(
+                        "riderPickedUp",
+                        "骑手已取餐"
+                    )
+                )}
 
                 <br>
 
-                🚴 外卖正在配送中。
+                🚴 ${escapeHTML(
+                    t(
+                        "foodDelivering",
+                        "外卖正在配送中。"
+                    )
+                )}
 
             </div>
 
@@ -2073,19 +2093,27 @@ function renderStatusInfo(order) {
     }
 
 
-    if (
-        status === "已完成"
-    ) {
+    if (status === "已完成") {
 
         return `
 
             <div class="completed-box">
 
-                ✅ 外卖已经送达
+                ✅ ${escapeHTML(
+                    t(
+                        "foodDelivered",
+                        "外卖已经送达"
+                    )
+                )}
 
                 <br>
 
-                感谢使用 MDY FOOD！
+                ${escapeHTML(
+                    t(
+                        "thanksForUsing",
+                        "感谢使用 MDY FOOD！"
+                    )
+                )}
 
             </div>
 
@@ -2094,15 +2122,18 @@ function renderStatusInfo(order) {
     }
 
 
-    if (
-        status === "已取消"
-    ) {
+    if (status === "已取消") {
 
         return `
 
             <div class="waiting-box">
 
-                ❌ 这个订单已经取消。
+                ❌ ${escapeHTML(
+                    t(
+                        "orderCancelledMessage",
+                        "这个订单已经取消。"
+                    )
+                )}
 
             </div>
 
@@ -2123,15 +2154,7 @@ function renderStatusInfo(order) {
 function renderItems(order) {
 
     if (
-        !Array.isArray(order.items)
-    ) {
-
-        return "";
-
-    }
-
-
-    if (
+        !Array.isArray(order.items) ||
         order.items.length === 0
     ) {
 
@@ -2149,7 +2172,7 @@ function renderItems(order) {
             const name =
                 escapeHTML(
                     item.name ||
-                    "菜品"
+                    t("food", "菜品")
                 );
 
 
@@ -2228,14 +2251,24 @@ function renderAmountDetails(order) {
         <div class="amount-box">
 
             <div class="amount-title">
-                💰 金额明细
+                💰 ${escapeHTML(
+                    t(
+                        "amountDetails",
+                        "金额明细"
+                    )
+                )}
             </div>
 
 
             <div class="amount-row">
 
                 <span>
-                    🍜 商品金额
+                    🍜 ${escapeHTML(
+                        t(
+                            "foodAmount",
+                            "商品金额"
+                        )
+                    )}
                 </span>
 
                 <span class="amount-value">
@@ -2254,7 +2287,12 @@ function renderAmountDetails(order) {
             <div class="amount-row delivery-fee">
 
                 <span>
-                    🛵 配送费
+                    🛵 ${escapeHTML(
+                        t(
+                            "deliveryFee",
+                            "配送费"
+                        )
+                    )}
                 </span>
 
                 <span class="amount-value">
@@ -2275,7 +2313,12 @@ function renderAmountDetails(order) {
             <div class="amount-total">
 
                 <span>
-                    总金额
+                    ${escapeHTML(
+                        t(
+                            "total",
+                            "总金额"
+                        )
+                    )}
                 </span>
 
                 <span>
@@ -2312,9 +2355,7 @@ function renderReviewArea(
         );
 
 
-    if (
-        status !== "已完成"
-    ) {
+    if (status !== "已完成") {
 
         return "";
 
@@ -2331,11 +2372,21 @@ function renderReviewArea(
 
                 <div class="reviewed-box">
 
-                    ⭐ 已评价
+                    ⭐ ${escapeHTML(
+                        t(
+                            "reviewed",
+                            "已评价"
+                        )
+                    )}
 
                     <br>
 
-                    感谢你的反馈 ❤️
+                    ${escapeHTML(
+                        t(
+                            "reviewThanks",
+                            "感谢你的反馈 ❤️"
+                        )
+                    )}
 
                 </div>
 
@@ -2356,7 +2407,12 @@ function renderReviewArea(
                 onclick="openReviewModal('${orderId}')"
             >
 
-                ⭐ 去评价
+                ⭐ ${escapeHTML(
+                    t(
+                        "pendingReview",
+                        "去评价"
+                    )
+                )}
 
             </button>
 
@@ -2379,16 +2435,12 @@ function renderOrders(orders) {
         );
 
 
-    if (
-        !container
-    ) {
+    if (!container) {
         return;
     }
 
 
-    if (
-        orders.length === 0
-    ) {
+    if (orders.length === 0) {
 
         container.innerHTML = `
 
@@ -2399,18 +2451,33 @@ function renderOrders(orders) {
                 </div>
 
                 <h2>
-                    暂时没有订单
+                    ${escapeHTML(
+                        t(
+                            "noOrders",
+                            "暂时没有订单"
+                        )
+                    )}
                 </h2>
 
                 <p>
-                    你还没有提交订单
+                    ${escapeHTML(
+                        t(
+                            "noOrdersDesc",
+                            "你还没有提交订单"
+                        )
+                    )}
                 </p>
 
                 <a
                     class="home-button"
                     href="index.html"
                 >
-                    去点餐
+                    ${escapeHTML(
+                        t(
+                            "goShopping",
+                            "去点餐"
+                        )
+                    )}
                 </a>
 
             </div>
@@ -2432,14 +2499,10 @@ function renderOrders(orders) {
                 orderObject.data;
 
 
-            const rawStatus =
-                order.status ||
-                "待接单";
-
-
             const status =
                 normalizeStatus(
-                    rawStatus
+                    order.status ||
+                    "待接单"
                 );
 
 
@@ -2453,9 +2516,7 @@ function renderOrders(orders) {
                 "order";
 
 
-            if (
-                orderObject.isChanged
-            ) {
+            if (orderObject.isChanged) {
 
                 div.classList.add(
                     "new-order"
@@ -2468,7 +2529,12 @@ function renderOrders(orders) {
 
                 <div class="order-number">
 
-                    订单号：
+                    ${escapeHTML(
+                        t(
+                            "orderNumberLabel",
+                            "订单号"
+                        )
+                    )}：
 
                     ${escapeHTML(
                         order.order_number ||
@@ -2484,7 +2550,10 @@ function renderOrders(orders) {
 
                     ${escapeHTML(
                         order.restaurantName ||
-                        "MDY FOOD 餐厅"
+                        t(
+                            "defaultRestaurantName",
+                            "MDY FOOD 餐厅"
+                        )
                     )}
 
                 </div>
@@ -2497,7 +2566,9 @@ function renderOrders(orders) {
 
                     ${getStatusIcon(status)}
 
-                    ${escapeHTML(status)}
+                    ${escapeHTML(
+                        translateStatus(status)
+                    )}
 
                 </div>
 
@@ -2519,7 +2590,12 @@ function renderOrders(orders) {
 
                 <div class="info">
 
-                    👤 姓名：
+                    👤 ${escapeHTML(
+                        t(
+                            "name",
+                            "姓名"
+                        )
+                    )}：
 
                     ${escapeHTML(
                         order.customername ||
@@ -2530,7 +2606,12 @@ function renderOrders(orders) {
                     <br>
 
 
-                    📱 电话：
+                    📱 ${escapeHTML(
+                        t(
+                            "phoneLabel",
+                            "电话"
+                        )
+                    )}：
 
                     ${escapeHTML(
                         order.phone ||
@@ -2540,7 +2621,12 @@ function renderOrders(orders) {
                     <br>
 
 
-                    📍 地址：
+                    📍 ${escapeHTML(
+                        t(
+                            "address",
+                            "地址"
+                        )
+                    )}：
 
                     ${escapeHTML(
                         order.adress ||
@@ -2551,22 +2637,38 @@ function renderOrders(orders) {
                     <br>
 
 
-                    💳 付款：
+                    💳 ${escapeHTML(
+                        t(
+                            "paymentMethod",
+                            "付款"
+                        )
+                    )}：
 
                     ${escapeHTML(
-                        order.payment ||
-                        ""
+                        window.MDYLanguage &&
+                        typeof window.MDYLanguage.translatePayment === "function"
+                        ? window.MDYLanguage.translatePayment(
+                            order.payment || ""
+                        )
+                        : order.payment || ""
                     )}
 
                     <br>
 
 
-                    🕐 下单时间：
+                    🕐 ${escapeHTML(
+                        t(
+                            "orderTime",
+                            "下单时间"
+                        )
+                    )}：
 
                     <span class="time">
 
-                        ${formatTime(
-                            order.created_at
+                        ${escapeHTML(
+                            formatTime(
+                                order.created_at
+                            )
                         )}
 
                     </span>
@@ -2578,7 +2680,12 @@ function renderOrders(orders) {
 
                     <div class="items-title">
 
-                        🍜 订单内容
+                        🍜 ${escapeHTML(
+                            t(
+                                "orderContentLabel",
+                                "订单内容"
+                            )
+                        )}
 
                     </div>
 
@@ -2652,9 +2759,7 @@ async function loadMyReviews() {
                 );
 
 
-                if (
-                    data.orderId
-                ) {
+                if (data.orderId) {
 
                     reviewedOrderIds.add(
                         data.orderId
@@ -2678,9 +2783,7 @@ async function loadMyReviews() {
     }
 
 
-    if (
-        currentOrders.length > 0
-    ) {
+    if (currentOrders.length > 0) {
 
         renderOrders(
             currentOrders
@@ -2692,7 +2795,7 @@ async function loadMyReviews() {
 
 
 // ========================================
-// 打开评价弹窗
+// 打开评价
 // ========================================
 
 function openReviewModal(orderId) {
@@ -2700,7 +2803,10 @@ function openReviewModal(orderId) {
     if (!currentUser) {
 
         alert(
-            "请先登录账号。"
+            t(
+                "pleaseLogin",
+                "请先登录账号。"
+            )
         );
 
         return;
@@ -2721,7 +2827,10 @@ function openReviewModal(orderId) {
     if (!orderObject) {
 
         alert(
-            "找不到这个订单，请刷新页面后重试。"
+            t(
+                "orderNotFound",
+                "找不到这个订单，请刷新页面后重试。"
+            )
         );
 
         return;
@@ -2739,12 +2848,13 @@ function openReviewModal(orderId) {
         );
 
 
-    if (
-        status !== "已完成"
-    ) {
+    if (status !== "已完成") {
 
         alert(
-            "只有已经完成的订单才能评价。"
+            t(
+                "reviewCompletedOnly",
+                "只有已经完成的订单才能评价。"
+            )
         );
 
         return;
@@ -2757,7 +2867,10 @@ function openReviewModal(orderId) {
     ) {
 
         alert(
-            "这个订单已经评价过了。"
+            t(
+                "reviewAlreadyExists",
+                "这个订单已经评价过了。"
+            )
         );
 
         return;
@@ -2776,8 +2889,7 @@ function openReviewModal(orderId) {
     };
 
 
-    selectedRating =
-        0;
+    selectedRating = 0;
 
 
     document.getElementById(
@@ -2786,7 +2898,10 @@ function openReviewModal(orderId) {
         "🏪 " +
         (
             order.restaurantName ||
-            "MDY FOOD 餐厅"
+            t(
+                "defaultRestaurantName",
+                "MDY FOOD 餐厅"
+            )
         );
 
 
@@ -2799,7 +2914,10 @@ function openReviewModal(orderId) {
     document.getElementById(
         "ratingText"
     ).innerText =
-        "请选择评分";
+        t(
+            "ratingRequired",
+            "请选择评分"
+        );
 
 
     updateStarButtons();
@@ -2814,7 +2932,10 @@ function openReviewModal(orderId) {
     document.getElementById(
         "submitReviewButton"
     ).innerText =
-        "提交评价";
+        t(
+            "submitReview",
+            "提交评价"
+        );
 
 
     document.getElementById(
@@ -2827,7 +2948,7 @@ function openReviewModal(orderId) {
 
 
 // ========================================
-// 关闭评价弹窗
+// 关闭评价
 // ========================================
 
 function closeReviewModal() {
@@ -2850,7 +2971,7 @@ function closeReviewModal() {
 
 
 // ========================================
-// 选择星级
+// 星级
 // ========================================
 
 function selectRating(rating) {
@@ -2865,19 +2986,34 @@ function selectRating(rating) {
     const texts = {
 
         1:
-            "⭐ 非常不满意",
+            t(
+                "rating1",
+                "⭐ 非常不满意"
+            ),
 
         2:
-            "⭐⭐ 不太满意",
+            t(
+                "rating2",
+                "⭐⭐ 不太满意"
+            ),
 
         3:
-            "⭐⭐⭐ 一般",
+            t(
+                "rating3",
+                "⭐⭐⭐ 一般"
+            ),
 
         4:
-            "⭐⭐⭐⭐ 满意",
+            t(
+                "rating4",
+                "⭐⭐⭐⭐ 满意"
+            ),
 
         5:
-            "⭐⭐⭐⭐⭐ 非常满意"
+            t(
+                "rating5",
+                "⭐⭐⭐⭐⭐ 非常满意"
+            )
 
     };
 
@@ -2886,7 +3022,10 @@ function selectRating(rating) {
         "ratingText"
     ).innerText =
         texts[selectedRating] ||
-        "请选择评分";
+        t(
+            "ratingRequired",
+            "请选择评分"
+        );
 
 }
 
@@ -2912,9 +3051,7 @@ function updateStarButtons() {
                 );
 
 
-            if (
-                rating <= selectedRating
-            ) {
+            if (rating <= selectedRating) {
 
                 button.classList.add(
                     "active"
@@ -2945,7 +3082,10 @@ async function submitReview() {
     if (!currentUser) {
 
         alert(
-            "请先登录账号。"
+            t(
+                "pleaseLogin",
+                "请先登录账号。"
+            )
         );
 
         return;
@@ -2956,7 +3096,10 @@ async function submitReview() {
     if (!currentReviewOrder) {
 
         alert(
-            "评价订单不存在，请重新打开。"
+            t(
+                "reviewOrderMissing",
+                "评价订单不存在，请重新打开。"
+            )
         );
 
         return;
@@ -2970,7 +3113,10 @@ async function submitReview() {
     ) {
 
         alert(
-            "请选择 1～5 星评分。"
+            t(
+                "ratingRequired",
+                "请选择 1～5 星评分。"
+            )
         );
 
         return;
@@ -2992,12 +3138,13 @@ async function submitReview() {
         );
 
 
-    if (
-        status !== "已完成"
-    ) {
+    if (status !== "已完成") {
 
         alert(
-            "只有已经完成的订单才能评价。"
+            t(
+                "reviewCompletedOnly",
+                "只有已经完成的订单才能评价。"
+            )
         );
 
         return;
@@ -3010,8 +3157,12 @@ async function submitReview() {
     ) {
 
         alert(
-            "这个订单已经评价过了。"
+            t(
+                "reviewAlreadyExists",
+                "这个订单已经评价过了。"
+            )
         );
+
 
         closeReviewModal();
 
@@ -3045,7 +3196,10 @@ async function submitReview() {
 
 
     submitButton.innerText =
-        "正在提交...";
+        t(
+            "submitting",
+            "正在提交..."
+        );
 
 
     try {
@@ -3118,7 +3272,11 @@ async function submitReview() {
 
 
         showToast(
-            "⭐ 评价提交成功！感谢你的反馈 ❤️"
+            "⭐ " +
+            t(
+                "reviewSuccess",
+                "评价提交成功！感谢你的反馈 ❤️"
+            )
         );
 
 
@@ -3133,7 +3291,11 @@ async function submitReview() {
 
 
         alert(
-            "评价提交失败：\n" +
+            t(
+                "reviewFailed",
+                "评价提交失败"
+            ) +
+            "：\n" +
             error.message
         );
 
@@ -3143,7 +3305,10 @@ async function submitReview() {
 
 
         submitButton.innerText =
-            "提交评价";
+            t(
+                "submitReview",
+                "提交评价"
+            );
 
     }
 
@@ -3151,7 +3316,7 @@ async function submitReview() {
 
 
 // ========================================
-// 点击弹窗背景关闭
+// 弹窗背景
 // ========================================
 
 document.getElementById(
@@ -3161,8 +3326,7 @@ document.getElementById(
     function(event) {
 
         if (
-            event.target ===
-            this
+            event.target === this
         ) {
 
             closeReviewModal();
@@ -3174,7 +3338,7 @@ document.getElementById(
 
 
 // ========================================
-// 声音提醒
+// 声音
 // ========================================
 
 function playNotificationSound() {
@@ -3258,7 +3422,7 @@ function playNotificationSound() {
 
 
 // ========================================
-// 页面弹窗提醒
+// Toast
 // ========================================
 
 function showToast(message) {
@@ -3355,7 +3519,11 @@ async function enableNotifications() {
     ) {
 
         showToast(
-            "❌ 当前浏览器不支持通知"
+            "❌ " +
+            t(
+                "notificationUnsupported",
+                "当前浏览器不支持通知"
+            )
         );
 
         return;
@@ -3374,13 +3542,20 @@ async function enableNotifications() {
         ) {
 
             showToast(
-                "🔔 订单提醒已开启"
+                "🔔 " +
+                t(
+                    "notificationEnabled",
+                    "订单提醒已开启"
+                )
             );
 
 
             sendBrowserNotification(
                 "MDY FOOD",
-                "订单提醒已经开启！"
+                t(
+                    "notificationEnabledMessage",
+                    "订单提醒已经开启！"
+                )
             );
 
         }
@@ -3388,7 +3563,11 @@ async function enableNotifications() {
         else {
 
             showToast(
-                "⚠️ 你没有允许浏览器通知"
+                "⚠️ " +
+                t(
+                    "notificationDenied",
+                    "你没有允许浏览器通知"
+                )
             );
 
         }
@@ -3462,7 +3641,11 @@ function checkOrderChanges(
 
 
                 showToast(
-                    "🆕 收到新的订单！"
+                    "🆕 " +
+                    t(
+                        "newOrderReceived",
+                        "收到新的订单！"
+                    )
                 );
 
 
@@ -3470,8 +3653,11 @@ function checkOrderChanges(
 
 
                 sendBrowserNotification(
-                    "🆕 MDY FOOD 新订单",
-                    "你有一个新的订单，请查看订单详情。"
+                    "🆕 MDY FOOD",
+                    t(
+                        "newOrderNotification",
+                        "你有一个新的订单，请查看订单详情。"
+                    )
                 );
 
             }
@@ -3487,13 +3673,18 @@ function checkOrderChanges(
 
 
                 const displayStatus =
-                    normalizeStatus(
+                    translateStatus(
                         status
                     );
 
 
                 showToast(
-                    "🔔 订单状态：" +
+                    "🔔 " +
+                    t(
+                        "orderStatus",
+                        "订单状态"
+                    ) +
+                    "：" +
                     displayStatus
                 );
 
@@ -3502,8 +3693,12 @@ function checkOrderChanges(
 
 
                 sendBrowserNotification(
-                    "🔔 MDY FOOD 订单更新",
-                    "订单状态已经变更为：" +
+                    "🔔 MDY FOOD",
+                    t(
+                        "orderStatusChanged",
+                        "订单状态已经变更为"
+                    ) +
+                    "：" +
                     displayStatus
                 );
 
@@ -3547,14 +3742,12 @@ function checkOrderChanges(
 
 
 // ========================================
-// 实时监听订单
+// 实时订单
 // ========================================
 
 function listenMyOrders() {
 
-    if (
-        unsubscribeOrders
-    ) {
+    if (unsubscribeOrders) {
 
         unsubscribeOrders();
 
@@ -3607,10 +3800,6 @@ function listenMyOrders() {
                     );
 
 
-                    /*
-                        最新订单在最上面
-                    */
-
                     orders.sort(
                         function(a, b) {
 
@@ -3658,18 +3847,10 @@ function listenMyOrders() {
                     );
 
 
-                    /*
-                        先显示订单
-                    */
-
                     renderOrders(
                         orders
                     );
 
-
-                    /*
-                        再读取评价
-                    */
 
                     await loadMyReviews();
 
@@ -3690,7 +3871,12 @@ function listenMyOrders() {
 
                         <div class="error">
 
-                            ❌ 订单加载失败
+                            ❌ ${escapeHTML(
+                                t(
+                                    "dataLoadFailed",
+                                    "订单加载失败"
+                                )
+                            )}
 
                             <br><br>
 
@@ -3724,7 +3910,11 @@ function manualRefresh() {
     if (button) {
 
         button.textContent =
-            "⏳ 刷新中...";
+            "⏳ " +
+            t(
+                "refreshing",
+                "刷新中..."
+            );
 
     }
 
@@ -3738,13 +3928,21 @@ function manualRefresh() {
             if (button) {
 
                 button.textContent =
-                    "🔄 刷新订单";
+                    "🔄 " +
+                    t(
+                        "refreshOrders",
+                        "刷新订单"
+                    );
 
             }
 
 
             showToast(
-                "✅ 订单已刷新"
+                "✅ " +
+                t(
+                    "ordersRefreshed",
+                    "订单已刷新"
+                )
             );
 
         },
@@ -3755,7 +3953,7 @@ function manualRefresh() {
 
 
 // ========================================
-// 显示登录页面
+// 登录框
 // ========================================
 
 function showLoginBox() {
@@ -3791,7 +3989,7 @@ function showLoginBox() {
 
 
 // ========================================
-// 显示订单页面
+// 订单区域
 // ========================================
 
 function showOrderArea() {
@@ -3827,14 +4025,10 @@ function showOrderArea() {
 
 
 // ========================================
-// 处理 Firebase 登录状态
+// Auth
 // ========================================
 
 function handleAuthUser(user) {
-
-    /*
-     * Firebase 恢复出用户。
-     */
 
     if (user) {
 
@@ -3867,10 +4061,6 @@ function handleAuthUser(user) {
         showOrderArea();
 
 
-        /*
-         * 登录后开始读取当前用户订单。
-         */
-
         listenMyOrders();
 
 
@@ -3879,24 +4069,12 @@ function handleAuthUser(user) {
     }
 
 
-    /*
-     * 第一次收到 null：
-     *
-     * Firebase 可能还在恢复 LOCAL 登录状态。
-     *
-     * 所以不能立即显示“请先登录”。
-     */
-
     if (!authStateInitialized) {
 
         console.log(
             "MDY FOOD：正在等待 Firebase Auth 恢复..."
         );
 
-
-        /*
-         * 先直接检查 currentUser。
-         */
 
         if (auth.currentUser) {
 
@@ -3908,10 +4086,6 @@ function handleAuthUser(user) {
 
         }
 
-
-        /*
-         * 再等待 2.5 秒。
-         */
 
         if (authCheckTimer) {
 
@@ -3941,11 +4115,6 @@ function handleAuthUser(user) {
                     }
 
 
-                    /*
-                     * 到这里仍然没有用户，
-                     * 才确定是真的没有登录。
-                     */
-
                     authStateInitialized =
                         true;
 
@@ -3954,9 +4123,7 @@ function handleAuthUser(user) {
                         null;
 
 
-                    if (
-                        unsubscribeOrders
-                    ) {
+                    if (unsubscribeOrders) {
 
                         unsubscribeOrders();
 
@@ -3991,19 +4158,11 @@ function handleAuthUser(user) {
     }
 
 
-    /*
-     * 如果已经初始化完成，
-     * 后续又收到 null，
-     * 说明用户确实退出登录。
-     */
-
     currentUser =
         null;
 
 
-    if (
-        unsubscribeOrders
-    ) {
+    if (unsubscribeOrders) {
 
         unsubscribeOrders();
 
@@ -4032,7 +4191,228 @@ function handleAuthUser(user) {
 
 
 // ========================================
-// Firebase Auth 登录状态监听
+// 页面语言更新
+// ========================================
+
+function updatePageLanguage() {
+
+    document.title =
+        t(
+            "myOrders",
+            "我的订单"
+        ) +
+        " - MDY FOOD";
+
+
+    document.documentElement.lang =
+        (
+            window.MDYLanguage &&
+            typeof window.MDYLanguage.getLanguage === "function"
+        )
+        ? (
+            window.MDYLanguage.getLanguage() === "my"
+            ? "my"
+            : window.MDYLanguage.getLanguage() === "en"
+            ? "en"
+            : "zh-CN"
+        )
+        : "zh-CN";
+
+
+    const setText =
+        function(id, key, fallback) {
+
+            const element =
+                document.getElementById(id);
+
+
+            if (element) {
+
+                element.innerText =
+                    t(
+                        key,
+                        fallback
+                    );
+
+            }
+
+        };
+
+
+    setText(
+        "pageTitle",
+        "myOrders",
+        "我的订单"
+    );
+
+
+    setText(
+        "backHomeText",
+        "backHomeText",
+        "返回首页"
+    );
+
+
+    setText(
+        "loginTitle",
+        "pleaseLogin",
+        "请先登录"
+    );
+
+
+    const loginDescription =
+        document.getElementById(
+            "loginDescription"
+        );
+
+
+    if (loginDescription) {
+
+        loginDescription.innerHTML =
+            escapeHTML(
+                t(
+                    "loginRequiredDesc",
+                    "登录后才能查看你的订单。"
+                )
+            ) +
+            "<br>" +
+            escapeHTML(
+                t(
+                    "ordersSavedToAccount",
+                    "订单会自动保存到你的账号。"
+                )
+            );
+
+    }
+
+
+    setText(
+        "loginButton",
+        "loginRegister",
+        "👤 登录 / 注册"
+    );
+
+
+    setText(
+        "refreshButton",
+        "refreshOrders",
+        "🔄 刷新订单"
+    );
+
+
+    setText(
+        "notificationButton",
+        "enableNotifications",
+        "🔔 开启提醒"
+    );
+
+
+    setText(
+        "liveText",
+        "orderRealtimeSync",
+        "订单状态实时同步中"
+    );
+
+
+    setText(
+        "reviewTitle",
+        "reviewTitle",
+        "评价订单"
+    );
+
+
+    setText(
+        "ratingText",
+        "ratingRequired",
+        "请选择评分"
+    );
+
+
+    const comment =
+        document.getElementById(
+            "reviewComment"
+        );
+
+
+    if (comment) {
+
+        comment.placeholder =
+            t(
+                "commentPlaceholder",
+                "写下你对这次订单的评价吧～（可选）"
+            );
+
+    }
+
+
+    setText(
+        "cancelReviewButton",
+        "cancel",
+        "取消"
+    );
+
+
+    const submitButton =
+        document.getElementById(
+            "submitReviewButton"
+        );
+
+
+    if (
+        submitButton &&
+        !submitButton.disabled
+    ) {
+
+        submitButton.innerText =
+            t(
+                "submitReview",
+                "提交评价"
+            );
+
+    }
+
+
+    if (currentOrders.length > 0) {
+
+        renderOrders(
+            currentOrders
+        );
+
+    }
+
+}
+
+
+// ========================================
+// 语言变化
+// ========================================
+
+window.addEventListener(
+    "mdyLanguageChanged",
+    function() {
+
+        updatePageLanguage();
+
+    }
+);
+
+
+// ========================================
+// 初始化语言
+// ========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        updatePageLanguage();
+
+    }
+);
+
+
+// ========================================
+// Firebase Auth 登录监听
 // ========================================
 
 auth.onAuthStateChanged(
@@ -4055,10 +4435,7 @@ auth.onAuthStateChanged(
 
 
 // ========================================
-// Firebase Token 状态监听
-//
-// 登录状态已经恢复时，这里也会收到用户。
-// 可以进一步保证跨页面跳转后状态正确。
+// Firebase Token
 // ========================================
 
 auth.onIdTokenChanged(
@@ -4071,11 +4448,6 @@ auth.onIdTokenChanged(
                 : "null"
         );
 
-
-        /*
-         * 如果当前还没有用户，
-         * Token 监听恢复出用户时直接进入订单。
-         */
 
         if (
             user &&
