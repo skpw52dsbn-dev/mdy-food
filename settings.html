@@ -1,1461 +1,436 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MDY FOOD - 设置</title>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 <style>
-
-* {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
-}
-
-body {
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Microsoft YaHei",
-        Arial,
-        sans-serif;
-
-    background: #f5f5f5;
-    color: #222;
-
-    padding-bottom: 90px;
-
-    transition:
-        background 0.25s ease,
-        color 0.25s ease;
-}
-
-
-/* ================================
-   顶部
-================================ */
-
-.header {
-    background: #ff7a00;
-    color: #fff;
-
-    padding:
-        18px
-        16px
-        22px;
-
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.header-title {
-    font-size: 24px;
-    font-weight: 700;
-}
-
-.header-subtitle {
-    margin-top: 5px;
-    font-size: 13px;
-    opacity: 0.9;
-}
-
-
-/* ================================
-   主体
-================================ */
-
-.container {
-    width: 100%;
-    max-width: 720px;
-
-    margin: 0 auto;
-
-    padding: 16px;
-}
-
-
-/* ================================
-   区块
-================================ */
-
-.section {
-    background: #fff;
-
-    border-radius: 16px;
-
-    margin-bottom: 14px;
-
-    overflow: hidden;
-
-    box-shadow:
-        0 2px 10px
-        rgba(0, 0, 0, 0.05);
-
-    transition:
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-}
-
-.section-title {
-    padding:
-        16px
-        16px
-        12px;
-
-    font-size: 17px;
-    font-weight: 700;
-}
-
-.section-description {
-    padding:
-        0
-        16px
-        12px;
-
-    font-size: 13px;
-    color: #888;
-}
-
-
-/* ================================
-   设置行
-================================ */
-
-.setting-row {
-    min-height: 66px;
-
-    padding:
-        12px
-        16px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    border-top:
-        1px solid #f0f0f0;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease;
-}
-
-.setting-row:first-of-type {
-    border-top: none;
-}
-
-.setting-row:hover {
-    background: #fafafa;
-}
-
-.setting-left {
-    display: flex;
-
-    align-items: center;
-
-    min-width: 0;
-}
-
-.setting-icon {
-    width: 40px;
-    height: 40px;
-
-    border-radius: 11px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    background: #fff3e8;
-
-    font-size: 20px;
-
-    margin-right: 12px;
-
-    flex-shrink: 0;
-}
-
-.setting-text {
-    min-width: 0;
-}
-
-.setting-name {
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.setting-desc {
-    margin-top: 3px;
-
-    font-size: 12px;
-
-    color: #999;
-
-    line-height: 1.4;
-}
-
-.setting-right {
-    margin-left: 12px;
-
-    flex-shrink: 0;
-}
-
-
-/* ================================
-   右侧按钮开关
-================================ */
-
-.switch-button {
-    width: 66px;
-    height: 32px;
-
-    border: none;
-
-    border-radius: 18px;
-
-    background: #d8d8d8;
-
-    color: #666;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    position: relative;
-
-    cursor: pointer;
-
-    padding: 0;
-
-    transition:
-        background 0.25s ease,
-        color 0.25s ease,
-        box-shadow 0.25s ease;
-
-    box-shadow:
-        inset 0 0 0 1px
-        rgba(0, 0, 0, 0.04);
-}
-
-.switch-button::before {
-    content: "";
-
-    position: absolute;
-
-    width: 26px;
-    height: 26px;
-
-    top: 3px;
-    left: 3px;
-
-    border-radius: 50%;
-
-    background: #fff;
-
-    box-shadow:
-        0 1px 5px
-        rgba(0, 0, 0, 0.2);
-
-    transition:
-        left 0.25s ease;
-}
-
-.switch-button .switch-label {
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: flex-end;
-
-    padding-right: 9px;
-
-    pointer-events: none;
-}
-
-.switch-button.on {
-    background: #ff7a00;
-
-    color: #fff;
-
-    box-shadow:
-        0 2px 7px
-        rgba(255, 122, 0, 0.25);
-}
-
-.switch-button.on::before {
-    left: 37px;
-}
-
-.switch-button.on .switch-label {
-    justify-content: flex-start;
-
-    padding-left: 9px;
-    padding-right: 0;
-}
-
-
-/* ================================
-   语言选择
-================================ */
-
-.language-select {
-    border: 1px solid #ddd;
-
-    border-radius: 10px;
-
-    background: #fff;
-
-    padding:
-        8px
-        12px;
-
-    font-size: 14px;
-
-    outline: none;
-
-    color: #333;
-
-    cursor: pointer;
-}
-
-.language-select:focus {
-    border-color: #ff7a00;
-}
-
-
-/* ================================
-   用户资料
-================================ */
-
-.profile-card {
-    padding: 18px;
-}
-
-.profile-header {
-    display: flex;
-
-    align-items: center;
-}
-
-.avatar {
-    width: 58px;
-    height: 58px;
-
-    border-radius: 50%;
-
-    background: #ff7a00;
-
-    color: #fff;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    font-size: 25px;
-
-    font-weight: 700;
-
-    margin-right: 13px;
-
-    flex-shrink: 0;
-}
-
-.profile-main {
-    min-width: 0;
-}
-
-.profile-name {
-    font-size: 18px;
-    font-weight: 700;
-
-    word-break: break-all;
-}
-
-.profile-email {
-    margin-top: 4px;
-
-    color: #888;
-
-    font-size: 13px;
-
-    word-break: break-all;
-}
-
-.profile-info {
-    margin-top: 16px;
-
-    display: grid;
-
-    gap: 10px;
-}
-
-.info-item {
-    background: #f8f8f8;
-
-    border-radius: 10px;
-
-    padding: 11px 12px;
-}
-
-.info-label {
-    color: #999;
-
-    font-size: 12px;
-}
-
-.info-value {
-    margin-top: 4px;
-
-    font-size: 14px;
-
-    word-break: break-word;
+*{
+    box-sizing:border-box;
 }
-
-.profile-button {
-    width: 100%;
-
-    margin-top: 14px;
 
-    border: none;
-
-    border-radius: 11px;
-
-    padding: 12px;
-
-    background: #ff7a00;
-
-    color: #fff;
-
-    font-size: 15px;
-
-    font-weight: 600;
-
-    cursor: pointer;
+body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;
+    background:#f6f6f6;
+    color:#222;
 }
 
-.profile-button:active {
-    transform: scale(0.99);
+body.dark{
+    background:#171717;
+    color:#f5f5f5;
 }
-
-
-/* ================================
-   链接行
-================================ */
 
-.link-arrow {
-    color: #aaa;
-
-    font-size: 20px;
+.header{
+    height:60px;
+    background:#ff7a00;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    font-size:20px;
+    font-weight:700;
 }
-
-
-/* ================================
-   Toast
-================================ */
-
-.toast {
-    position: fixed;
-
-    left: 50%;
-
-    bottom: 90px;
-
-    transform:
-        translate(-50%, 20px);
-
-    background:
-        rgba(0, 0, 0, 0.82);
-
-    color: #fff;
-
-    padding:
-        10px
-        16px;
-
-    border-radius: 10px;
-
-    font-size: 13px;
-
-    opacity: 0;
-
-    pointer-events: none;
-
-    transition:
-        opacity 0.25s ease,
-        transform 0.25s ease;
-
-    z-index: 9999;
-
-    max-width: 85%;
 
-    text-align: center;
+.back{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+    border:0;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    font-size:22px;
+    cursor:pointer;
 }
 
-.toast.show {
-    opacity: 1;
-
-    transform:
-        translate(-50%, 0);
+.container{
+    max-width:700px;
+    margin:20px auto 100px;
+    padding:0 15px;
 }
-
-
-/* ================================
-   底部导航
-================================ */
-
-.bottom-nav {
-    position: fixed;
-
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    height: 70px;
-
-    background: #fff;
-
-    border-top:
-        1px solid #eee;
 
-    display: flex;
-
-    justify-content: space-around;
-
-    align-items: center;
-
-    z-index: 500;
-
-    box-shadow:
-        0 -2px 10px
-        rgba(0, 0, 0, 0.05);
+.card{
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+    margin-bottom:16px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
 }
-
-.nav-item {
-    flex: 1;
-
-    height: 100%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
 
-    justify-content: center;
-
-    color: #888;
-
-    text-decoration: none;
-
-    font-size: 11px;
-
-    gap: 3px;
+body.dark .card{
+    background:#242424;
+    box-shadow:none;
 }
 
-.nav-icon {
-    font-size: 22px;
+.card-title{
+    padding:16px 18px 10px;
+    font-size:15px;
+    color:#888;
+    font-weight:600;
 }
 
-.nav-item.active {
-    color: #ff7a00;
+.setting-row{
+    min-height:58px;
+    padding:12px 18px;
+    border-top:1px solid #eee;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
 }
-
-
-/* ================================
-   编辑资料弹窗
-================================ */
-
-.modal-mask {
-    position: fixed;
-
-    inset: 0;
 
-    background:
-        rgba(0, 0, 0, 0.5);
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 20px;
-
-    z-index: 2000;
+body.dark .setting-row{
+    border-color:#3a3a3a;
 }
 
-.modal-mask.show {
-    display: flex;
+.left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
 }
-
-.modal {
-    width: 100%;
-    max-width: 480px;
-
-    background: #fff;
-
-    border-radius: 18px;
-
-    padding: 20px;
-
-    max-height: 90vh;
 
-    overflow-y: auto;
+.icon{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    background:#fff1e6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    flex-shrink:0;
 }
 
-.modal-title {
-    font-size: 20px;
-
-    font-weight: 700;
-
-    margin-bottom: 18px;
+.text{
+    min-width:0;
 }
 
-.form-group {
-    margin-bottom: 14px;
+.name{
+    font-size:16px;
+    font-weight:500;
 }
-
-.form-label {
-    display: block;
-
-    font-size: 13px;
 
-    color: #666;
-
-    margin-bottom: 6px;
+.desc{
+    font-size:12px;
+    color:#999;
+    margin-top:3px;
 }
-
-.form-input {
-    width: 100%;
-
-    border:
-        1px solid #ddd;
-
-    border-radius: 10px;
 
-    padding:
-        11px
-        12px;
-
-    font-size: 14px;
-
-    outline: none;
-
-    background: #fff;
-
-    color: #222;
+.arrow{
+    color:#aaa;
+    font-size:20px;
 }
 
-.form-input:focus {
-    border-color: #ff7a00;
+.switch{
+    width:48px;
+    height:28px;
+    border-radius:20px;
+    background:#ccc;
+    position:relative;
+    transition:.2s;
+    flex-shrink:0;
 }
 
-.modal-actions {
-    display: flex;
-
-    gap: 10px;
-
-    margin-top: 18px;
+.switch::after{
+    content:"";
+    position:absolute;
+    width:22px;
+    height:22px;
+    top:3px;
+    left:3px;
+    background:#fff;
+    border-radius:50%;
+    transition:.2s;
+    box-shadow:0 1px 3px rgba(0,0,0,.2);
 }
-
-.modal-button {
-    flex: 1;
-
-    border: none;
-
-    border-radius: 10px;
 
-    padding: 12px;
-
-    font-size: 14px;
-
-    cursor: pointer;
+.switch.on{
+    background:#ff7a00;
 }
 
-.cancel-button {
-    background: #eee;
-
-    color: #555;
+.switch.on::after{
+    left:23px;
 }
-
-.save-button {
-    background: #ff7a00;
 
-    color: #fff;
+.select-value{
+    color:#888;
+    font-size:14px;
 }
 
-
-/* ================================
-   深色模式
-================================ */
-
-body.dark {
-    background: #111;
-
-    color: #eee;
+.profile-box{
+    padding:18px;
 }
 
-body.dark .section {
-    background: #1d1d1d;
-
-    box-shadow:
-        0 2px 10px
-        rgba(0, 0, 0, 0.25);
+.profile-line{
+    margin-bottom:12px;
 }
 
-body.dark .setting-row {
-    border-top-color: #303030;
+.profile-line:last-child{
+    margin-bottom:0;
 }
 
-body.dark .setting-row:hover {
-    background: #252525;
+.profile-line label{
+    display:block;
+    color:#999;
+    font-size:12px;
+    margin-bottom:5px;
 }
 
-body.dark .setting-desc,
-body.dark .section-description {
-    color: #999;
+.profile-line input{
+    width:100%;
+    height:42px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    padding:0 12px;
+    font-size:14px;
+    outline:none;
+    background:#fff;
+    color:#222;
 }
 
-body.dark .setting-icon {
-    background: #302519;
+body.dark .profile-line input{
+    background:#303030;
+    border-color:#444;
+    color:#fff;
 }
-
-body.dark .language-select {
-    background: #252525;
 
-    color: #eee;
-
-    border-color: #444;
+.save-btn{
+    width:100%;
+    height:44px;
+    border:0;
+    border-radius:10px;
+    background:#ff7a00;
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:5px;
 }
 
-body.dark .info-item {
-    background: #272727;
+.logout-btn{
+    width:100%;
+    height:46px;
+    border:0;
+    border-radius:12px;
+    background:#fff;
+    color:#f04444;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
 }
 
-body.dark .profile-email {
-    color: #aaa;
+body.dark .logout-btn{
+    background:#242424;
 }
-
-body.dark .bottom-nav {
-    background: #1b1b1b;
 
-    border-top-color: #333;
+.bottom-nav{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    height:64px;
+    background:#fff;
+    border-top:1px solid #eee;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    z-index:20;
 }
 
-body.dark .modal {
-    background: #1d1d1d;
-
-    color: #eee;
+body.dark .bottom-nav{
+    background:#222;
+    border-color:#333;
 }
 
-body.dark .form-label {
-    color: #aaa;
+.nav-item{
+    text-align:center;
+    color:#888;
+    font-size:11px;
+    cursor:pointer;
 }
-
-body.dark .form-input {
-    background: #252525;
 
-    color: #eee;
-
-    border-color: #444;
+.nav-item .nav-icon{
+    font-size:21px;
+    line-height:25px;
 }
-
-body.dark .cancel-button {
-    background: #333;
 
-    color: #eee;
+.nav-item.active{
+    color:#ff7a00;
 }
-
-
-/* ================================
-   手机适配
-================================ */
-
-@media (max-width: 480px) {
 
-    .container {
-        padding: 12px;
+@media(max-width:600px){
+    .container{
+        margin-top:12px;
     }
-
-    .header {
-        padding:
-            16px
-            14px
-            19px;
-    }
-
-    .header-title {
-        font-size: 22px;
-    }
-
-    .setting-name {
-        font-size: 14px;
-    }
-
-    .switch-button {
-        width: 62px;
-        height: 30px;
-    }
-
-    .switch-button::before {
-        width: 24px;
-        height: 24px;
-    }
-
-    .switch-button.on::before {
-        left: 35px;
-    }
-
 }
-
 </style>
 
 </head>
 
-
 <body>
 
+<div class="header">
+    <button class="back" onclick="history.back()">‹</button>
+    <span>设置</span>
+</div>
 
-<!-- ================================
-     顶部
-================================ -->
+<div class="container">
 
-<header class="header">
+```
+<!-- 账户资料 -->
+<div class="card">
 
-    <div
-        class="header-title"
-        id="pageTitle"
-    >
-        设置
+    <div class="card-title">
+        账户资料
     </div>
 
-    <div
-        class="header-subtitle"
-        id="pageSubtitle"
-    >
-        管理你的 MDY FOOD 使用偏好
-    </div>
+    <div class="profile-box">
 
-</header>
-
-
-<main class="container">
-
-
-<!-- ================================
-     账户信息
-================================ -->
-
-<section class="section">
-
-    <div
-        class="section-title"
-        data-i18n="accountTitle"
-    >
-        👤 账户信息
-    </div>
-
-    <div
-        class="section-description"
-        data-i18n="accountDescription"
-    >
-        当前登录账户与个人资料
-    </div>
-
-    <div id="profileArea">
-
-        <div class="profile-card">
-
-            <div class="profile-header">
-
-                <div
-                    class="avatar"
-                    id="avatar"
-                >
-                    ?
-                </div>
-
-                <div class="profile-main">
-
-                    <div
-                        class="profile-name"
-                        id="profileName"
-                    >
-                        加载中...
-                    </div>
-
-                    <div
-                        class="profile-email"
-                        id="profileEmail"
-                    >
-                        --
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="profile-info">
-
-                <div class="info-item">
-
-                    <div
-                        class="info-label"
-                        data-i18n="phone"
-                    >
-                        手机号码
-                    </div>
-
-                    <div
-                        class="info-value"
-                        id="profilePhone"
-                    >
-                        --
-                    </div>
-
-                </div>
-
-
-                <div class="info-item">
-
-                    <div
-                        class="info-label"
-                        data-i18n="address"
-                    >
-                        地址
-                    </div>
-
-                    <div
-                        class="info-value"
-                        id="profileAddress"
-                    >
-                        --
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <button
-                class="profile-button"
-                id="editProfileButton"
-                onclick="openEditProfile()"
+        <div class="profile-line">
+            <label>昵称</label>
+            <input
+                id="nickname"
+                type="text"
+                placeholder="请输入昵称"
             >
-                ✏️ 编辑个人资料
-            </button>
-
         </div>
 
+        <div class="profile-line">
+            <label>手机号</label>
+            <input
+                id="phone"
+                type="text"
+                placeholder="请输入手机号"
+            >
+        </div>
+
+        <button
+            class="save-btn"
+            onclick="saveProfile()"
+        >
+            保存资料
+        </button>
+
     </div>
 
-</section>
+</div>
 
 
-<!-- ================================
-     偏好设置
-================================ -->
+<!-- 偏好设置 -->
+<div class="card">
 
-<section class="section">
-
-    <div
-        class="section-title"
-        data-i18n="preferenceTitle"
-    >
-        ⚙️ 偏好设置
+    <div class="card-title">
+        偏好设置
     </div>
 
-    <div
-        class="section-description"
-        data-i18n="preferenceDescription"
-    >
-        设置 MDY FOOD 的使用方式
-    </div>
-
-
-    <!-- 通知 -->
-
+    <!-- 消息通知 -->
     <div
         class="setting-row"
-        onclick="toggleSetting('notification')"
+        onclick="toggleNotification()"
     >
 
-        <div class="setting-left">
+        <div class="left">
 
-            <div class="setting-icon">
+            <div class="icon">
                 🔔
             </div>
 
-            <div class="setting-text">
+            <div class="text">
 
-                <div
-                    class="setting-name"
-                    data-i18n="notification"
-                >
-                    通知
+                <div class="name">
+                    消息通知
                 </div>
 
-                <div
-                    class="setting-desc"
-                    data-i18n="notificationDesc"
-                >
-                    开启后保留你的通知偏好
+                <div class="desc">
+                    接收订单及系统消息
                 </div>
 
             </div>
 
         </div>
 
-
-        <div class="setting-right">
-
-            <button
-                type="button"
-                id="notificationSwitch"
-                class="switch-button"
-                onclick="event.stopPropagation(); toggleSetting('notification')"
-                aria-label="通知开关"
-            >
-
-                <span class="switch-label">
-                    关
-                </span>
-
-            </button>
-
-        </div>
+        <div
+            id="notificationSwitch"
+            class="switch"
+        ></div>
 
     </div>
 
 
     <!-- 深色模式 -->
-
     <div
         class="setting-row"
-        onclick="toggleSetting('dark')"
+        onclick="toggleDarkMode()"
     >
 
-        <div class="setting-left">
+        <div class="left">
 
-            <div class="setting-icon">
+            <div class="icon">
                 🌙
             </div>
 
-            <div class="setting-text">
+            <div class="text">
 
-                <div
-                    class="setting-name"
-                    data-i18n="darkMode"
-                >
+                <div class="name">
                     深色模式
                 </div>
 
-                <div
-                    class="setting-desc"
-                    data-i18n="darkModeDesc"
-                >
-                    切换页面显示主题
+                <div class="desc">
+                    切换页面显示模式
                 </div>
 
             </div>
 
         </div>
 
-
-        <div class="setting-right">
-
-            <button
-                type="button"
-                id="darkModeSwitch"
-                class="switch-button"
-                onclick="event.stopPropagation(); toggleSetting('dark')"
-                aria-label="深色模式开关"
-            >
-
-                <span class="switch-label">
-                    关
-                </span>
-
-            </button>
-
-        </div>
+        <div
+            id="darkSwitch"
+            class="switch"
+        ></div>
 
     </div>
 
 
     <!-- 语言 -->
+    <div
+        class="setting-row"
+        onclick="changeLanguage()"
+    >
 
-    <div class="setting-row">
+        <div class="left">
 
-        <div class="setting-left">
-
-            <div class="setting-icon">
+            <div class="icon">
                 🌐
             </div>
 
-            <div class="setting-text">
+            <div class="text">
 
-                <div
-                    class="setting-name"
-                    data-i18n="language"
-                >
+                <div class="name">
                     语言
                 </div>
 
-                <div
-                    class="setting-desc"
-                    data-i18n="languageDesc"
-                >
-                    选择页面语言
+                <div class="desc">
+                    选择页面显示语言
                 </div>
 
             </div>
 
         </div>
-
-
-        <div class="setting-right">
-
-            <select
-                id="languageSelect"
-                class="language-select"
-                onclick="event.stopPropagation()"
-                onchange="changeLanguage(this.value)"
-            >
-
-                <option value="zh">
-                    中文
-                </option>
-
-                <option value="my">
-                    မြန်မာ
-                </option>
-
-                <option value="en">
-                    English
-                </option>
-
-            </select>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================================
-     登录信息
-================================ -->
-
-<section class="section">
-
-    <div
-        class="section-title"
-        data-i18n="loginTitle"
-    >
-        🔐 登录信息
-    </div>
-
-    <div
-        class="section-description"
-        data-i18n="loginDescription"
-    >
-        当前账户登录状态
-    </div>
-
-
-    <div
-        class="setting-row"
-        style="cursor:default;"
-    >
-
-        <div class="setting-left">
-
-            <div class="setting-icon">
-                🔑
-            </div>
-
-            <div class="setting-text">
-
-                <div
-                    class="setting-name"
-                    id="loginStatusText"
-                >
-                    检查登录状态...
-                </div>
-
-                <div
-                    class="setting-desc"
-                    id="loginEmailText"
-                >
-                    --
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================================
-     关于与隐私
-================================ -->
-
-<section class="section">
-
-    <div
-        class="section-title"
-        data-i18n="aboutTitle"
-    >
-        📄 关于与隐私
-    </div>
-
-
-    <div
-        class="setting-row"
-        onclick="location.href='user-agreement.html'"
-    >
-
-        <div class="setting-left">
-
-            <div class="setting-icon">
-                📜
-            </div>
-
-            <div class="setting-text">
-
-                <div
-                    class="setting-name"
-                    data-i18n="agreement"
-                >
-                    用户协议
-                </div>
-
-                <div
-                    class="setting-desc"
-                    data-i18n="agreementDesc"
-                >
-                    查看 MDY FOOD 用户协议
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="setting-right link-arrow">
-            ›
-        </div>
-
-    </div>
-
-
-    <div
-        class="setting-row"
-        onclick="location.href='privacy.html'"
-    >
-
-        <div class="setting-left">
-
-            <div class="setting-icon">
-                🔒
-            </div>
-
-            <div class="setting-text">
-
-                <div
-                    class="setting-name"
-                    data-i18n="privacy"
-                >
-                    隐私政策
-                </div>
-
-                <div class="setting-desc"
-                     data-i18n="privacyDesc">
-                    查看 MDY FOOD 隐私政策
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="setting-right link-arrow">
-            ›
-        </div>
-
-    </div>
-
-
-    <div
-        class="setting-row"
-        onclick="location.href='about.html'"
-    >
-
-        <div class="setting-left">
-
-            <div class="setting-icon">
-                ℹ️
-            </div>
-
-            <div class="setting-text">
-
-                <div
-                    class="setting-name"
-                    data-i18n="about"
-                >
-                    关于 MDY FOOD
-                </div>
-
-                <div
-                    class="setting-desc"
-                    data-i18n="aboutDesc"
-                >
-                    了解 MDY FOOD
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="setting-right link-arrow">
-            ›
-        </div>
-
-    </div>
-
-</section>
-
-
-</main>
-
-
-<!-- ================================
-     编辑资料弹窗
-================================ -->
-
-<div
-    class="modal-mask"
-    id="editModal"
->
-
-    <div class="modal">
 
         <div
-            class="modal-title"
-            data-i18n="editTitle"
+            class="select-value"
+            id="languageValue"
         >
-            编辑个人资料
-        </div>
-
-
-        <div class="form-group">
-
-            <label
-                class="form-label"
-                data-i18n="name"
-            >
-                姓名
-            </label>
-
-            <input
-                type="text"
-                id="editName"
-                class="form-input"
-            >
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label
-                class="form-label"
-                data-i18n="phone"
-            >
-                手机号码
-            </label>
-
-            <input
-                type="text"
-                id="editPhone"
-                class="form-input"
-            >
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label
-                class="form-label"
-                data-i18n="address"
-            >
-                地址
-            </label>
-
-            <input
-                type="text"
-                id="editAddress"
-                class="form-input"
-            >
-
-        </div>
-
-
-        <div class="modal-actions">
-
-            <button
-                class="modal-button cancel-button"
-                onclick="closeEditProfile()"
-                data-i18n="cancel"
-            >
-                取消
-            </button>
-
-            <button
-                class="modal-button save-button"
-                onclick="saveProfile()"
-                id="saveProfileButton"
-                data-i18n="save"
-            >
-                保存
-            </button>
-
+            中文
         </div>
 
     </div>
@@ -1463,93 +438,220 @@ body.dark .cancel-button {
 </div>
 
 
-<!-- ================================
-     Toast
-================================ -->
+<!-- 关于与服务 -->
+<div class="card">
+
+    <div class="card-title">
+        关于与服务
+    </div>
+
+
+    <!-- 用户协议 -->
+    <a
+        href="user-agreement.html"
+        class="setting-row"
+        style="text-decoration:none;color:inherit;"
+    >
+
+        <div class="left">
+
+            <div class="icon">
+                📄
+            </div>
+
+            <div class="text">
+
+                <div class="name">
+                    用户协议
+                </div>
+
+                <div class="desc">
+                    查看 MDY FOOD 用户协议
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <!-- 隐私政策 -->
+    <a
+        href="privacy.html"
+        class="setting-row"
+        style="text-decoration:none;color:inherit;"
+    >
+
+        <div class="left">
+
+            <div class="icon">
+                🔐
+            </div>
+
+            <div class="text">
+
+                <div class="name">
+                    隐私政策
+                </div>
+
+                <div class="desc">
+                    了解我们如何保护你的信息
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <!-- 关于 MDY FOOD -->
+    <a
+        href="about.html"
+        class="setting-row"
+        style="text-decoration:none;color:inherit;"
+    >
+
+        <div class="left">
+
+            <div class="icon">
+                ℹ️
+            </div>
+
+            <div class="text">
+
+                <div class="name">
+                    关于 MDY FOOD
+                </div>
+
+                <div class="desc">
+                    了解平台信息
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="arrow">
+            ›
+        </div>
+
+    </a>
+
+</div>
+
+
+<!-- 账户操作 -->
+<div class="card">
+
+    <div class="card-title">
+        账户操作
+    </div>
+
+    <div
+        class="setting-row"
+        onclick="checkLogin()"
+    >
+
+        <div class="left">
+
+            <div class="icon">
+                👤
+            </div>
+
+            <div class="text">
+
+                <div class="name">
+                    登录状态
+                </div>
+
+                <div
+                    class="desc"
+                    id="loginStatus"
+                >
+                    检查中...
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="arrow">
+            ›
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- 退出登录 -->
+<button
+    class="logout-btn"
+    onclick="logout()"
+>
+    退出登录
+</button>
+```
+
+</div>
+
+<!-- 底部导航 -->
+
+<div class="bottom-nav">
+
+```
+<div
+    class="nav-item"
+    onclick="location.href='index.html'"
+>
+    <div class="nav-icon">
+        🏠
+    </div>
+    首页
+</div>
+
 
 <div
-    class="toast"
-    id="toast"
-></div>
+    class="nav-item"
+    onclick="location.href='orders.html'"
+>
+    <div class="nav-icon">
+        📋
+    </div>
+    订单
+</div>
 
 
-<!-- ================================
-     底部导航
-================================ -->
+<div
+    class="nav-item active"
+    onclick="location.href='profile.html'"
+>
+    <div class="nav-icon">
+        👤
+    </div>
+    我的
+</div>
+```
 
-<nav class="bottom-nav">
+</div>
 
-    <a
-        href="index.html"
-        class="nav-item"
-    >
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
-        <div class="nav-icon">
-            🏠
-        </div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
-        <div data-i18n="home">
-            首页
-        </div>
-
-    </a>
-
-
-    <a
-        href="restaurants.html"
-        class="nav-item"
-    >
-
-        <div class="nav-icon">
-            🍽️
-        </div>
-
-        <div data-i18n="restaurants">
-            餐厅
-        </div>
-
-    </a>
-
-
-    <a
-        href="orders.html"
-        class="nav-item"
-    >
-
-        <div class="nav-icon">
-            📦
-        </div>
-
-        <div data-i18n="orders">
-            订单
-        </div>
-
-    </a>
-
-
-    <a
-        href="profile.html"
-        class="nav-item active"
-    >
-
-        <div class="nav-icon">
-            👤
-        </div>
-
-        <div data-i18n="profile">
-            我的
-        </div>
-
-    </a>
-
-</nav>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-
-/* ========================================
-   Firebase
-======================================== */
 
 const firebaseConfig = {
 
@@ -1573,1321 +675,343 @@ const firebaseConfig = {
 
     measurementId:
         "G-6Q5G2862XQ"
-
 };
 
 
-firebase.initializeApp(
-    firebaseConfig
-);
-
-
-const db =
-    firebase.firestore();
+firebase.initializeApp(firebaseConfig);
 
 
 const auth =
     firebase.auth();
 
+const db =
+    firebase.firestore();
+
 
 let currentUser = null;
 
-let customerData = {};
 
+/* 登录状态 */
 
-/* ========================================
-   多语言
-======================================== */
+auth.onAuthStateChanged(async user => {
 
-const translations = {
+    currentUser = user;
 
-    zh: {
 
-        pageTitle: "设置",
-
-        pageSubtitle:
-            "管理你的 MDY FOOD 使用偏好",
-
-        accountTitle:
-            "👤 账户信息",
-
-        accountDescription:
-            "当前登录账户与个人资料",
-
-        phone:
-            "手机号码",
-
-        address:
-            "地址",
-
-        preferenceTitle:
-            "⚙️ 偏好设置",
-
-        preferenceDescription:
-            "设置 MDY FOOD 的使用方式",
-
-        notification:
-            "通知",
-
-        notificationDesc:
-            "开启后保留你的通知偏好",
-
-        darkMode:
-            "深色模式",
-
-        darkModeDesc:
-            "切换页面显示主题",
-
-        language:
-            "语言",
-
-        languageDesc:
-            "选择页面语言",
-
-        loginTitle:
-            "🔐 登录信息",
-
-        loginDescription:
-            "当前账户登录状态",
-
-        aboutTitle:
-            "📄 关于与隐私",
-
-        agreement:
-            "用户协议",
-
-        agreementDesc:
-            "查看 MDY FOOD 用户协议",
-
-        privacy:
-            "隐私政策",
-
-        privacyDesc:
-            "查看 MDY FOOD 隐私政策",
-
-        about:
-            "关于 MDY FOOD",
-
-        aboutDesc:
-            "了解 MDY FOOD",
-
-        editTitle:
-            "编辑个人资料",
-
-        name:
-            "姓名",
-
-        cancel:
-            "取消",
-
-        save:
-            "保存",
-
-        home:
-            "首页",
-
-        restaurants:
-            "餐厅",
-
-        orders:
-            "订单",
-
-        profile:
-            "我的",
-
-        loggedIn:
-            "已登录",
-
-        loggedOut:
-            "未登录",
-
-        loginRequired:
-            "请先登录",
-
-        loginNow:
-            "登录",
-
-        noData:
-            "暂无资料",
-
-        notificationOn:
-            "通知已开启",
-
-        notificationOff:
-            "通知已关闭",
-
-        darkOn:
-            "深色模式已开启",
-
-        darkOff:
-            "深色模式已关闭",
-
-        languageChanged:
-            "语言已切换为中文",
-
-        profileSaved:
-            "个人资料保存成功",
-
-        saveFailed:
-            "保存失败，请稍后重试",
-
-        loading:
-            "加载中...",
-
-        unknown:
-            "未填写",
-
-        on:
-            "开",
-
-        off:
-            "关"
-
-    },
-
-
-    my: {
-
-        pageTitle:
-            "ဆက်တင်များ",
-
-        pageSubtitle:
-            "MDY FOOD အသုံးပြုမှု ဆက်တင်များ",
-
-        accountTitle:
-            "👤 အကောင့်အချက်အလက်",
-
-        accountDescription:
-            "လက်ရှိအကောင့်နှင့် ကိုယ်ရေးအချက်အလက်",
-
-        phone:
-            "ဖုန်းနံပါတ်",
-
-        address:
-            "လိပ်စာ",
-
-        preferenceTitle:
-            "⚙️ အသုံးပြုမှုဆက်တင်",
-
-        preferenceDescription:
-            "MDY FOOD အသုံးပြုပုံကို သတ်မှတ်ပါ",
-
-        notification:
-            "အသိပေးချက်",
-
-        notificationDesc:
-            "အသိပေးချက်ဆိုင်ရာ ဆက်တင်ကို သိမ်းဆည်းပါ",
-
-        darkMode:
-            "အမှောင်မုဒ်",
-
-        darkModeDesc:
-            "စာမျက်နှာအရောင်ပုံစံ ပြောင်းပါ",
-
-        language:
-            "ဘာသာစကား",
-
-        languageDesc:
-            "စာမျက်နှာဘာသာစကား ရွေးချယ်ပါ",
-
-        loginTitle:
-            "🔐 လော့ဂ်အင်အချက်အလက်",
-
-        loginDescription:
-            "လက်ရှိအကောင့် လော့ဂ်အင်အခြေအနေ",
-
-        aboutTitle:
-            "📄 အကြောင်းနှင့် ကိုယ်ရေးအချက်အလက်",
-
-        agreement:
-            "အသုံးပြုသူသဘောတူညီချက်",
-
-        agreementDesc:
-            "MDY FOOD အသုံးပြုသူသဘောတူညီချက်ကို ကြည့်ပါ",
-
-        privacy:
-            "ကိုယ်ရေးအချက်အလက်မူဝါဒ",
-
-        privacyDesc:
-            "MDY FOOD ကိုယ်ရေးအချက်အလက်မူဝါဒကို ကြည့်ပါ",
-
-        about:
-            "MDY FOOD အကြောင်း",
-
-        aboutDesc:
-            "MDY FOOD အကြောင်း သိရှိရန်",
-
-        editTitle:
-            "ကိုယ်ရေးအချက်အလက် ပြင်ဆင်ရန်",
-
-        name:
-            "အမည်",
-
-        cancel:
-            "ပယ်ဖျက်",
-
-        save:
-            "သိမ်းဆည်း",
-
-        home:
-            "ပင်မ",
-
-        restaurants:
-            "စားသောက်ဆိုင်",
-
-        orders:
-            "အော်ဒါ",
-
-        profile:
-            "ကျွန်ုပ်",
-
-        loggedIn:
-            "လော့ဂ်အင်ဝင်ထားသည်",
-
-        loggedOut:
-            "လော့ဂ်အင်မဝင်ရသေးပါ",
-
-        loginRequired:
-            "ကျေးဇူးပြု၍ အရင်လော့ဂ်အင်ဝင်ပါ",
-
-        loginNow:
-            "လော့ဂ်အင်",
-
-        noData:
-            "အချက်အလက်မရှိပါ",
-
-        notificationOn:
-            "အသိပေးချက် ဖွင့်ထားသည်",
-
-        notificationOff:
-            "အသိပေးချက် ပိတ်ထားသည်",
-
-        darkOn:
-            "အမှောင်မုဒ် ဖွင့်ထားသည်",
-
-        darkOff:
-            "အမှောင်မုဒ် ပိတ်ထားသည်",
-
-        languageChanged:
-            "ဘာသာစကားကို မြန်မာလို ပြောင်းပြီးပါပြီ",
-
-        profileSaved:
-            "ကိုယ်ရေးအချက်အလက် သိမ်းဆည်းပြီးပါပြီ",
-
-        saveFailed:
-            "သိမ်းဆည်းမှု မအောင်မြင်ပါ",
-
-        loading:
-            "ဖတ်နေသည်...",
-
-        unknown:
-            "မဖြည့်ထားပါ",
-
-        on:
-            "ဖွင့်",
-
-        off:
-            "ပိတ်"
-
-    },
-
-
-    en: {
-
-        pageTitle:
-            "Settings",
-
-        pageSubtitle:
-            "Manage your MDY FOOD preferences",
-
-        accountTitle:
-            "👤 Account Information",
-
-        accountDescription:
-            "Your current account and profile",
-
-        phone:
-            "Phone Number",
-
-        address:
-            "Address",
-
-        preferenceTitle:
-            "⚙️ Preferences",
-
-        preferenceDescription:
-            "Customize how you use MDY FOOD",
-
-        notification:
-            "Notifications",
-
-        notificationDesc:
-            "Save your notification preference",
-
-        darkMode:
-            "Dark Mode",
-
-        darkModeDesc:
-            "Change the page appearance",
-
-        language:
-            "Language",
-
-        languageDesc:
-            "Choose your page language",
-
-        loginTitle:
-            "🔐 Login Information",
-
-        loginDescription:
-            "Current account login status",
-
-        aboutTitle:
-            "📄 About & Privacy",
-
-        agreement:
-            "User Agreement",
-
-        agreementDesc:
-            "View the MDY FOOD user agreement",
-
-        privacy:
-            "Privacy Policy",
-
-        privacyDesc:
-            "View the MDY FOOD privacy policy",
-
-        about:
-            "About MDY FOOD",
-
-        aboutDesc:
-            "Learn more about MDY FOOD",
-
-        editTitle:
-            "Edit Profile",
-
-        name:
-            "Name",
-
-        cancel:
-            "Cancel",
-
-        save:
-            "Save",
-
-        home:
-            "Home",
-
-        restaurants:
-            "Restaurants",
-
-        orders:
-            "Orders",
-
-        profile:
-            "Profile",
-
-        loggedIn:
-            "Logged in",
-
-        loggedOut:
-            "Not logged in",
-
-        loginRequired:
-            "Please log in first",
-
-        loginNow:
-            "Log in",
-
-        noData:
-            "Not provided",
-
-        notificationOn:
-            "Notifications enabled",
-
-        notificationOff:
-            "Notifications disabled",
-
-        darkOn:
-            "Dark mode enabled",
-
-        darkOff:
-            "Dark mode disabled",
-
-        languageChanged:
-            "Language changed to English",
-
-        profileSaved:
-            "Profile saved successfully",
-
-        saveFailed:
-            "Failed to save. Please try again.",
-
-        loading:
-            "Loading...",
-
-        unknown:
-            "Not provided",
-
-        on:
-            "ON",
-
-        off:
-            "OFF"
-
-    }
-
-};
-
-
-let currentLanguage =
-    localStorage.getItem(
-        "mdyLanguage"
-    ) || "zh";
-
-
-/* ========================================
-   翻译
-======================================== */
-
-function t(key) {
-
-    const language =
-        translations[currentLanguage] ||
-        translations.zh;
-
-    return (
-        language[key] ||
-        translations.zh[key] ||
-        key
-    );
-
-}
-
-
-/* ========================================
-   应用语言
-======================================== */
-
-function applyLanguage(showMessage = false) {
-
-    if (
-        !translations[currentLanguage]
-    ) {
-
-        currentLanguage = "zh";
-
-    }
-
-
-    document.documentElement.lang =
-        currentLanguage === "zh"
-            ? "zh-CN"
-            : currentLanguage === "my"
-                ? "my"
-                : "en";
-
-
-    document.getElementById(
-        "pageTitle"
-    ).textContent =
-        t("pageTitle");
-
-
-    document.getElementById(
-        "pageSubtitle"
-    ).textContent =
-        t("pageSubtitle");
-
-
-    document
-        .querySelectorAll("[data-i18n]")
-        .forEach(function (element) {
-
-            const key =
-                element.getAttribute(
-                    "data-i18n"
-                );
-
-            element.textContent =
-                t(key);
-
-        });
-
-
-    document.getElementById(
-        "languageSelect"
-    ).value =
-        currentLanguage;
-
-
-    updateSwitchVisual(
-        "notificationSwitch",
-        localStorage.getItem(
-            "mdyNotification"
-        ) !== "false"
-    );
-
-
-    updateSwitchVisual(
-        "darkModeSwitch",
-        localStorage.getItem(
-            "mdyDarkMode"
-        ) === "true"
-    );
-
-
-    updateProfileText();
-
-
-    if (currentUser) {
+    if(!user){
 
         document.getElementById(
-            "loginStatusText"
-        ).textContent =
-            t("loggedIn");
+            "loginStatus"
+        ).textContent = "未登录";
 
-    } else {
-
-        document.getElementById(
-            "loginStatusText"
-        ).textContent =
-            t("loggedOut");
-
-    }
-
-
-    if (showMessage) {
-
-        showToast(
-            t("languageChanged")
-        );
-
-    }
-
-}
-
-
-/* ========================================
-   Toast
-======================================== */
-
-let toastTimer = null;
-
-function showToast(message) {
-
-    const toast =
-        document.getElementById(
-            "toast"
-        );
-
-    toast.textContent =
-        message;
-
-    toast.classList.add("show");
-
-
-    clearTimeout(toastTimer);
-
-
-    toastTimer =
-        setTimeout(function () {
-
-            toast.classList.remove(
-                "show"
-            );
-
-        }, 2200);
-
-}
-
-
-/* ========================================
-   更新按钮视觉
-======================================== */
-
-function updateSwitchVisual(
-    id,
-    enabled
-) {
-
-    const button =
-        document.getElementById(id);
-
-
-    if (!button) {
         return;
     }
 
 
-    button.classList.toggle(
-        "on",
-        enabled
-    );
+    document.getElementById(
+        "loginStatus"
+    ).textContent =
+        user.email || "已登录";
 
 
-    const label =
-        button.querySelector(
-            ".switch-label"
-        );
+    try{
+
+        const snap =
+            await db
+                .collection("customers")
+                .doc(user.uid)
+                .get();
 
 
-    if (label) {
+        if(snap.exists){
 
-        label.textContent =
-            enabled
-                ? t("on")
-                : t("off");
+            const data =
+                snap.data();
+
+
+            document.getElementById(
+                "nickname"
+            ).value =
+                data.name ||
+                data.customername ||
+                "";
+
+
+            document.getElementById(
+                "phone"
+            ).value =
+                data.phone ||
+                "";
+        }
+
+    }catch(error){
+
+        console.log(error);
 
     }
 
-
-    button.setAttribute(
-        "aria-pressed",
-        enabled
-            ? "true"
-            : "false"
-    );
-
-}
+});
 
 
-/* ========================================
-   通知
-======================================== */
+/* 读取设置 */
 
-function loadNotificationSetting() {
+function loadSettings(){
 
-    const saved =
-        localStorage.getItem(
-            "mdyNotification"
-        );
-
-
-    const enabled =
-        saved === null
-            ? true
-            : saved === "true";
-
-
-    localStorage.setItem(
-        "mdyNotification",
-        String(enabled)
-    );
-
-
-    updateSwitchVisual(
-        "notificationSwitch",
-        enabled
-    );
-
-}
-
-
-function toggleNotification() {
-
-    const oldValue =
+    const notification =
         localStorage.getItem(
             "mdyNotification"
         ) !== "false";
 
 
-    const enabled =
-        !oldValue;
-
-
-    localStorage.setItem(
-        "mdyNotification",
-        String(enabled)
-    );
-
-
-    updateSwitchVisual(
-        "notificationSwitch",
-        enabled
-    );
-
-
-    showToast(
-        enabled
-            ? t("notificationOn")
-            : t("notificationOff")
-    );
-
-}
-
-
-/* ========================================
-   深色模式
-======================================== */
-
-function applyDarkMode() {
-
-    const enabled =
+    const dark =
         localStorage.getItem(
             "mdyDarkMode"
         ) === "true";
+
+
+    document
+        .getElementById("notificationSwitch")
+        .classList
+        .toggle(
+            "on",
+            notification
+        );
+
+
+    document
+        .getElementById("darkSwitch")
+        .classList
+        .toggle(
+            "on",
+            dark
+        );
 
 
     document.body.classList.toggle(
         "dark",
-        enabled
+        dark
     );
 
 
-    updateSwitchVisual(
-        "darkModeSwitch",
-        enabled
-    );
+    const language =
+        localStorage.getItem(
+            "mdyLanguage"
+        ) || "zh";
 
+
+    document.getElementById(
+        "languageValue"
+    ).textContent =
+
+        language === "my"
+            ? "မြန်မာ"
+
+            : language === "en"
+            ? "English"
+
+            : "中文";
 }
 
 
-function toggleDarkMode() {
+/* 消息通知 */
 
-    const oldValue =
+function toggleNotification(){
+
+    const current =
+        localStorage.getItem(
+            "mdyNotification"
+        ) !== "false";
+
+
+    localStorage.setItem(
+        "mdyNotification",
+        String(!current)
+    );
+
+
+    loadSettings();
+}
+
+
+/* 深色模式 */
+
+function toggleDarkMode(){
+
+    const current =
         localStorage.getItem(
             "mdyDarkMode"
         ) === "true";
 
 
-    const enabled =
-        !oldValue;
-
-
     localStorage.setItem(
         "mdyDarkMode",
-        String(enabled)
+        String(!current)
     );
 
 
-    applyDarkMode();
-
-
-    showToast(
-        enabled
-            ? t("darkOn")
-            : t("darkOff")
-    );
-
+    loadSettings();
 }
 
 
-/* ========================================
-   设置按钮
-======================================== */
+/* 语言 */
 
-function toggleSetting(type) {
+function changeLanguage(){
 
-    if (type === "notification") {
-
-        toggleNotification();
-
-        return;
-
-    }
+    const current =
+        localStorage.getItem(
+            "mdyLanguage"
+        ) || "zh";
 
 
-    if (type === "dark") {
-
-        toggleDarkMode();
-
-        return;
-
-    }
-
-}
+    let next;
 
 
-/* ========================================
-   语言
-======================================== */
+    if(current === "zh"){
 
-function changeLanguage(language) {
+        next = "my";
 
-    if (
-        !translations[language]
-    ) {
+    }else if(current === "my"){
 
-        language = "zh";
+        next = "en";
+
+    }else{
+
+        next = "zh";
 
     }
-
-
-    currentLanguage =
-        language;
 
 
     localStorage.setItem(
         "mdyLanguage",
-        language
+        next
     );
 
 
-    applyLanguage(true);
-
+    loadSettings();
 }
 
 
-/* ========================================
-   Firebase 登录状态
-======================================== */
+/* 保存资料 */
 
-auth.onAuthStateChanged(
-    async function (user) {
+async function saveProfile(){
 
-        currentUser =
-            user || null;
+    if(!currentUser){
 
+        alert("请先登录");
 
-        if (user) {
-
-            document.getElementById(
-                "loginStatusText"
-            ).textContent =
-                t("loggedIn");
-
-
-            document.getElementById(
-                "loginEmailText"
-            ).textContent =
-                user.email || "--";
-
-
-            await loadCustomerProfile();
-
-        } else {
-
-            document.getElementById(
-                "profileName"
-            ).textContent =
-                t("loggedOut");
-
-
-            document.getElementById(
-                "profileEmail"
-            ).textContent =
-                t("loginRequired");
-
-
-            document.getElementById(
-                "profilePhone"
-            ).textContent =
-                "--";
-
-
-            document.getElementById(
-                "profileAddress"
-            ).textContent =
-                "--";
-
-
-            document.getElementById(
-                "avatar"
-            ).textContent =
-                "?";
-
-
-            document.getElementById(
-                "loginStatusText"
-            ).textContent =
-                t("loggedOut");
-
-
-            document.getElementById(
-                "loginEmailText"
-            ).textContent =
-                t("loginRequired");
-
-
-            const button =
-                document.getElementById(
-                    "editProfileButton"
-                );
-
-
-            button.textContent =
-                "🔑 " + t("loginNow");
-
-
-            button.onclick =
-                function () {
-
-                    location.href =
-                        "login.html";
-
-                };
-
-        }
-
-    }
-);
-
-
-/* ========================================
-   加载顾客资料
-======================================== */
-
-async function loadCustomerProfile() {
-
-    if (!currentUser) {
-        return;
-    }
-
-
-    customerData = {};
-
-
-    try {
-
-        const doc =
-            await db
-                .collection("customers")
-                .doc(currentUser.uid)
-                .get();
-
-
-        if (doc.exists) {
-
-            customerData =
-                doc.data() || {};
-
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            "读取 customers 失败:",
-            error
-        );
-
-    }
-
-
-    updateProfileText();
-
-}
-
-
-/* ========================================
-   显示顾客资料
-======================================== */
-
-function updateProfileText() {
-
-    if (!currentUser) {
         return;
     }
 
 
     const name =
-        customerData.name ||
-        customerData.customerName ||
-        currentUser.displayName ||
-        t("noData");
-
-
-    const email =
-        currentUser.email ||
-        customerData.email ||
-        t("noData");
+        document
+            .getElementById("nickname")
+            .value
+            .trim();
 
 
     const phone =
-        customerData.phone ||
-        t("noData");
+        document
+            .getElementById("phone")
+            .value
+            .trim();
 
 
-    const address =
-        customerData.address ||
-        customerData.adress ||
-        t("noData");
-
-
-    document.getElementById(
-        "profileName"
-    ).textContent =
-        name;
-
-
-    document.getElementById(
-        "profileEmail"
-    ).textContent =
-        email;
-
-
-    document.getElementById(
-        "profilePhone"
-    ).textContent =
-        phone;
-
-
-    document.getElementById(
-        "profileAddress"
-    ).textContent =
-        address;
-
-
-    const firstCharacter =
-        String(name)
-            .trim()
-            .charAt(0);
-
-
-    document.getElementById(
-        "avatar"
-    ).textContent =
-        firstCharacter || "?";
-
-
-    const button =
-        document.getElementById(
-            "editProfileButton"
-        );
-
-
-    button.textContent =
-        "✏️ " + t("editTitle");
-
-
-    button.onclick =
-        openEditProfile;
-
-}
-
-
-/* ========================================
-   编辑资料
-======================================== */
-
-function openEditProfile() {
-
-    if (!currentUser) {
-
-        location.href =
-            "login.html";
-
-        return;
-
-    }
-
-
-    document.getElementById(
-        "editName"
-    ).value =
-        customerData.name ||
-        customerData.customerName ||
-        currentUser.displayName ||
-        "";
-
-
-    document.getElementById(
-        "editPhone"
-    ).value =
-        customerData.phone ||
-        "";
-
-
-    document.getElementById(
-        "editAddress"
-    ).value =
-        customerData.address ||
-        customerData.adress ||
-        "";
-
-
-    document.getElementById(
-        "editModal"
-    ).classList.add("show");
-
-}
-
-
-function closeEditProfile() {
-
-    document.getElementById(
-        "editModal"
-    ).classList.remove("show");
-
-}
-
-
-/* ========================================
-   保存资料
-======================================== */
-
-async function saveProfile() {
-
-    if (!currentUser) {
-
-        location.href =
-            "login.html";
-
-        return;
-
-    }
-
-
-    const name =
-        document.getElementById(
-            "editName"
-        ).value.trim();
-
-
-    const phone =
-        document.getElementById(
-            "editPhone"
-        ).value.trim();
-
-
-    const address =
-        document.getElementById(
-            "editAddress"
-        ).value.trim();
-
-
-    if (!name) {
-
-        showToast(
-            currentLanguage === "zh"
-                ? "请输入姓名"
-                : currentLanguage === "my"
-                    ? "အမည်ထည့်ပါ"
-                    : "Please enter your name"
-        );
-
-        return;
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "saveProfileButton"
-        );
-
-
-    button.disabled = true;
-
-
-    try {
+    try{
 
         await db
             .collection("customers")
             .doc(currentUser.uid)
             .set({
 
-                uid:
-                    currentUser.uid,
+                name:name,
 
-                name:
-                    name,
+                customername:name,
 
-                phone:
-                    phone,
+                phone:phone,
 
                 email:
-                    currentUser.email ||
-                    customerData.email ||
-                    "",
+                    currentUser.email || "",
 
-                address:
-                    address,
+                uid:
+                    currentUser.uid,
 
                 updatedAt:
                     firebase.firestore
                         .FieldValue
                         .serverTimestamp()
 
-            }, {
-
-                merge: true
-
+            },{
+                merge:true
             });
 
 
-        customerData.name =
-            name;
-
-        customerData.phone =
-            phone;
-
-        customerData.address =
-            address;
+        alert("资料保存成功");
 
 
-        updateProfileText();
+    }catch(error){
 
+        console.error(error);
 
-        closeEditProfile();
-
-
-        showToast(
-            t("profileSaved")
+        alert(
+            "保存失败，请稍后再试"
         );
-
-
-    } catch (error) {
-
-        console.error(
-            "保存个人资料失败:",
-            error
-        );
-
-
-        showToast(
-            t("saveFailed")
-        );
-
-    } finally {
-
-        button.disabled =
-            false;
 
     }
 
 }
 
 
-/* ========================================
-   初始化
-======================================== */
+/* 登录状态 */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+function checkLogin(){
 
-        loadNotificationSetting();
+    if(currentUser){
 
-        applyDarkMode();
+        alert(
+            "当前已登录\n\n" +
+            "账号：" +
+            (
+                currentUser.email || ""
+            )
+        );
 
-        applyLanguage(false);
+    }else{
+
+        alert("当前未登录");
 
     }
-);
+
+}
 
 
-/* ========================================
-   弹窗背景关闭
-======================================== */
+/* 退出登录 */
 
-document
-    .getElementById("editModal")
-    .addEventListener(
-        "click",
-        function (event) {
+async function logout(){
 
-            if (
-                event.target === this
-            ) {
+    try{
 
-                closeEditProfile();
+        await auth.signOut();
 
-            }
+        location.href =
+            "login.html";
 
-        }
-    );
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "退出登录失败"
+        );
+
+    }
+
+}
+
+
+/* 初始化 */
+
+loadSettings();
 
 </script>
 
