@@ -2,15 +2,24 @@
 <html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>订单成功 - Mandalay Food</title>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>订单成功 - MDY FOOD</title>
 
     <!-- MDY FOOD 共享语言系统 -->
     <script src="language.js"></script>
 
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -67,12 +76,12 @@
         .order-number strong {
             font-size: 22px;
             color: #ff5a1f;
+            word-break: break-all;
         }
 
         .button {
             display: block;
             width: 100%;
-            box-sizing: border-box;
             padding: 15px;
             margin-top: 15px;
             border: none;
@@ -89,6 +98,26 @@
             color: #333;
         }
 
+        @media (max-width: 500px) {
+
+            .container {
+                margin: 30px auto;
+            }
+
+            .box {
+                padding: 30px 20px;
+            }
+
+            .success-icon {
+                font-size: 55px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+        }
+
     </style>
 
 </head>
@@ -96,39 +125,72 @@
 
 <body>
 
+
+    <!-- ================================
+         顶部
+    ================================= -->
+
     <header>
-        <strong>🍜 Mandalay Food</strong>
+
+        <strong>
+            🍜 MDY FOOD
+        </strong>
+
     </header>
 
+
+    <!-- ================================
+         成功内容
+    ================================= -->
 
     <div class="container">
 
         <div class="box">
 
+
             <div class="success-icon">
                 ✅
             </div>
 
-            <h1 data-i18n="orderSuccessTitle">
+
+            <h1
+                data-i18n="orderSuccessTitle"
+            >
                 订单提交成功！
             </h1>
 
+
             <p class="message">
-                <span data-i18n="orderSuccessMessage">
+
+                <span
+                    data-i18n="orderSuccessMessage"
+                >
                     感谢你的订单！
                 </span>
+
                 <br>
-                <span data-i18n="orderSuccessPreparing">
+
+                <span
+                    data-i18n="orderSuccessPreparing"
+                >
                     商家收到订单后会尽快准备。
                 </span>
+
             </p>
 
 
+            <!-- ================================
+                 订单号
+            ================================= -->
+
             <div class="order-number">
 
-                <span data-i18n="orderNumber">
+                <span
+                    data-i18n="orderNumber"
+                >
                     订单号
                 </span>
+
 
                 <strong id="orderNumber">
                     --
@@ -136,6 +198,10 @@
 
             </div>
 
+
+            <!-- ================================
+                 返回首页
+            ================================= -->
 
             <a
                 class="button"
@@ -146,6 +212,10 @@
             </a>
 
 
+            <!-- ================================
+                 继续点餐
+            ================================= -->
+
             <a
                 class="button secondary"
                 href="menu.html"
@@ -154,6 +224,7 @@
                 继续点餐
             </a>
 
+
         </div>
 
     </div>
@@ -161,83 +232,195 @@
 
     <script>
 
-        // ================================
-        // MDY FOOD 共享语言系统
-        // ================================
+        "use strict";
 
-        function updateSuccessLanguage() {
 
-            if (
+        /* =====================================================
+           MDY FOOD - SUCCESS
+           统一使用 language.js
+        ===================================================== */
+
+
+        /* ================================
+           翻译
+        ================================= */
+
+        function t(
+            key,
+            fallback
+        ){
+
+            if(
                 window.MDYLanguage &&
-                typeof window.MDYLanguage.apply === "function"
-            ) {
-                MDYLanguage.apply(
-                    MDYLanguage.getLanguage()
+                typeof window.MDYLanguage.t ===
+                "function"
+            ){
+
+                return window.MDYLanguage.t(
+                    key,
+                    {},
+                    fallback || key
                 );
+
             }
 
-            // 更新页面标题
+
+            return fallback || key;
+
+        }
+
+
+        /* ================================
+           更新页面标题
+        ================================= */
+
+        function updateSuccessTitle(){
+
             document.title =
-                MDYLanguage.t(
+                t(
                     "orderSuccessTitle",
                     "订单提交成功！"
-                ) + " - Mandalay Food";
+                ) +
+                " - MDY FOOD";
+
         }
 
 
-        // ================================
-        // 读取订单号
-        // ================================
+        /* ================================
+           读取订单号
+        ================================= */
 
-        const order =
-            JSON.parse(
-                localStorage.getItem("lastOrder")
-            );
-
-
-        if (order) {
+        function loadLastOrder(){
 
             const orderNumberElement =
-                document.getElementById("orderNumber");
+                document.getElementById(
+                    "orderNumber"
+                );
 
-            if (orderNumberElement) {
+
+            if(!orderNumberElement){
+
+                return;
+
+            }
+
+
+            let order = null;
+
+
+            try{
+
+                const savedOrder =
+                    localStorage.getItem(
+                        "lastOrder"
+                    );
+
+
+                if(savedOrder){
+
+                    order =
+                        JSON.parse(
+                            savedOrder
+                        );
+
+                }
+
+            }
+
+            catch(error){
+
+                console.error(
+                    "读取最后订单失败：",
+                    error
+                );
+
+            }
+
+
+            if(order){
 
                 orderNumberElement.innerText =
-                    order.orderNumber || "--";
+                    order.orderNumber ||
+                    order.order_number ||
+                    "--";
+
+            }
+
+            else{
+
+                orderNumberElement.innerText =
+                    "--";
 
             }
 
         }
 
 
-        // ================================
-        // 监听语言切换
-        // ================================
+        /* ================================
+           页面语言刷新
+        ================================= */
+
+        function refreshLanguage(){
+
+            updateSuccessTitle();
+
+            /*
+             * language.js 会自动处理
+             * data-i18n 元素。
+             *
+             * 这里只负责动态内容。
+             */
+
+        }
+
+
+        /* ================================
+           监听语言切换
+        ================================= */
 
         window.addEventListener(
             "mdyLanguageChanged",
-            function () {
+            function(){
 
-                updateSuccessLanguage();
-
-            }
-        );
-
-
-        // ================================
-        // 页面初始化
-        // ================================
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-
-                updateSuccessLanguage();
+                refreshLanguage();
 
             }
         );
+
+
+        /* ================================
+           页面初始化
+        ================================= */
+
+        function initializePage(){
+
+            loadLastOrder();
+
+            refreshLanguage();
+
+        }
+
+
+        if(
+            document.readyState ===
+            "loading"
+        ){
+
+            document.addEventListener(
+                "DOMContentLoaded",
+                initializePage
+            );
+
+        }
+
+        else{
+
+            initializePage();
+
+        }
 
     </script>
+
 
 </body>
 
