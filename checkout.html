@@ -13,9 +13,7 @@
     <title>确认订单 - MDY FOOD</title>
 
 
-    <!-- ========================================
-         Firebase
-    ========================================= -->
+    <!-- Firebase -->
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
@@ -24,9 +22,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 
-    <!-- ========================================
-         MDY FOOD 全站语言系统
-    ========================================= -->
+    <!-- MDY FOOD 全站语言系统 -->
 
     <script src="language.js"></script>
 
@@ -66,10 +62,6 @@
 
         }
 
-
-        /* ========================================
-           返回购物车
-        ========================================= */
 
         .back-button {
 
@@ -359,6 +351,10 @@
 
             padding: 50px 20px;
 
+            color: #777;
+
+            line-height: 1.8;
+
         }
 
 
@@ -406,22 +402,22 @@
 <header>
 
 
-    <!-- ========================================
-         返回购物车
-    ========================================= -->
-
     <a
         href="cart.html"
         class="back-button"
-        id="backToCartButton"
     >
-        ← <span id="backToCartText">返回购物车</span>
+
+        ←
+
+        <span
+            id="backToCartText"
+            data-i18n="back"
+        >
+            返回购物车
+        </span>
+
     </a>
 
-
-    <!-- ========================================
-         页面标题
-    ========================================= -->
 
     <div class="header-title">
 
@@ -433,16 +429,13 @@
 
     </div>
 
-
 </header>
 
 
 <div class="container">
 
 
-    <!-- ========================================
-         登录提醒
-    ========================================= -->
+    <!-- 登录提醒 -->
 
     <div
         id="loginWarning"
@@ -454,17 +447,13 @@
             ⚠️ 你还没有登录。
         </span>
 
-
         <br>
-
 
         <span data-i18n="loginRequiredDesc">
             登录后才能提交订单，并且你的订单会自动保存到你的账号。
         </span>
 
-
         <br>
-
 
         <a href="login.html">
 
@@ -479,13 +468,9 @@
     </div>
 
 
-
-    <!-- ========================================
-         订单内容
-    ========================================= -->
+    <!-- 订单内容 -->
 
     <div class="box">
-
 
         <h2>
 
@@ -510,7 +495,6 @@
 
 
         <div class="summary">
-
 
             <div>
 
@@ -541,7 +525,6 @@
 
             </div>
 
-
         </div>
 
 
@@ -550,7 +533,6 @@
             <span data-i18n="total">
                 总计
             </span>
-
 
             <span id="total">
                 2,000 Ks
@@ -561,13 +543,9 @@
     </div>
 
 
-
-    <!-- ========================================
-         配送信息
-    ========================================= -->
+    <!-- 配送信息 -->
 
     <div class="box">
-
 
         <h2>
 
@@ -620,13 +598,9 @@
     </div>
 
 
-
-    <!-- ========================================
-         付款方式
-    ========================================= -->
+    <!-- 付款方式 -->
 
     <div class="box">
-
 
         <h2>
 
@@ -640,7 +614,6 @@
 
 
         <div class="payment">
-
 
             <label>
 
@@ -693,7 +666,6 @@
 
             </label>
 
-
         </div>
 
 
@@ -707,430 +679,370 @@
 
     </div>
 
-
 </div>
-
 
 
 <script>
 
 
-    // ========================================
-    // Firebase
-    // ========================================
+/* ========================================
+   Firebase
+======================================== */
 
-    const firebaseConfig = {
+const firebaseConfig = {
 
-        apiKey:
-            "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+    apiKey:
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
 
-        authDomain:
-            "mdy-food.firebaseapp.com",
+    authDomain:
+        "mdy-food.firebaseapp.com",
 
-        projectId:
-            "mdy-food",
+    projectId:
+        "mdy-food",
 
-        storageBucket:
-            "mdy-food.firebasestorage.app",
+    storageBucket:
+        "mdy-food.firebasestorage.app",
 
-        messagingSenderId:
-            "498327590625",
+    messagingSenderId:
+        "498327590625",
 
-        appId:
-            "1:498327590625:web:cceafb7febb689e7ad09a0",
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0",
 
-        measurementId:
-            "G-6Q5G2862XQ"
+    measurementId:
+        "G-6Q5G2862XQ"
 
-    };
-
-
-    if (!firebase.apps.length) {
-
-        firebase.initializeApp(
-            firebaseConfig
-        );
-
-    }
+};
 
 
-    const db =
-        firebase.firestore();
+if (!firebase.apps.length) {
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+}
 
 
-    const auth =
-        firebase.auth();
+const db =
+    firebase.firestore();
 
 
+const auth =
+    firebase.auth();
 
-    // ========================================
-    // 语言
-    // ========================================
 
-    function t(key, fallback) {
+/* ========================================
+   语言
+======================================== */
+
+function t(key, fallback) {
+
+    if (
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t === "function"
+    ) {
+
+        const result =
+            window.MDYLanguage.t(
+                key,
+                {},
+                fallback
+            );
 
         if (
-            window.MDYLanguage &&
-            typeof MDYLanguage.t === "function"
+            result &&
+            result !== key
         ) {
 
-            const result =
-                MDYLanguage.t(
-                    key,
-                    {},
-                    fallback
-                );
-
-
-            if (
-                result &&
-                result !== key
-            ) {
-
-                return result;
-
-            }
-
-        }
-
-
-        return fallback || key;
-
-    }
-
-
-
-    // ========================================
-    // 更新页面语言
-    // ========================================
-
-    function updateCheckoutLanguage() {
-
-
-        if (
-            window.MDYLanguage &&
-            typeof MDYLanguage.apply === "function"
-        ) {
-
-            MDYLanguage.apply(
-                MDYLanguage.getLanguage()
-            );
-
-        }
-
-
-        /*
-         * 返回购物车使用现有共享 back
-         * 翻译键，不另外创建语言系统。
-         */
-
-        const backText =
-            document.getElementById(
-                "backToCartText"
-            );
-
-
-        if (backText) {
-
-            backText.innerText =
-                t(
-                    "back",
-                    "返回购物车"
-                );
-
-        }
-
-
-        document.title =
-            t(
-                "checkoutTitle",
-                "确认订单 - MDY FOOD"
-            );
-
-
-        showOrder();
-
-
-        loadRestaurant();
-
-
-        const submitButton =
-            document.getElementById(
-                "submitButton"
-            );
-
-
-        if (
-            submitButton &&
-            !submitButton.disabled
-        ) {
-
-            submitButton.innerText =
-                t(
-                    "placeOrder",
-                    "提交订单"
-                );
+            return result;
 
         }
 
     }
 
+    return fallback || key;
+
+}
 
 
-    // ========================================
-    // 当前登录顾客
-    // ========================================
+/* ========================================
+   当前用户
+======================================== */
 
-    let currentUser =
-        null;
-
+let currentUser = null;
 
 
-    // ========================================
-    // 获取购物车
-    // ========================================
+/* ========================================
+   购物车
+======================================== */
 
-    let cart =
+let cart = [];
+
+try {
+
+    cart =
         JSON.parse(
             localStorage.getItem("cart")
         ) || [];
 
+    if (!Array.isArray(cart)) {
+
+        cart = [];
+
+    }
+
+} catch (error) {
+
+    console.error(
+        "读取购物车失败:",
+        error
+    );
+
+    cart = [];
+
+}
 
 
-    // ========================================
-    // 餐厅
-    // ========================================
+/* ========================================
+   餐厅
+======================================== */
 
-    let restaurantId =
+let restaurantId =
+    null;
+
+
+let restaurantName =
+    t(
+        "unknownRestaurant",
+        "未知餐厅"
+    );
+
+
+if (cart.length > 0) {
+
+    restaurantId =
+        cart[0].restaurantId ||
         null;
 
+}
 
-    let restaurantName =
-        "未知餐厅";
 
+/* ========================================
+   页面语言
+======================================== */
 
-    if (cart.length > 0) {
+function updateCheckoutLanguage() {
 
-        restaurantId =
-            cart[0].restaurantId ||
-            null;
+    /*
+     * 不再调用 MDYLanguage.apply()
+     * 防止语言事件递归。
+     */
 
-    }
-
-
-
-    // ========================================
-    // 读取餐厅
-    // ========================================
-
-    async function loadRestaurant() {
-
-        const nameElement =
-            document.getElementById(
-                "restaurantName"
-            );
-
-
-        if (!restaurantId) {
-
-            nameElement.innerText =
-                "⚠️ " +
-                t(
-                    "cannotIdentifyRestaurant",
-                    "无法识别餐厅"
-                );
-
-            return;
-
-        }
-
-
-        try {
-
-            const doc =
-                await db
-                    .collection("restaurants")
-                    .doc(restaurantId)
-                    .get();
-
-
-            if (doc.exists) {
-
-                const data =
-                    doc.data();
-
-
-                restaurantName =
-                    data.name ||
-                    t(
-                        "unknownRestaurant",
-                        "未知餐厅"
-                    );
-
-
-                nameElement.innerText =
-                    "🏪 " +
-                    restaurantName;
-
-            }
-
-            else {
-
-                nameElement.innerText =
-                    "⚠️ " +
-                    t(
-                        "restaurantDoesNotExist",
-                        "餐厅不存在"
-                    );
-
-            }
-
-
-        }
-
-        catch (error) {
-
-            console.error(error);
-
-
-            nameElement.innerText =
-                "⚠️ " +
-                t(
-                    "restaurantLoadError",
-                    "餐厅信息加载失败"
-                );
-
-        }
-
-    }
-
-
-
-    // ========================================
-    // 显示订单
-    // ========================================
-
-    function showOrder() {
-
-        const container =
-            document.getElementById(
-                "orderItems"
-            );
-
-
-        if (cart.length === 0) {
-
-            container.innerHTML = `
-
-                <div class="empty">
-
-                    🛒
-
-                    <br><br>
-
-                    ${t(
-                        "emptyCartCheckout",
-                        "购物车是空的"
-                    )}
-
-                </div>
-
-            `;
-
-
-            document.getElementById(
-                "subtotal"
-            ).innerText =
-                "0 Ks";
-
-
-            document.getElementById(
-                "deliveryFee"
-            ).innerText =
-                "2,000 Ks";
-
-
-            document.getElementById(
-                "total"
-            ).innerText =
-                "2,000 Ks";
-
-
-            return;
-
-        }
-
-
-        let subtotal = 0;
-
-
-        container.innerHTML = "";
-
-
-        cart.forEach(
-            function(item) {
-
-                const price =
-                    Number(item.price) || 0;
-
-
-                const quantity =
-                    Number(item.quantity) || 0;
-
-
-                const itemTotal =
-                    price * quantity;
-
-
-                subtotal +=
-                    itemTotal;
-
-
-                const div =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                div.className =
-                    "item";
-
-
-                div.innerHTML = `
-
-                    <span>
-
-                        ${item.name}
-
-                        × ${quantity}
-
-                    </span>
-
-
-                    <span>
-
-                        ${itemTotal
-                            .toLocaleString()}
-                        Ks
-
-                    </span>
-
-                `;
-
-
-                container.appendChild(
-                    div
-                );
-
-            }
+    document.title =
+        t(
+            "checkoutTitle",
+            "确认订单 - MDY FOOD"
         );
+
+
+    /*
+     * 静态 data-i18n 内容由 language.js
+     * 自己处理。
+     *
+     * 这里只重新生成动态订单文字。
+     */
+
+    showOrder();
+
+
+    /*
+     * 餐厅名称已经读取过时，
+     * 不需要因为语言变化再次读取 Firestore。
+     *
+     * 只更新错误状态/默认状态。
+     */
+
+    const nameElement =
+        document.getElementById(
+            "restaurantName"
+        );
+
+
+    if (
+        nameElement &&
+        !restaurantId
+    ) {
+
+        nameElement.innerText =
+            "⚠️ " +
+            t(
+                "cannotIdentifyRestaurant",
+                "无法识别餐厅"
+            );
+
+    }
+
+
+    const submitButton =
+        document.getElementById(
+            "submitButton"
+        );
+
+
+    if (
+        submitButton &&
+        !submitButton.disabled
+    ) {
+
+        submitButton.innerText =
+            t(
+                "placeOrder",
+                "提交订单"
+            );
+
+    }
+
+}
+
+
+/* ========================================
+   读取餐厅
+======================================== */
+
+async function loadRestaurant() {
+
+    const nameElement =
+        document.getElementById(
+            "restaurantName"
+        );
+
+
+    if (!nameElement) {
+
+        return;
+
+    }
+
+
+    if (!restaurantId) {
+
+        nameElement.innerText =
+            "⚠️ " +
+            t(
+                "cannotIdentifyRestaurant",
+                "无法识别餐厅"
+            );
+
+        return;
+
+    }
+
+
+    try {
+
+        const doc =
+            await db
+                .collection("restaurants")
+                .doc(restaurantId)
+                .get();
+
+
+        if (doc.exists) {
+
+            const data =
+                doc.data();
+
+
+            restaurantName =
+                data.name ||
+                t(
+                    "unknownRestaurant",
+                    "未知餐厅"
+                );
+
+
+            nameElement.innerText =
+                "🏪 " +
+                restaurantName;
+
+        }
+
+        else {
+
+            nameElement.innerText =
+                "⚠️ " +
+                t(
+                    "restaurantDoesNotExist",
+                    "餐厅不存在"
+                );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "读取餐厅失败:",
+            error
+        );
+
+
+        nameElement.innerText =
+            "⚠️ " +
+            t(
+                "restaurantLoadError",
+                "餐厅信息加载失败"
+            );
+
+    }
+
+}
+
+
+/* ========================================
+   显示订单
+======================================== */
+
+function showOrder() {
+
+    const container =
+        document.getElementById(
+            "orderItems"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    if (cart.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                🛒
+
+                <br><br>
+
+                ${t(
+                    "emptyCartCheckout",
+                    "购物车是空的"
+                )}
+
+            </div>
+
+        `;
 
 
         document.getElementById(
             "subtotal"
         ).innerText =
-            subtotal.toLocaleString() +
-            " Ks";
+            "0 Ks";
 
 
         document.getElementById(
@@ -1142,280 +1054,235 @@
         document.getElementById(
             "total"
         ).innerText =
-            (
-                subtotal + 2000
-            ).toLocaleString() +
-            " Ks";
+            "2,000 Ks";
+
+
+        return;
 
     }
 
 
-
-    // ========================================
-    // 自动读取顾客资料
-    // ========================================
-
-    async function loadCustomerProfile(
-        user
-    ) {
-
-        if (!user) {
-
-            return;
-
-        }
+    let subtotal = 0;
 
 
-        try {
-
-            const doc =
-                await db
-                    .collection("customers")
-                    .doc(user.uid)
-                    .get();
+    container.innerHTML = "";
 
 
-            if (!doc.exists) {
+    cart.forEach(
+        function(item) {
 
-                return;
-
-            }
-
-
-            const customer =
-                doc.data();
+            const price =
+                Number(item.price) || 0;
 
 
-            document.getElementById(
-                "name"
-            ).value =
-                customer.name ||
-                "";
+            const quantity =
+                Number(item.quantity) || 0;
 
 
-            document.getElementById(
-                "phone"
-            ).value =
-                customer.phone ||
-                "";
+            const itemTotal =
+                price * quantity;
 
 
-            document.getElementById(
-                "address"
-            ).value =
-                customer.address ||
-                "";
+            subtotal +=
+                itemTotal;
 
-        }
 
-        catch (error) {
+            const div =
+                document.createElement(
+                    "div"
+                );
 
-            console.error(
-                "读取顾客资料失败:",
-                error
+
+            div.className =
+                "item";
+
+
+            div.innerHTML = `
+
+                <span>
+
+                    ${escapeHtml(
+                        item.name || ""
+                    )}
+
+                    × ${quantity}
+
+                </span>
+
+
+                <span>
+
+                    ${itemTotal
+                        .toLocaleString()}
+                    Ks
+
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                div
             );
-
-        }
-
-    }
-
-
-
-    // ========================================
-    // 登录状态
-    // ========================================
-
-    auth.onAuthStateChanged(
-        async function(user) {
-
-            currentUser =
-                user;
-
-
-            const warning =
-                document.getElementById(
-                    "loginWarning"
-                );
-
-
-            const submitButton =
-                document.getElementById(
-                    "submitButton"
-                );
-
-
-            if (user) {
-
-                warning.style.display =
-                    "none";
-
-
-                submitButton.disabled =
-                    false;
-
-
-                await loadCustomerProfile(
-                    user
-                );
-
-            }
-
-            else {
-
-                warning.style.display =
-                    "block";
-
-
-                submitButton.disabled =
-                    false;
-
-            }
 
         }
     );
 
 
-
-    // ========================================
-    // 提交订单
-    // ========================================
-
-    async function submitOrder() {
-
-
-        // ========================================
-        // 检查登录
-        // ========================================
-
-        if (!currentUser) {
-
-            alert(
-                t(
-                    "pleaseLoginBeforeOrder",
-                    "请先登录账号，再提交订单。"
-                )
-            );
+    document.getElementById(
+        "subtotal"
+    ).innerText =
+        subtotal.toLocaleString() +
+        " Ks";
 
 
-            window.location.href =
-                "login.html";
+    document.getElementById(
+        "deliveryFee"
+    ).innerText =
+        "2,000 Ks";
 
 
-            return;
+    document.getElementById(
+        "total"
+    ).innerText =
+        (
+            subtotal + 2000
+        ).toLocaleString() +
+        " Ks";
 
-        }
-
-
-        if (cart.length === 0) {
-
-            alert(
-                t(
-                    "emptyCartCheckout",
-                    "购物车是空的"
-                )
-            );
+}
 
 
-            return;
+/* ========================================
+   HTML 安全处理
+======================================== */
 
-        }
+function escapeHtml(value) {
 
+    if (
+        value === null ||
+        value === undefined
+    ) {
 
-        if (!restaurantId) {
+        return "";
 
-            alert(
-                t(
-                    "restaurantReturnToMenu",
-                    "无法识别餐厅，请返回菜单重新加入菜品。"
-                )
-            );
-
-
-            return;
-
-        }
+    }
 
 
-        const name =
-            document
-                .getElementById("name")
-                .value
-                .trim();
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
 
 
-        const phone =
-            document
-                .getElementById("phone")
-                .value
-                .trim();
+/* ========================================
+   自动读取顾客资料
+======================================== */
+
+async function loadCustomerProfile(
+    user
+) {
+
+    if (!user) {
+
+        return;
+
+    }
 
 
-        const address =
-            document
-                .getElementById("address")
-                .value
-                .trim();
+    try {
+
+        const doc =
+            await db
+                .collection("customers")
+                .doc(user.uid)
+                .get();
 
 
-        const paymentElement =
-            document.querySelector(
-                'input[name="payment"]:checked'
-            );
-
-
-        /*
-         * payment 的内部值保持不变。
-         */
-
-        const payment =
-            paymentElement
-                ? paymentElement.value
-                : "现金";
-
-
-        if (!name) {
-
-            alert(
-                t(
-                    "pleaseEnterName",
-                    "请输入姓名"
-                )
-            );
-
+        if (!doc.exists) {
 
             return;
 
         }
 
 
-        if (!phone) {
+        const customer =
+            doc.data();
 
-            alert(
-                t(
-                    "pleaseEnterPhone",
-                    "请输入电话号码"
-                )
+
+        document.getElementById(
+            "name"
+        ).value =
+            customer.name ||
+            "";
+
+
+        document.getElementById(
+            "phone"
+        ).value =
+            customer.phone ||
+            "";
+
+
+        document.getElementById(
+            "address"
+        ).value =
+            customer.address ||
+            "";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "读取顾客资料失败:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ========================================
+   登录状态
+======================================== */
+
+auth.onAuthStateChanged(
+    async function(user) {
+
+        currentUser =
+            user;
+
+
+        const warning =
+            document.getElementById(
+                "loginWarning"
             );
-
-
-            return;
-
-        }
-
-
-        if (!address) {
-
-            alert(
-                t(
-                    "pleaseEnterAddress",
-                    "请输入配送地址"
-                )
-            );
-
-
-            return;
-
-        }
 
 
         const submitButton =
@@ -1424,255 +1291,33 @@
             );
 
 
-        submitButton.disabled =
-            true;
+        if (user) {
+
+            warning.style.display =
+                "none";
 
 
-        submitButton.innerText =
-            t(
-                "submittingOrder",
-                "正在提交订单..."
+            submitButton.disabled =
+                false;
+
+
+            submitButton.innerText =
+                t(
+                    "placeOrder",
+                    "提交订单"
+                );
+
+
+            await loadCustomerProfile(
+                user
             );
-
-
-
-        // ========================================
-        // 计算金额
-        // ========================================
-
-        const subtotal =
-            cart.reduce(
-                function(sum, item) {
-
-                    return sum +
-                        (
-                            Number(item.price) || 0
-                        ) *
-                        (
-                            Number(item.quantity) || 0
-                        );
-
-                },
-                0
-            );
-
-
-        const total =
-            subtotal + 2000;
-
-
-
-        // ========================================
-        // 订单号
-        // ========================================
-
-        const orderNumber =
-            "MDY" +
-            Date.now();
-
-
-
-        try {
-
-
-            // ========================================
-            // 保存到 Firebase
-            // ========================================
-
-            await db
-                .collection("orders")
-                .add({
-
-                    order_number:
-                        orderNumber,
-
-
-                    restaurantId:
-                        restaurantId,
-
-
-                    restaurantName:
-                        restaurantName,
-
-
-                    customerId:
-                        currentUser.uid,
-
-
-                    customerEmail:
-                        currentUser.email ||
-                        "",
-
-
-                    customername:
-                        name,
-
-
-                    phone:
-                        phone,
-
-
-                    adress:
-                        address,
-
-
-                    total:
-                        total,
-
-
-                    status:
-                        "待接单",
-
-
-                    payment:
-                        payment,
-
-
-                    method:
-                        "网站",
-
-
-                    items:
-                        cart,
-
-
-                    created_at:
-                        firebase.firestore
-                            .FieldValue
-                            .serverTimestamp()
-
-                });
-
-
-
-            // ========================================
-            // 本地保存
-            // ========================================
-
-            const order = {
-
-                orderNumber:
-                    orderNumber,
-
-
-                restaurantId:
-                    restaurantId,
-
-
-                restaurantName:
-                    restaurantName,
-
-
-                customerId:
-                    currentUser.uid,
-
-
-                customerEmail:
-                    currentUser.email ||
-                    "",
-
-
-                name:
-                    name,
-
-
-                phone:
-                    phone,
-
-
-                address:
-                    address,
-
-
-                payment:
-                    payment,
-
-
-                items:
-                    cart,
-
-
-                total:
-                    total,
-
-
-                status:
-                    "待接单",
-
-
-                createdAt:
-                    new Date()
-                        .toLocaleString()
-
-            };
-
-
-            let orders =
-                JSON.parse(
-                    localStorage.getItem(
-                        "orders"
-                    )
-                ) || [];
-
-
-            orders.push(
-                order
-            );
-
-
-            localStorage.setItem(
-                "orders",
-                JSON.stringify(
-                    orders
-                )
-            );
-
-
-            localStorage.setItem(
-                "lastOrder",
-                JSON.stringify(
-                    order
-                )
-            );
-
-
-
-            // ========================================
-            // 清空购物车
-            // ========================================
-
-            localStorage.removeItem(
-                "cart"
-            );
-
-
-
-            // ========================================
-            // 成功
-            // ========================================
-
-            window.location.href =
-                "success.html";
-
 
         }
 
-        catch (error) {
+        else {
 
-            console.error(
-                "Firebase 订单错误:",
-                error
-            );
-
-
-            alert(
-                t(
-                    "orderSubmitFailed",
-                    "订单提交失败"
-                ) +
-                "：\n" +
-                error.message
-            );
+            warning.style.display =
+                "block";
 
 
             submitButton.disabled =
@@ -1688,36 +1333,429 @@
         }
 
     }
+);
 
 
+/* ========================================
+   提交订单
+======================================== */
 
-    // ========================================
-    // 监听语言变化
-    // ========================================
+async function submitOrder() {
 
-    window.addEventListener(
-        "mdyLanguageChanged",
-        function() {
 
-            updateCheckoutLanguage();
+    if (!currentUser) {
+
+        alert(
+            t(
+                "pleaseLoginBeforeOrder",
+                "请先登录账号，再提交订单。"
+            )
+        );
+
+
+        window.location.href =
+            "login.html";
+
+
+        return;
+
+    }
+
+
+    if (cart.length === 0) {
+
+        alert(
+            t(
+                "emptyCartCheckout",
+                "购物车是空的"
+            )
+        );
+
+
+        return;
+
+    }
+
+
+    if (!restaurantId) {
+
+        alert(
+            t(
+                "restaurantReturnToMenu",
+                "无法识别餐厅，请返回菜单重新加入菜品。"
+            )
+        );
+
+
+        return;
+
+    }
+
+
+    const name =
+        document
+            .getElementById("name")
+            .value
+            .trim();
+
+
+    const phone =
+        document
+            .getElementById("phone")
+            .value
+            .trim();
+
+
+    const address =
+        document
+            .getElementById("address")
+            .value
+            .trim();
+
+
+    const paymentElement =
+        document.querySelector(
+            'input[name="payment"]:checked'
+        );
+
+
+    /*
+     * Firestore 中继续保存原来的内部值。
+     */
+
+    const payment =
+        paymentElement
+            ? paymentElement.value
+            : "现金";
+
+
+    if (!name) {
+
+        alert(
+            t(
+                "pleaseEnterName",
+                "请输入姓名"
+            )
+        );
+
+
+        return;
+
+    }
+
+
+    if (!phone) {
+
+        alert(
+            t(
+                "pleaseEnterPhone",
+                "请输入电话号码"
+            )
+        );
+
+
+        return;
+
+    }
+
+
+    if (!address) {
+
+        alert(
+            t(
+                "pleaseEnterAddress",
+                "请输入配送地址"
+            )
+        );
+
+
+        return;
+
+    }
+
+
+    const submitButton =
+        document.getElementById(
+            "submitButton"
+        );
+
+
+    submitButton.disabled =
+        true;
+
+
+    submitButton.innerText =
+        t(
+            "submittingOrder",
+            "正在提交订单..."
+        );
+
+
+    const subtotal =
+        cart.reduce(
+            function(sum, item) {
+
+                return sum +
+
+                    (
+                        Number(item.price) || 0
+                    ) *
+
+                    (
+                        Number(item.quantity) || 0
+                    );
+
+            },
+            0
+        );
+
+
+    const total =
+        subtotal + 2000;
+
+
+    const orderNumber =
+        "MDY" +
+        Date.now();
+
+
+    try {
+
+        await db
+            .collection("orders")
+            .add({
+
+                order_number:
+                    orderNumber,
+
+                restaurantId:
+                    restaurantId,
+
+                restaurantName:
+                    restaurantName,
+
+                customerId:
+                    currentUser.uid,
+
+                customerEmail:
+                    currentUser.email ||
+                    "",
+
+                customername:
+                    name,
+
+                phone:
+                    phone,
+
+                adress:
+                    address,
+
+                total:
+                    total,
+
+                status:
+                    "待接单",
+
+                payment:
+                    payment,
+
+                method:
+                    "网站",
+
+                items:
+                    cart,
+
+                created_at:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        /*
+         * 本地订单记录
+         */
+
+        const order = {
+
+            orderNumber:
+                orderNumber,
+
+            restaurantId:
+                restaurantId,
+
+            restaurantName:
+                restaurantName,
+
+            customerId:
+                currentUser.uid,
+
+            customerEmail:
+                currentUser.email ||
+                "",
+
+            name:
+                name,
+
+            phone:
+                phone,
+
+            address:
+                address,
+
+            payment:
+                payment,
+
+            items:
+                cart,
+
+            total:
+                total,
+
+            status:
+                "待接单",
+
+            createdAt:
+                new Date()
+                    .toLocaleString()
+
+        };
+
+
+        let orders = [];
+
+
+        try {
+
+            orders =
+                JSON.parse(
+                    localStorage.getItem(
+                        "orders"
+                    )
+                ) || [];
+
+
+            if (!Array.isArray(orders)) {
+
+                orders = [];
+
+            }
 
         }
-    );
 
+        catch (error) {
 
-
-    // ========================================
-    // 页面启动
-    // ========================================
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function() {
-
-            updateCheckoutLanguage();
+            orders = [];
 
         }
-    );
+
+
+        orders.push(
+            order
+        );
+
+
+        localStorage.setItem(
+            "orders",
+            JSON.stringify(
+                orders
+            )
+        );
+
+
+        localStorage.setItem(
+            "lastOrder",
+            JSON.stringify(
+                order
+            )
+        );
+
+
+        /*
+         * 清空购物车
+         */
+
+        localStorage.removeItem(
+            "cart"
+        );
+
+
+        /*
+         * 成功
+         */
+
+        window.location.href =
+            "success.html";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Firebase 订单错误:",
+            error
+        );
+
+
+        alert(
+            t(
+                "orderSubmitFailed",
+                "订单提交失败"
+            ) +
+            "：\n" +
+            error.message
+        );
+
+
+        submitButton.disabled =
+            false;
+
+
+        submitButton.innerText =
+            t(
+                "placeOrder",
+                "提交订单"
+            );
+
+    }
+
+}
+
+
+/* ========================================
+   监听语言变化
+======================================== */
+
+window.addEventListener(
+    "mdyLanguageChanged",
+    function() {
+
+        updateCheckoutLanguage();
+
+    }
+);
+
+
+/* ========================================
+   页面启动
+======================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        /*
+         * language.js 自动初始化语言。
+         * 不再手动调用 apply()。
+         */
+
+        updateCheckoutLanguage();
+
+        loadRestaurant();
+
+    }
+);
 
 </script>
 
