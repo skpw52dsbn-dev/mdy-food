@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>MDY FOOD - 我的</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0 0 85px;
+    font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    background: #f6f6f6;
+    color: #222;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+/* =========================
+   顶部
+========================= */
+
+.header {
+    background:
+        linear-gradient(
+            135deg,
+            #ff6a2a,
+            #ff4d1f
+        );
+
+    color: white;
+
+    padding:
+        20px
+        16px
+        30px;
+
+    border-radius:
+        0
+        0
+        28px
+        28px;
+}
+
+.header-top {
+    max-width: 900px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.back-button {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,0.18);
+
+    color: white;
+
+    font-size: 21px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-title {
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.header-placeholder {
+    width: 40px;
+}
+
+
+/* =========================
+   主体
+========================= */
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
+}
+
+
+/* =========================
+   用户卡片
+========================= */
+
+.user-card {
+
+    margin-top: -20px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.08);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+.avatar {
+
+    width: 64px;
+    height: 64px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff0e8,
+            #ffe0d2
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 31px;
+
+    border: 3px solid #fff;
+}
+
+.user-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: 800;
+
+    margin-bottom: 5px;
+}
+
+.user-sub {
+    color: #999;
+    font-size: 12px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-login-button {
+
+    border: none;
+
+    background: #ff5a1f;
+
+    color: white;
+
+    padding:
+        9px
+        14px;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   未登录
+========================= */
+
+.login-card {
+
+    display: none;
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 22px;
+
+    margin-top: -20px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.08);
+
+    text-align: center;
+}
+
+.login-icon {
+    font-size: 45px;
+    margin-bottom: 8px;
+}
+
+.login-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.login-sub {
+    color: #999;
+    font-size: 13px;
+    margin-bottom: 17px;
+}
+
+.login-button {
+
+    display: inline-block;
+
+    background: #ff5a1f;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding:
+        12px
+        28px;
+
+    border-radius: 11px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   快捷功能
+========================= */
+
+.quick-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 9px;
+
+    margin-top: 16px;
+}
+
+.quick-item {
+
+    background: white;
+
+    border-radius: 15px;
+
+    padding:
+        15px
+        5px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    color: #444;
+
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.05);
+}
+
+.quick-icon {
+    font-size: 23px;
+    margin-bottom: 6px;
+}
+
+.quick-text {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   区块标题
+========================= */
+
+.section-title {
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    margin:
+        23px
+        2px
+        10px;
+}
+
+
+/* =========================
+   功能菜单
+========================= */
+
+.menu-card {
+
+    background: white;
+
+    border-radius: 17px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.05);
+}
+
+.menu-item {
+
+    min-height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding:
+        0
+        16px;
+
+    text-decoration: none;
+
+    color: #333;
+
+    border-bottom:
+        1px solid #f1f1f1;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-icon {
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 11px;
+
+    background: #fff5f1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 19px;
+
+    margin-right: 12px;
+}
+
+.menu-content {
+    flex: 1;
+}
+
+.menu-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.menu-sub {
+    color: #aaa;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.menu-arrow {
+    color: #bbb;
+    font-size: 18px;
+}
+
+
+/* =========================
+   退出登录
+========================= */
+
+.logout-button {
+
+    display: none;
+
+    width: 100%;
+
+    margin-top: 18px;
+
+    border: none;
+
+    background: white;
+
+    color: #e53935;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.05);
+}
+
+
+/* =========================
+   底部导航
+========================= */
+
+.bottom-nav {
+
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 9999;
+
+    height: 68px;
+
+    background:
+        rgba(255,255,255,0.97);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    border-top:
+        1px solid #eee;
+
+    box-shadow:
+        0 -3px 15px
+        rgba(0,0,0,0.08);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.bottom-nav-inner {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    height: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+}
+
+.nav-item {
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 3px;
+
+    text-decoration: none;
+
+    color: #888;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.nav-icon {
+    font-size: 21px;
+    line-height: 1;
+}
+
+.nav-item.active {
+    color: #ff5a1f;
+}
+
+.nav-item.active::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 28px;
+    height: 3px;
+
+    background: #ff5a1f;
+
+    border-radius:
+        0
+        0
+        5px
+        5px;
+}
+
+
+/* =========================
+   手机
+========================= */
+
+@media (max-width: 500px) {
+
+    body {
+        padding-bottom: 78px;
+    }
+
+    .header {
+        padding:
+            17px
+            13px
+            28px;
+    }
+
+    .container {
+        padding:
+            13px;
+    }
+
+    .user-card {
+        padding: 17px;
+    }
+
+    .avatar {
+        width: 57px;
+        height: 57px;
+        font-size: 27px;
+    }
+
+    .user-name {
+        font-size: 16px;
+    }
+
+    .quick-grid {
+        gap: 7px;
+    }
+
+    .quick-item {
+        padding:
+            13px
+            3px;
+    }
+
+    .quick-text {
+        font-size: 10px;
+    }
+
+}
+
+
+/* =========================
+   小手机
+========================= */
+
+@media (max-width: 360px) {
+
+    .quick-icon {
+        font-size: 20px;
+    }
+
+    .quick-text {
+        font-size: 9px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     顶部
+========================= -->
+
+<header class="header">
+
+    <div class="header-top">
+
+        <button
+            class="back-button"
+            onclick="goHome()"
+        >
+            ←
+        </button>
+
+        <div class="header-title">
+            我的
+        </div>
+
+        <div class="header-placeholder"></div>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- =========================
+     已登录用户
+========================= -->
+
+<div
+    id="userCard"
+    class="user-card"
+>
+
+    <div class="avatar">
+        👤
+    </div>
+
+    <div class="user-info">
+
+        <div
+            id="userName"
+            class="user-name"
+        >
+            我的账户
+        </div>
+
+        <div
+            id="userEmail"
+            class="user-sub"
+        >
+            正在读取账户信息...
+        </div>
+
+    </div>
+
+    <button
+        class="user-login-button"
+        onclick="editProfile()"
+    >
+        编辑
+    </button>
+
+</div>
+
+
+<!-- =========================
+     未登录
+========================= -->
+
+<div
+    id="loginCard"
+    class="login-card"
+>
+
+    <div class="login-icon">
+        👤
+    </div>
+
+    <div class="login-title">
+        登录 MDY FOOD
+    </div>
+
+    <div class="login-sub">
+        登录后可以管理订单、收藏和收货地址
+    </div>
+
+    <a
+        href="login.html"
+        class="login-button"
+    >
+        登录 / 注册
+    </a>
+
+</div>
+
+
+<!-- =========================
+     快捷入口
+========================= -->
+
+<div class="quick-grid">
+
+    <a
+        href="orders.html"
+        class="quick-item"
+    >
+
+        <div class="quick-icon">
+            📦
+        </div>
+
+        <div class="quick-text">
+            我的订单
+        </div>
+
+    </a>
+
+
+    <a
+        href="favorites.html"
+        class="quick-item"
+    >
+
+        <div class="quick-icon">
+            ❤️
+        </div>
+
+        <div class="quick-text">
+            我的收藏
+        </div>
+
+    </a>
+
+
+    <a
+        href="addresses.html"
+        class="quick-item"
+    >
+
+        <div class="quick-icon">
+            📍
+        </div>
+
+        <div class="quick-text">
+            收货地址
+        </div>
+
+    </a>
+
+
+    <a
+        href="restaurants.html"
+        class="quick-item"
+    >
+
+        <div class="quick-icon">
+            🍜
+        </div>
+
+        <div class="quick-text">
+            找餐厅
+        </div>
+
+    </a>
+
+</div>
+
+
+<!-- =========================
+     我的服务
+========================= -->
+
+<div class="section-title">
+    我的服务
+</div>
+
+
+<div class="menu-card">
+
+
+    <a
+        href="orders.html"
+        class="menu-item"
+    >
+
+        <div class="menu-icon">
+            📦
+        </div>
+
+        <div class="menu-content">
+
+            <div class="menu-title">
+                我的订单
+            </div>
+
+            <div class="menu-sub">
+                查看全部订单和订单状态
+            </div>
+
+        </div>
+
+        <div class="menu-arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <a
+        href="favorites.html"
+        class="menu-item"
+    >
+
+        <div class="menu-icon">
+            ❤️
+        </div>
+
+        <div class="menu-content">
+
+            <div class="menu-title">
+                我的收藏
+            </div>
+
+            <div class="menu-sub">
+                收藏的餐厅和美食
+            </div>
+
+        </div>
+
+        <div class="menu-arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <a
+        href="addresses.html"
+        class="menu-item"
+    >
+
+        <div class="menu-icon">
+            📍
+        </div>
+
+        <div class="menu-content">
+
+            <div class="menu-title">
+                收货地址
+            </div>
+
+            <div class="menu-sub">
+                管理送餐地址
+            </div>
+
+        </div>
+
+        <div class="menu-arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <a
+        href="coupons.html"
+        class="menu-item"
+    >
+
+        <div class="menu-icon">
+            🎟️
+        </div>
+
+        <div class="menu-content">
+
+            <div class="menu-title">
+                我的优惠券
+            </div>
+
+            <div class="menu-sub">
+                查看可使用的优惠券
+            </div>
+
+        </div>
+
+        <div class="menu-arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <a
+        href="my-reviews.html"
+        class="menu-item"
+    >
+
+        <div class="menu-icon">
+            ⭐
+        </div>
+
+        <div class="menu-content">
+
+            <div class="menu-title">
+                我的评价
+            </div>
+
+            <div class="menu-sub">
+                查看我发布过的评价
+            </div>
+
+        </div>
+
+        <div class="menu-arrow">
+            ›
+        </div>
+
+    </a>
+
+
+</div>
+
+
+<!-- =========================
+     其他
+========================= -->
+
+<div class="section-title">
+    其他
+</div>
+
+
+<div class="menu-card">
+
+
+    <a
+        href="settings.html"
+        class="menu-item"
+    >
+
+        <div class="menu-icon">
+            ⚙️
+        </div>
+
+        <div class="menu-content">
+
+            <div class="menu-title">
+                设置
+            </div>
+
+            <div class="menu-sub">
+                账户和应用设置
+            </div>
+
+        </div>
+
+        <div class="menu-arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <a
+        href="about.html"
+        class="menu-item"
+    >
+
+        <div class="menu-icon">
+            ℹ️
+        </div>
+
+        <div class="menu-content">
+
+            <div class="menu-title">
+                关于 MDY FOOD
+            </div>
+
+            <div class="menu-sub">
+                平台信息
+            </div>
+
+        </div>
+
+        <div class="menu-arrow">
+            ›
+        </div>
+
+    </a>
+
+
+</div>
+
+
+<!-- =========================
+     退出登录
+========================= -->
+
+<button
+    id="logoutButton"
+    class="logout-button"
+    onclick="logout()"
+>
+    退出登录
+</button>
+
+
+</div>
+
+
+<!-- =========================
+     底部导航
+========================= -->
+
+<nav class="bottom-nav">
+
+    <div class="bottom-nav-inner">
+
+
+        <a
+            href="index.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                🏠
+            </div>
+
+            <div>
+                首页
+            </div>
+
+        </a>
+
+
+        <a
+            href="restaurants.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                🍜
+            </div>
+
+            <div>
+                餐厅
+            </div>
+
+        </a>
+
+
+        <a
+            href="orders.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                📦
+            </div>
+
+            <div>
+                订单
+            </div>
+
+        </a>
+
+
+        <a
+            href="profile.html"
+            class="nav-item active"
+        >
+
+            <div class="nav-icon">
+                👤
+            </div>
+
+            <div>
+                我的
+            </div>
+
+        </a>
+
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     Firebase
+========================= -->
+
+<script>
+
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+
+    authDomain:
+        "mdy-food.firebaseapp.com",
+
+    projectId:
+        "mdy-food",
+
+    storageBucket:
+        "mdy-food.firebasestorage.app",
+
+    messagingSenderId:
+        "498327590625",
+
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0",
+
+    measurementId:
+        "G-6Q5G2862XQ"
+};
+
+
+firebase.initializeApp(
+    firebaseConfig
+);
+
+
+const db =
+    firebase.firestore();
+
+
+const auth =
+    firebase.auth();
+
+
+/* =========================
+   返回首页
+========================= */
+
+function goHome() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+/* =========================
+   编辑个人资料
+========================= */
+
+function editProfile() {
+
+    alert(
+        "个人资料功能正在开发中"
+    );
+
+}
+
+
+/* =========================
+   退出登录
+========================= */
+
+async function logout() {
+
+    const confirmed =
+        confirm(
+            "确定要退出登录吗？"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        await auth.signOut();
+
+        window.location.href =
+            "index.html";
+
+    } catch (error) {
+
+        console.error(
+            "退出登录失败:",
+            error
+        );
+
+        alert(
+            "退出登录失败，请稍后再试"
+        );
+
+    }
+
+}
+
+
+/* =========================
+   登录状态
+========================= */
+
+auth.onAuthStateChanged(
+    function(user) {
+
+        const userCard =
+            document.getElementById(
+                "userCard"
+            );
+
+        const loginCard =
+            document.getElementById(
+                "loginCard"
+            );
+
+        const logoutButton =
+            document.getElementById(
+                "logoutButton"
+            );
+
+        const userName =
+            document.getElementById(
+                "userName"
+            );
+
+        const userEmail =
+            document.getElementById(
+                "userEmail"
+            );
+
+
+        if (user) {
+
+            userCard.style.display =
+                "flex";
+
+            loginCard.style.display =
+                "none";
+
+            logoutButton.style.display =
+                "block";
+
+
+            let displayName =
+                user.displayName;
+
+
+            if (!displayName) {
+
+                displayName =
+                    "MDY FOOD 用户";
+
+            }
+
+
+            userName.innerText =
+                displayName;
+
+
+            if (user.email) {
+
+                userEmail.innerText =
+                    user.email;
+
+            } else if (user.phoneNumber) {
+
+                userEmail.innerText =
+                    user.phoneNumber;
+
+            } else {
+
+                userEmail.innerText =
+                    "已登录";
+
+            }
+
+        } else {
+
+            userCard.style.display =
+                "none";
+
+            loginCard.style.display =
+                "block";
+
+            logoutButton.style.display =
+                "none";
+
+        }
+
+    }
+);
+
+
+</script>
+
+</body>
+
+</html>
