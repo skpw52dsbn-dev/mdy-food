@@ -2,32 +2,24 @@
 <html lang="zh-CN">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>MDY FOOD - 登录</title>
 
-<style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
+<script src="language.js"></script>
+
+<style>
 * {
     box-sizing: border-box;
 }
 
-html,
 body {
     margin: 0;
-    padding: 0;
-    min-height: 100%;
-}
-
-body {
     min-height: 100vh;
-
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -35,442 +27,224 @@ body {
         "Microsoft YaHei",
         Arial,
         sans-serif;
-
     background:
         linear-gradient(
             135deg,
             #fff7ed 0%,
-            #ffffff 48%,
-            #f8fafc 100%
+            #ffffff 50%,
+            #fff1f2 100%
         );
-
-    color: #1f2937;
-}
-
-button,
-input {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-.page {
-    min-height: 100vh;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-    padding: 24px 16px;
-
-    position: relative;
+    padding: 20px;
+    color: #333;
 }
 
-/* =========================
-   语言选择器
-========================= */
-
-.language-box {
-    position: fixed;
-    top: 18px;
-    right: 18px;
-    z-index: 100;
-}
-
-/* =========================
-   登录卡片
-========================= */
-
-.login-card {
+.login-wrapper {
     width: 100%;
     max-width: 430px;
-
-    background: rgba(255,255,255,0.97);
-
-    border-radius: 24px;
-
-    padding: 34px 28px 30px;
-
-    box-shadow:
-        0 20px 60px rgba(15,23,42,0.10),
-        0 4px 18px rgba(15,23,42,0.05);
 }
 
-/* =========================
-   品牌
-========================= */
+.login-card {
+    background: rgba(255,255,255,.97);
+    border-radius: 24px;
+    padding: 34px 30px;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.10);
+}
 
-.brand {
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.logo {
     text-align: center;
     margin-bottom: 28px;
 }
 
-.brand-logo {
-    width: 76px;
-    height: 76px;
-
+.logo-icon {
+    width: 72px;
+    height: 72px;
     margin: 0 auto 14px;
-
     border-radius: 22px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff6b35,
-            #ff8a4c
-        );
-
-    color: #ffffff;
-
-    font-size: 38px;
-
-    box-shadow:
-        0 10px 24px rgba(255,107,53,0.25);
+    background: linear-gradient(135deg,#ff6b35,#ff3d00);
+    color: white;
+    font-size: 36px;
+    box-shadow: 0 10px 25px rgba(255,91,45,.25);
 }
 
-.brand-title {
+.logo h1 {
     margin: 0;
-
     font-size: 28px;
     font-weight: 800;
-
-    letter-spacing: 0.5px;
-
-    color: #111827;
+    color: #222;
 }
 
-.brand-subtitle {
-    margin-top: 6px;
-
-    font-size: 13px;
-
-    color: #9ca3af;
-
-    letter-spacing: 0.5px;
+.logo p {
+    margin: 8px 0 0;
+    color: #888;
+    font-size: 14px;
 }
-
-/* =========================
-   表单
-========================= */
 
 .form-group {
-    margin-bottom: 17px;
+    margin-bottom: 18px;
 }
 
-.form-label {
+.form-group label {
     display: block;
-
     margin-bottom: 8px;
-
     font-size: 14px;
     font-weight: 600;
-
-    color: #374151;
-}
-
-.input-wrap {
-    position: relative;
+    color: #444;
 }
 
 .input {
     width: 100%;
-    height: 52px;
-
-    padding: 0 16px;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 14px;
-
+    height: 50px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 0 15px;
+    font-size: 15px;
     outline: none;
-
-    background: #f9fafb;
-
-    color: #111827;
-
-    transition:
-        border-color 0.2s,
-        background 0.2s,
-        box-shadow 0.2s;
+    transition: .2s;
 }
 
 .input:focus {
-    border-color: #ff6b35;
-
-    background: #ffffff;
-
-    box-shadow:
-        0 0 0 4px rgba(255,107,53,0.10);
+    border-color: #ff5722;
+    box-shadow: 0 0 0 3px rgba(255,87,34,.10);
 }
 
-.input::placeholder {
-    color: #b6bcc6;
-}
-
-/* =========================
-   主按钮
-========================= */
-
-.login-button {
+.btn {
     width: 100%;
-    height: 52px;
-
-    margin-top: 4px;
-
+    height: 50px;
     border: none;
-
-    border-radius: 14px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff6b35,
-            #ff7f45
-        );
-
-    color: #ffffff;
-
+    border-radius: 12px;
     font-size: 16px;
     font-weight: 700;
-
-    box-shadow:
-        0 8px 20px rgba(255,107,53,0.22);
-
-    transition:
-        transform 0.15s,
-        opacity 0.15s,
-        box-shadow 0.15s;
+    cursor: pointer;
+    transition: .2s;
 }
 
-.login-button:hover {
-    box-shadow:
-        0 10px 24px rgba(255,107,53,0.28);
+.btn-primary {
+    background: linear-gradient(135deg,#ff6b35,#ff3d00);
+    color: white;
+    box-shadow: 0 8px 20px rgba(255,87,34,.20);
 }
 
-.login-button:active {
-    transform: scale(0.985);
+.btn-primary:hover {
+    transform: translateY(-1px);
 }
 
-.login-button:disabled {
-    opacity: 0.65;
-
+.btn-primary:disabled {
+    opacity: .65;
     cursor: not-allowed;
-
-    box-shadow: none;
+    transform: none;
 }
-
-/* =========================
-   分隔线
-========================= */
 
 .divider {
     display: flex;
     align-items: center;
-
     gap: 12px;
-
     margin: 22px 0;
-}
-
-.divider-line {
-    flex: 1;
-
-    height: 1px;
-
-    background: #e5e7eb;
-}
-
-.divider-text {
+    color: #999;
     font-size: 13px;
-
-    color: #9ca3af;
 }
 
-/* =========================
-   Google
-========================= */
-
-.google-button {
-    width: 100%;
-    height: 50px;
-
-    border:
-        1px solid #e5e7eb;
-
-    border-radius: 14px;
-
-    background: #ffffff;
-
-    color: #374151;
-
-    font-size: 15px;
-    font-weight: 600;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 10px;
-
-    transition:
-        background 0.15s,
-        border-color 0.15s;
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
 }
 
-.google-button:hover {
-    background: #f9fafb;
-
-    border-color: #d1d5db;
+.btn-google {
+    background: white;
+    color: #444;
+    border: 1px solid #ddd;
 }
 
-.google-icon {
-    width: 20px;
-    height: 20px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 18px;
-}
-
-/* =========================
-   手机登录
-========================= */
-
-.phone-button {
-    width: 100%;
-    height: 50px;
-
-    margin-top: 12px;
-
-    border:
-        1px solid #fed7aa;
-
-    border-radius: 14px;
-
+.btn-phone {
     background: #fff7ed;
-
-    color: #ea580c;
-
-    font-size: 15px;
-    font-weight: 600;
-
-    transition:
-        background 0.15s;
+    color: #f4511e;
+    border: 1px solid #ffd7c2;
+    margin-top: 12px;
 }
 
-.phone-button:hover {
-    background: #ffedd5;
-}
-
-/* =========================
-   注册
-========================= */
-
-.register-area {
+.register-text {
     text-align: center;
-
-    margin-top: 24px;
-
+    margin-top: 22px;
     font-size: 14px;
-
-    color: #9ca3af;
+    color: #777;
 }
 
-.register-link {
-    color: #f97316;
-
-    font-weight: 700;
-
+.register-text a {
+    color: #ff5722;
     text-decoration: none;
-
-    margin-left: 4px;
+    font-weight: 700;
 }
-
-.register-link:hover {
-    text-decoration: underline;
-}
-
-/* =========================
-   错误提示
-========================= */
 
 .message {
     display: none;
-
-    margin-top: 15px;
-
+    margin-bottom: 18px;
     padding: 12px 14px;
-
-    border-radius: 12px;
-
-    font-size: 13px;
-
-    line-height: 1.6;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .message.error {
     display: block;
-
-    background: #fef2f2;
-
-    border: 1px solid #fecaca;
-
-    color: #b91c1c;
+    background: #fff1f2;
+    color: #d32f2f;
+    border: 1px solid #ffcdd2;
 }
 
 .message.success {
     display: block;
-
     background: #f0fdf4;
-
-    border: 1px solid #bbf7d0;
-
     color: #15803d;
+    border: 1px solid #bbf7d0;
 }
 
-/* =========================
-   手机登录区域
-========================= */
-
-.phone-login-panel {
+.phone-login {
     display: none;
 }
 
-.phone-login-panel.show {
+.phone-login.active {
     display: block;
 }
 
-.email-login-panel.hide {
+.login-methods.hidden {
     display: none;
 }
 
-.back-login-button {
+.back-button {
     width: 100%;
-    height: 46px;
-
-    margin-top: 12px;
-
+    height: 44px;
     border: none;
-
     background: transparent;
-
-    color: #f97316;
-
+    color: #777;
+    cursor: pointer;
+    margin-top: 8px;
     font-size: 14px;
-    font-weight: 600;
+}
+
+.phone-hint {
+    margin-top: 7px;
+    color: #999;
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 .code-row {
     display: flex;
-
     gap: 10px;
 }
 
@@ -478,151 +252,64 @@ button {
     flex: 1;
 }
 
-.code-button {
+.code-btn {
     width: 125px;
-
     flex-shrink: 0;
-
-    height: 52px;
-
-    border: none;
-
-    border-radius: 14px;
-
-    background: #fff7ed;
-
-    color: #ea580c;
-
-    font-size: 13px;
-
-    font-weight: 700;
+    border: 1px solid #ff7043;
+    background: white;
+    color: #f4511e;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
 }
 
-.code-button:disabled {
-    opacity: 0.5;
-
+.code-btn:disabled {
+    color: #aaa;
+    border-color: #ddd;
     cursor: not-allowed;
 }
 
-/* =========================
-   reCAPTCHA
-========================= */
-
 #recaptcha-container {
-    margin-top: 12px;
-
-    display: flex;
-
-    justify-content: center;
+    margin: 12px 0;
 }
 
-/* =========================
-   底部
-========================= */
-
-.footer {
-    margin-top: 24px;
-
-    text-align: center;
-
+.debug-info {
+    margin-top: 18px;
+    padding: 10px 12px;
+    background: #f8f8f8;
+    border-radius: 10px;
     font-size: 11px;
-
-    color: #c4c8ce;
+    color: #999;
+    word-break: break-all;
+    display: none;
 }
-
-/* =========================
-   小屏幕
-========================= */
-
-@media (max-width: 480px) {
-
-    .page {
-        padding:
-            70px 14px
-            20px;
-    }
-
-    .login-card {
-        padding:
-            30px 20px
-            26px;
-
-        border-radius: 20px;
-    }
-
-    .brand-title {
-        font-size: 25px;
-    }
-
-    .brand-logo {
-        width: 68px;
-        height: 68px;
-
-        font-size: 34px;
-    }
-
-    .language-box {
-        top: 12px;
-        right: 12px;
-    }
-
-}
-
 </style>
-
 </head>
 
 <body>
 
-<div class="page">
-
-    <div
-        id="languageSelector"
-        class="language-box"
-    ></div>
+<div class="login-wrapper">
 
     <div class="login-card">
 
-        <div class="brand">
-
-            <div class="brand-logo">
-                🍜
-            </div>
-
-            <h1
-                id="brandTitle"
-                class="brand-title"
-            >
-                MDY FOOD
-            </h1>
-
-            <div
-                id="brandSubtitle"
-                class="brand-subtitle"
-            >
-                Mandalay Food Delivery
-            </div>
-
+        <div class="top-bar">
+            <div id="languageSelector"></div>
         </div>
 
-        <!-- =========================
-             邮箱登录
-        ========================== -->
+        <div class="logo">
+            <div class="logo-icon">🍜</div>
+            <h1 id="pageTitle">MDY FOOD</h1>
+            <p id="pageSubtitle">美食配送平台</p>
+        </div>
 
-        <div
-            id="emailLoginPanel"
-            class="email-login-panel"
-        >
+        <div id="message" class="message"></div>
+
+        <!-- ==================== 邮箱登录 ==================== -->
+
+        <div id="loginMethods" class="login-methods">
 
             <div class="form-group">
-
-                <label
-                    id="emailLabel"
-                    class="form-label"
-                >
-                    邮箱
-                </label>
-
+                <label id="emailLabel">邮箱</label>
                 <input
                     id="email"
                     class="input"
@@ -630,18 +317,10 @@ button {
                     autocomplete="email"
                     placeholder="请输入邮箱"
                 >
-
             </div>
 
             <div class="form-group">
-
-                <label
-                    id="passwordLabel"
-                    class="form-label"
-                >
-                    密码
-                </label>
-
+                <label id="passwordLabel">密码</label>
                 <input
                     id="password"
                     class="input"
@@ -649,81 +328,44 @@ button {
                     autocomplete="current-password"
                     placeholder="请输入密码"
                 >
-
             </div>
 
             <button
                 id="loginButton"
-                class="login-button"
-                type="button"
+                class="btn btn-primary"
                 onclick="login()"
             >
                 登录
             </button>
 
-            <div
-                id="emailMessage"
-                class="message"
-            ></div>
-
             <div class="divider">
-
-                <div class="divider-line"></div>
-
-                <div
-                    id="orText"
-                    class="divider-text"
-                >
-                    或
-                </div>
-
-                <div class="divider-line"></div>
-
+                <span id="orText">或</span>
             </div>
 
             <button
                 id="googleButton"
-                class="google-button"
-                type="button"
+                class="btn btn-google"
                 onclick="googleLogin()"
             >
-
-                <span class="google-icon">
-                    G
-                </span>
-
-                <span id="googleText">
-                    使用 Google 登录
-                </span>
-
+                🌐 <span id="googleText">使用 Google 登录</span>
             </button>
 
             <button
                 id="phoneButton"
-                class="phone-button"
-                type="button"
+                class="btn btn-phone"
                 onclick="showPhoneLogin()"
             >
-                📱 使用手机号登录
+                📱 <span id="phoneText">使用手机号登录</span>
             </button>
 
         </div>
 
-        <!-- =========================
-             手机登录
-        ========================== -->
+        <!-- ==================== 手机号登录 ==================== -->
 
-        <div
-            id="phoneLoginPanel"
-            class="phone-login-panel"
-        >
+        <div id="phoneLogin" class="phone-login">
 
             <div class="form-group">
-
-                <label
-                    id="phoneLabel"
-                    class="form-label"
-                >
+                <label id="phoneLabel">
                     手机号
                 </label>
 
@@ -735,22 +377,21 @@ button {
                     placeholder="+95 9xxxxxxxxx"
                 >
 
+                <div
+                    id="phoneHint"
+                    class="phone-hint"
+                >
+                    请使用国际格式，例如 +95 9xxxxxxxxx
+                </div>
             </div>
 
-            <div
-                id="phoneHint"
-                style="
-                    margin-top:-8px;
-                    margin-bottom:14px;
-                    font-size:12px;
-                    line-height:1.6;
-                    color:#9ca3af;
-                "
-            >
-                请输入国际格式手机号，例如 +959xxxxxxxxx
-            </div>
+            <div id="recaptcha-container"></div>
 
             <div class="form-group">
+
+                <label id="verificationCodeLabel">
+                    验证码
+                </label>
 
                 <div class="code-row">
 
@@ -760,13 +401,12 @@ button {
                         type="text"
                         inputmode="numeric"
                         autocomplete="one-time-code"
-                        placeholder="验证码"
+                        placeholder="请输入验证码"
                     >
 
                     <button
                         id="codeButton"
-                        class="code-button"
-                        type="button"
+                        class="code-btn"
                         onclick="sendVerificationCode()"
                     >
                         获取验证码
@@ -776,1889 +416,134 @@ button {
 
             </div>
 
-            <div id="recaptcha-container"></div>
-
             <button
                 id="phoneLoginButton"
-                class="login-button"
-                type="button"
+                class="btn btn-primary"
                 onclick="phoneLogin()"
             >
-                手机号登录
+                登录
             </button>
 
             <button
                 id="backLoginButton"
-                class="back-login-button"
-                type="button"
-                onclick="showEmailLogin()"
+                class="back-button"
+                onclick="showNormalLogin()"
             >
                 ← 返回邮箱登录
             </button>
 
-            <div
-                id="phoneMessage"
-                class="message"
-            ></div>
-
         </div>
 
-        <!-- =========================
-             注册
-        ========================== -->
-
-        <div class="register-area">
-
-            <span id="noAccountText">
-                还没有账户？
-            </span>
-
+        <div class="register-text">
+            <span id="noAccountText">还没有账号？</span>
             <a
                 id="registerLink"
-                class="register-link"
                 href="register.html"
             >
                 立即注册
             </a>
-
         </div>
 
-        <div
-            id="footerText"
-            class="footer"
-        >
-            MDY FOOD · Mandalay Food Delivery
-        </div>
+        <div id="debugInfo" class="debug-info"></div>
 
     </div>
 
 </div>
 
-<!-- =========================
-     Firebase
-========================== -->
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
-<!-- =========================
-     MDY FOOD Language
-========================== -->
-
-<script src="language.js"></script>
 
 <script>
 
 /* =========================================================
    Firebase 配置
-========================================================= */
+   ========================================================= */
 
 const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyDR8dxsbDYA3a6pLaXcJTngcFhNfWPUlv0",
-
-    authDomain:
-        "mdy-food.firebaseapp.com",
-
-    projectId:
-        "mdy-food",
-
-    storageBucket:
-        "mdy-food.firebasestorage.app",
-
-    messagingSenderId:
-        "498327590625",
-
-    appId:
-        "1:498327590625:web:cceafb7febb689e7ad09a0",
-
-    measurementId:
-        "G-6Q5G2862XQ"
-
+    apiKey: "AIzaSyA84W7Xx-yNWAWWqwmcbeHzKCRsqxv5X7Q",
+    authDomain: "mdy-food.firebaseapp.com",
+    projectId: "mdy-food",
+    storageBucket: "mdy-food.firebasestorage.app",
+    messagingSenderId: "498327590625",
+    appId: "1:498327590625:web:cceafb7febb689e7ad09a0",
+    measurementId: "G-6Q5G2862XQ"
 };
 
 
 /* =========================================================
-   Firebase 初始化
-========================================================= */
+   初始化 Firebase
+   ========================================================= */
 
-try {
-
-    if (!firebase.apps.length) {
-
-        firebase.initializeApp(
-            firebaseConfig
-        );
-
-    }
-
-} catch (error) {
-
-    console.error(
-        "Firebase 初始化失败:",
-        error
-    );
-
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
 }
-
-
-/* =========================================================
-   Firebase Auth
-========================================================= */
 
 const auth = firebase.auth();
 
 
 /* =========================================================
-   Firebase 实际配置检测
-========================================================= */
+   调试信息
+   ========================================================= */
 
-try {
-
-    const actualFirebaseConfig =
-        firebase.app().options;
-
-    console.log(
-        "========== MDY FOOD Firebase 检测 =========="
-    );
-
-    console.log(
-        "Firebase Project ID:",
-        actualFirebaseConfig.projectId
-    );
-
-    console.log(
-        "Firebase Auth Domain:",
-        actualFirebaseConfig.authDomain
-    );
-
-    console.log(
-        "Firebase API Key:",
-        actualFirebaseConfig.apiKey
-    );
-
-    console.log(
-        "Firebase App ID:",
-        actualFirebaseConfig.appId
-    );
-
-    console.log(
-        "Firebase Auth:",
-        auth
-    );
-
-    console.log(
-        "============================================"
-    );
-
-} catch (error) {
-
-    console.error(
-        "Firebase 配置检测失败:",
-        error
-    );
-
-}
+console.log("========== MDY FOOD Firebase 检测 ==========");
+console.log(
+    "Firebase Project ID:",
+    firebaseConfig.projectId
+);
+console.log(
+    "Firebase Auth Domain:",
+    firebaseConfig.authDomain
+);
+console.log(
+    "Firebase API Key:",
+    firebaseConfig.apiKey
+);
+console.log(
+    "Firebase App ID:",
+    firebaseConfig.appId
+);
+console.log(
+    "Firebase Auth:",
+    auth ? "已初始化" : "未初始化"
+);
+console.log("============================================");
 
 
 /* =========================================================
-   全局变量
-========================================================= */
-
-let confirmationResult = null;
-
-let recaptchaVerifier = null;
-
-let countdownTimer = null;
-
-
-/* =========================================================
-   翻译函数
-========================================================= */
-
-function t(key, fallback) {
-
-    try {
-
-        if (
-            window.MDYLanguage &&
-            typeof window.MDYLanguage.t === "function"
-        ) {
-
-            return window.MDYLanguage.t(
-                key,
-                {},
-                fallback
-            );
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "语言翻译读取失败:",
-            error
-        );
-
-    }
-
-    return fallback || key;
-
-}
-
-
-/* =========================================================
-   当前语言
-========================================================= */
-
-function getCurrentLanguage() {
-
-    try {
-
-        if (
-            window.MDYLanguage &&
-            typeof window.MDYLanguage.getLanguage === "function"
-        ) {
-
-            return window.MDYLanguage.getLanguage();
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "读取当前语言失败:",
-            error
-        );
-
-    }
-
-    return "zh";
-
-}
-
-
-/* =========================================================
-   页面语言
-========================================================= */
-
-function renderLoginLanguage() {
-
-    const lang =
-        getCurrentLanguage();
-
-
-    document.documentElement.lang =
-        lang === "my"
-            ? "my"
-            : lang === "en"
-                ? "en"
-                : "zh-CN";
-
-
-    document.title =
-        t(
-            "loginPageTitle",
-            "MDY FOOD - 登录"
-        );
-
-
-    const brandTitle =
-        document.getElementById(
-            "brandTitle"
-        );
-
-    if (brandTitle) {
-
-        brandTitle.textContent =
-            t(
-                "brandName",
-                "MDY FOOD"
-            );
-
-    }
-
-
-    const brandSubtitle =
-        document.getElementById(
-            "brandSubtitle"
-        );
-
-    if (brandSubtitle) {
-
-        brandSubtitle.textContent =
-            t(
-                "brandSubtitle",
-                "Mandalay Food Delivery"
-            );
-
-    }
-
-
-    const emailLabel =
-        document.getElementById(
-            "emailLabel"
-        );
-
-    if (emailLabel) {
-
-        emailLabel.textContent =
-            t(
-                "email",
-                "邮箱"
-            );
-
-    }
-
-
-    const email =
-        document.getElementById(
-            "email"
-        );
-
-    if (email) {
-
-        email.placeholder =
-            t(
-                "emailPlaceholder",
-                "请输入邮箱"
-            );
-
-    }
-
-
-    const passwordLabel =
-        document.getElementById(
-            "passwordLabel"
-        );
-
-    if (passwordLabel) {
-
-        passwordLabel.textContent =
-            t(
-                "password",
-                "密码"
-            );
-
-    }
-
-
-    const password =
-        document.getElementById(
-            "password"
-        );
-
-    if (password) {
-
-        password.placeholder =
-            t(
-                "passwordPlaceholder",
-                "请输入密码"
-            );
-
-    }
-
-
-    const loginButton =
-        document.getElementById(
-            "loginButton"
-        );
-
-    if (
-        loginButton &&
-        !loginButton.disabled
-    ) {
-
-        loginButton.textContent =
-            t(
-                "loginButton",
-                "登录"
-            );
-
-    }
-
-
-    const orText =
-        document.getElementById(
-            "orText"
-        );
-
-    if (orText) {
-
-        orText.textContent =
-            t(
-                "or",
-                "或"
-            );
-
-    }
-
-
-    const googleText =
-        document.getElementById(
-            "googleText"
-        );
-
-    if (
-        googleText &&
-        !document.getElementById(
-            "googleButton"
-        ).disabled
-    ) {
-
-        googleText.textContent =
-            t(
-                "googleLogin",
-                "使用 Google 登录"
-            );
-
-    }
-
-
-    const phoneButton =
-        document.getElementById(
-            "phoneButton"
-        );
-
-    if (phoneButton) {
-
-        phoneButton.textContent =
-            "📱 " +
-            t(
-                "phoneLogin",
-                "使用手机号登录"
-            );
-
-    }
-
-
-    const phoneLabel =
-        document.getElementById(
-            "phoneLabel"
-        );
-
-    if (phoneLabel) {
-
-        phoneLabel.textContent =
-            t(
-                "phoneInternationalPlaceholder",
-                "手机号"
-            );
-
-    }
-
-
-    const phoneNumber =
-        document.getElementById(
-            "phoneNumber"
-        );
-
-    if (phoneNumber) {
-
-        phoneNumber.placeholder =
-            t(
-                "phoneInternationalPlaceholder",
-                "+95 9xxxxxxxxx"
-            );
-
-    }
-
-
-    const phoneHint =
-        document.getElementById(
-            "phoneHint"
-        );
-
-    if (phoneHint) {
-
-        phoneHint.textContent =
-            t(
-                "phoneInternationalHint",
-                "请输入国际格式手机号，例如 +959xxxxxxxxx"
-            );
-
-    }
-
-
-    const verificationCode =
-        document.getElementById(
-            "verificationCode"
-        );
-
-    if (verificationCode) {
-
-        verificationCode.placeholder =
-            t(
-                "verificationCode",
-                "验证码"
-            );
-
-    }
-
-
-    const codeButton =
-        document.getElementById(
-            "codeButton"
-        );
-
-    if (
-        codeButton &&
-        !codeButton.disabled
-    ) {
-
-        codeButton.textContent =
-            t(
-                "getVerificationCode",
-                "获取验证码"
-            );
-
-    }
-
-
-    const phoneLoginButton =
-        document.getElementById(
-            "phoneLoginButton"
-        );
-
-    if (
-        phoneLoginButton &&
-        !phoneLoginButton.disabled
-    ) {
-
-        phoneLoginButton.textContent =
-            t(
-                "phoneLoginButton",
-                "手机号登录"
-            );
-
-    }
-
-
-    const backLoginButton =
-        document.getElementById(
-            "backLoginButton"
-        );
-
-    if (backLoginButton) {
-
-        backLoginButton.textContent =
-            "← " +
-            t(
-                "backToLoginMethods",
-                "返回邮箱登录"
-            );
-
-    }
-
-
-    const noAccountText =
-        document.getElementById(
-            "noAccountText"
-        );
-
-    if (noAccountText) {
-
-        noAccountText.textContent =
-            t(
-                "noAccount",
-                "还没有账户？"
-            );
-
-    }
-
-
-    const registerLink =
-        document.getElementById(
-            "registerLink"
-        );
-
-    if (registerLink) {
-
-        registerLink.textContent =
-            t(
-                "registerNow",
-                "立即注册"
-            );
-
-    }
-
-
-    const footerText =
-        document.getElementById(
-            "footerText"
-        );
-
-    if (footerText) {
-
-        footerText.textContent =
-            "MDY FOOD · Mandalay Food Delivery";
-
-    }
-
-}
-
-
-/* =========================================================
-   显示消息
-========================================================= */
-
-function showMessage(
-    elementId,
-    message,
-    type = "error"
-) {
-
-    const element =
-        document.getElementById(
-            elementId
-        );
-
-
-    if (!element) {
-
-        return;
-
-    }
-
-
-    element.textContent =
-        message;
-
-
-    element.className =
-        "message " +
-        type;
-
-}
-
-
-/* =========================================================
-   清除消息
-========================================================= */
-
-function clearMessage(
-    elementId
-) {
-
-    const element =
-        document.getElementById(
-            elementId
-        );
-
-
-    if (!element) {
-
-        return;
-
-    }
-
-
-    element.textContent =
-        "";
-
-    element.className =
-        "message";
-
-}
-
-
-/* =========================================================
-   Firebase 错误翻译
-========================================================= */
-
-function getFirebaseErrorMessage(
-    error
-) {
-
-    if (!error) {
-
-        return t(
-            "loginFailed",
-            "登录失败"
-        );
-
-    }
-
-
-    console.error(
-        "Firebase 登录错误:",
-        error
-    );
-
-
-    const code =
-        error.code || "";
-
-
-    switch (code) {
-
-        case "auth/invalid-api-key":
-
-        case "auth/api-key-not-valid":
-
-            return t(
-                "firebaseApiKeyInvalid",
-                "Firebase API Key 无效，请检查 Firebase 配置。"
-            );
-
-
-        case "auth/invalid-email":
-
-            return t(
-                "invalidEmail",
-                "邮箱格式不正确"
-            );
-
-
-        case "auth/invalid-credential":
-
-        case "auth/user-not-found":
-
-        case "auth/wrong-password":
-
-            return t(
-                "emailOrPasswordWrong",
-                "邮箱或密码错误"
-            );
-
-
-        case "auth/user-disabled":
-
-            return getCurrentLanguage() === "my"
-
-                ? "ဤအကောင့်ကို ပိတ်ထားပါသည်။"
-
-                : getCurrentLanguage() === "en"
-
-                    ? "This account has been disabled."
-
-                    : "此账号已被禁用";
-
-
-        case "auth/too-many-requests":
-
-            return getCurrentLanguage() === "my"
-
-                ? "ကြိုးစားမှုများလွန်းပါသည်။ ခဏစောင့်ပြီး ထပ်မံကြိုးစားပါ။"
-
-                : getCurrentLanguage() === "en"
-
-                    ? "Too many attempts. Please try again later."
-
-                    : "尝试次数过多，请稍后再试";
-
-
-        case "auth/network-request-failed":
-
-            return t(
-                "networkConnectionFailed",
-                "网络连接失败，请检查网络后重试"
-            );
-
-
-        case "auth/operation-not-allowed":
-
-            return getCurrentLanguage() === "my"
-
-                ? "Firebase Authentication တွင် ဤဝင်ရောက်နည်းကို ဖွင့်ထားခြင်းမရှိပါ။"
-
-                : getCurrentLanguage() === "en"
-
-                    ? "This sign-in method is not enabled in Firebase Authentication."
-
-                    : "Firebase Authentication 尚未启用此登录方式";
-
-
-        case "auth/popup-blocked":
-
-            return getCurrentLanguage() === "my"
-
-                ? "Browser သည် popup ကို ပိတ်ထားပါသည်။"
-
-                : getCurrentLanguage() === "en"
-
-                    ? "The browser blocked the sign-in popup."
-
-                    : "浏览器阻止了登录弹窗";
-
-
-        case "auth/popup-closed-by-user":
-
-            return getCurrentLanguage() === "my"
-
-                ? "ဝင်ရောက်ရန် popup ကို ပိတ်လိုက်ပါသည်။"
-
-                : getCurrentLanguage() === "en"
-
-                    ? "The sign-in popup was closed."
-
-                    : "登录窗口已关闭";
-
-
-        case "auth/invalid-verification-code":
-
-            return t(
-                "verificationCodeInvalid",
-                "验证码错误"
-            );
-
-
-        case "auth/code-expired":
-
-            return getCurrentLanguage() === "my"
-
-                ? "အတည်ပြုကုဒ် သက်တမ်းကုန်သွားပါပြီ။"
-
-                : getCurrentLanguage() === "en"
-
-                    ? "The verification code has expired."
-
-                    : "验证码已过期";
-
-
-        default:
-
-            return (
-                t(
-                    "loginFailed",
-                    "登录失败"
-                ) +
-                " (" +
-                (
-                    error.message ||
-                    code ||
-                    "Unknown error"
-                ) +
-                ")"
-            );
-
-    }
-
-}
-
-
-/* =========================================================
-   LOCAL 持久化
-========================================================= */
-
-async function setLocalPersistence() {
-
-    try {
-
-        await auth.setPersistence(
-            firebase.auth.Auth.Persistence.LOCAL
-        );
-
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "Firebase Auth Persistence 设置失败:",
-            error
-        );
-
-        return false;
-
-    }
-
-}
-
-
-/* =========================================================
-   邮箱登录
-========================================================= */
-
-async function login() {
-
-    clearMessage(
-        "emailMessage"
-    );
-
-
-    const emailElement =
-        document.getElementById(
-            "email"
-        );
-
-
-    const passwordElement =
-        document.getElementById(
-            "password"
-        );
-
-
-    const email =
-        emailElement
-            ? emailElement.value
-                .trim()
-                .toLowerCase()
-            : "";
-
-
-    const password =
-        passwordElement
-            ? passwordElement.value
-            : "";
-
-
-    if (!email || !password) {
-
-        showMessage(
-            "emailMessage",
-            t(
-                "pleaseEnterEmailPassword",
-                "请输入邮箱和密码"
-            )
-        );
-
-        return;
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "loginButton"
-        );
-
-
-    button.disabled =
-        true;
-
-
-    button.textContent =
-        t(
-            "loggingIn",
-            "正在登录..."
-        );
-
-
-    try {
-
-        await setLocalPersistence();
-
-
-        const credential =
-            await auth.signInWithEmailAndPassword(
-                email,
-                password
-            );
-
-
-        if (
-            !credential ||
-            !credential.user
-        ) {
-
-            throw new Error(
-                "Firebase 登录成功，但没有返回用户。"
-            );
-
-        }
-
-
-        console.log(
-            "登录成功:",
-            credential.user.uid
-        );
-
-
-        showMessage(
-            "emailMessage",
-
-            t(
-                "loginSuccess",
-                "登录成功"
-            ),
-
-            "success"
-        );
-
-
-        setTimeout(
-            function() {
-
-                window.location.replace(
-                    "index.html"
-                );
-
-            },
-            300
-        );
-
-
-    } catch (error) {
-
-        const message =
-            getFirebaseErrorMessage(
-                error
-            );
-
-
-        showMessage(
-            "emailMessage",
-            message
-        );
-
-
-        button.disabled =
-            false;
-
-
-        button.textContent =
-            t(
-                "loginButton",
-                "登录"
-            );
-
-    }
-
-}
-
-
-/* =========================================================
-   Google 登录
-========================================================= */
-
-async function googleLogin() {
-
-    clearMessage(
-        "emailMessage"
-    );
-
-
-    const button =
-        document.getElementById(
-            "googleButton"
-        );
-
-
-    button.disabled =
-        true;
-
-
-    const textElement =
-        document.getElementById(
-            "googleText"
-        );
-
-
-    const originalText =
-        textElement.textContent;
-
-
-    textElement.textContent =
-        t(
-            "loggingIn",
-            "正在登录..."
-        );
-
-
-    try {
-
-        await setLocalPersistence();
-
-
-        const provider =
-            new firebase.auth.GoogleAuthProvider();
-
-
-        provider.setCustomParameters({
-            prompt: "select_account"
-        });
-
-
-        const result =
-            await auth.signInWithPopup(
-                provider
-            );
-
-
-        if (
-            !result ||
-            !result.user
-        ) {
-
-            throw new Error(
-                "Google 登录没有返回用户。"
-            );
-
-        }
-
-
-        console.log(
-            "Google 登录成功:",
-            result.user.uid
-        );
-
-
-        window.location.replace(
-            "index.html"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Google 登录失败:",
-            error
-        );
-
-
-        if (
-            error.code ===
-            "auth/popup-blocked"
-        ) {
-
-            try {
-
-                const provider =
-                    new firebase.auth.GoogleAuthProvider();
-
-
-                provider.setCustomParameters({
-                    prompt: "select_account"
-                });
-
-
-                await auth.signInWithRedirect(
-                    provider
-                );
-
-
-                return;
-
-            } catch (redirectError) {
-
-                showMessage(
-                    "emailMessage",
-                    getFirebaseErrorMessage(
-                        redirectError
-                    )
-                );
-
-            }
-
-        } else {
-
-            showMessage(
-                "emailMessage",
-                getFirebaseErrorMessage(
-                    error
-                )
-            );
-
-        }
-
-
-        button.disabled =
-            false;
-
-
-        textElement.textContent =
-            originalText;
-
-    }
-
-}
-
-
-/* =========================================================
-   显示手机号登录
-========================================================= */
-
-function showPhoneLogin() {
-
-    clearMessage(
-        "emailMessage"
-    );
-
-    clearMessage(
-        "phoneMessage"
-    );
-
-
-    document
-        .getElementById(
-            "emailLoginPanel"
-        )
-        .classList
-        .add("hide");
-
-
-    document
-        .getElementById(
-            "phoneLoginPanel"
-        )
-        .classList
-        .add("show");
-
-
-    createRecaptcha();
-
-}
-
-
-/* =========================================================
-   返回邮箱登录
-========================================================= */
-
-function showEmailLogin() {
-
-    clearMessage(
-        "phoneMessage"
-    );
-
-
-    document
-        .getElementById(
-            "phoneLoginPanel"
-        )
-        .classList
-        .remove("show");
-
-
-    document
-        .getElementById(
-            "emailLoginPanel"
-        )
-        .classList
-        .remove("hide");
-
-}
-
-
-/* =========================================================
-   创建 reCAPTCHA
-========================================================= */
-
-function createRecaptcha() {
-
-    try {
-
-        if (recaptchaVerifier) {
-
-            return;
-
-        }
-
-
-        recaptchaVerifier =
-            new firebase.auth.RecaptchaVerifier(
-                "recaptcha-container",
-                {
-
-                    size:
-                        "normal",
-
-                    callback:
-                        function() {
-
-                            console.log(
-                                "reCAPTCHA 验证成功"
-                            );
-
-                        },
-
-                    "expired-callback":
-                        function() {
-
-                            console.log(
-                                "reCAPTCHA 已过期"
-                            );
-
-                        }
-
-                }
-            );
-
-
-        recaptchaVerifier
-            .render()
-            .catch(
-                function(error) {
-
-                    console.error(
-                        "reCAPTCHA 加载失败:",
-                        error
-                    );
-
-                }
-            );
-
-
-    } catch (error) {
-
-        console.error(
-            "创建 reCAPTCHA 失败:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   获取验证码
-========================================================= */
-
-async function sendVerificationCode() {
-
-    clearMessage(
-        "phoneMessage"
-    );
-
-
-    const phoneNumber =
-        document
-            .getElementById(
-                "phoneNumber"
-            )
-            .value
-            .trim();
-
-
-    if (!phoneNumber) {
-
-        showMessage(
-            "phoneMessage",
-            t(
-                "phoneInternationalRequired",
-                "请输入国际格式手机号"
-            )
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !phoneNumber.startsWith("+")
-    ) {
-
-        showMessage(
-            "phoneMessage",
-            t(
-                "phoneInternationalRequired",
-                "请输入国际格式手机号"
-            )
-        );
-
-        return;
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "codeButton"
-        );
-
-
-    button.disabled =
-        true;
-
-
-    button.textContent =
-        t(
-            "sendingCode",
-            "发送中..."
-        );
-
-
-    try {
-
-        await setLocalPersistence();
-
-
-        createRecaptcha();
-
-
-        if (!recaptchaVerifier) {
-
-            throw new Error(
-                "reCAPTCHA 初始化失败"
-            );
-
-        }
-
-
-        confirmationResult =
-            await auth.signInWithPhoneNumber(
-                phoneNumber,
-                recaptchaVerifier
-            );
-
-
-        showMessage(
-            "phoneMessage",
-
-            t(
-                "verificationCodeSent",
-                "验证码已发送"
-            ),
-
-            "success"
-        );
-
-
-        startCodeCountdown();
-
-
-    } catch (error) {
-
-        console.error(
-            "发送验证码失败:",
-            error
-        );
-
-
-        showMessage(
-            "phoneMessage",
-            getFirebaseErrorMessage(
-                error
-            )
-        );
-
-
-        button.disabled =
-            false;
-
-
-        button.textContent =
-            t(
-                "getVerificationCode",
-                "获取验证码"
-            );
-
-
-        resetRecaptcha();
-
-    }
-
-}
-
-
-/* =========================================================
-   验证码倒计时
-========================================================= */
-
-function startCodeCountdown() {
-
-    const button =
-        document.getElementById(
-            "codeButton"
-        );
-
-
-    let seconds =
-        60;
-
-
-    button.disabled =
-        true;
-
-
-    button.textContent =
-        seconds + "s";
-
-
-    clearInterval(
-        countdownTimer
-    );
-
-
-    countdownTimer =
-        setInterval(
-            function() {
-
-                seconds--;
-
-
-                if (seconds <= 0) {
-
-                    clearInterval(
-                        countdownTimer
-                    );
-
-
-                    button.disabled =
-                        false;
-
-
-                    button.textContent =
-                        t(
-                            "getVerificationCode",
-                            "获取验证码"
-                        );
-
-
-                    return;
-
-                }
-
-
-                button.textContent =
-                    seconds + "s";
-
-            },
-            1000
-        );
-
-}
-
-
-/* =========================================================
-   手机号登录
-========================================================= */
-
-async function phoneLogin() {
-
-    clearMessage(
-        "phoneMessage"
-    );
-
-
-    const code =
-        document
-            .getElementById(
-                "verificationCode"
-            )
-            .value
-            .trim();
-
-
-    if (!confirmationResult) {
-
-        showMessage(
-            "phoneMessage",
-            t(
-                "getCodeFirst",
-                "请先获取验证码"
-            )
-        );
-
-        return;
-
-    }
-
-
-    if (!code) {
-
-        showMessage(
-            "phoneMessage",
-            t(
-                "enterVerificationCode",
-                "请输入验证码"
-            )
-        );
-
-        return;
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "phoneLoginButton"
-        );
-
-
-    button.disabled =
-        true;
-
-
-    button.textContent =
-        t(
-            "loggingIn",
-            "正在登录..."
-        );
-
-
-    try {
-
-        const result =
-            await confirmationResult.confirm(
-                code
-            );
-
-
-        if (
-            !result ||
-            !result.user
-        ) {
-
-            throw new Error(
-                "手机号登录没有返回用户。"
-            );
-
-        }
-
-
-        console.log(
-            "手机号登录成功:",
-            result.user.uid
-        );
-
-
-        showMessage(
-            "phoneMessage",
-
-            t(
-                "loginSuccess",
-                "登录成功"
-            ),
-
-            "success"
-        );
-
-
-        setTimeout(
-            function() {
-
-                window.location.replace(
-                    "index.html"
-                );
-
-            },
-            300
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "手机号登录失败:",
-            error
-        );
-
-
-        showMessage(
-            "phoneMessage",
-            getFirebaseErrorMessage(
-                error
-            )
-        );
-
-
-        button.disabled =
-            false;
-
-
-        button.textContent =
-            t(
-                "phoneLoginButton",
-                "手机号登录"
-            );
-
-    }
-
-}
-
-
-/* =========================================================
-   重置 reCAPTCHA
-========================================================= */
-
-function resetRecaptcha() {
-
-    try {
-
-        if (recaptchaVerifier) {
-
-            recaptchaVerifier.clear();
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "清理 reCAPTCHA 失败:",
-            error
-        );
-
-    }
-
-
-    recaptchaVerifier =
-        null;
-
-
-    const container =
-        document.getElementById(
-            "recaptcha-container"
-        );
-
-
-    if (container) {
-
-        container.innerHTML =
-            "";
-
-    }
-
-}
+   DOM
+   ========================================================= */
+
+const messageBox =
+    document.getElementById("message");
 
 
 /* =========================================================
    Firebase Auth 状态
-========================================================= */
+   ========================================================= */
 
-auth.onAuthStateChanged(
-    function(user) {
+auth.onAuthStateChanged(function(user) {
 
-        if (user) {
+    if (user) {
 
-            console.log(
-                "Firebase Auth 状态：已登录",
-                user.uid,
-                user.email ||
-                user.phoneNumber ||
-                ""
-            );
-
-        } else {
-
-            console.log(
-                "Firebase Auth 状态：未登录"
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   语言选择器
-   ★ 本次重点修复
-========================================================= */
-
-function renderLanguageSelector() {
-
-    try {
-
-        if (
-            !window.MDYLanguage ||
-            typeof window.MDYLanguage.renderLanguageSelector !==
-                "function"
-        ) {
-
-            console.warn(
-                "MDYLanguage.renderLanguageSelector 不存在"
-            );
-
-            return;
-
-        }
-
-
-        const selector =
-            document.getElementById(
-                "languageSelector"
-            );
-
-
-        if (!selector) {
-
-            console.warn(
-                "找不到 languageSelector DOM 元素"
-            );
-
-            return;
-
-        }
-
-
-        /*
-         * 这里必须传 DOM 元素。
-         *
-         * 以前：
-         *
-         * renderLanguageSelector("languageSelector")
-         *
-         * 会把字符串传进 language.js。
-         *
-         * 现在：
-         *
-         * renderLanguageSelector(selector)
-         *
-         * 直接传真实 DOM。
-         */
-
-        window.MDYLanguage.renderLanguageSelector(
-            selector
+        console.log(
+            "Firebase Auth 状态：已登录",
+            user.email || user.phoneNumber || user.uid
         );
 
-    } catch (error) {
+    } else {
 
-        console.warn(
-            "语言选择器加载失败:",
-            error
+        console.log(
+            "Firebase Auth 状态：未登录"
         );
 
     }
 
-}
+});
 
 
 /* =========================================================
-   语言切换
-========================================================= */
+   设置 LOCAL Persistence
+   ========================================================= */
 
-window.addEventListener(
-    "mdyLanguageChanged",
-    function() {
-
-        /*
-         * language.js 已经负责自己的语言应用。
-         * 这里仅刷新登录页自己的文字和选择器。
-         */
-
-        renderLoginLanguage();
-
-        renderLanguageSelector();
-
-    }
-);
-
-
-/* =========================================================
-   Enter 登录
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Enter" &&
-            !document
-                .getElementById(
-                    "phoneLoginPanel"
-                )
-                .classList
-                .contains("show")
-        ) {
-
-            login();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   页面启动
-========================================================= */
-
-async function initLoginPage() {
+async function setLocalPersistence() {
 
     try {
 
@@ -2679,6 +564,1034 @@ async function initLoginPage() {
 
     }
 
+}
+
+
+/* =========================================================
+   语言
+   ========================================================= */
+
+function renderLoginLanguage() {
+
+    if (
+        !window.MDYLanguage ||
+        typeof window.MDYLanguage.t !== "function"
+    ) {
+        return;
+    }
+
+    const t = window.MDYLanguage.t;
+
+    document.title =
+        t("loginPageTitle", {}, "MDY FOOD - 登录");
+
+    document.getElementById("pageTitle").textContent =
+        t("brandName", {}, "MDY FOOD");
+
+    document.getElementById("pageSubtitle").textContent =
+        t("brandSubtitle", {}, "美食配送平台");
+
+    document.getElementById("emailLabel").textContent =
+        t("email", {}, "邮箱");
+
+    document.getElementById("email").placeholder =
+        t(
+            "emailPlaceholder",
+            {},
+            "请输入邮箱"
+        );
+
+    document.getElementById("passwordLabel").textContent =
+        t("password", {}, "密码");
+
+    document.getElementById("password").placeholder =
+        t(
+            "passwordPlaceholder",
+            {},
+            "请输入密码"
+        );
+
+    document.getElementById("loginButton").textContent =
+        t("loginButton", {}, "登录");
+
+    document.getElementById("orText").textContent =
+        t("or", {}, "或");
+
+    document.getElementById("googleText").textContent =
+        t(
+            "googleLogin",
+            {},
+            "使用 Google 登录"
+        );
+
+    document.getElementById("phoneText").textContent =
+        t(
+            "phoneLogin",
+            {},
+            "使用手机号登录"
+        );
+
+    document.getElementById("phoneLabel").textContent =
+        t(
+            "phoneInternationalPlaceholder",
+            {},
+            "手机号"
+        );
+
+    document.getElementById("phoneNumber").placeholder =
+        t(
+            "phoneInternationalPlaceholder",
+            {},
+            "+95 9xxxxxxxxx"
+        );
+
+    document.getElementById("phoneHint").textContent =
+        t(
+            "phoneInternationalHint",
+            {},
+            "请使用国际格式，例如 +95 9xxxxxxxxx"
+        );
+
+    document.getElementById(
+        "verificationCodeLabel"
+    ).textContent =
+        t(
+            "verificationCode",
+            {},
+            "验证码"
+        );
+
+    document.getElementById(
+        "verificationCode"
+    ).placeholder =
+        t(
+            "verificationCode",
+            {},
+            "请输入验证码"
+        );
+
+    document.getElementById("codeButton").textContent =
+        t(
+            "getVerificationCode",
+            {},
+            "获取验证码"
+        );
+
+    document.getElementById(
+        "phoneLoginButton"
+    ).textContent =
+        t(
+            "phoneLoginButton",
+            {},
+            "登录"
+        );
+
+    document.getElementById(
+        "backLoginButton"
+    ).textContent =
+        "← " +
+        t(
+            "backToLoginMethods",
+            {},
+            "返回登录方式"
+        );
+
+    document.getElementById("noAccountText").textContent =
+        t(
+            "noAccount",
+            {},
+            "还没有账号？"
+        );
+
+    document.getElementById("registerLink").textContent =
+        t(
+            "registerNow",
+            {},
+            "立即注册"
+        );
+
+}
+
+
+/* =========================================================
+   语言选择器
+   ========================================================= */
+
+function renderLanguageSelector() {
+
+    try {
+
+        if (
+            !window.MDYLanguage ||
+            typeof window.MDYLanguage
+                .renderLanguageSelector !==
+                "function"
+        ) {
+
+            console.warn(
+                "MDYLanguage.renderLanguageSelector 不存在"
+            );
+
+            return;
+        }
+
+        const selector =
+            document.getElementById(
+                "languageSelector"
+            );
+
+        if (!selector) {
+
+            console.warn(
+                "找不到 languageSelector DOM 元素"
+            );
+
+            return;
+        }
+
+        window.MDYLanguage.renderLanguageSelector(
+            selector
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "语言选择器加载失败:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   显示消息
+   ========================================================= */
+
+function showMessage(
+    message,
+    type = "error"
+) {
+
+    messageBox.textContent = message;
+
+    messageBox.className =
+        "message " + type;
+
+}
+
+
+function clearMessage() {
+
+    messageBox.textContent = "";
+
+    messageBox.className =
+        "message";
+
+}
+
+
+/* =========================================================
+   Firebase 错误翻译
+   ========================================================= */
+
+function getFirebaseErrorMessage(error) {
+
+    console.error(
+        "Firebase 登录错误:",
+        error
+    );
+
+    const code =
+        error &&
+        error.code
+            ? error.code
+            : "";
+
+    const t =
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t === "function"
+            ? window.MDYLanguage.t
+            : function(key, params, fallback) {
+                return fallback || key;
+            };
+
+
+    if (
+        code ===
+        "auth/api-key-not-valid"
+    ) {
+
+        return t(
+            "firebaseApiKeyInvalid",
+            {},
+            "Firebase API Key 无效，请检查 Firebase 配置。"
+        );
+
+    }
+
+
+    if (
+        code ===
+        "auth/invalid-email"
+    ) {
+
+        return t(
+            "invalidEmail",
+            {},
+            "邮箱格式不正确。"
+        );
+
+    }
+
+
+    if (
+        code ===
+        "auth/user-not-found"
+    ) {
+
+        return t(
+            "emailNotRegistered",
+            {},
+            "该邮箱尚未注册。"
+        );
+
+    }
+
+
+    if (
+        code ===
+        "auth/wrong-password"
+        ||
+        code ===
+        "auth/invalid-credential"
+    ) {
+
+        return t(
+            "emailOrPasswordWrong",
+            {},
+            "邮箱或密码错误。"
+        );
+
+    }
+
+
+    if (
+        code ===
+        "auth/too-many-requests"
+    ) {
+
+        return t(
+            "loginFailed",
+            {},
+            "尝试次数过多，请稍后再试。"
+        );
+
+    }
+
+
+    if (
+        code ===
+        "auth/network-request-failed"
+    ) {
+
+        return t(
+            "networkConnectionFailed",
+            {},
+            "网络连接失败，请检查网络后重试。"
+        );
+
+    }
+
+
+    if (
+        code ===
+        "auth/operation-not-allowed"
+    ) {
+
+        return t(
+            "loginFailed",
+            {},
+            "当前登录方式尚未启用。"
+        );
+
+    }
+
+
+    if (
+        code ===
+        "auth/user-disabled"
+    ) {
+
+        return t(
+            "loginFailed",
+            {},
+            "该账号已被禁用。"
+        );
+
+    }
+
+
+    if (
+        code ===
+        "auth/invalid-api-key"
+    ) {
+
+        return t(
+            "firebaseApiKeyInvalid",
+            {},
+            "Firebase API Key 无效。"
+        );
+
+    }
+
+
+    return (
+        error &&
+        error.message
+            ? error.message
+            : t(
+                "loginFailed",
+                {},
+                "登录失败，请稍后再试。"
+            )
+    );
+
+}
+
+
+/* =========================================================
+   邮箱登录
+   ========================================================= */
+
+async function login() {
+
+    clearMessage();
+
+    const email =
+        document
+            .getElementById("email")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("password")
+            .value;
+
+    const t =
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t === "function"
+            ? window.MDYLanguage.t
+            : function(key, params, fallback) {
+                return fallback || key;
+            };
+
+
+    if (!email || !password) {
+
+        showMessage(
+            t(
+                "pleaseEnterEmailPassword",
+                {},
+                "请输入邮箱和密码。"
+            )
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "loginButton"
+        );
+
+    const originalText =
+        button.textContent;
+
+    button.disabled = true;
+
+    button.textContent =
+        t(
+            "loggingIn",
+            {},
+            "正在登录..."
+        );
+
+
+    try {
+
+        await setLocalPersistence();
+
+        const result =
+            await auth.signInWithEmailAndPassword(
+                email,
+                password
+            );
+
+        console.log(
+            "Firebase 登录成功:",
+            result.user.uid
+        );
+
+        showMessage(
+            t(
+                "loginSuccess",
+                {},
+                "登录成功！"
+            ),
+            "success"
+        );
+
+
+        setTimeout(
+            function() {
+
+                window.location.href =
+                    "index.html";
+
+            },
+            700
+        );
+
+
+    } catch (error) {
+
+        showMessage(
+            getFirebaseErrorMessage(error)
+        );
+
+    } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            originalText;
+
+    }
+
+}
+
+
+/* =========================================================
+   Google 登录
+   ========================================================= */
+
+async function googleLogin() {
+
+    clearMessage();
+
+    const t =
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t === "function"
+            ? window.MDYLanguage.t
+            : function(key, params, fallback) {
+                return fallback || key;
+            };
+
+
+    try {
+
+        await setLocalPersistence();
+
+        const provider =
+            new firebase.auth.GoogleAuthProvider();
+
+        provider.setCustomParameters({
+            prompt: "select_account"
+        });
+
+
+        const result =
+            await auth.signInWithPopup(
+                provider
+            );
+
+        console.log(
+            "Google 登录成功:",
+            result.user.uid
+        );
+
+
+        showMessage(
+            t(
+                "loginSuccess",
+                {},
+                "登录成功！"
+            ),
+            "success"
+        );
+
+
+        setTimeout(
+            function() {
+
+                window.location.href =
+                    "index.html";
+
+            },
+            700
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Google 登录错误:",
+            error
+        );
+
+
+        if (
+            error.code ===
+            "auth/popup-closed-by-user"
+        ) {
+
+            return;
+        }
+
+
+        showMessage(
+            getFirebaseErrorMessage(error)
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   手机登录
+   ========================================================= */
+
+let confirmationResult = null;
+let recaptchaVerifier = null;
+
+
+/* =========================================================
+   显示手机号登录
+   ========================================================= */
+
+function showPhoneLogin() {
+
+    clearMessage();
+
+    document
+        .getElementById("loginMethods")
+        .classList
+        .add("hidden");
+
+    document
+        .getElementById("phoneLogin")
+        .classList
+        .add("active");
+
+
+    initRecaptcha();
+
+}
+
+
+/* =========================================================
+   返回普通登录
+   ========================================================= */
+
+function showNormalLogin() {
+
+    clearMessage();
+
+    document
+        .getElementById("phoneLogin")
+        .classList
+        .remove("active");
+
+    document
+        .getElementById("loginMethods")
+        .classList
+        .remove("hidden");
+
+}
+
+
+/* =========================================================
+   初始化 reCAPTCHA
+   ========================================================= */
+
+function initRecaptcha() {
+
+    try {
+
+        if (recaptchaVerifier) {
+            return;
+        }
+
+        recaptchaVerifier =
+            new firebase.auth.RecaptchaVerifier(
+                "recaptcha-container",
+                {
+                    size: "normal"
+                }
+            );
+
+        recaptchaVerifier.render()
+            .then(function(widgetId) {
+
+                window.recaptchaWidgetId =
+                    widgetId;
+
+            });
+
+    } catch (error) {
+
+        console.error(
+            "reCAPTCHA 初始化失败:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   发送验证码
+   ========================================================= */
+
+async function sendVerificationCode() {
+
+    clearMessage();
+
+    const phone =
+        document
+            .getElementById("phoneNumber")
+            .value
+            .trim();
+
+    const t =
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t === "function"
+            ? window.MDYLanguage.t
+            : function(key, params, fallback) {
+                return fallback || key;
+            };
+
+
+    if (!phone) {
+
+        showMessage(
+            t(
+                "phoneInternationalRequired",
+                {},
+                "请输入国际格式手机号。"
+            )
+        );
+
+        return;
+    }
+
+
+    if (!phone.startsWith("+")) {
+
+        showMessage(
+            t(
+                "phoneInternationalRequired",
+                {},
+                "手机号必须使用国际格式，例如 +95 9xxxxxxxxx。"
+            )
+        );
+
+        return;
+    }
+
+
+    try {
+
+        await setLocalPersistence();
+
+
+        if (!recaptchaVerifier) {
+
+            initRecaptcha();
+
+        }
+
+
+        const codeButton =
+            document.getElementById(
+                "codeButton"
+            );
+
+        codeButton.disabled = true;
+
+        codeButton.textContent =
+            t(
+                "sendingCode",
+                {},
+                "发送中..."
+            );
+
+
+        confirmationResult =
+            await auth.signInWithPhoneNumber(
+                phone,
+                recaptchaVerifier
+            );
+
+
+        showMessage(
+            t(
+                "verificationCodeSent",
+                {},
+                "验证码已发送，请查收短信。"
+            ),
+            "success"
+        );
+
+
+        let countdown = 60;
+
+        const timer =
+            setInterval(
+                function() {
+
+                    countdown--;
+
+                    codeButton.textContent =
+                        countdown + "s";
+
+
+                    if (countdown <= 0) {
+
+                        clearInterval(timer);
+
+                        codeButton.disabled =
+                            false;
+
+                        codeButton.textContent =
+                            t(
+                                "getVerificationCode",
+                                {},
+                                "获取验证码"
+                            );
+
+                    }
+
+                },
+                1000
+            );
+
+
+    } catch (error) {
+
+        console.error(
+            "发送验证码失败:",
+            error
+        );
+
+
+        const codeButton =
+            document.getElementById(
+                "codeButton"
+            );
+
+        codeButton.disabled =
+            false;
+
+        codeButton.textContent =
+            t(
+                "getVerificationCode",
+                {},
+                "获取验证码"
+            );
+
+
+        showMessage(
+            getFirebaseErrorMessage(error)
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   手机验证码登录
+   ========================================================= */
+
+async function phoneLogin() {
+
+    clearMessage();
+
+    const code =
+        document
+            .getElementById(
+                "verificationCode"
+            )
+            .value
+            .trim();
+
+    const t =
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t === "function"
+            ? window.MDYLanguage.t
+            : function(key, params, fallback) {
+                return fallback || key;
+            };
+
+
+    if (!confirmationResult) {
+
+        showMessage(
+            t(
+                "getCodeFirst",
+                {},
+                "请先获取验证码。"
+            )
+        );
+
+        return;
+    }
+
+
+    if (!code) {
+
+        showMessage(
+            t(
+                "enterVerificationCode",
+                {},
+                "请输入验证码。"
+            )
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "phoneLoginButton"
+        );
+
+    const originalText =
+        button.textContent;
+
+    button.disabled = true;
+
+    button.textContent =
+        t(
+            "loggingIn",
+            {},
+            "正在登录..."
+        );
+
+
+    try {
+
+        const result =
+            await confirmationResult.confirm(
+                code
+            );
+
+
+        console.log(
+            "手机号登录成功:",
+            result.user.uid
+        );
+
+
+        showMessage(
+            t(
+                "loginSuccess",
+                {},
+                "登录成功！"
+            ),
+            "success"
+        );
+
+
+        setTimeout(
+            function() {
+
+                window.location.href =
+                    "index.html";
+
+            },
+            700
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "手机号登录错误:",
+            error
+        );
+
+
+        showMessage(
+            getFirebaseErrorMessage(error)
+        );
+
+
+    } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            originalText;
+
+    }
+
+}
+
+
+/* =========================================================
+   Enter 键登录
+   ========================================================= */
+
+document
+    .getElementById("password")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                login();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   语言切换事件
+   ========================================================= */
+
+window.addEventListener(
+    "mdyLanguageChanged",
+    function() {
+
+        renderLoginLanguage();
+
+        renderLanguageSelector();
+
+    }
+);
+
+
+/* =========================================================
+   初始化登录页面
+   ========================================================= */
+
+async function initLoginPage() {
+
+    await setLocalPersistence();
 
     renderLoginLanguage();
 
@@ -2689,12 +1602,25 @@ async function initLoginPage() {
 
 /* =========================================================
    启动
-========================================================= */
+   ========================================================= */
 
-initLoginPage();
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initLoginPage
+    );
+
+} else {
+
+    initLoginPage();
+
+}
 
 </script>
 
 </body>
-
 </html>
