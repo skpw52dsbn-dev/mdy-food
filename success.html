@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -7,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>订单成功 - Mandalay Food</title>
+
+    <!-- MDY FOOD 共享语言系统 -->
+    <script src="language.js"></script>
 
     <style>
 
@@ -107,19 +109,24 @@
                 ✅
             </div>
 
-            <h1>
+            <h1 data-i18n="orderSuccessTitle">
                 订单提交成功！
             </h1>
 
             <p class="message">
-                感谢你的订单！<br>
-                商家收到订单后会尽快准备。
+                <span data-i18n="orderSuccessMessage">
+                    感谢你的订单！
+                </span>
+                <br>
+                <span data-i18n="orderSuccessPreparing">
+                    商家收到订单后会尽快准备。
+                </span>
             </p>
 
 
             <div class="order-number">
 
-                <span>
+                <span data-i18n="orderNumber">
                     订单号
                 </span>
 
@@ -130,12 +137,20 @@
             </div>
 
 
-            <a class="button" href="index.html">
+            <a
+                class="button"
+                href="index.html"
+                data-i18n="backHome"
+            >
                 返回首页
             </a>
 
 
-            <a class="button secondary" href="menu.html">
+            <a
+                class="button secondary"
+                href="menu.html"
+                data-i18n="continueOrdering"
+            >
                 继续点餐
             </a>
 
@@ -146,6 +161,34 @@
 
     <script>
 
+        // ================================
+        // MDY FOOD 共享语言系统
+        // ================================
+
+        function updateSuccessLanguage() {
+
+            if (
+                window.MDYLanguage &&
+                typeof window.MDYLanguage.apply === "function"
+            ) {
+                MDYLanguage.apply(
+                    MDYLanguage.getLanguage()
+                );
+            }
+
+            // 更新页面标题
+            document.title =
+                MDYLanguage.t(
+                    "orderSuccessTitle",
+                    "订单提交成功！"
+                ) + " - Mandalay Food";
+        }
+
+
+        // ================================
+        // 读取订单号
+        // ================================
+
         const order =
             JSON.parse(
                 localStorage.getItem("lastOrder")
@@ -154,14 +197,48 @@
 
         if (order) {
 
-            document.getElementById("orderNumber").innerText =
-                order.orderNumber;
+            const orderNumberElement =
+                document.getElementById("orderNumber");
+
+            if (orderNumberElement) {
+
+                orderNumberElement.innerText =
+                    order.orderNumber || "--";
+
+            }
 
         }
+
+
+        // ================================
+        // 监听语言切换
+        // ================================
+
+        window.addEventListener(
+            "mdyLanguageChanged",
+            function () {
+
+                updateSuccessLanguage();
+
+            }
+        );
+
+
+        // ================================
+        // 页面初始化
+        // ================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                updateSuccessLanguage();
+
+            }
+        );
 
     </script>
 
 </body>
 
 </html>
-```
