@@ -266,6 +266,127 @@ button:disabled {
     line-height: 1.6;
 }
 
+/* ===============================
+   结算状态
+=============================== */
+
+.settlement-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.settlement-item {
+    background: #f7f7f7;
+    border-radius: 10px;
+    padding: 15px 10px;
+    text-align: center;
+}
+
+.settlement-item.pending {
+    background: #fff8e8;
+}
+
+.settlement-item.settled {
+    background: #ecfdf5;
+}
+
+.settlement-number {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.settlement-item.pending .settlement-number {
+    color: #d97706;
+}
+
+.settlement-item.settled .settlement-number {
+    color: #15803d;
+}
+
+.settlement-label {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+}
+
+/* ===============================
+   收入明细
+=============================== */
+
+.income-detail-card {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 12px;
+    background: #fff;
+}
+
+.income-detail-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.income-detail-order {
+    font-size: 13px;
+    color: #888;
+    word-break: break-all;
+}
+
+.income-detail-money {
+    font-size: 18px;
+    font-weight: bold;
+    color: #16a34a;
+    white-space: nowrap;
+}
+
+.income-detail-restaurant {
+    font-size: 17px;
+    font-weight: bold;
+    margin-top: 9px;
+}
+
+.income-detail-info {
+    color: #777;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-top: 7px;
+}
+
+.income-detail-status {
+    display: inline-block;
+    background: #ecfdf5;
+    color: #15803d;
+    border-radius: 7px;
+    padding: 4px 8px;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.income-refresh {
+    background: #f3f4f6;
+    color: #555;
+    padding: 10px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.income-detail-summary {
+    background: #fff8e8;
+    border-radius: 10px;
+    padding: 13px;
+    margin-bottom: 14px;
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.income-detail-summary b {
+    color: #ff6b00;
+}
+
 @media (max-width: 500px) {
 
     .container {
@@ -282,6 +403,18 @@ button:disabled {
 
     .income-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .settlement-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .income-detail-top {
+        align-items: flex-start;
+    }
+
+    .income-detail-money {
+        font-size: 16px;
     }
 }
 </style>
@@ -329,7 +462,6 @@ button:disabled {
 
         </div>
 
-
         <div class="stats">
 
             <div class="stat">
@@ -347,7 +479,6 @@ button:disabled {
 
             </div>
 
-
             <div class="stat">
 
                 <div
@@ -362,7 +493,6 @@ button:disabled {
                 </div>
 
             </div>
-
 
             <div class="stat">
 
@@ -391,7 +521,6 @@ button:disabled {
             💰 我的收入
         </div>
 
-
         <div class="income-grid">
 
             <div class="income-item">
@@ -409,7 +538,6 @@ button:disabled {
 
             </div>
 
-
             <div class="income-item">
 
                 <div
@@ -425,7 +553,6 @@ button:disabled {
 
             </div>
 
-
             <div class="income-item">
 
                 <div
@@ -440,7 +567,6 @@ button:disabled {
                 </div>
 
             </div>
-
 
             <div class="income-item">
 
@@ -459,7 +585,6 @@ button:disabled {
 
         </div>
 
-
         <div class="income-note">
 
             💡 当前系统配送费为
@@ -467,6 +592,119 @@ button:disabled {
             订单完成后，配送费计入骑手收入。
 
         </div>
+
+    </div>
+
+
+    <!-- 结算状态 -->
+    <div class="card">
+
+        <div class="section-title">
+            🧾 我的结算
+        </div>
+
+        <div class="settlement-grid">
+
+            <div class="settlement-item settled">
+
+                <div
+                    class="settlement-number"
+                    id="settledIncome"
+                >
+                    0 Ks
+                </div>
+
+                <div class="settlement-label">
+                    已结算
+                </div>
+
+            </div>
+
+            <div class="settlement-item pending">
+
+                <div
+                    class="settlement-number"
+                    id="pendingIncome"
+                >
+                    0 Ks
+                </div>
+
+                <div class="settlement-label">
+                    待结算
+                </div>
+
+            </div>
+
+            <div class="settlement-item">
+
+                <div
+                    class="settlement-number"
+                    id="settlementCount"
+                >
+                    0
+                </div>
+
+                <div class="settlement-label">
+                    结算次数
+                </div>
+
+            </div>
+
+            <div class="settlement-item">
+
+                <div
+                    class="settlement-number"
+                    id="settledOrderCount"
+                >
+                    0
+                </div>
+
+                <div class="settlement-label">
+                    已结算订单
+                </div>
+
+            </div>
+
+        </div>
+
+        <div
+            class="income-note"
+            id="lastSettlementText"
+        >
+            暂无结算记录
+        </div>
+
+    </div>
+
+
+    <!-- 收入明细 -->
+    <div class="card">
+
+        <div class="section-title">
+            📋 收入明细
+        </div>
+
+        <div
+            class="income-detail-summary"
+            id="incomeDetailSummary"
+        >
+            正在加载收入明细...
+        </div>
+
+        <div id="incomeDetails">
+
+            <div class="loading">
+                正在加载收入明细...
+            </div>
+
+        </div>
+
+        <button
+            class="income-refresh"
+            onclick="loadIncome()"
+        >
+            🔄 刷新收入明细
+        </button>
 
     </div>
 
@@ -594,6 +832,17 @@ if (!deliveryUsername) {
 let riderData = null;
 
 let currentOrder = null;
+
+
+// ===============================
+// 收入数据
+// ===============================
+
+let incomeRecords = [];
+
+let settledIncomeAmount = 0;
+
+let settlementRecords = [];
 
 
 // ===============================
@@ -2206,7 +2455,7 @@ async function completeOrder(
 
 
 // ===============================
-// 我的收入
+// 时间转换
 // ===============================
 
 function getTimestampDate(
@@ -2239,7 +2488,7 @@ function getTimestampDate(
 
 
         if (
-            timestamp.seconds
+            timestamp.seconds !== undefined
         ) {
 
             return new Date(
@@ -2439,7 +2688,7 @@ function isSameWeek(
 
 
 // ===============================
-// 读取骑手收入
+// 加载收入明细
 // ===============================
 
 async function loadIncome() {
@@ -2463,6 +2712,9 @@ async function loadIncome() {
 
         const now =
             new Date();
+
+
+        incomeRecords = [];
 
 
         snapshot.forEach(
@@ -2517,6 +2769,7 @@ async function loadIncome() {
 
                 completedCount++;
 
+
                 totalIncome +=
                     earning;
 
@@ -2544,6 +2797,52 @@ async function loadIncome() {
                         earning;
 
                 }
+
+
+                incomeRecords.push({
+
+                    id:
+                        doc.id,
+
+                    orderNumber:
+                        order.order_number ||
+                        doc.id,
+
+                    restaurantName:
+                        order.restaurantName ||
+                        "MDY FOOD 餐厅",
+
+                    earning:
+                        earning,
+
+                    completedAt:
+                        date,
+
+                    status:
+                        order.status
+
+                });
+
+            }
+        );
+
+
+        // 最新完成订单排在最上面
+
+        incomeRecords.sort(
+            function(a, b) {
+
+                const aTime =
+                    a.completedAt
+                        ? a.completedAt.getTime()
+                        : 0;
+
+                const bTime =
+                    b.completedAt
+                        ? b.completedAt.getTime()
+                        : 0;
+
+                return bTime - aTime;
 
             }
         );
@@ -2582,6 +2881,16 @@ async function loadIncome() {
             completedCount;
 
 
+        // 读取结算记录
+
+        await loadSettlementData();
+
+
+        // 显示收入明细
+
+        renderIncomeDetails();
+
+
     } catch (error) {
 
         console.error(
@@ -2612,6 +2921,624 @@ async function loadIncome() {
             "incomeCompletedOrders"
         ).innerText =
             "-";
+
+
+        const detailBox =
+            document.getElementById(
+                "incomeDetails"
+            );
+
+
+        if (detailBox) {
+
+            detailBox.innerHTML = `
+
+                <div class="empty">
+
+                    ⚠️ 读取收入失败
+
+                    <br><br>
+
+                    ${escapeHtml(
+                        error.message
+                    )}
+
+                </div>
+
+            `;
+
+        }
+
+
+        const summary =
+            document.getElementById(
+                "incomeDetailSummary"
+            );
+
+
+        if (summary) {
+
+            summary.innerHTML =
+                "⚠️ 收入数据读取失败";
+
+        }
+
+    }
+
+}
+
+
+// ===============================
+// 读取配送员结算记录
+// ===============================
+
+async function loadSettlementData() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "deliverySettlements"
+                )
+                .get();
+
+
+        settlementRecords = [];
+
+
+        settledIncomeAmount = 0;
+
+
+        let settledOrderCount = 0;
+
+
+        snapshot.forEach(
+            function(doc) {
+
+                const data =
+                    doc.data() || {};
+
+
+                const settlementDeliveryId =
+                    data.deliveryId ||
+                    data.riderId ||
+                    data.deliveryPersonId ||
+                    "";
+
+
+                if (
+                    settlementDeliveryId !==
+                    deliveryId
+                ) {
+
+                    return;
+
+                }
+
+
+                const amount =
+                    Number(
+                        data.amount
+                    ) || 0;
+
+
+                const orderCount =
+                    Number(
+                        data.completedOrderCount
+                    ) || 0;
+
+
+                const createdAt =
+                    getTimestampDate(
+                        data.createdAt ||
+                        data.created_at ||
+                        data.settledAt
+                    );
+
+
+                settledIncomeAmount +=
+                    amount;
+
+
+                settledOrderCount +=
+                    orderCount;
+
+
+                settlementRecords.push({
+
+                    id:
+                        doc.id,
+
+                    amount:
+                        amount,
+
+                    completedOrderCount:
+                        orderCount,
+
+                    createdAt:
+                        createdAt
+
+                });
+
+            }
+        );
+
+
+        settlementRecords.sort(
+            function(a, b) {
+
+                const aTime =
+                    a.createdAt
+                        ? a.createdAt.getTime()
+                        : 0;
+
+                const bTime =
+                    b.createdAt
+                        ? b.createdAt.getTime()
+                        : 0;
+
+                return bTime - aTime;
+
+            }
+        );
+
+
+        document.getElementById(
+            "settledIncome"
+        ).innerText =
+            formatMoney(
+                settledIncomeAmount
+            ) +
+            " Ks";
+
+
+        const totalIncome =
+            incomeRecords.reduce(
+                function(total, item) {
+
+                    return (
+                        total +
+                        (
+                            Number(
+                                item.earning
+                            ) || 0
+                        )
+                    );
+
+                },
+                0
+            );
+
+
+        const pending =
+            Math.max(
+                0,
+                totalIncome -
+                settledIncomeAmount
+            );
+
+
+        document.getElementById(
+            "pendingIncome"
+        ).innerText =
+            formatMoney(
+                pending
+            ) +
+            " Ks";
+
+
+        document.getElementById(
+            "settlementCount"
+        ).innerText =
+            settlementRecords.length;
+
+
+        document.getElementById(
+            "settledOrderCount"
+        ).innerText =
+            settledOrderCount;
+
+
+        const lastSettlement =
+            settlementRecords.length
+                ? settlementRecords[0]
+                : null;
+
+
+        const lastSettlementText =
+            document.getElementById(
+                "lastSettlementText"
+            );
+
+
+        if (
+            lastSettlement &&
+            lastSettlement.createdAt
+        ) {
+
+            lastSettlementText.innerHTML =
+
+                "🕐 最近一次结算：" +
+                escapeHtml(
+                    formatDateTime(
+                        lastSettlement.createdAt
+                    )
+                ) +
+                "<br>" +
+
+                "💰 本次结算：" +
+                "<b>" +
+                formatMoney(
+                    lastSettlement.amount
+                ) +
+                " Ks</b>" +
+                "<br>" +
+
+                "📦 本次结算订单：" +
+                lastSettlement.completedOrderCount +
+                " 单";
+
+        } else {
+
+            lastSettlementText.innerHTML =
+                "暂无结算记录";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "读取配送员结算记录失败：",
+            error
+        );
+
+
+        settledIncomeAmount = 0;
+
+        settlementRecords = [];
+
+
+        document.getElementById(
+            "settledIncome"
+        ).innerText =
+            "0 Ks";
+
+
+        document.getElementById(
+            "pendingIncome"
+        ).innerText =
+            formatMoney(
+                incomeRecords.reduce(
+                    function(total, item) {
+
+                        return (
+                            total +
+                            (
+                                Number(
+                                    item.earning
+                                ) || 0
+                            )
+                        );
+
+                    },
+                    0
+                )
+            ) +
+            " Ks";
+
+
+        document.getElementById(
+            "settlementCount"
+        ).innerText =
+            "0";
+
+
+        document.getElementById(
+            "settledOrderCount"
+        ).innerText =
+            "0";
+
+
+        document.getElementById(
+            "lastSettlementText"
+        ).innerHTML =
+            "暂无结算记录";
+
+    }
+
+}
+
+
+// ===============================
+// 显示收入明细
+// ===============================
+
+function renderIncomeDetails() {
+
+    const box =
+        document.getElementById(
+            "incomeDetails"
+        );
+
+
+    const summary =
+        document.getElementById(
+            "incomeDetailSummary"
+        );
+
+
+    if (!box) {
+        return;
+    }
+
+
+    const totalIncome =
+        incomeRecords.reduce(
+            function(total, item) {
+
+                return (
+                    total +
+                    (
+                        Number(
+                            item.earning
+                        ) || 0
+                    )
+                );
+
+            },
+            0
+        );
+
+
+    const pending =
+        Math.max(
+            0,
+            totalIncome -
+            settledIncomeAmount
+        );
+
+
+    if (summary) {
+
+        summary.innerHTML =
+
+            "📦 完成订单：" +
+            "<b>" +
+            incomeRecords.length +
+            " 单</b>" +
+
+            "<br>" +
+
+            "💰 累计收入：" +
+            "<b>" +
+            formatMoney(
+                totalIncome
+            ) +
+            " Ks</b>" +
+
+            "<br>" +
+
+            "✅ 已结算：" +
+            "<b>" +
+            formatMoney(
+                settledIncomeAmount
+            ) +
+            " Ks</b>" +
+
+            "<br>" +
+
+            "⏳ 待结算：" +
+            "<b>" +
+            formatMoney(
+                pending
+            ) +
+            " Ks</b>";
+
+    }
+
+
+    if (!incomeRecords.length) {
+
+        box.innerHTML = `
+
+            <div class="empty">
+
+                💰 暂无收入记录
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    box.innerHTML = "";
+
+
+    incomeRecords.forEach(
+        function(record) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "income-detail-card";
+
+
+            const timeText =
+                record.completedAt
+                    ? formatDateTime(
+                        record.completedAt
+                    )
+                    : "时间记录暂不可用";
+
+
+            div.innerHTML = `
+
+                <div class="income-detail-top">
+
+                    <div class="income-detail-order">
+
+                        📦 订单号：
+
+                        ${escapeHtml(
+                            record.orderNumber
+                        )}
+
+                    </div>
+
+
+                    <div class="income-detail-money">
+
+                        +${formatMoney(
+                            record.earning
+                        )} Ks
+
+                    </div>
+
+                </div>
+
+
+                <div class="income-detail-restaurant">
+
+                    🏪
+
+                    ${escapeHtml(
+                        record.restaurantName
+                    )}
+
+                </div>
+
+
+                <div class="income-detail-info">
+
+                    🕐 完成时间：
+
+                    ${escapeHtml(
+                        timeText
+                    )}
+
+                    <br>
+
+                    💵 配送收入：
+
+                    ${formatMoney(
+                        record.earning
+                    )}
+
+                    Ks
+
+                </div>
+
+
+                <div class="income-detail-status">
+
+                    ✅ 已完成
+
+                </div>
+
+            `;
+
+
+            box.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+// ===============================
+// 日期时间格式
+// ===============================
+
+function formatDateTime(
+    date
+) {
+
+    if (!date) {
+
+        return "-";
+
+    }
+
+
+    try {
+
+        const year =
+            date.getFullYear();
+
+
+        const month =
+            String(
+                date.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const day =
+            String(
+                date.getDate()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const hour =
+            String(
+                date.getHours()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const minute =
+            String(
+                date.getMinutes()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const second =
+            String(
+                date.getSeconds()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        return (
+            year +
+            "-" +
+            month +
+            "-" +
+            day +
+            " " +
+            hour +
+            ":" +
+            minute +
+            ":" +
+            second
+        );
+
+    } catch (error) {
+
+        return "-";
 
     }
 
@@ -2878,7 +3805,7 @@ function logout() {
 // ===============================
 
 // 每 10 秒刷新一次
-// 减少 Firebase 读取次数
+// 保持原来的刷新机制
 
 setInterval(
     async function() {
