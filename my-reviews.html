@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>MDY FOOD - 我的评价</title>
+
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+
+<!-- 统一语言系统 -->
+<script src="language.js"></script>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:#f6f6f6;
+    color:#222;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;
+}
+
+.header{
+    height:60px;
+    background:#ff7a00;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    font-size:20px;
+    font-weight:700;
+}
+
+.back{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+    width:38px;
+    height:38px;
+    border:0;
+    border-radius:50%;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.container{
+    max-width:720px;
+    margin:15px auto 90px;
+    padding:0 14px;
+}
+
+.summary{
+    background:#fff;
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.summary-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.summary-icon{
+    width:45px;
+    height:45px;
+    border-radius:12px;
+    background:#fff1e6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+}
+
+.summary-title{
+    font-size:16px;
+    font-weight:700;
+}
+
+.summary-desc{
+    font-size:12px;
+    color:#999;
+    margin-top:4px;
+}
+
+.summary-count{
+    font-size:24px;
+    font-weight:800;
+    color:#ff7a00;
+}
+
+.review-card{
+    background:#fff;
+    border-radius:16px;
+    margin-bottom:14px;
+    padding:17px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+
+.restaurant-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+}
+
+.restaurant-name{
+    font-size:17px;
+    font-weight:700;
+}
+
+.order-number{
+    color:#999;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.rating{
+    color:#ff9d00;
+    font-size:17px;
+    white-space:nowrap;
+}
+
+.rating-number{
+    color:#999;
+    font-size:12px;
+    margin-left:3px;
+}
+
+.review-content{
+    margin-top:15px;
+    padding:13px;
+    background:#f8f8f8;
+    border-radius:10px;
+    font-size:14px;
+    line-height:1.8;
+    color:#444;
+}
+
+.review-time{
+    color:#aaa;
+    font-size:12px;
+    margin-top:12px;
+}
+
+.empty{
+    background:#fff;
+    border-radius:16px;
+    padding:55px 20px;
+    text-align:center;
+    color:#999;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+
+.empty-icon{
+    font-size:48px;
+    margin-bottom:12px;
+}
+
+.empty-title{
+    color:#666;
+    font-size:16px;
+    font-weight:600;
+}
+
+.empty-desc{
+    font-size:13px;
+    margin-top:7px;
+}
+
+.login-button{
+    margin-top:18px;
+    border:0;
+    background:#ff7a00;
+    color:#fff;
+    padding:10px 24px;
+    border-radius:9px;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.loading{
+    text-align:center;
+    padding:50px 20px;
+    color:#999;
+}
+
+.error{
+    background:#fff;
+    border-radius:16px;
+    padding:30px 20px;
+    text-align:center;
+    color:#999;
+}
+
+.bottom-nav{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    height:64px;
+    background:#fff;
+    border-top:1px solid #eee;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    z-index:20;
+}
+
+.nav-item{
+    text-align:center;
+    color:#888;
+    font-size:11px;
+    cursor:pointer;
+}
+
+.nav-icon{
+    font-size:21px;
+    line-height:25px;
+}
+
+.nav-item.active{
+    color:#ff7a00;
+}
+
+@media(max-width:600px){
+
+    .summary{
+        padding:15px;
+    }
+
+    .review-card{
+        padding:15px;
+    }
+
+    .restaurant-name{
+        font-size:16px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <button
+        class="back"
+        onclick="history.back()"
+        aria-label="返回"
+    >
+        ‹
+    </button>
+
+
+    <span id="pageTitle">
+        我的评价
+    </span>
+
+</div>
+
+
+<div class="container">
+
+
+    <div class="summary">
+
+        <div class="summary-left">
+
+            <div class="summary-icon">
+                ⭐
+            </div>
+
+
+            <div>
+
+                <div
+                    class="summary-title"
+                    id="summaryTitle"
+                >
+                    我的评价
+                </div>
+
+
+                <div
+                    class="summary-desc"
+                    id="summaryDesc"
+                >
+                    查看你提交过的餐厅评价
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="summary-count"
+            id="reviewCount"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div id="content">
+
+        <div class="loading">
+            正在加载评价...
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="bottom-nav">
+
+
+    <div
+        class="nav-item"
+        onclick="location.href='index.html'"
+    >
+
+        <div class="nav-icon">
+            🏠
+        </div>
+
+        <span id="navHome">
+            首页
+        </span>
+
+    </div>
+
+
+    <div
+        class="nav-item"
+        onclick="location.href='orders.html'"
+    >
+
+        <div class="nav-icon">
+            📋
+        </div>
+
+        <span id="navOrders">
+            订单
+        </span>
+
+    </div>
+
+
+    <div
+        class="nav-item active"
+        onclick="location.href='profile.html'"
+    >
+
+        <div class="nav-icon">
+            👤
+        </div>
+
+        <span id="navProfile">
+            我的
+        </span>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+// ========================================
+// 统一语言
+// ========================================
+
+function t(key, fallback){
+
+    if(
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t === "function"
+    ){
+
+        return window.MDYLanguage.t(
+            key,
+            {},
+            fallback || key
+        );
+
+    }
+
+    return fallback || key;
+
+}
+
+
+// ========================================
+// Firebase
+// ========================================
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+
+    authDomain:
+        "mdy-food.firebaseapp.com",
+
+    projectId:
+        "mdy-food",
+
+    storageBucket:
+        "mdy-food.firebasestorage.app",
+
+    messagingSenderId:
+        "498327590625",
+
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0",
+
+    measurementId:
+        "G-6Q5G2862XQ"
+
+};
+
+
+firebase.initializeApp(
+    firebaseConfig
+);
+
+
+const auth =
+    firebase.auth();
+
+
+const db =
+    firebase.firestore();
+
+
+// ========================================
+// 全局数据
+// ========================================
+
+let currentUser = null;
+
+let currentReviews = [];
+
+
+// ========================================
+// HTML 安全
+// ========================================
+
+function escapeHtml(value){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// ========================================
+// 时间
+// ========================================
+
+function formatTime(timestamp){
+
+    if(!timestamp){
+
+        return t(
+            "timeUnknown",
+            "时间未知"
+        );
+
+    }
+
+
+    try{
+
+        const date =
+            timestamp.toDate
+                ? timestamp.toDate()
+                : new Date(timestamp);
+
+
+        if(
+            isNaN(
+                date.getTime()
+            )
+        ){
+
+            return t(
+                "timeUnknown",
+                "时间未知"
+            );
+
+        }
+
+
+        if(
+            window.MDYLanguage &&
+            typeof window.MDYLanguage.formatDateTime === "function"
+        ){
+
+            return window.MDYLanguage.formatDateTime(
+                date
+            );
+
+        }
+
+
+        return date.toLocaleString(
+            "zh-CN",
+            {
+                year:"numeric",
+                month:"2-digit",
+                day:"2-digit",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+            "时间格式化失败：",
+            error
+        );
+
+
+        return t(
+            "timeUnknown",
+            "时间未知"
+        );
+
+    }
+
+}
+
+
+// ========================================
+// 星星
+// ========================================
+
+function createStars(rating){
+
+    const number =
+        Number(rating) || 0;
+
+
+    let stars = "";
+
+
+    for(
+        let i = 1;
+        i <= 5;
+        i++
+    ){
+
+        stars +=
+            i <= number
+                ? "★"
+                : "☆";
+
+    }
+
+
+    return stars;
+
+}
+
+
+// ========================================
+// 渲染评价
+// ========================================
+
+function renderReviews(reviews){
+
+    const content =
+        document.getElementById(
+            "content"
+        );
+
+
+    const count =
+        document.getElementById(
+            "reviewCount"
+        );
+
+
+    if(!content || !count){
+
+        return;
+
+    }
+
+
+    count.textContent =
+        reviews.length;
+
+
+    // ================================
+    // 没有评价
+    // ================================
+
+    if(reviews.length === 0){
+
+        content.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ⭐
+                </div>
+
+
+                <div class="empty-title">
+
+                    ${escapeHtml(
+                        t(
+                            "noMyReviews",
+                            "还没有评价"
+                        )
+                    )}
+
+                </div>
+
+
+                <div class="empty-desc">
+
+                    ${escapeHtml(
+                        t(
+                            "noMyReviewsDesc",
+                            "完成订单后可以给餐厅留下评价"
+                        )
+                    )}
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    // ================================
+    // 有评价
+    // ================================
+
+    content.innerHTML =
+
+        reviews.map(
+            function(review){
+
+                const restaurantName =
+                    review.restaurantName ||
+                    t(
+                        "defaultRestaurantName",
+                        "MDY FOOD 餐厅"
+                    );
+
+
+                const orderNumber =
+                    review.order_number ||
+                    review.orderId ||
+                    "";
+
+
+                const rating =
+                    Number(
+                        review.rating
+                    ) || 0;
+
+
+                const comment =
+                    review.comment ||
+                    t(
+                        "userNoTextReview",
+                        "用户未填写文字评价"
+                    );
+
+
+                const createdAt =
+                    review.createdAt ||
+                    review.created_at ||
+                    null;
+
+
+                return `
+
+                    <div class="review-card">
+
+
+                        <div class="restaurant-row">
+
+
+                            <div>
+
+                                <div class="restaurant-name">
+
+                                    ${escapeHtml(
+                                        restaurantName
+                                    )}
+
+                                </div>
+
+
+                                ${
+                                    orderNumber
+                                    ?
+                                    `
+
+                                    <div class="order-number">
+
+                                        ${escapeHtml(
+                                            t(
+                                                "orderNumberShort",
+                                                "订单号"
+                                            )
+                                        )}：
+
+                                        ${escapeHtml(
+                                            orderNumber
+                                        )}
+
+                                    </div>
+
+                                    `
+                                    :
+                                    ""
+                                }
+
+                            </div>
+
+
+                            <div class="rating">
+
+                                ${createStars(
+                                    rating
+                                )}
+
+                                <span class="rating-number">
+
+                                    ${rating.toFixed(1)}
+
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="review-content">
+
+                            ${escapeHtml(
+                                comment
+                            )}
+
+                        </div>
+
+
+                        <div class="review-time">
+
+                            ${escapeHtml(
+                                formatTime(
+                                    createdAt
+                                )
+                            )}
+
+                        </div>
+
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+// ========================================
+// 加载评价
+// ========================================
+
+function loadReviews(user){
+
+    const content =
+        document.getElementById(
+            "content"
+        );
+
+
+    if(!content){
+
+        return;
+
+    }
+
+
+    content.innerHTML = `
+
+        <div class="loading">
+
+            ${escapeHtml(
+                t(
+                    "reviewLoading",
+                    "正在加载评价..."
+                )
+            )}
+
+        </div>
+
+    `;
+
+
+    /*
+        不使用 orderBy。
+        避免 Firestore 因为缺少复合索引而报错。
+        获取数据后在前端按照时间排序。
+    */
+
+    db.collection("reviews")
+
+        .where(
+            "customerId",
+            "==",
+            user.uid
+        )
+
+        .get()
+
+        .then(
+            function(snapshot){
+
+                const reviews = [];
+
+
+                snapshot.forEach(
+                    function(doc){
+
+                        const data =
+                            doc.data() || {};
+
+
+                        reviews.push({
+
+                            ...data,
+
+                            _docId:
+                                doc.id
+
+                        });
+
+                    }
+                );
+
+
+                reviews.sort(
+                    function(a,b){
+
+                        const aTime =
+                            a.createdAt ||
+                            a.created_at;
+
+
+                        const bTime =
+                            b.createdAt ||
+                            b.created_at;
+
+
+                        let aMillis = 0;
+
+                        let bMillis = 0;
+
+
+                        try{
+
+                            if(
+                                aTime &&
+                                aTime.toMillis
+                            ){
+
+                                aMillis =
+                                    aTime.toMillis();
+
+                            }
+
+                            else if(aTime){
+
+                                aMillis =
+                                    new Date(
+                                        aTime
+                                    ).getTime();
+
+                            }
+
+                        }
+
+                        catch(error){}
+
+
+                        try{
+
+                            if(
+                                bTime &&
+                                bTime.toMillis
+                            ){
+
+                                bMillis =
+                                    bTime.toMillis();
+
+                            }
+
+                            else if(bTime){
+
+                                bMillis =
+                                    new Date(
+                                        bTime
+                                    ).getTime();
+
+                            }
+
+                        }
+
+                        catch(error){}
+
+
+                        return (
+                            bMillis -
+                            aMillis
+                        );
+
+                    }
+                );
+
+
+                currentReviews =
+                    reviews;
+
+
+                renderReviews(
+                    reviews
+                );
+
+            }
+        )
+
+        .catch(
+            function(error){
+
+                console.error(
+                    "加载评价失败：",
+                    error
+                );
+
+
+                document.getElementById(
+                    "reviewCount"
+                ).textContent =
+                    "0";
+
+
+                content.innerHTML = `
+
+                    <div class="error">
+
+                        <div
+                            style="
+                                font-size:40px;
+                                margin-bottom:10px;
+                            "
+                        >
+                            ⚠️
+                        </div>
+
+
+                        <div>
+
+                            ${escapeHtml(
+                                t(
+                                    "reviewLoadFailed",
+                                    "评价加载失败"
+                                )
+                            )}
+
+                        </div>
+
+
+                        <div
+                            style="
+                                font-size:12px;
+                                margin-top:8px;
+                            "
+                        >
+
+                            ${escapeHtml(
+                                t(
+                                    "retry",
+                                    "请刷新页面后重试"
+                                )
+                            )}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+}
+
+
+// ========================================
+// 登录状态
+// ========================================
+
+function showLoginState(){
+
+    const count =
+        document.getElementById(
+            "reviewCount"
+        );
+
+
+    const content =
+        document.getElementById(
+            "content"
+        );
+
+
+    if(count){
+
+        count.textContent =
+            "0";
+
+    }
+
+
+    if(!content){
+
+        return;
+
+    }
+
+
+    content.innerHTML = `
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                👤
+            </div>
+
+
+            <div class="empty-title">
+
+                ${escapeHtml(
+                    t(
+                        "loginToView",
+                        "请先登录"
+                    )
+                )}
+
+            </div>
+
+
+            <div class="empty-desc">
+
+                ${escapeHtml(
+                    t(
+                        "loginToViewDesc",
+                        "登录后才能查看我的评价"
+                    )
+                )}
+
+            </div>
+
+
+            <button
+                class="login-button"
+                onclick="location.href='login.html'"
+            >
+
+                ${escapeHtml(
+                    t(
+                        "goLogin",
+                        "去登录"
+                    )
+                )}
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+// ========================================
+// 页面语言更新
+// ========================================
+
+function updatePageLanguage(){
+
+    const language =
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.getLanguage === "function"
+
+        ? window.MDYLanguage.getLanguage()
+
+        : "zh";
+
+
+    // 页面语言
+
+    document.documentElement.lang =
+        language === "my"
+            ? "my"
+            : language === "en"
+            ? "en"
+            : "zh-CN";
+
+
+    // 页面标题
+
+    document.title =
+        "MDY FOOD - " +
+        t(
+            "myReviews",
+            "我的评价"
+        );
+
+
+    // 顶部标题
+
+    const pageTitle =
+        document.getElementById(
+            "pageTitle"
+        );
+
+
+    if(pageTitle){
+
+        pageTitle.textContent =
+            t(
+                "myReviews",
+                "我的评价"
+            );
+
+    }
+
+
+    // Summary 标题
+
+    const summaryTitle =
+        document.getElementById(
+            "summaryTitle"
+        );
+
+
+    if(summaryTitle){
+
+        summaryTitle.textContent =
+            t(
+                "myReviews",
+                "我的评价"
+            );
+
+    }
+
+
+    // Summary 描述
+
+    const summaryDesc =
+        document.getElementById(
+            "summaryDesc"
+        );
+
+
+    if(summaryDesc){
+
+        summaryDesc.textContent =
+            t(
+                "myReviewsDesc",
+                "查看你提交过的餐厅评价"
+            );
+
+    }
+
+
+    // 底部导航
+
+    const navHome =
+        document.getElementById(
+            "navHome"
+        );
+
+
+    if(navHome){
+
+        navHome.textContent =
+            t(
+                "home",
+                "首页"
+            );
+
+    }
+
+
+    const navOrders =
+        document.getElementById(
+            "navOrders"
+        );
+
+
+    if(navOrders){
+
+        navOrders.textContent =
+            t(
+                "orders",
+                "订单"
+            );
+
+    }
+
+
+    const navProfile =
+        document.getElementById(
+            "navProfile"
+        );
+
+
+    if(navProfile){
+
+        navProfile.textContent =
+            t(
+                "profile",
+                "我的"
+            );
+
+    }
+
+
+    // 当前评价重新渲染
+
+    if(
+        currentReviews &&
+        currentReviews.length >= 0 &&
+        currentUser
+    ){
+
+        renderReviews(
+            currentReviews
+        );
+
+    }
+
+}
+
+
+// ========================================
+// 语言变化监听
+// ========================================
+
+window.addEventListener(
+    "mdyLanguageChanged",
+    function(){
+
+        updatePageLanguage();
+
+    }
+);
+
+
+// ========================================
+// 页面初始化
+// ========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        updatePageLanguage();
+
+    }
+);
+
+
+// ========================================
+// Firebase 登录监听
+// ========================================
+
+auth.onAuthStateChanged(
+    function(user){
+
+        if(!user){
+
+            currentUser =
+                null;
+
+
+            currentReviews =
+                [];
+
+
+            showLoginState();
+
+            return;
+
+        }
+
+
+        currentUser =
+            user;
+
+
+        loadReviews(
+            user
+        );
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>
