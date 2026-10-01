@@ -13,7 +13,10 @@
 <title>MDY FOOD - 我的评价</title>
 
 
-<!-- Firebase -->
+<!-- =========================
+     Firebase
+========================= -->
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -21,7 +24,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 
-<!-- 统一语言系统 -->
+<!-- =========================
+     MDY FOOD 统一语言系统
+========================= -->
+
 <script src="language.js"></script>
 
 
@@ -274,6 +280,10 @@ body{
 <body>
 
 
+<!-- =========================
+     顶部
+========================= -->
+
 <div class="header">
 
     <button
@@ -291,6 +301,10 @@ body{
 
 </div>
 
+
+<!-- =========================
+     内容
+========================= -->
 
 <div class="container">
 
@@ -339,7 +353,9 @@ body{
     <div id="content">
 
         <div class="loading">
+
             正在加载评价...
+
         </div>
 
     </div>
@@ -347,6 +363,10 @@ body{
 
 </div>
 
+
+<!-- =========================
+     底部导航
+========================= -->
 
 <div class="bottom-nav">
 
@@ -404,10 +424,18 @@ body{
 
 <script>
 
+"use strict";
 
-// ========================================
-// 统一语言
-// ========================================
+
+/* =========================================================
+   MDY FOOD - MY REVIEWS
+   language.js 统一语言系统版本
+========================================================= */
+
+
+/* =========================
+   语言工具
+========================= */
 
 function t(key, fallback){
 
@@ -429,9 +457,9 @@ function t(key, fallback){
 }
 
 
-// ========================================
-// Firebase
-// ========================================
+/* =========================
+   Firebase
+========================= */
 
 const firebaseConfig = {
 
@@ -459,9 +487,15 @@ const firebaseConfig = {
 };
 
 
-firebase.initializeApp(
-    firebaseConfig
-);
+if(
+    !firebase.apps.length
+){
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+}
 
 
 const auth =
@@ -472,18 +506,18 @@ const db =
     firebase.firestore();
 
 
-// ========================================
-// 全局数据
-// ========================================
+/* =========================
+   全局数据
+========================= */
 
 let currentUser = null;
 
 let currentReviews = [];
 
 
-// ========================================
-// HTML 安全
-// ========================================
+/* =========================
+   HTML 安全
+========================= */
 
 function escapeHtml(value){
 
@@ -527,11 +561,95 @@ function escapeHtml(value){
 }
 
 
-// ========================================
-// 时间
-// ========================================
+/* =========================
+   获取时间毫秒
+========================= */
 
-function formatTime(timestamp){
+function getReviewTime(
+    review
+){
+
+    const timestamp =
+        review.createdAt ||
+        review.created_at;
+
+
+    if(!timestamp){
+
+        return 0;
+
+    }
+
+
+    try{
+
+        if(
+            typeof timestamp.toMillis ===
+            "function"
+        ){
+
+            return timestamp.toMillis();
+
+        }
+
+
+        if(
+            typeof timestamp.toDate ===
+            "function"
+        ){
+
+            return timestamp
+                .toDate()
+                .getTime();
+
+        }
+
+
+        if(
+            timestamp instanceof Date
+        ){
+
+            return timestamp.getTime();
+
+        }
+
+
+        if(
+            typeof timestamp === "number"
+        ){
+
+            return timestamp;
+
+        }
+
+
+        const parsed =
+            new Date(timestamp)
+                .getTime();
+
+
+        return isNaN(parsed)
+            ? 0
+            : parsed;
+
+    }
+
+    catch(error){
+
+        return 0;
+
+    }
+
+}
+
+
+/* =========================
+   时间格式化
+========================= */
+
+function formatTime(
+    timestamp
+){
 
     if(!timestamp){
 
@@ -546,8 +664,16 @@ function formatTime(timestamp){
     try{
 
         const date =
-            timestamp.toDate
+            timestamp &&
+            typeof timestamp.toDate ===
+            "function"
+
                 ? timestamp.toDate()
+
+                : timestamp instanceof Date
+
+                ? timestamp
+
                 : new Date(timestamp);
 
 
@@ -567,7 +693,8 @@ function formatTime(timestamp){
 
         if(
             window.MDYLanguage &&
-            typeof window.MDYLanguage.formatDateTime === "function"
+            typeof window.MDYLanguage.formatDateTime ===
+            "function"
         ){
 
             return window.MDYLanguage.formatDateTime(
@@ -584,7 +711,8 @@ function formatTime(timestamp){
                 month:"2-digit",
                 day:"2-digit",
                 hour:"2-digit",
-                minute:"2-digit"
+                minute:"2-digit",
+                hour12:false
             }
         );
 
@@ -608,14 +736,22 @@ function formatTime(timestamp){
 }
 
 
-// ========================================
-// 星星
-// ========================================
+/* =========================
+   星星
+========================= */
 
-function createStars(rating){
+function createStars(
+    rating
+){
 
     const number =
-        Number(rating) || 0;
+        Math.max(
+            0,
+            Math.min(
+                5,
+                Number(rating) || 0
+            )
+        );
 
 
     let stars = "";
@@ -640,11 +776,13 @@ function createStars(rating){
 }
 
 
-// ========================================
-// 渲染评价
-// ========================================
+/* =========================
+   渲染评价
+========================= */
 
-function renderReviews(reviews){
+function renderReviews(
+    reviews
+){
 
     const content =
         document.getElementById(
@@ -658,7 +796,10 @@ function renderReviews(reviews){
         );
 
 
-    if(!content || !count){
+    if(
+        !content ||
+        !count
+    ){
 
         return;
 
@@ -669,11 +810,13 @@ function renderReviews(reviews){
         reviews.length;
 
 
-    // ================================
-    // 没有评价
-    // ================================
+    /* =========================
+       没有评价
+    ========================= */
 
-    if(reviews.length === 0){
+    if(
+        reviews.length === 0
+    ){
 
         content.innerHTML = `
 
@@ -716,9 +859,9 @@ function renderReviews(reviews){
     }
 
 
-    // ================================
-    // 有评价
-    // ================================
+    /* =========================
+       有评价
+    ========================= */
 
     content.innerHTML =
 
@@ -763,9 +906,7 @@ function renderReviews(reviews){
 
                     <div class="review-card">
 
-
                         <div class="restaurant-row">
-
 
                             <div>
 
@@ -820,7 +961,6 @@ function renderReviews(reviews){
 
                             </div>
 
-
                         </div>
 
 
@@ -843,7 +983,6 @@ function renderReviews(reviews){
 
                         </div>
 
-
                     </div>
 
                 `;
@@ -854,11 +993,13 @@ function renderReviews(reviews){
 }
 
 
-// ========================================
-// 加载评价
-// ========================================
+/* =========================
+   加载评价
+========================= */
 
-function loadReviews(user){
+function loadReviews(
+    user
+){
 
     const content =
         document.getElementById(
@@ -866,7 +1007,10 @@ function loadReviews(user){
         );
 
 
-    if(!content){
+    if(
+        !content ||
+        !user
+    ){
 
         return;
 
@@ -890,9 +1034,10 @@ function loadReviews(user){
 
 
     /*
-        不使用 orderBy。
-        避免 Firestore 因为缺少复合索引而报错。
-        获取数据后在前端按照时间排序。
+       不使用 orderBy。
+
+       避免 Firestore 因索引问题报错。
+       查询后在前端按照时间排序。
     */
 
     db.collection("reviews")
@@ -931,79 +1076,16 @@ function loadReviews(user){
                 );
 
 
+                /* =========================
+                   最新评价排前面
+                ========================= */
+
                 reviews.sort(
                     function(a,b){
 
-                        const aTime =
-                            a.createdAt ||
-                            a.created_at;
-
-
-                        const bTime =
-                            b.createdAt ||
-                            b.created_at;
-
-
-                        let aMillis = 0;
-
-                        let bMillis = 0;
-
-
-                        try{
-
-                            if(
-                                aTime &&
-                                aTime.toMillis
-                            ){
-
-                                aMillis =
-                                    aTime.toMillis();
-
-                            }
-
-                            else if(aTime){
-
-                                aMillis =
-                                    new Date(
-                                        aTime
-                                    ).getTime();
-
-                            }
-
-                        }
-
-                        catch(error){}
-
-
-                        try{
-
-                            if(
-                                bTime &&
-                                bTime.toMillis
-                            ){
-
-                                bMillis =
-                                    bTime.toMillis();
-
-                            }
-
-                            else if(bTime){
-
-                                bMillis =
-                                    new Date(
-                                        bTime
-                                    ).getTime();
-
-                            }
-
-                        }
-
-                        catch(error){}
-
-
                         return (
-                            bMillis -
-                            aMillis
+                            getReviewTime(b) -
+                            getReviewTime(a)
                         );
 
                     }
@@ -1015,7 +1097,7 @@ function loadReviews(user){
 
 
                 renderReviews(
-                    reviews
+                    currentReviews
                 );
 
             }
@@ -1028,6 +1110,10 @@ function loadReviews(user){
                     "加载评价失败：",
                     error
                 );
+
+
+                currentReviews =
+                    [];
 
 
                 document.getElementById(
@@ -1088,9 +1174,9 @@ function loadReviews(user){
 }
 
 
-// ========================================
-// 登录状态
-// ========================================
+/* =========================
+   登录状态页面
+========================= */
 
 function showLoginState(){
 
@@ -1175,32 +1261,42 @@ function showLoginState(){
 }
 
 
-// ========================================
-// 页面语言更新
-// ========================================
+/* =========================
+   更新静态页面语言
+========================= */
 
 function updatePageLanguage(){
 
     const language =
         window.MDYLanguage &&
-        typeof window.MDYLanguage.getLanguage === "function"
+        typeof window.MDYLanguage.getLanguage ===
+        "function"
 
-        ? window.MDYLanguage.getLanguage()
+            ? window.MDYLanguage.getLanguage()
 
-        : "zh";
+            : "zh";
 
 
-    // 页面语言
+    /* =========================
+       HTML lang
+    ========================= */
 
     document.documentElement.lang =
+
         language === "my"
+
             ? "my"
+
             : language === "en"
+
             ? "en"
+
             : "zh-CN";
 
 
-    // 页面标题
+    /* =========================
+       页面标题
+    ========================= */
 
     document.title =
         "MDY FOOD - " +
@@ -1210,7 +1306,9 @@ function updatePageLanguage(){
         );
 
 
-    // 顶部标题
+    /* =========================
+       顶部标题
+    ========================= */
 
     const pageTitle =
         document.getElementById(
@@ -1229,7 +1327,9 @@ function updatePageLanguage(){
     }
 
 
-    // Summary 标题
+    /* =========================
+       Summary 标题
+    ========================= */
 
     const summaryTitle =
         document.getElementById(
@@ -1248,7 +1348,9 @@ function updatePageLanguage(){
     }
 
 
-    // Summary 描述
+    /* =========================
+       Summary 描述
+    ========================= */
 
     const summaryDesc =
         document.getElementById(
@@ -1267,7 +1369,9 @@ function updatePageLanguage(){
     }
 
 
-    // 底部导航
+    /* =========================
+       底部导航
+    ========================= */
 
     const navHome =
         document.getElementById(
@@ -1320,11 +1424,12 @@ function updatePageLanguage(){
     }
 
 
-    // 当前评价重新渲染
+    /* =========================
+       当前评价重新渲染
+       不重新请求 Firestore
+    ========================= */
 
     if(
-        currentReviews &&
-        currentReviews.length >= 0 &&
         currentUser
     ){
 
@@ -1337,9 +1442,9 @@ function updatePageLanguage(){
 }
 
 
-// ========================================
-// 语言变化监听
-// ========================================
+/* =========================
+   语言切换监听
+========================= */
 
 window.addEventListener(
     "mdyLanguageChanged",
@@ -1351,23 +1456,9 @@ window.addEventListener(
 );
 
 
-// ========================================
-// 页面初始化
-// ========================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-        updatePageLanguage();
-
-    }
-);
-
-
-// ========================================
-// Firebase 登录监听
-// ========================================
+/* =========================
+   Firebase 登录状态
+========================= */
 
 auth.onAuthStateChanged(
     function(user){
@@ -1377,10 +1468,8 @@ auth.onAuthStateChanged(
             currentUser =
                 null;
 
-
             currentReviews =
                 [];
-
 
             showLoginState();
 
@@ -1400,6 +1489,19 @@ auth.onAuthStateChanged(
     }
 );
 
+
+/* =========================
+   初始页面语言
+========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        updatePageLanguage();
+
+    }
+);
 
 </script>
 
