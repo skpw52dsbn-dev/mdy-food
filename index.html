@@ -3,1554 +3,1090 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
 
-    <title>MDY FOOD - Mandalay Food Delivery</title>
+<title>MDY FOOD</title>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
-    <!-- Firebase 10.12.2 -->
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<style>
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+/* =========================================================
+   基础
+========================================================= */
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
+html {
+    scroll-behavior: smooth;
+}
 
-    <style>
+body {
 
-        * {
-            box-sizing: border-box;
-        }
+    margin: 0;
 
+    padding: 0 0 82px;
 
-        html {
-            scroll-behavior: smooth;
-        }
+    font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
 
+    background: #f6f6f6;
 
-        body {
+    color: #222;
 
-            margin: 0;
+}
 
-            font-family:
-                Arial,
-                "Microsoft YaHei",
-                sans-serif;
+button,
+input {
+    font-family: inherit;
+}
 
-            background:
-                #f7f7f7;
+button {
+    cursor: pointer;
+}
 
-            color: #222;
 
-            padding-bottom: 75px;
+/* =========================================================
+   顶部
+========================================================= */
 
-        }
+.header {
 
+    background:
+        linear-gradient(
+            135deg,
+            #ff6a2a,
+            #ff4d1f
+        );
 
-        button,
-        input {
-            font-family: inherit;
-        }
+    color: white;
 
+    padding:
+        22px
+        16px
+        24px;
 
-        /* ========================================
-           顶部
-        ======================================== */
+    border-radius:
+        0
+        0
+        24px
+        24px;
 
-        header {
+}
 
-            position: sticky;
+.header-top {
 
-            top: 0;
+    display: flex;
 
-            z-index: 1000;
+    align-items: center;
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #ff5a1f,
-                    #ff7043
-                );
+    justify-content: space-between;
 
-            color: white;
+    max-width: 900px;
 
-            padding:
-                16px 15px 18px;
+    margin: 0 auto 18px;
 
-            box-shadow:
-                0 3px 15px
-                rgba(0,0,0,0.12);
+}
 
-        }
+.logo-area {
 
+    display: flex;
 
-        .header-inner {
+    align-items: center;
 
-            max-width: 800px;
+    gap: 10px;
 
-            margin: 0 auto;
+}
 
-            display: flex;
+.logo-icon {
 
-            align-items: center;
+    width: 42px;
+    height: 42px;
 
-            justify-content: space-between;
+    background: rgba(255,255,255,0.18);
 
-            gap: 12px;
+    border-radius: 13px;
 
-        }
+    display: flex;
 
+    align-items: center;
 
-        .brand {
+    justify-content: center;
 
-            min-width: 0;
+    font-size: 23px;
 
-        }
+}
 
+.logo-text {
 
-        .brand-title {
+    font-size: 23px;
 
-            margin: 0;
+    font-weight: 800;
 
-            font-size: 25px;
+}
 
-            font-weight: 800;
+.logo-sub {
 
-            letter-spacing: 0.3px;
+    font-size: 11px;
 
-        }
+    opacity: 0.85;
 
+    margin-top: 2px;
 
-        .brand-subtitle {
+}
 
-            margin-top: 4px;
+.header-account {
 
-            font-size: 12px;
+    width: 40px;
+    height: 40px;
 
-            opacity: 0.9;
+    border-radius: 50%;
 
-        }
+    border: none;
 
+    background: rgba(255,255,255,0.18);
 
-        .header-order-btn {
+    color: white;
 
-            flex-shrink: 0;
+    font-size: 20px;
 
-            display: inline-flex;
+    display: flex;
 
-            align-items: center;
+    align-items: center;
 
-            justify-content: center;
+    justify-content: center;
 
-            gap: 5px;
+}
 
-            min-width: 88px;
+.header-title {
 
-            padding: 9px 12px;
+    max-width: 900px;
 
-            border-radius: 20px;
+    margin: auto;
 
-            background:
-                rgba(255,255,255,0.18);
+}
 
-            border:
-                1px solid
-                rgba(255,255,255,0.35);
+.header-title h1 {
 
-            color: white;
+    margin: 0;
 
-            text-decoration: none;
+    font-size: 25px;
 
-            font-size: 13px;
+    line-height: 1.3;
 
-            font-weight: bold;
+}
 
-            backdrop-filter: blur(8px);
+.header-title p {
 
-        }
+    margin: 6px 0 0;
 
+    font-size: 13px;
 
-        /* ========================================
-           主容器
-        ======================================== */
+    opacity: 0.9;
 
-        .container {
+}
 
-            max-width: 800px;
 
-            margin: 0 auto;
+/* =========================================================
+   主体
+========================================================= */
 
-            padding:
-                15px 15px 25px;
+.container {
 
-        }
+    width: 100%;
 
+    max-width: 900px;
 
-        /* ========================================
-           欢迎区域
-        ======================================== */
+    margin: auto;
 
-        .welcome-box {
+    padding: 15px;
 
-            position: relative;
+}
 
-            overflow: hidden;
 
-            margin-bottom: 14px;
+/* =========================================================
+   搜索
+========================================================= */
 
-            padding: 20px;
+.search-wrapper {
 
-            border-radius: 18px;
+    margin-top: -8px;
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #fff4ef,
-                    #fffaf8
-                );
+    margin-bottom: 17px;
 
-            border:
-                1px solid
-                #ffe2d7;
+}
 
-        }
+.search-box {
 
+    width: 100%;
 
-        .welcome-box::after {
+    height: 52px;
 
-            content: "🍜";
+    border: none;
 
-            position: absolute;
+    outline: none;
 
-            right: 18px;
+    background: white;
 
-            bottom: -8px;
+    border-radius: 15px;
 
-            font-size: 70px;
+    padding:
+        0
+        16px
+        0
+        48px;
 
-            opacity: 0.13;
+    font-size: 15px;
 
-            transform: rotate(-10deg);
+    box-shadow:
+        0 4px 16px
+        rgba(0,0,0,0.10);
 
-        }
+}
 
+.search-wrapper {
 
-        .welcome-title {
+    position: relative;
 
-            position: relative;
+}
 
-            z-index: 1;
+.search-icon {
 
-            margin: 0;
+    position: absolute;
 
-            font-size: 20px;
+    left: 17px;
 
-            font-weight: 800;
+    top: 50%;
 
-            color: #222;
+    transform: translateY(-50%);
 
-        }
+    font-size: 19px;
 
+    color: #999;
 
-        .welcome-text {
+    pointer-events: none;
 
-            position: relative;
+}
 
-            z-index: 1;
+.search-box:focus {
 
-            margin:
-                6px 0 0;
+    box-shadow:
+        0 0 0 2px #ff5a1f,
+        0 4px 16px rgba(0,0,0,0.08);
 
-            color: #777;
+}
 
-            font-size: 13px;
 
-            line-height: 1.6;
+/* =========================================================
+   快捷入口
+========================================================= */
 
-        }
+.quick-links {
 
+    display: grid;
 
-        /* ========================================
-           用户账号
-        ======================================== */
+    grid-template-columns:
+        repeat(4, 1fr);
 
-        .account-box {
+    gap: 10px;
 
-            background: white;
+    margin-bottom: 20px;
 
-            border-radius: 16px;
+}
 
-            margin-bottom: 14px;
+.quick-item {
 
-            padding: 14px;
+    background: white;
 
-            box-shadow:
-                0 3px 12px
-                rgba(0,0,0,0.06);
+    border-radius: 14px;
 
-        }
+    padding: 13px 5px;
 
+    text-align: center;
 
-        .account-login {
+    text-decoration: none;
 
-            display: flex;
+    color: #444;
 
-            align-items: center;
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.05);
 
-            justify-content: center;
+    transition:
+        transform .15s;
 
-            gap: 7px;
+}
 
-            width: 100%;
+.quick-item:active {
 
-            padding: 13px;
+    transform: scale(.96);
 
-            background:
-                #fff1ed;
+}
 
-            color:
-                #ff5a1f;
+.quick-icon {
 
-            text-decoration: none;
+    font-size: 23px;
 
-            border-radius: 11px;
+    margin-bottom: 6px;
 
-            font-weight: bold;
+}
 
-            font-size: 15px;
+.quick-text {
 
-        }
+    font-size: 12px;
 
+    font-weight: 600;
 
-        .account-user {
+}
 
-            display: flex;
 
-            align-items: center;
+/* =========================================================
+   分类
+========================================================= */
 
-            justify-content: space-between;
+.section-title-row {
 
-            gap: 10px;
+    display: flex;
 
-        }
+    justify-content: space-between;
 
+    align-items: center;
 
-        .account-user-info {
+    margin:
+        5px
+        2px
+        11px;
 
-            min-width: 0;
+}
 
-        }
+.section-title {
 
+    font-size: 19px;
 
-        .account-welcome {
+    font-weight: 800;
 
-            color: #999;
+}
 
-            font-size: 12px;
+.section-more {
 
-            margin-bottom: 3px;
+    font-size: 13px;
 
-        }
+    color: #ff5a1f;
 
+    text-decoration: none;
 
-        .account-user strong {
+}
 
-            display: block;
+.category-bar {
 
-            color: #222;
+    display: flex;
 
-            font-size: 15px;
+    gap: 9px;
 
-            overflow: hidden;
+    overflow-x: auto;
 
-            text-overflow: ellipsis;
+    padding:
+        1px
+        2px
+        5px;
 
-            white-space: nowrap;
+    margin-bottom: 19px;
 
-            max-width: 230px;
+    scrollbar-width: none;
 
-        }
+}
 
+.category-bar::-webkit-scrollbar {
 
-        .account-actions {
+    display: none;
 
-            flex-shrink: 0;
+}
 
-            display: flex;
+.category-btn {
 
-            gap: 7px;
+    flex-shrink: 0;
 
-        }
+    border: none;
 
+    background: white;
 
-        .account-action {
+    color: #555;
 
-            border: none;
+    padding:
+        10px
+        15px;
 
-            padding:
-                9px 11px;
+    border-radius: 22px;
 
-            border-radius: 9px;
+    font-size: 13px;
 
-            font-size: 12px;
+    box-shadow:
+        0 2px 7px
+        rgba(0,0,0,0.06);
 
-            font-weight: bold;
+}
 
-            cursor: pointer;
+.category-btn.active {
 
-            text-decoration: none;
+    background: #ff5a1f;
 
-            white-space: nowrap;
+    color: white;
 
-        }
+    font-weight: bold;
 
+}
 
-        .account-action.order {
 
-            background:
-                #fff1ed;
+/* =========================================================
+   登录提示
+========================================================= */
 
-            color:
-                #ff5a1f;
+.login-banner {
 
-        }
+    display: none;
 
+    background: white;
 
-        .account-action.logout {
+    border-radius: 15px;
 
-            background:
-                #f1f1f1;
+    padding: 15px;
 
-            color:
-                #666;
+    margin-bottom: 18px;
 
-        }
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.06);
 
+}
 
-        /* ========================================
-           搜索区域
-        ======================================== */
+.login-banner-content {
 
-        .search-section {
+    display: flex;
 
-            margin-bottom: 15px;
+    align-items: center;
 
-        }
+    justify-content: space-between;
 
+    gap: 10px;
 
-        .search-label {
+}
 
-            margin:
-                0 0 8px 2px;
+.login-banner-left {
 
-            font-size: 14px;
+    display: flex;
 
-            font-weight: bold;
+    align-items: center;
 
-            color: #444;
+    gap: 10px;
 
-        }
+}
 
+.login-banner-icon {
 
-        .search-wrap {
+    width: 40px;
+    height: 40px;
 
-            position: relative;
+    background: #fff0eb;
 
-        }
+    border-radius: 12px;
 
+    display: flex;
 
-        .search-icon {
+    align-items: center;
 
-            position: absolute;
+    justify-content: center;
 
-            left: 15px;
+    font-size: 20px;
 
-            top: 50%;
+}
 
-            transform:
-                translateY(-50%);
+.login-banner-title {
 
-            font-size: 18px;
+    font-size: 14px;
 
-            pointer-events: none;
+    font-weight: bold;
 
-        }
+}
 
+.login-banner-sub {
 
-        .search {
+    font-size: 12px;
 
-            width: 100%;
+    color: #999;
 
-            padding:
-                14px 44px 14px 44px;
+    margin-top: 3px;
 
-            border:
-                1px solid
-                #eeeeee;
+}
 
-            border-radius: 13px;
+.login-banner-btn {
 
-            font-size: 15px;
+    flex-shrink: 0;
 
-            background: white;
+    background: #ff5a1f;
 
-            box-shadow:
-                0 3px 12px
-                rgba(0,0,0,0.06);
+    color: white;
 
-            outline: none;
+    border-radius: 9px;
 
-            transition:
-                0.2s ease;
+    padding: 9px 13px;
 
-        }
+    text-decoration: none;
 
+    font-size: 12px;
 
-        .search:focus {
+    font-weight: bold;
 
-            border-color:
-                #ff5a1f;
+}
 
-            box-shadow:
-                0 0 0 3px
-                rgba(255,90,31,0.10);
 
-        }
+/* =========================================================
+   餐厅
+========================================================= */
 
+.restaurant {
 
-        .search-clear {
+    background: white;
 
-            position: absolute;
+    border-radius: 17px;
 
-            right: 10px;
+    margin-bottom: 17px;
 
-            top: 50%;
+    overflow: hidden;
 
-            transform:
-                translateY(-50%);
+    box-shadow:
+        0 3px 14px
+        rgba(0,0,0,0.07);
 
-            width: 30px;
+}
 
-            height: 30px;
+.restaurant-image-box {
 
-            border: none;
+    position: relative;
 
-            border-radius: 50%;
+    width: 100%;
 
-            background:
-                #f0f0f0;
+    height: 190px;
 
-            color: #777;
+    overflow: hidden;
 
-            cursor: pointer;
+    background: #eee;
 
-            display: none;
+}
 
-        }
+.restaurant-image {
 
+    width: 100%;
 
-        /* ========================================
-           分类
-        ======================================== */
+    height: 100%;
 
-        .section-heading {
+    object-fit: cover;
 
-            display: flex;
+    display: block;
 
-            align-items: center;
+}
 
-            justify-content: space-between;
+.image-placeholder {
 
-            margin:
-                5px 2px 9px;
+    width: 100%;
 
-        }
+    height: 100%;
 
+    display: flex;
 
-        .section-heading h2 {
+    align-items: center;
 
-            margin: 0;
+    justify-content: center;
 
-            font-size: 17px;
+    background:
+        linear-gradient(
+            135deg,
+            #fff1eb,
+            #ffe0d4
+        );
 
-        }
+    color: #ff5a1f;
 
+    font-size: 55px;
 
-        .section-heading span {
+}
 
-            font-size: 12px;
+.status-badge {
 
-            color: #999;
+    position: absolute;
 
-        }
+    top: 12px;
 
+    left: 12px;
 
-        .category-bar {
+    padding:
+        7px
+        11px;
 
-            display: flex;
+    border-radius: 20px;
 
-            gap: 9px;
+    font-size: 12px;
 
-            overflow-x: auto;
+    font-weight: bold;
 
-            margin:
-                0 0 17px;
+    background: white;
 
-            padding:
-                2px 2px 5px;
+    box-shadow:
+        0 2px 7px
+        rgba(0,0,0,0.14);
 
-            scrollbar-width: none;
+}
 
-        }
+.status-badge.open {
 
+    color: #16864b;
 
-        .category-bar::-webkit-scrollbar {
+}
 
-            display: none;
+.status-badge.closed {
 
-        }
+    color: #d33;
 
+}
 
-        .category-btn {
+.restaurant-content {
 
-            flex-shrink: 0;
+    padding: 16px;
 
-            border:
-                1px solid
-                #eeeeee;
+}
 
-            background: white;
+.restaurant h2 {
 
-            color: #555;
+    margin:
+        0
+        0
+        6px;
 
-            padding:
-                9px 15px;
+    font-size: 20px;
 
-            border-radius: 22px;
+}
 
-            font-size: 13px;
+.category {
 
-            cursor: pointer;
+    color: #888;
 
-            box-shadow:
-                0 2px 7px
-                rgba(0,0,0,0.05);
+    font-size: 13px;
 
-            transition:
-                0.2s ease;
+    margin-bottom: 7px;
 
-        }
+}
 
+.description {
 
-        .category-btn.active {
+    color: #666;
 
-            background:
-                #ff5a1f;
+    font-size: 13px;
 
-            border-color:
-                #ff5a1f;
+    line-height: 1.6;
 
-            color: white;
+    margin-bottom: 10px;
 
-            font-weight: bold;
+}
 
-            box-shadow:
-                0 4px 10px
-                rgba(255,90,31,0.22);
+.restaurant-info {
 
-        }
+    display: flex;
 
+    gap: 14px;
 
-        /* ========================================
-           我的订单快捷入口
-        ======================================== */
+    flex-wrap: wrap;
 
-        .quick-order {
+    margin-bottom: 13px;
 
-            display: flex;
+    font-size: 12px;
 
-            align-items: center;
+    color: #777;
 
-            justify-content: space-between;
+}
 
-            gap: 12px;
+.restaurant-rating {
 
-            margin-bottom: 18px;
+    color: #f59e0b;
 
-            padding:
-                14px 15px;
+    font-weight: bold;
 
-            background: white;
+}
 
-            border-radius: 14px;
+.food-count {
 
-            text-decoration: none;
+    color: #777;
 
-            color: #222;
+}
 
-            box-shadow:
-                0 3px 12px
-                rgba(0,0,0,0.06);
+.food-match {
 
-        }
+    display: none;
 
+    margin-bottom: 12px;
 
-        .quick-order-left {
+    padding:
+        9px
+        12px;
 
-            display: flex;
+    background: #fff5f1;
 
-            align-items: center;
+    border-radius: 9px;
 
-            gap: 11px;
+    color: #ff5a1f;
 
-            min-width: 0;
+    font-size: 12px;
 
-        }
+}
 
+.restaurant-button {
 
-        .quick-order-icon {
+    width: 100%;
 
-            width: 42px;
+    border: none;
 
-            height: 42px;
+    background: #ff5a1f;
 
-            flex-shrink: 0;
+    color: white;
 
-            display: flex;
+    padding: 13px;
 
-            align-items: center;
+    border-radius: 10px;
 
-            justify-content: center;
+    font-size: 14px;
 
-            border-radius: 12px;
+    font-weight: bold;
 
-            background:
-                #fff1ed;
+}
 
-            font-size: 21px;
+.restaurant-button.closed {
 
-        }
+    background: #999 !important;
 
+}
 
-        .quick-order-title {
 
-            font-size: 14px;
+/* =========================================================
+   Loading
+========================================================= */
 
-            font-weight: bold;
+.loading {
 
-            margin-bottom: 3px;
+    background: white;
 
-        }
+    border-radius: 16px;
 
+    padding:
+        45px
+        15px;
 
-        .quick-order-desc {
+    text-align: center;
 
-            font-size: 12px;
+    color: #777;
 
-            color: #999;
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.05);
 
-        }
+}
 
+.loading-icon {
 
-        .quick-order-arrow {
+    font-size: 40px;
 
-            color:
-                #ff5a1f;
+    margin-bottom: 10px;
 
-            font-size: 22px;
+    animation:
+        loadingSpin 1.5s infinite;
 
-        }
+}
 
+@keyframes loadingSpin {
 
-        /* ========================================
-           餐厅列表标题
-        ======================================== */
+    0% {
+        transform: scale(1);
+    }
 
-        .restaurant-heading {
+    50% {
+        transform: scale(1.12);
+    }
 
-            display: flex;
+    100% {
+        transform: scale(1);
+    }
 
-            align-items: flex-end;
+}
 
-            justify-content: space-between;
 
-            margin:
-                0 2px 11px;
+/* =========================================================
+   无结果 / 错误
+========================================================= */
 
-        }
+.no-result,
+.error-box {
 
+    display: none;
 
-        .restaurant-heading h2 {
+    background: white;
 
-            margin: 0;
+    border-radius: 16px;
 
-            font-size: 19px;
+    padding:
+        40px
+        15px;
 
-        }
+    text-align: center;
 
+    color: #777;
 
-        .restaurant-heading span {
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.05);
 
-            color: #999;
+}
 
-            font-size: 12px;
+.no-result-icon {
 
-        }
+    font-size: 43px;
 
+    margin-bottom: 10px;
 
-        /* ========================================
-           餐厅列表
-        ======================================== */
+}
 
-        #restaurantList {
+.no-result-title {
 
-            display: flex;
+    color: #555;
 
-            flex-direction: column;
+    font-size: 17px;
 
-            gap: 15px;
+    font-weight: bold;
 
-        }
+    margin-bottom: 6px;
 
+}
 
-        /* ========================================
-           餐厅卡片
-        ======================================== */
 
-        .restaurant {
+/* =========================================================
+   底部导航
+========================================================= */
 
-            position: relative;
+.bottom-nav {
 
-            background: white;
+    position: fixed;
 
-            border-radius: 17px;
+    left: 0;
 
-            overflow: hidden;
+    right: 0;
 
-            box-shadow:
-                0 4px 16px
-                rgba(0,0,0,0.07);
+    bottom: 0;
 
-            transition:
-                transform 0.18s ease,
-                box-shadow 0.18s ease;
+    z-index: 9999;
 
-        }
+    height: 68px;
 
+    background:
+        rgba(255,255,255,0.97);
 
-        .restaurant:active {
+    backdrop-filter:
+        blur(12px);
 
-            transform:
-                scale(0.99);
+    -webkit-backdrop-filter:
+        blur(12px);
 
-        }
+    border-top:
+        1px solid #eee;
 
+    box-shadow:
+        0 -3px 15px
+        rgba(0,0,0,0.08);
 
-        .restaurant-image-box {
+    display: flex;
 
-            position: relative;
+    align-items: center;
 
-            width: 100%;
+    justify-content: center;
 
-            height: 205px;
+}
 
-            overflow: hidden;
+.bottom-nav-inner {
 
-            background: #eeeeee;
+    width: 100%;
 
-        }
+    max-width: 700px;
 
+    height: 100%;
 
-        .restaurant-image {
+    display: grid;
 
-            width: 100%;
+    grid-template-columns:
+        repeat(4, 1fr);
 
-            height: 100%;
+}
 
-            object-fit: cover;
+.nav-item {
 
-            display: block;
+    position: relative;
 
-            transition:
-                transform 0.35s ease;
+    display: flex;
 
-        }
+    flex-direction: column;
 
+    align-items: center;
 
-        .restaurant:hover
-        .restaurant-image {
+    justify-content: center;
 
-            transform:
-                scale(1.03);
+    gap: 3px;
 
-        }
+    text-decoration: none;
 
+    color: #888;
 
-        .image-placeholder {
+    font-size: 11px;
 
-            width: 100%;
+    font-weight: 600;
 
-            height: 100%;
+}
 
-            display: flex;
+.nav-icon {
 
-            align-items: center;
+    font-size: 21px;
 
-            justify-content: center;
+    line-height: 1;
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #fff2ec,
-                    #ffe2d6
-                );
+}
 
-            color:
-                #ff5a1f;
+.nav-item.active {
 
-            font-size: 58px;
+    color: #ff5a1f;
 
-        }
+}
 
+.nav-item.active::before {
 
-        .status-badge {
+    content: "";
 
-            position: absolute;
+    position: absolute;
 
-            top: 12px;
+    top: 0;
 
-            left: 12px;
+    left: 50%;
 
-            padding:
-                7px 11px;
+    transform: translateX(-50%);
 
-            border-radius: 20px;
+    width: 28px;
 
-            font-size: 12px;
+    height: 3px;
 
-            font-weight: bold;
+    background: #ff5a1f;
 
-            background:
-                rgba(255,255,255,0.95);
+    border-radius:
+        0
+        0
+        5px
+        5px;
 
-            box-shadow:
-                0 2px 8px
-                rgba(0,0,0,0.14);
+}
 
-            backdrop-filter:
-                blur(5px);
 
-        }
+/* =========================================================
+   小屏幕
+========================================================= */
 
+@media (max-width: 500px) {
 
-        .status-badge.open {
+    body {
+        padding-bottom: 78px;
+    }
 
-            color:
-                #218c55;
+    .header {
 
-        }
+        padding:
+            18px
+            13px
+            23px;
 
+    }
 
-        .status-badge.closed {
+    .header-title h1 {
 
-            color:
-                #d33;
+        font-size: 23px;
 
-        }
+    }
 
+    .container {
 
-        .restaurant-content {
+        padding:
+            13px;
 
-            padding:
-                15px 16px 16px;
+    }
 
-        }
+    .restaurant-image-box {
 
+        height: 175px;
 
-        .restaurant-title-row {
+    }
 
-            display: flex;
+    .quick-links {
 
-            align-items: flex-start;
+        gap: 7px;
 
-            justify-content: space-between;
+    }
 
-            gap: 10px;
+    .quick-item {
 
-            margin-bottom: 6px;
+        padding:
+            12px
+            3px;
 
-        }
+    }
 
+    .quick-text {
 
-        .restaurant h2 {
+        font-size: 11px;
 
-            margin: 0;
+    }
 
-            font-size: 20px;
+}
 
-            line-height: 1.3;
 
-            color: #222;
+/* =========================================================
+   更小手机
+========================================================= */
 
-        }
+@media (max-width: 360px) {
 
+    .quick-icon {
 
-        .restaurant-category-tag {
+        font-size: 20px;
 
-            flex-shrink: 0;
+    }
 
-            padding:
-                4px 8px;
+    .quick-text {
 
-            border-radius: 7px;
+        font-size: 10px;
 
-            background:
-                #f7f7f7;
+    }
 
-            color: #777;
+    .header-title h1 {
 
-            font-size: 11px;
+        font-size: 21px;
 
-        }
+    }
 
+}
 
-        .description {
-
-            color: #777;
-
-            font-size: 13px;
-
-            line-height: 1.55;
-
-            margin-bottom: 10px;
-
-            display:
-                -webkit-box;
-
-            -webkit-line-clamp: 2;
-
-            -webkit-box-orient:
-                vertical;
-
-            overflow: hidden;
-
-        }
-
-
-        .restaurant-info {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-
-            flex-wrap: wrap;
-
-            margin-bottom: 12px;
-
-            font-size: 12px;
-
-        }
-
-
-        .restaurant-rating {
-
-            display: inline-flex;
-
-            align-items: center;
-
-            padding:
-                5px 8px;
-
-            border-radius: 7px;
-
-            background:
-                #fff8e7;
-
-            color:
-                #e89b00;
-
-            font-weight: bold;
-
-        }
-
-
-        .food-count {
-
-            color: #777;
-
-            padding:
-                5px 0;
-
-        }
-
-
-        .food-match {
-
-            display: none;
-
-            margin-bottom: 11px;
-
-            padding:
-                9px 11px;
-
-            background:
-                #fff5f0;
-
-            border-radius: 9px;
-
-            color:
-                #e95620;
-
-            font-size: 12px;
-
-            line-height: 1.5;
-
-        }
-
-
-        .restaurant-bottom {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-        }
-
-
-        .restaurant button {
-
-            flex: 1;
-
-            width: 100%;
-
-            border: none;
-
-            background:
-                #ff5a1f;
-
-            color: white;
-
-            padding:
-                13px;
-
-            border-radius: 10px;
-
-            font-size: 14px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition:
-                0.18s ease;
-
-        }
-
-
-        .restaurant button:active {
-
-            transform:
-                scale(0.98);
-
-        }
-
-
-        .restaurant button.closed {
-
-            background:
-                #b5b5b5 !important;
-
-        }
-
-
-        .no-menu {
-
-            background:
-                #999 !important;
-
-        }
-
-
-        /* ========================================
-           Loading
-        ======================================== */
-
-        .loading {
-
-            background: white;
-
-            border-radius: 16px;
-
-            padding:
-                42px 15px;
-
-            text-align: center;
-
-            color: #777;
-
-            box-shadow:
-                0 3px 12px
-                rgba(0,0,0,0.06);
-
-        }
-
-
-        .loading-icon {
-
-            font-size: 40px;
-
-            margin-bottom: 10px;
-
-            animation:
-                loadingFloat 1.2s
-                ease-in-out infinite;
-
-        }
-
-
-        @keyframes loadingFloat {
-
-            0%,
-            100% {
-                transform:
-                    translateY(0);
-            }
-
-            50% {
-                transform:
-                    translateY(-6px);
-            }
-
-        }
-
-
-        /* ========================================
-           无结果
-        ======================================== */
-
-        #noResult {
-
-            display: none;
-
-            background: white;
-
-            border-radius: 16px;
-
-            padding:
-                38px 15px;
-
-            text-align: center;
-
-            color: #777;
-
-            box-shadow:
-                0 3px 12px
-                rgba(0,0,0,0.06);
-
-        }
-
-
-        .no-result-icon {
-
-            font-size: 44px;
-
-            margin-bottom: 10px;
-
-        }
-
-
-        .no-result-title {
-
-            font-size: 17px;
-
-            font-weight: bold;
-
-            color: #555;
-
-            margin-bottom: 6px;
-
-        }
-
-
-        .no-result-text {
-
-            font-size: 13px;
-
-            color: #999;
-
-        }
-
-
-        /* ========================================
-           错误
-        ======================================== */
-
-        .error-box {
-
-            background: white;
-
-            border-radius: 16px;
-
-            padding:
-                35px 15px;
-
-            text-align: center;
-
-            color: #777;
-
-            box-shadow:
-                0 3px 12px
-                rgba(0,0,0,0.06);
-
-        }
-
-
-        /* ========================================
-           手机底部导航
-        ======================================== */
-
-        .bottom-nav {
-
-            position: fixed;
-
-            left: 0;
-
-            right: 0;
-
-            bottom: 0;
-
-            z-index: 2000;
-
-            height: 62px;
-
-            background:
-                rgba(255,255,255,0.97);
-
-            border-top:
-                1px solid
-                #eeeeee;
-
-            box-shadow:
-                0 -3px 15px
-                rgba(0,0,0,0.08);
-
-            display: flex;
-
-            justify-content: center;
-
-        }
-
-
-        .bottom-nav-inner {
-
-            width: 100%;
-
-            max-width: 800px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-around;
-
-        }
-
-
-        .bottom-nav-item {
-
-            flex: 1;
-
-            height: 100%;
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            justify-content: center;
-
-            gap: 2px;
-
-            text-decoration: none;
-
-            color: #888;
-
-            font-size: 10px;
-
-            font-weight: bold;
-
-        }
-
-
-        .bottom-nav-icon {
-
-            font-size: 20px;
-
-            line-height: 1;
-
-        }
-
-
-        .bottom-nav-item.active {
-
-            color:
-                #ff5a1f;
-
-        }
-
-
-        /* ========================================
-           小屏手机
-        ======================================== */
-
-        @media (max-width: 500px) {
-
-            body {
-                padding-bottom: 68px;
-            }
-
-
-            header {
-
-                padding:
-                    14px 12px 15px;
-
-            }
-
-
-            .brand-title {
-
-                font-size: 22px;
-
-            }
-
-
-            .brand-subtitle {
-
-                font-size: 11px;
-
-            }
-
-
-            .header-order-btn {
-
-                min-width: 76px;
-
-                padding:
-                    8px 9px;
-
-                font-size: 12px;
-
-            }
-
-
-            .container {
-
-                padding:
-                    12px 12px 20px;
-
-            }
-
-
-            .welcome-box {
-
-                padding:
-                    17px;
-
-            }
-
-
-            .welcome-title {
-
-                font-size: 18px;
-
-            }
-
-
-            .account-user strong {
-
-                max-width: 155px;
-
-            }
-
-
-            .account-action {
-
-                padding:
-                    8px 9px;
-
-                font-size: 11px;
-
-            }
-
-
-            .restaurant-image-box {
-
-                height: 180px;
-
-            }
-
-
-            .restaurant-content {
-
-                padding:
-                    14px;
-
-            }
-
-
-            .restaurant h2 {
-
-                font-size: 18px;
-
-            }
-
-
-            .description {
-
-                font-size: 12px;
-
-            }
-
-
-            .restaurant-info {
-
-                font-size: 11px;
-
-            }
-
-        }
-
-
-        @media (min-width: 501px) {
-
-            .bottom-nav {
-
-                display: none;
-
-            }
-
-
-            body {
-
-                padding-bottom: 0;
-
-            }
-
-        }
-
-    </style>
+</style>
 
 </head>
 
@@ -1558,33 +1094,54 @@
 <body>
 
 
-<!-- ========================================
+<!-- =========================================================
      顶部
-======================================== -->
+========================================================= -->
 
-<header>
+<header class="header">
 
-    <div class="header-inner">
+    <div class="header-top">
 
-        <div class="brand">
+        <div class="logo-area">
 
-            <h1 class="brand-title">
-                🍜 MDY FOOD
-            </h1>
+            <div class="logo-icon">
+                🍜
+            </div>
 
-            <div class="brand-subtitle">
-                缅甸外卖 · အစားအစာ Delivery
+            <div>
+
+                <div class="logo-text">
+                    MDY FOOD
+                </div>
+
+                <div class="logo-sub">
+                    Mandalay Food Delivery
+                </div>
+
             </div>
 
         </div>
 
 
-        <a
-            href="orders.html"
-            class="header-order-btn"
+        <button
+            class="header-account"
+            onclick="goToProfile()"
         >
-            📦 我的订单
-        </a>
+            👤
+        </button>
+
+    </div>
+
+
+    <div class="header-title">
+
+        <h1>
+            今天想吃点什么？
+        </h1>
+
+        <p>
+            找到你喜欢的餐厅和美食 🍽️
+        </p>
 
     </div>
 
@@ -1595,129 +1152,139 @@
 <div class="container">
 
 
-    <!-- ========================================
-         欢迎
-    ======================================== -->
+    <!-- =====================================================
+         搜索
+    ====================================================== -->
 
-    <div class="welcome-box">
+    <div class="search-wrapper">
 
-        <h2
-            class="welcome-title"
-            id="welcomeTitle"
+        <span class="search-icon">
+            🔍
+        </span>
+
+        <input
+            id="searchInput"
+            class="search-box"
+            type="text"
+            placeholder="搜索餐厅、菜品..."
+            oninput="searchRestaurants()"
         >
-            今天想吃点什么？🍜
-        </h2>
-
-        <p class="welcome-text">
-            找一家喜欢的餐厅，选好菜品，我们帮你送到家。
-        </p>
 
     </div>
 
 
 
-    <!-- ========================================
-         用户账号
-    ======================================== -->
+    <!-- =====================================================
+         快捷入口
+    ====================================================== -->
 
-    <div
-        class="account-box"
-        id="accountBox"
-    >
+    <div class="quick-links">
 
-        <div id="loggedOut">
-
-            <a
-                href="login.html"
-                class="account-login"
-            >
-                👤 登录 / 注册
-            </a>
-
-        </div>
-
-
-        <div
-            id="loggedIn"
-            style="display:none;"
+        <a
+            href="restaurants.html"
+            class="quick-item"
         >
 
-            <div class="account-user">
+            <div class="quick-icon">
+                🍜
+            </div>
 
-                <div class="account-user-info">
+            <div class="quick-text">
+                全部餐厅
+            </div>
 
-                    <div class="account-welcome">
-                        👋 欢迎回来
-                    </div>
+        </a>
 
-                    <strong id="userEmail">
-                        用户
-                    </strong>
 
+        <a
+            href="orders.html"
+            class="quick-item"
+        >
+
+            <div class="quick-icon">
+                📦
+            </div>
+
+            <div class="quick-text">
+                我的订单
+            </div>
+
+        </a>
+
+
+        <a
+            href="profile.html"
+            class="quick-item"
+        >
+
+            <div class="quick-icon">
+                ❤️
+            </div>
+
+            <div class="quick-text">
+                我的收藏
+            </div>
+
+        </a>
+
+
+        <a
+            href="profile.html"
+            class="quick-item"
+        >
+
+            <div class="quick-icon">
+                📍
+            </div>
+
+            <div class="quick-text">
+                收货地址
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         登录提示
+    ====================================================== -->
+
+    <div
+        class="login-banner"
+        id="loginBanner"
+    >
+
+        <div class="login-banner-content">
+
+            <div class="login-banner-left">
+
+                <div class="login-banner-icon">
+                    👤
                 </div>
 
+                <div>
 
-                <div class="account-actions">
+                    <div class="login-banner-title">
+                        登录后点餐更方便
+                    </div>
 
-                    <a
-                        href="orders.html"
-                        class="account-action order"
-                    >
-                        📦 订单
-                    </a>
-
-
-                    <button
-                        class="account-action logout"
-                        onclick="logout()"
-                    >
-                        退出
-                    </button>
+                    <div class="login-banner-sub">
+                        保存订单和收货地址
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
 
-    </div>
-
-
-
-    <!-- ========================================
-         搜索
-    ======================================== -->
-
-    <div class="search-section">
-
-        <div class="search-label">
-            🔎 找餐厅 / 找菜品
-        </div>
-
-
-        <div class="search-wrap">
-
-            <span class="search-icon">
-                🔍
-            </span>
-
-
-            <input
-                id="searchInput"
-                class="search"
-                type="text"
-                placeholder="搜索餐厅、菜品..."
-                oninput="searchRestaurants()"
+            <a
+                href="login.html"
+                class="login-banner-btn"
             >
-
-
-            <button
-                id="searchClear"
-                class="search-clear"
-                onclick="clearSearch()"
-            >
-                ×
-            </button>
+                登录 / 注册
+            </a>
 
         </div>
 
@@ -1725,19 +1292,22 @@
 
 
 
-    <!-- ========================================
+    <!-- =====================================================
          分类
-    ======================================== -->
+    ====================================================== -->
 
-    <div class="section-heading">
+    <div class="section-title-row">
 
-        <h2>
-            🍽️ 食物分类
-        </h2>
+        <div class="section-title">
+            美食分类
+        </div>
 
-        <span>
-            左右滑动查看更多
-        </span>
+        <a
+            href="restaurants.html"
+            class="section-more"
+        >
+            查看全部 →
+        </a>
 
     </div>
 
@@ -1775,66 +1345,42 @@
             🔥 烧烤
         </button>
 
-    </div>
 
-
-
-    <!-- ========================================
-         我的订单快捷入口
-    ======================================== -->
-
-    <a
-        href="orders.html"
-        class="quick-order"
-    >
-
-        <div class="quick-order-left">
-
-            <div class="quick-order-icon">
-                📦
-            </div>
-
-
-            <div>
-
-                <div class="quick-order-title">
-                    我的订单
-                </div>
-
-                <div class="quick-order-desc">
-                    查看订单状态和历史订单
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="quick-order-arrow">
-            ›
-        </div>
-
-    </a>
-
-
-
-    <!-- ========================================
-         餐厅
-    ======================================== -->
-
-    <div class="restaurant-heading">
-
-        <h2>
-            🏪 附近餐厅
-        </h2>
-
-        <span id="restaurantCountText">
-            正在加载...
-        </span>
+        <button
+            class="category-btn"
+            onclick="filterCategory('其他', this)"
+        >
+            🍱 其他
+        </button>
 
     </div>
 
 
+
+    <!-- =====================================================
+         餐厅标题
+    ====================================================== -->
+
+    <div class="section-title-row">
+
+        <div class="section-title">
+            附近餐厅
+        </div>
+
+        <a
+            href="restaurants.html"
+            class="section-more"
+        >
+            全部 →
+        </a>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         餐厅列表
+    ====================================================== -->
 
     <div id="restaurantList">
 
@@ -1852,96 +1398,106 @@
 
 
 
-    <!-- ========================================
+    <!-- =====================================================
          无结果
-    ======================================== -->
+    ====================================================== -->
 
-    <div id="noResult">
+    <div
+        id="noResult"
+        class="no-result"
+    >
 
         <div class="no-result-icon">
             🔍
         </div>
 
-
         <div class="no-result-title">
             没有找到相关餐厅
         </div>
 
-
-        <div class="no-result-text">
-            换一个关键词或者分类试试看
+        <div>
+            换一个关键词试试看
         </div>
 
     </div>
+
 
 </div>
 
 
 
-<!-- ========================================
-     手机底部导航
-======================================== -->
+<!-- =========================================================
+     底部导航
+========================================================= -->
 
 <nav class="bottom-nav">
 
     <div class="bottom-nav-inner">
 
+
         <a
             href="index.html"
-            class="bottom-nav-item active"
+            class="nav-item active"
         >
 
-            <div class="bottom-nav-icon">
+            <div class="nav-icon">
                 🏠
             </div>
 
-            首页
+            <div>
+                首页
+            </div>
 
         </a>
 
 
         <a
-            href="#restaurantList"
-            class="bottom-nav-item"
-            onclick="scrollToRestaurants(event)"
+            href="restaurants.html"
+            class="nav-item"
         >
 
-            <div class="bottom-nav-icon">
+            <div class="nav-icon">
                 🍜
             </div>
 
-            餐厅
+            <div>
+                餐厅
+            </div>
 
         </a>
 
 
         <a
             href="orders.html"
-            class="bottom-nav-item"
+            class="nav-item"
         >
 
-            <div class="bottom-nav-icon">
+            <div class="nav-icon">
                 📦
             </div>
 
-            订单
+            <div>
+                订单
+            </div>
 
         </a>
 
 
         <a
-            href="login.html"
-            class="bottom-nav-item"
-            id="bottomAccountLink"
+            href="profile.html"
+            class="nav-item"
         >
 
-            <div class="bottom-nav-icon">
+            <div class="nav-icon">
                 👤
             </div>
 
-            我的
+            <div>
+                我的
+            </div>
 
         </a>
+
 
     </div>
 
@@ -1949,12 +1505,12 @@
 
 
 
+<!-- =========================================================
+     Firebase
+========================================================= -->
+
 <script>
 
-
-// ========================================
-// Firebase
-// ========================================
 
 const firebaseConfig = {
 
@@ -1995,27 +1551,26 @@ const auth =
     firebase.auth();
 
 
-// ========================================
-// 全局数据
-// ========================================
+
+/* =========================================================
+   全局数据
+========================================================= */
 
 let currentCategory =
     "全部";
 
-
 let allFoods = [];
 
-
 let allRestaurants = [];
-
 
 let reviewsUnsubscribe =
     null;
 
 
-// ========================================
-// 默认图片
-// ========================================
+
+/* =========================================================
+   默认图片
+========================================================= */
 
 const defaultImages = {
 
@@ -2031,97 +1586,29 @@ const defaultImages = {
 };
 
 
-// ========================================
-// 登录状态
-// ========================================
+
+/* =========================================================
+   登录状态
+========================================================= */
 
 auth.onAuthStateChanged(
     function(user) {
 
-        const loggedOut =
+        const loginBanner =
             document.getElementById(
-                "loggedOut"
-            );
-
-
-        const loggedIn =
-            document.getElementById(
-                "loggedIn"
-            );
-
-
-        const userEmail =
-            document.getElementById(
-                "userEmail"
-            );
-
-
-        const welcomeTitle =
-            document.getElementById(
-                "welcomeTitle"
-            );
-
-
-        const bottomAccountLink =
-            document.getElementById(
-                "bottomAccountLink"
+                "loginBanner"
             );
 
 
         if (user) {
 
-            loggedOut.style.display =
+            loginBanner.style.display =
                 "none";
-
-
-            loggedIn.style.display =
-                "block";
-
-
-            userEmail.innerText =
-                user.email ||
-                "用户";
-
-
-            if (welcomeTitle) {
-
-                welcomeTitle.innerText =
-                    "欢迎回来，开始点餐吧 🍜";
-
-            }
-
-
-            if (bottomAccountLink) {
-
-                bottomAccountLink.href =
-                    "orders.html";
-
-            }
 
         } else {
 
-            loggedOut.style.display =
+            loginBanner.style.display =
                 "block";
-
-
-            loggedIn.style.display =
-                "none";
-
-
-            if (welcomeTitle) {
-
-                welcomeTitle.innerText =
-                    "今天想吃点什么？🍜";
-
-            }
-
-
-            if (bottomAccountLink) {
-
-                bottomAccountLink.href =
-                    "login.html";
-
-            }
 
         }
 
@@ -2129,38 +1616,23 @@ auth.onAuthStateChanged(
 );
 
 
-// ========================================
-// 退出登录
-// ========================================
 
-async function logout() {
+/* =========================================================
+   进入个人中心
+========================================================= */
 
-    try {
+function goToProfile() {
 
-        await auth.signOut();
-
-        alert(
-            "已退出登录"
-        );
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-        alert(
-            "退出登录失败，请稍后再试"
-        );
-
-    }
+    window.location.href =
+        "profile.html";
 
 }
 
 
-// ========================================
-// 分类名称
-// ========================================
+
+/* =========================================================
+   分类名称
+========================================================= */
 
 function getCategoryName(
     category
@@ -2214,9 +1686,10 @@ function getCategoryName(
 }
 
 
-// ========================================
-// 默认图标
-// ========================================
+
+/* =========================================================
+   餐厅图标
+========================================================= */
 
 function getRestaurantIcon(
     category
@@ -2260,9 +1733,10 @@ function getRestaurantIcon(
 }
 
 
-// ========================================
-// 设置图片
-// ========================================
+
+/* =========================================================
+   餐厅图片
+========================================================= */
 
 function getRestaurantImage(
     restaurant
@@ -2293,9 +1767,77 @@ function getRestaurantImage(
 }
 
 
-// ========================================
-// 创建餐厅卡片
-// ========================================
+
+/* =========================================================
+   HTML 转义
+========================================================= */
+
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value || ""
+    )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+/* =========================================================
+   JS 转义
+========================================================= */
+
+function escapeJs(
+    value
+) {
+
+    return String(
+        value || ""
+    )
+
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+
+        .replace(
+            /'/g,
+            "\\'"
+        );
+
+}
+
+
+
+/* =========================================================
+   创建餐厅卡片
+========================================================= */
 
 function createRestaurantCard(
     restaurant,
@@ -2366,13 +1908,11 @@ function createRestaurantCard(
 
 
     card.dataset.name =
-        String(name)
-            .toLowerCase();
+        name.toLowerCase();
 
 
     card.dataset.description =
-        String(description)
-            .toLowerCase();
+        description.toLowerCase();
 
 
     card.innerHTML = `
@@ -2381,9 +1921,10 @@ function createRestaurantCard(
 
             ${
                 image
-                ?
-                `
 
+                ?
+
+                `
                 <img
                     class="restaurant-image"
                     src="${escapeHtml(image)}"
@@ -2400,15 +1941,14 @@ function createRestaurantCard(
                 >
                     ${icon}
                 </div>
-
                 `
+
                 :
-                `
 
+                `
                 <div class="image-placeholder">
                     ${icon}
                 </div>
-
                 `
             }
 
@@ -2434,17 +1974,13 @@ function createRestaurantCard(
 
         <div class="restaurant-content">
 
+            <h2>
+                ${escapeHtml(name)}
+            </h2>
 
-            <div class="restaurant-title-row">
 
-                <h2>
-                    ${escapeHtml(name)}
-                </h2>
-
-                <div class="restaurant-category-tag">
-                    ${escapeHtml(normalizedCategory)}
-                </div>
-
+            <div class="category">
+                ${escapeHtml(normalizedCategory)}
             </div>
 
 
@@ -2480,32 +2016,22 @@ function createRestaurantCard(
             </div>
 
 
-            <div class="restaurant-bottom">
+            <button
+                class="restaurant-button ${
+                    status === "营业中"
+                        ? ""
+                        : "closed"
+                }"
+                onclick="openRestaurant('${escapeJs(id)}')"
+            >
 
-                <button
-                    id="button-${escapeHtml(id)}"
-                    class="${
-                        status === "营业中"
-                            ? ""
-                            : "closed"
-                    }"
-                    onclick="
-                        openRestaurant(
-                            '${escapeJs(id)}'
-                        )
-                    "
-                >
+                ${
+                    status === "营业中"
+                        ? "查看菜单 →"
+                        : "休息中"
+                }
 
-                    ${
-                        status === "营业中"
-                            ? "查看菜单 →"
-                            : "休息中"
-                    }
-
-                </button>
-
-            </div>
-
+            </button>
 
         </div>
 
@@ -2517,374 +2043,10 @@ function createRestaurantCard(
 }
 
 
-// ========================================
-// 防止 HTML 注入
-// ========================================
 
-function escapeHtml(
-    value
-) {
-
-    return String(
-        value || ""
-    )
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-// ========================================
-// 防止 JS 注入
-// ========================================
-
-function escapeJs(
-    value
-) {
-
-    return String(
-        value || ""
-    )
-
-        .replace(
-            /\\/g,
-            "\\\\"
-        )
-
-        .replace(
-            /'/g,
-            "\\'"
-        );
-
-}
-
-
-// ========================================
-// 读取所有商家
-// ========================================
-
-async function loadRestaurants() {
-
-    const restaurantList =
-        document.getElementById(
-            "restaurantList"
-        );
-
-
-    restaurantList.innerHTML = `
-
-        <div class="loading">
-
-            <div class="loading-icon">
-                🍜
-            </div>
-
-            正在读取餐厅...
-
-        </div>
-
-    `;
-
-
-    try {
-
-        const snapshot =
-            await db
-                .collection("restaurants")
-                .get();
-
-
-        allRestaurants = [];
-
-
-        snapshot.forEach(
-            function(doc) {
-
-                const restaurant =
-                    doc.data() || {};
-
-
-                /*
-                 * 只显示正式可用的商家
-                 */
-
-                const approvalStatus =
-                    String(
-                        restaurant.approvalStatus ||
-                        ""
-                    )
-                    .toLowerCase();
-
-
-                const approved =
-                    restaurant.approved === true ||
-                    approvalStatus === "approved";
-
-
-                const enabled =
-                    restaurant.enabled !== false;
-
-
-                const shouldShow =
-                    enabled &&
-                    (
-                        approved ||
-                        (
-                            !restaurant.approvalStatus &&
-                            restaurant.enabled !== false
-                        )
-                    );
-
-
-                if (!shouldShow) {
-
-                    return;
-
-                }
-
-
-                allRestaurants.push({
-
-                    id:
-                        doc.id,
-
-                    ...restaurant
-
-                });
-
-            }
-        );
-
-
-        /*
-         * 新商家优先
-         */
-
-        allRestaurants.sort(
-            function(a, b) {
-
-                const timeA =
-                    getTimestampMillis(
-                        a.createdAt ||
-                        a.approvedAt
-                    );
-
-
-                const timeB =
-                    getTimestampMillis(
-                        b.createdAt ||
-                        b.approvedAt
-                    );
-
-
-                return (
-                    timeB -
-                    timeA
-                );
-
-            }
-        );
-
-
-        restaurantList.innerHTML =
-            "";
-
-
-        updateRestaurantCount();
-
-
-        if (
-            allRestaurants.length === 0
-        ) {
-
-            restaurantList.innerHTML = `
-
-                <div class="error-box">
-
-                    <div
-                        style="
-                            font-size:45px;
-                            margin-bottom:10px;
-                        "
-                    >
-                        🍜
-                    </div>
-
-                    <div
-                        style="
-                            font-size:17px;
-                            font-weight:bold;
-                            margin-bottom:7px;
-                        "
-                    >
-                        暂时还没有营业餐厅
-                    </div>
-
-                    <div>
-                        请稍后再来看看
-                    </div>
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        /*
-         * 创建全部商家卡片
-         */
-
-        allRestaurants.forEach(
-            function(restaurant) {
-
-                const card =
-                    createRestaurantCard(
-                        restaurant,
-                        restaurant.id
-                    );
-
-
-                restaurantList.appendChild(
-                    card
-                );
-
-
-                /*
-                 * 每家商家自己的菜品数量
-                 */
-
-                updateFoodCount(
-                    restaurant.id
-                );
-
-            }
-        );
-
-
-        /*
-         * 启动一次全局评价实时监听
-         */
-
-        loadAllRestaurantRatings();
-
-
-        searchRestaurants();
-
-
-    } catch (error) {
-
-        console.error(
-            "读取餐厅失败:",
-            error
-        );
-
-
-        restaurantList.innerHTML = `
-
-            <div class="error-box">
-
-                <div
-                    style="
-                        font-size:40px;
-                        margin-bottom:10px;
-                    "
-                >
-                    ⚠️
-                </div>
-
-                <div
-                    style="
-                        font-size:17px;
-                        font-weight:bold;
-                        margin-bottom:8px;
-                    "
-                >
-                    餐厅读取失败
-                </div>
-
-                <div>
-                    ${escapeHtml(
-                        error.message ||
-                        "请检查网络连接"
-                    )}
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-// ========================================
-// 餐厅数量
-// ========================================
-
-function updateRestaurantCount() {
-
-    const element =
-        document.getElementById(
-            "restaurantCountText"
-        );
-
-
-    if (!element) {
-        return;
-    }
-
-
-    const count =
-        allRestaurants.length;
-
-
-    if (count === 0) {
-
-        element.innerText =
-            "暂无餐厅";
-
-        return;
-
-    }
-
-
-    element.innerText =
-        count +
-        " 家餐厅";
-
-}
-
-
-// ========================================
-// 时间转换
-// ========================================
+/* =========================================================
+   时间
+========================================================= */
 
 function getTimestampMillis(
     value
@@ -2941,16 +2103,245 @@ function getTimestampMillis(
 }
 
 
-// ========================================
-// 读取所有商家的评价
-// ========================================
+
+/* =========================================================
+   读取餐厅
+========================================================= */
+
+async function loadRestaurants() {
+
+    const restaurantList =
+        document.getElementById(
+            "restaurantList"
+        );
+
+
+    restaurantList.innerHTML = `
+
+        <div class="loading">
+
+            <div class="loading-icon">
+                🍜
+            </div>
+
+            正在读取餐厅...
+
+        </div>
+
+    `;
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("restaurants")
+                .get();
+
+
+        allRestaurants = [];
+
+
+        snapshot.forEach(
+            function(doc) {
+
+                const restaurant =
+                    doc.data() || {};
+
+
+                const approvalStatus =
+                    String(
+                        restaurant.approvalStatus ||
+                        ""
+                    )
+                    .toLowerCase();
+
+
+                const approved =
+                    restaurant.approved === true ||
+                    approvalStatus ===
+                    "approved";
+
+
+                const enabled =
+                    restaurant.enabled !== false;
+
+
+                const shouldShow =
+                    enabled &&
+                    (
+                        approved ||
+                        (
+                            !restaurant.approvalStatus &&
+                            restaurant.enabled !== false
+                        )
+                    );
+
+
+                if (!shouldShow) {
+
+                    return;
+
+                }
+
+
+                allRestaurants.push({
+
+                    id: doc.id,
+
+                    ...restaurant
+
+                });
+
+            }
+        );
+
+
+        allRestaurants.sort(
+            function(a, b) {
+
+                const timeA =
+                    getTimestampMillis(
+                        a.createdAt ||
+                        a.approvedAt
+                    );
+
+
+                const timeB =
+                    getTimestampMillis(
+                        b.createdAt ||
+                        b.approvedAt
+                    );
+
+
+                return timeB - timeA;
+
+            }
+        );
+
+
+        restaurantList.innerHTML =
+            "";
+
+
+        if (
+            allRestaurants.length === 0
+        ) {
+
+            restaurantList.innerHTML = `
+
+                <div
+                    class="error-box"
+                    style="display:block;"
+                >
+
+                    <div style="font-size:40px;">
+                        🍜
+                    </div>
+
+                    <div
+                        style="
+                            font-size:17px;
+                            font-weight:bold;
+                            margin:10px 0;
+                        "
+                    >
+                        暂时还没有营业餐厅
+                    </div>
+
+                    <div>
+                        请稍后再来看看
+                    </div>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        allRestaurants.forEach(
+            function(restaurant) {
+
+                const card =
+                    createRestaurantCard(
+                        restaurant,
+                        restaurant.id
+                    );
+
+
+                restaurantList.appendChild(
+                    card
+                );
+
+
+                updateFoodCount(
+                    restaurant.id
+                );
+
+            }
+        );
+
+
+        loadAllRestaurantRatings();
+
+
+        searchRestaurants();
+
+
+    } catch (error) {
+
+        console.error(
+            "读取餐厅失败:",
+            error
+        );
+
+
+        restaurantList.innerHTML = `
+
+            <div
+                class="error-box"
+                style="display:block;"
+            >
+
+                <div style="font-size:40px;">
+                    ⚠️
+                </div>
+
+                <div
+                    style="
+                        font-size:17px;
+                        font-weight:bold;
+                        margin:10px 0;
+                    "
+                >
+                    餐厅读取失败
+                </div>
+
+                <div>
+                    ${escapeHtml(
+                        error.message ||
+                        "请检查网络连接"
+                    )}
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   评价
+========================================================= */
 
 function loadAllRestaurantRatings() {
-
-    /*
-     * 如果之前已经建立过监听，
-     * 先取消，避免重复监听。
-     */
 
     if (
         reviewsUnsubscribe
@@ -2965,13 +2356,14 @@ function loadAllRestaurantRatings() {
 
 
     reviewsUnsubscribe =
-        db.collection("reviews")
-
+        db
+            .collection("reviews")
             .onSnapshot(
 
                 function(snapshot) {
 
-                    const ratingMap = {};
+                    const ratingMap =
+                        {};
 
 
                     snapshot.forEach(
@@ -3052,10 +2444,6 @@ function loadAllRestaurantRatings() {
                     );
 
 
-                    /*
-                     * 更新每一家商家的评分
-                     */
-
                     allRestaurants.forEach(
                         function(restaurant) {
 
@@ -3112,7 +2500,7 @@ function loadAllRestaurantRatings() {
                 function(error) {
 
                     console.error(
-                        "读取所有商家评价失败:",
+                        "读取评价失败:",
                         error
                     );
 
@@ -3144,9 +2532,10 @@ function loadAllRestaurantRatings() {
 }
 
 
-// ========================================
-// 菜品数量
-// ========================================
+
+/* =========================================================
+   菜品数量
+========================================================= */
 
 async function updateFoodCount(
     restaurantId
@@ -3189,10 +2578,6 @@ async function updateFoodCount(
                     doc.data() || {};
 
 
-                /*
-                 * 下架菜品不计算
-                 */
-
                 if (
                     food.status !==
                     "下架"
@@ -3228,9 +2613,10 @@ async function updateFoodCount(
 }
 
 
-// ========================================
-// 查找菜品
-// ========================================
+
+/* =========================================================
+   查找菜品
+========================================================= */
 
 function findFoodMatches(
     restaurantId,
@@ -3291,7 +2677,6 @@ function findFoodMatches(
                 &&
 
                 (
-
                     foodName.includes(
                         keyword
                     )
@@ -3301,7 +2686,6 @@ function findFoodMatches(
                     foodDescription.includes(
                         keyword
                     )
-
                 )
 
             );
@@ -3312,9 +2696,10 @@ function findFoodMatches(
 }
 
 
-// ========================================
-// 搜索
-// ========================================
+
+/* =========================================================
+   搜索
+========================================================= */
 
 function searchRestaurants() {
 
@@ -3324,31 +2709,10 @@ function searchRestaurants() {
         );
 
 
-    if (!input) {
-        return;
-    }
-
-
     const keyword =
         input.value
             .trim()
             .toLowerCase();
-
-
-    const clearButton =
-        document.getElementById(
-            "searchClear"
-        );
-
-
-    if (clearButton) {
-
-        clearButton.style.display =
-            keyword
-                ? "block"
-                : "none";
-
-    }
 
 
     const restaurants =
@@ -3513,38 +2877,10 @@ function searchRestaurants() {
 }
 
 
-// ========================================
-// 清除搜索
-// ========================================
 
-function clearSearch() {
-
-    const input =
-        document.getElementById(
-            "searchInput"
-        );
-
-
-    if (!input) {
-        return;
-    }
-
-
-    input.value =
-        "";
-
-
-    input.focus();
-
-
-    searchRestaurants();
-
-}
-
-
-// ========================================
-// 分类筛选
-// ========================================
+/* =========================================================
+   分类
+========================================================= */
 
 function filterCategory(
     category,
@@ -3572,13 +2908,9 @@ function filterCategory(
     );
 
 
-    if (button) {
-
-        button.classList.add(
-            "active"
-        );
-
-    }
+    button.classList.add(
+        "active"
+    );
 
 
     searchRestaurants();
@@ -3586,9 +2918,10 @@ function filterCategory(
 }
 
 
-// ========================================
-// 打开餐厅
-// ========================================
+
+/* =========================================================
+   打开餐厅
+========================================================= */
 
 function openRestaurant(
     id
@@ -3621,6 +2954,7 @@ function openRestaurant(
 
         const status =
             restaurant.status ||
+
             (
                 restaurant.enabled === false
                     ? "休息中"
@@ -3629,8 +2963,7 @@ function openRestaurant(
 
 
         if (
-            status !==
-            "营业中"
+            status !== "营业中"
         ) {
 
             alert(
@@ -3651,9 +2984,10 @@ function openRestaurant(
 }
 
 
-// ========================================
-// 读取所有菜品
-// ========================================
+
+/* =========================================================
+   读取所有菜品
+========================================================= */
 
 async function loadFoods() {
 
@@ -3677,8 +3011,7 @@ async function loadFoods() {
 
                 allFoods.push({
 
-                    id:
-                        doc.id,
+                    id: doc.id,
 
                     ...food
 
@@ -3703,42 +3036,10 @@ async function loadFoods() {
 }
 
 
-// ========================================
-// 滚动到餐厅
-// ========================================
 
-function scrollToRestaurants(
-    event
-) {
-
-    if (event) {
-
-        event.preventDefault();
-
-    }
-
-
-    const element =
-        document.getElementById(
-            "restaurantList"
-        );
-
-
-    if (element) {
-
-        element.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-
-    }
-
-}
-
-
-// ========================================
-// 页面启动
-// ========================================
+/* =========================================================
+   初始化
+========================================================= */
 
 async function init() {
 
@@ -3754,6 +3055,7 @@ async function init() {
 
 
 init();
+
 
 </script>
 
