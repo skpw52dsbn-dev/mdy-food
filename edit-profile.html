@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>MDY FOOD - 编辑个人资料</title>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+
+    margin: 0;
+
+    padding:
+        0
+        0
+        30px;
+
+    font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+
+    background: #f6f6f6;
+
+    color: #222;
+}
+
+button,
+input {
+
+    font-family: inherit;
+}
+
+button {
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   顶部
+========================= */
+
+.header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff6a2a,
+            #ff4d1f
+        );
+
+    color: white;
+
+    padding:
+        20px
+        16px
+        28px;
+
+    border-radius:
+        0
+        0
+        28px
+        28px;
+}
+
+.header-top {
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.back-button {
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,0.18);
+
+    color: white;
+
+    font-size: 21px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.header-title {
+
+    font-size: 21px;
+
+    font-weight: 800;
+}
+
+.header-placeholder {
+
+    width: 40px;
+}
+
+
+/* =========================
+   主体
+========================= */
+
+.container {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    margin: auto;
+
+    padding: 15px;
+}
+
+
+/* =========================
+   资料卡片
+========================= */
+
+.profile-card {
+
+    margin-top: -15px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.08);
+}
+
+
+/* =========================
+   头像
+========================= */
+
+.avatar-section {
+
+    text-align: center;
+
+    margin-bottom: 25px;
+}
+
+.avatar {
+
+    width: 90px;
+
+    height: 90px;
+
+    margin: 0 auto 12px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff0e8,
+            #ffe0d2
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 43px;
+
+    border:
+        4px solid white;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.08);
+
+    overflow: hidden;
+}
+
+.avatar img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.avatar-text {
+
+    color: #ff5a1f;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* =========================
+   表单
+========================= */
+
+.form-group {
+
+    margin-bottom: 18px;
+}
+
+.form-label {
+
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #444;
+
+    margin-bottom: 8px;
+}
+
+.form-input {
+
+    width: 100%;
+
+    height: 48px;
+
+    border:
+        1px solid #e5e5e5;
+
+    border-radius: 12px;
+
+    background: #fafafa;
+
+    padding:
+        0
+        14px;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        background 0.2s;
+}
+
+.form-input:focus {
+
+    border-color: #ff5a1f;
+
+    background: white;
+}
+
+.form-input:disabled {
+
+    color: #999;
+
+    background: #f3f3f3;
+
+    cursor: not-allowed;
+}
+
+.form-tip {
+
+    margin-top: 6px;
+
+    color: #aaa;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================
+   保存按钮
+========================= */
+
+.save-button {
+
+    width: 100%;
+
+    height: 50px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff6a2a,
+            #ff4d1f
+        );
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    margin-top: 8px;
+
+    box-shadow:
+        0 5px 14px
+        rgba(255,90,31,0.22);
+}
+
+.save-button:disabled {
+
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   返回按钮
+========================= */
+
+.cancel-button {
+
+    width: 100%;
+
+    height: 48px;
+
+    border:
+        1px solid #eee;
+
+    border-radius: 13px;
+
+    background: white;
+
+    color: #666;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin-top: 10px;
+}
+
+
+/* =========================
+   登录提示
+========================= */
+
+.login-message {
+
+    display: none;
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 30px 20px;
+
+    text-align: center;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.08);
+
+    margin-top: -15px;
+}
+
+.login-icon {
+
+    font-size: 45px;
+
+    margin-bottom: 10px;
+}
+
+.login-title {
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    margin-bottom: 8px;
+}
+
+.login-sub {
+
+    color: #999;
+
+    font-size: 13px;
+
+    margin-bottom: 18px;
+}
+
+.login-button {
+
+    display: inline-block;
+
+    background: #ff5a1f;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding:
+        12px
+        28px;
+
+    border-radius: 11px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   手机
+========================= */
+
+@media (max-width: 500px) {
+
+    .header {
+
+        padding:
+            17px
+            13px
+            27px;
+    }
+
+    .container {
+
+        padding:
+            13px;
+    }
+
+    .profile-card {
+
+        padding: 20px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     顶部
+========================= -->
+
+<header class="header">
+
+    <div class="header-top">
+
+        <button
+            class="back-button"
+            onclick="goBack()"
+        >
+            ←
+        </button>
+
+        <div class="header-title">
+            编辑个人资料
+        </div>
+
+        <div class="header-placeholder"></div>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- =========================
+     编辑资料
+========================= -->
+
+<div
+    id="profileCard"
+    class="profile-card"
+>
+
+
+    <!-- 头像 -->
+
+    <div class="avatar-section">
+
+        <div
+            id="avatar"
+            class="avatar"
+        >
+            👤
+        </div>
+
+        <div class="avatar-text">
+            MDY FOOD 用户
+        </div>
+
+    </div>
+
+
+    <!-- 昵称 -->
+
+    <div class="form-group">
+
+        <label
+            class="form-label"
+            for="displayName"
+        >
+            昵称
+        </label>
+
+        <input
+            id="displayName"
+            class="form-input"
+            type="text"
+            maxlength="30"
+            placeholder="请输入你的昵称"
+        >
+
+        <div class="form-tip">
+            昵称最多 30 个字符
+        </div>
+
+    </div>
+
+
+    <!-- 邮箱 -->
+
+    <div class="form-group">
+
+        <label
+            class="form-label"
+            for="email"
+        >
+            邮箱
+        </label>
+
+        <input
+            id="email"
+            class="form-input"
+            type="text"
+            disabled
+        >
+
+        <div class="form-tip">
+            登录账号信息不可在这里修改
+        </div>
+
+    </div>
+
+
+    <!-- 手机号 -->
+
+    <div class="form-group">
+
+        <label
+            class="form-label"
+            for="phone"
+        >
+            手机号
+        </label>
+
+        <input
+            id="phone"
+            class="form-input"
+            type="text"
+            disabled
+        >
+
+    </div>
+
+
+    <!-- 保存 -->
+
+    <button
+        id="saveButton"
+        class="save-button"
+        onclick="saveProfile()"
+    >
+        保存资料
+    </button>
+
+
+    <!-- 返回 -->
+
+    <button
+        class="cancel-button"
+        onclick="goBack()"
+    >
+        返回
+    </button>
+
+
+</div>
+
+
+<!-- =========================
+     未登录
+========================= -->
+
+<div
+    id="loginMessage"
+    class="login-message"
+>
+
+    <div class="login-icon">
+        👤
+    </div>
+
+    <div class="login-title">
+        请先登录
+    </div>
+
+    <div class="login-sub">
+        登录后才能编辑个人资料
+    </div>
+
+    <a
+        href="login.html"
+        class="login-button"
+    >
+        登录 / 注册
+    </a>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+/* =========================
+   Firebase
+========================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+
+    authDomain:
+        "mdy-food.firebaseapp.com",
+
+    projectId:
+        "mdy-food",
+
+    storageBucket:
+        "mdy-food.firebasestorage.app",
+
+    messagingSenderId:
+        "498327590625",
+
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0",
+
+    measurementId:
+        "G-6Q5G2862XQ"
+
+};
+
+
+firebase.initializeApp(
+    firebaseConfig
+);
+
+
+const db =
+    firebase.firestore();
+
+
+const auth =
+    firebase.auth();
+
+
+let currentUser = null;
+
+
+/* =========================
+   返回
+========================= */
+
+function goBack() {
+
+    window.location.href =
+        "profile.html";
+
+}
+
+
+/* =========================
+   读取用户资料
+========================= */
+
+auth.onAuthStateChanged(
+    async function(user) {
+
+        const profileCard =
+            document.getElementById(
+                "profileCard"
+            );
+
+        const loginMessage =
+            document.getElementById(
+                "loginMessage"
+            );
+
+        if (!user) {
+
+            currentUser = null;
+
+            profileCard.style.display =
+                "none";
+
+            loginMessage.style.display =
+                "block";
+
+            return;
+
+        }
+
+
+        currentUser = user;
+
+        profileCard.style.display =
+            "block";
+
+        loginMessage.style.display =
+            "none";
+
+
+        const displayName =
+            document.getElementById(
+                "displayName"
+            );
+
+        const email =
+            document.getElementById(
+                "email"
+            );
+
+        const phone =
+            document.getElementById(
+                "phone"
+            );
+
+
+        /* Firebase Auth 基础资料 */
+
+        displayName.value =
+            user.displayName || "";
+
+
+        email.value =
+            user.email ||
+            "未绑定邮箱";
+
+
+        phone.value =
+            user.phoneNumber ||
+            "未绑定手机号";
+
+
+        /*
+         * 尝试读取 Firestore 用户资料
+         */
+
+        try {
+
+            const doc =
+                await db
+                    .collection("users")
+                    .doc(user.uid)
+                    .get();
+
+
+            if (doc.exists) {
+
+                const data =
+                    doc.data();
+
+
+                if (
+                    data.displayName &&
+                    !displayName.value
+                ) {
+
+                    displayName.value =
+                        data.displayName;
+
+                }
+
+            }
+
+        } catch (error) {
+
+            console.log(
+                "读取 Firestore 用户资料失败:",
+                error
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================
+   保存资料
+========================= */
+
+async function saveProfile() {
+
+    if (!currentUser) {
+
+        alert(
+            "请先登录"
+        );
+
+        return;
+
+    }
+
+
+    const displayNameInput =
+        document.getElementById(
+            "displayName"
+        );
+
+    const saveButton =
+        document.getElementById(
+            "saveButton"
+        );
+
+
+    const displayName =
+        displayNameInput.value.trim();
+
+
+    if (!displayName) {
+
+        alert(
+            "请输入昵称"
+        );
+
+        displayNameInput.focus();
+
+        return;
+
+    }
+
+
+    if (displayName.length > 30) {
+
+        alert(
+            "昵称不能超过 30 个字符"
+        );
+
+        return;
+
+    }
+
+
+    saveButton.disabled =
+        true;
+
+    saveButton.innerText =
+        "正在保存...";
+
+
+    try {
+
+
+        /* =========================
+           1. 更新 Firebase Auth
+        ========================= */
+
+        await currentUser.updateProfile({
+
+            displayName:
+                displayName
+
+        });
+
+
+        /* =========================
+           2. 保存 Firestore
+        ========================= */
+
+        await db
+            .collection("users")
+            .doc(currentUser.uid)
+            .set({
+
+                displayName:
+                    displayName,
+
+                email:
+                    currentUser.email || null,
+
+                phoneNumber:
+                    currentUser.phoneNumber || null,
+
+                updatedAt:
+                    firebase.firestore.FieldValue.serverTimestamp()
+
+            }, {
+
+                merge: true
+
+            });
+
+
+        alert(
+            "个人资料保存成功！"
+        );
+
+
+        window.location.href =
+            "profile.html";
+
+
+    } catch (error) {
+
+        console.error(
+            "保存个人资料失败:",
+            error
+        );
+
+
+        alert(
+            "保存失败："
+            +
+            (
+                error.message ||
+                "请稍后再试"
+            )
+        );
+
+
+        saveButton.disabled =
+            false;
+
+        saveButton.innerText =
+            "保存资料";
+
+    }
+
+}
+
+
+</script>
+
+</body>
+
+</html>
