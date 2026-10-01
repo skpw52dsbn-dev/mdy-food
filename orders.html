@@ -1033,7 +1033,7 @@ header {
 const firebaseConfig = {
 
     apiKey:
-        "AIzaSyDR8dxsbDYA3a6pLaXcJTngFhNfWPUlv0",
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
 
     authDomain:
         "mdy-food.firebaseapp.com",
@@ -1069,6 +1069,39 @@ const auth =
     firebase.auth();
 
 
+// ========================================
+// Firebase Auth 持久化
+//
+// 强制使用 LOCAL，保证：
+//
+// 登录
+// ↓
+// 首页
+// ↓
+// 点餐
+// ↓
+// 下单
+// ↓
+// 我的订单
+//
+// 登录状态不会因为页面跳转而丢失。
+// ========================================
+
+auth.setPersistence(
+    firebase.auth.Auth.Persistence.LOCAL
+)
+.catch(
+    function(error) {
+
+        console.error(
+            "Firebase Auth LOCAL 持久化设置失败：",
+            error
+        );
+
+    }
+);
+
+
 let currentUser = null;
 
 let unsubscribeOrders = null;
@@ -1085,6 +1118,21 @@ let currentReviewOrder = null;
 
 let selectedRating = 0;
 
+
+// ========================================
+// Auth 初始化状态
+//
+// 非常重要：
+//
+// 页面刚打开的时候 Firebase 可能还没有
+// 完成本地登录状态恢复。
+//
+// 此时不能看到 null 就直接显示“请先登录”。
+// ========================================
+
+let authStateInitialized = false;
+
+let authCheckTimer = null;
 
 
 // ========================================
@@ -1108,7 +1156,6 @@ function escapeHTML(value) {
         .replace(/'/g, "&#039;");
 
 }
-
 
 
 // ========================================
@@ -1229,7 +1276,6 @@ function normalizeStatus(status) {
 }
 
 
-
 // ========================================
 // 状态 Class
 // ========================================
@@ -1285,7 +1331,6 @@ function getStatusClass(status) {
     return "";
 
 }
-
 
 
 // ========================================
@@ -1352,7 +1397,6 @@ function getStatusIcon(status) {
 }
 
 
-
 // ========================================
 // 时间
 // ========================================
@@ -1408,7 +1452,6 @@ function formatTime(createdAt) {
 }
 
 
-
 // ========================================
 // 金额
 // ========================================
@@ -1420,7 +1463,6 @@ function formatMoney(number) {
     ).toLocaleString();
 
 }
-
 
 
 // ========================================
@@ -1450,13 +1492,8 @@ function getDeliveryFee(order) {
 }
 
 
-
 // ========================================
 // 获取商品金额
-//
-// 优先根据商品重新计算。
-// 如果没有商品，则使用订单总额。
-// 如果订单中已经有 subtotal，优先使用 subtotal。
 // ========================================
 
 function getFoodSubtotal(order) {
@@ -1526,11 +1563,6 @@ function getFoodSubtotal(order) {
         getDeliveryFee(order);
 
 
-    /*
-        如果总金额包含配送费，
-        尝试扣除配送费。
-    */
-
     if (
         deliveryFee > 0 &&
         orderTotal >= deliveryFee
@@ -1544,7 +1576,6 @@ function getFoodSubtotal(order) {
     return orderTotal;
 
 }
-
 
 
 // ========================================
@@ -1575,7 +1606,6 @@ function getOrderTotal(order) {
     );
 
 }
-
 
 
 // ========================================
@@ -1629,7 +1659,6 @@ function getRiderStatusText(order) {
     return "配送信息已同步";
 
 }
-
 
 
 // ========================================
@@ -1694,7 +1723,6 @@ function renderRiderInfo(order) {
 }
 
 
-
 // ========================================
 // 状态时间线
 // ========================================
@@ -1706,10 +1734,6 @@ function renderOrderTimeline(order) {
             order.status
         );
 
-
-    /*
-        取消订单使用独立状态。
-    */
 
     if (
         status === "已取消"
@@ -1813,17 +1837,6 @@ function renderOrderTimeline(order) {
 
     let activeIndex =
         currentIndex;
-
-
-    /*
-        兼容部分旧订单：
-
-        如果数据库只有
-        “骑手已接单”，
-        这里不会错误跳到“外卖好了”。
-
-        只显示当前阶段之前的状态完成。
-    */
 
 
     if (
@@ -1941,7 +1954,6 @@ function renderOrderTimeline(order) {
     return html;
 
 }
-
 
 
 // ========================================
@@ -2104,7 +2116,6 @@ function renderStatusInfo(order) {
 }
 
 
-
 // ========================================
 // 商品
 // ========================================
@@ -2192,7 +2203,6 @@ function renderItems(order) {
     return html;
 
 }
-
 
 
 // ========================================
@@ -2287,7 +2297,6 @@ function renderAmountDetails(order) {
 }
 
 
-
 // ========================================
 // 评价区域
 // ========================================
@@ -2358,7 +2367,6 @@ function renderReviewArea(
 }
 
 
-
 // ========================================
 // 显示订单
 // ========================================
@@ -2369,6 +2377,13 @@ function renderOrders(orders) {
         document.getElementById(
             "orders"
         );
+
+
+    if (
+        !container
+    ) {
+        return;
+    }
 
 
     if (
@@ -2597,7 +2612,6 @@ function renderOrders(orders) {
 }
 
 
-
 // ========================================
 // 读取顾客评价
 // ========================================
@@ -2675,7 +2689,6 @@ async function loadMyReviews() {
     }
 
 }
-
 
 
 // ========================================
@@ -2813,7 +2826,6 @@ function openReviewModal(orderId) {
 }
 
 
-
 // ========================================
 // 关闭评价弹窗
 // ========================================
@@ -2835,7 +2847,6 @@ function closeReviewModal() {
         0;
 
 }
-
 
 
 // ========================================
@@ -2878,7 +2889,6 @@ function selectRating(rating) {
         "请选择评分";
 
 }
-
 
 
 // ========================================
@@ -2924,7 +2934,6 @@ function updateStarButtons() {
     );
 
 }
-
 
 
 // ========================================
@@ -3141,7 +3150,6 @@ async function submitReview() {
 }
 
 
-
 // ========================================
 // 点击弹窗背景关闭
 // ========================================
@@ -3163,7 +3171,6 @@ document.getElementById(
 
     }
 );
-
 
 
 // ========================================
@@ -3250,7 +3257,6 @@ function playNotificationSound() {
 }
 
 
-
 // ========================================
 // 页面弹窗提醒
 // ========================================
@@ -3284,7 +3290,6 @@ function showToast(message) {
     );
 
 }
-
 
 
 // ========================================
@@ -3337,7 +3342,6 @@ function sendBrowserNotification(
     }
 
 }
-
 
 
 // ========================================
@@ -3398,7 +3402,6 @@ async function enableNotifications() {
     }
 
 }
-
 
 
 // ========================================
@@ -3541,7 +3544,6 @@ function checkOrderChanges(
     );
 
 }
-
 
 
 // ========================================
@@ -3707,7 +3709,6 @@ function listenMyOrders() {
 }
 
 
-
 // ========================================
 // 手动刷新
 // ========================================
@@ -3720,8 +3721,12 @@ function manualRefresh() {
         );
 
 
-    button.textContent =
-        "⏳ 刷新中...";
+    if (button) {
+
+        button.textContent =
+            "⏳ 刷新中...";
+
+    }
 
 
     listenMyOrders();
@@ -3730,8 +3735,12 @@ function manualRefresh() {
     setTimeout(
         function() {
 
-            button.textContent =
-                "🔄 刷新订单";
+            if (button) {
+
+                button.textContent =
+                    "🔄 刷新订单";
+
+            }
 
 
             showToast(
@@ -3745,77 +3754,343 @@ function manualRefresh() {
 }
 
 
+// ========================================
+// 显示登录页面
+// ========================================
+
+function showLoginBox() {
+
+    const loginBox =
+        document.getElementById(
+            "loginBox"
+        );
+
+
+    const orderArea =
+        document.getElementById(
+            "orderArea"
+        );
+
+
+    if (loginBox) {
+
+        loginBox.style.display =
+            "block";
+
+    }
+
+
+    if (orderArea) {
+
+        orderArea.style.display =
+            "none";
+
+    }
+
+}
+
 
 // ========================================
-// 登录状态
+// 显示订单页面
 // ========================================
 
-auth.onAuthStateChanged(
-    function(user) {
+function showOrderArea() {
+
+    const loginBox =
+        document.getElementById(
+            "loginBox"
+        );
+
+
+    const orderArea =
+        document.getElementById(
+            "orderArea"
+        );
+
+
+    if (loginBox) {
+
+        loginBox.style.display =
+            "none";
+
+    }
+
+
+    if (orderArea) {
+
+        orderArea.style.display =
+            "block";
+
+    }
+
+}
+
+
+// ========================================
+// 处理 Firebase 登录状态
+// ========================================
+
+function handleAuthUser(user) {
+
+    /*
+     * Firebase 恢复出用户。
+     */
+
+    if (user) {
 
         currentUser =
             user;
 
 
-        const loginBox =
-            document.getElementById(
-                "loginBox"
+        authStateInitialized =
+            true;
+
+
+        if (authCheckTimer) {
+
+            clearTimeout(
+                authCheckTimer
             );
 
-
-        const orderArea =
-            document.getElementById(
-                "orderArea"
-            );
-
-
-        if (user) {
-
-            loginBox.style.display =
-                "none";
-
-
-            orderArea.style.display =
-                "block";
-
-
-            listenMyOrders();
+            authCheckTimer =
+                null;
 
         }
 
-        else {
 
-            if (
-                unsubscribeOrders
-            ) {
-
-                unsubscribeOrders();
-
-                unsubscribeOrders =
-                    null;
-
-            }
+        console.log(
+            "MDY FOOD：登录状态已恢复",
+            user.uid
+        );
 
 
-            currentOrders =
-                [];
+        showOrderArea();
 
 
-            reviewedOrderIds =
-                new Set();
+        /*
+         * 登录后开始读取当前用户订单。
+         */
+
+        listenMyOrders();
 
 
-            loginBox.style.display =
-                "block";
+        return;
+
+    }
 
 
-            orderArea.style.display =
-                "none";
+    /*
+     * 第一次收到 null：
+     *
+     * Firebase 可能还在恢复 LOCAL 登录状态。
+     *
+     * 所以不能立即显示“请先登录”。
+     */
+
+    if (!authStateInitialized) {
+
+        console.log(
+            "MDY FOOD：正在等待 Firebase Auth 恢复..."
+        );
+
+
+        /*
+         * 先直接检查 currentUser。
+         */
+
+        if (auth.currentUser) {
+
+            handleAuthUser(
+                auth.currentUser
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * 再等待 2.5 秒。
+         */
+
+        if (authCheckTimer) {
+
+            clearTimeout(
+                authCheckTimer
+            );
+
+        }
+
+
+        authCheckTimer =
+            setTimeout(
+                function() {
+
+                    const restoredUser =
+                        auth.currentUser;
+
+
+                    if (restoredUser) {
+
+                        handleAuthUser(
+                            restoredUser
+                        );
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * 到这里仍然没有用户，
+                     * 才确定是真的没有登录。
+                     */
+
+                    authStateInitialized =
+                        true;
+
+
+                    currentUser =
+                        null;
+
+
+                    if (
+                        unsubscribeOrders
+                    ) {
+
+                        unsubscribeOrders();
+
+                        unsubscribeOrders =
+                            null;
+
+                    }
+
+
+                    currentOrders =
+                        [];
+
+
+                    reviewedOrderIds =
+                        new Set();
+
+
+                    console.log(
+                        "MDY FOOD：确认没有登录用户"
+                    );
+
+
+                    showLoginBox();
+
+                },
+                2500
+            );
+
+
+        return;
+
+    }
+
+
+    /*
+     * 如果已经初始化完成，
+     * 后续又收到 null，
+     * 说明用户确实退出登录。
+     */
+
+    currentUser =
+        null;
+
+
+    if (
+        unsubscribeOrders
+    ) {
+
+        unsubscribeOrders();
+
+        unsubscribeOrders =
+            null;
+
+    }
+
+
+    currentOrders =
+        [];
+
+
+    reviewedOrderIds =
+        new Set();
+
+
+    console.log(
+        "MDY FOOD：用户已退出登录"
+    );
+
+
+    showLoginBox();
+
+}
+
+
+// ========================================
+// Firebase Auth 登录状态监听
+// ========================================
+
+auth.onAuthStateChanged(
+    function(user) {
+
+        console.log(
+            "MDY FOOD：Auth 状态变化：",
+            user
+                ? user.uid
+                : "null"
+        );
+
+
+        handleAuthUser(
+            user
+        );
+
+    }
+);
+
+
+// ========================================
+// Firebase Token 状态监听
+//
+// 登录状态已经恢复时，这里也会收到用户。
+// 可以进一步保证跨页面跳转后状态正确。
+// ========================================
+
+auth.onIdTokenChanged(
+    function(user) {
+
+        console.log(
+            "MDY FOOD：Token 状态变化：",
+            user
+                ? user.uid
+                : "null"
+        );
+
+
+        /*
+         * 如果当前还没有用户，
+         * Token 监听恢复出用户时直接进入订单。
+         */
+
+        if (
+            user &&
+            !currentUser
+        ) {
+
+            handleAuthUser(
+                user
+            );
 
         }
 
     }
 );
+
 
 </script>
 
