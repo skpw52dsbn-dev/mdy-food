@@ -825,6 +825,40 @@ th {
 
 
     <!-- =========================
+         用户管理
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <div>
+                <h2>👥 用户管理</h2>
+                <p>查看平台注册顾客资料与注册时间</p>
+            </div>
+        </div>
+
+        <div class="delivery-summary">
+            <div class="delivery-summary-card">
+                <div class="label">全部用户</div>
+                <div class="value" id="customerCount">0</div>
+            </div>
+        </div>
+
+        <input
+            type="text"
+            id="customerSearch"
+            class="search-box"
+            placeholder="搜索姓名、电话、邮箱或 UID..."
+        >
+
+        <div class="table-wrap" id="customerTableWrap">
+            <div class="empty">正在加载用户...</div>
+        </div>
+
+    </section>
+
+
+    <!-- =========================
          平台财务中心
     ========================== -->
 
@@ -1303,6 +1337,59 @@ th {
 
     </section>
         <!-- =========================
+         配送员申请审核
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <div>
+                <h2>📋 配送员申请审核</h2>
+                <p>配送员提交申请后先在这里审核，通过后才进入正式配送员管理</p>
+            </div>
+        </div>
+
+        <div class="delivery-summary">
+            <div class="delivery-summary-card">
+                <div class="label">全部申请</div>
+                <div class="value" id="deliveryApplicationTotal">0</div>
+            </div>
+            <div class="delivery-summary-card">
+                <div class="label">待审核</div>
+                <div class="value" id="deliveryApplicationPending">0</div>
+            </div>
+            <div class="delivery-summary-card">
+                <div class="label">已通过</div>
+                <div class="value" id="deliveryApplicationApproved">0</div>
+            </div>
+            <div class="delivery-summary-card">
+                <div class="label">已拒绝</div>
+                <div class="value" id="deliveryApplicationRejected">0</div>
+            </div>
+        </div>
+
+        <input
+            type="text"
+            id="deliveryApplicationSearch"
+            class="search-box"
+            placeholder="搜索配送员姓名、电话、邮箱、身份证号或配送区域..."
+        >
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="setDeliveryApplicationFilter('all')" id="deliveryApplicationFilterAll">全部</button>
+            <button class="filter-btn" onclick="setDeliveryApplicationFilter('pending')" id="deliveryApplicationFilterPending">待审核</button>
+            <button class="filter-btn" onclick="setDeliveryApplicationFilter('approved')" id="deliveryApplicationFilterApproved">已通过</button>
+            <button class="filter-btn" onclick="setDeliveryApplicationFilter('rejected')" id="deliveryApplicationFilterRejected">已拒绝</button>
+        </div>
+
+        <div class="table-wrap" id="deliveryApplicationTableWrap">
+            <div class="empty">正在加载配送员申请...</div>
+        </div>
+
+    </section>
+
+
+    <!-- =========================
          商家申请审核
     ========================== -->
 
@@ -1561,11 +1648,15 @@ let allOrders = [];
 
 let allReviews = [];
 
+let allCustomers = [];
+
 let allApplications = [];
 
 let allRestaurants = [];
 
 let allDeliveries = [];
+
+let allDeliveryApplications = [];
 
 let allDeliveryRiders = [];
 
@@ -1578,6 +1669,8 @@ let applicationFilter = "all";
 let orderFilter = "all";
 
 let deliveryFilter = "all";
+
+let deliveryApplicationFilter = "all";
 
 let commissionRate = 10;
 
@@ -2309,6 +2402,223 @@ async function loadReviews() {
 
 
 /* =========================
+   用户管理
+========================= */
+
+async function loadCustomers() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("customers")
+                .get();
+
+        allCustomers = [];
+
+        snapshot.forEach(doc => {
+
+            allCustomers.push({
+                id: doc.id,
+                ...doc.data()
+            });
+
+        });
+
+        allCustomers.sort((a, b) => {
+
+            const dateA = getDateValue(
+                a.createdAt ||
+                a.created_at ||
+                a.registeredAt ||
+                a.registered_at
+            );
+
+            const dateB = getDateValue(
+                b.createdAt ||
+                b.created_at ||
+                b.registeredAt ||
+                b.registered_at
+            );
+
+            return (
+                (dateB ? dateB.getTime() : 0) -
+                (dateA ? dateA.getTime() : 0)
+            );
+
+        });
+
+        renderCustomers();
+
+    } catch (error) {
+
+        console.error(
+            "加载用户失败:",
+            error
+        );
+
+        const wrap =
+            document.getElementById(
+                "customerTableWrap"
+            );
+
+        if (wrap) {
+            wrap.innerHTML = `
+                <div class="empty">
+                    用户数据加载失败：${escapeHtml(error.message || "未知错误")}
+                </div>
+            `;
+        }
+
+    }
+
+}
+
+
+function renderCustomers() {
+
+    const wrap =
+        document.getElementById(
+            "customerTableWrap"
+        );
+
+    if (!wrap) {
+        return;
+    }
+
+    const searchInput =
+        document.getElementById(
+            "customerSearch"
+        );
+
+    const keyword =
+        String(
+            searchInput
+                ? searchInput.value
+                : ""
+        )
+        .trim()
+        .toLowerCase();
+
+    let customers =
+        [...allCustomers];
+
+    if (keyword) {
+
+        customers =
+            customers.filter(
+                customer => {
+
+                    const text = [
+                        customer.name,
+                        customer.phone,
+                        customer.email,
+                        customer.uid,
+                        customer.id
+                    ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+                    return text.includes(
+                        keyword
+                    );
+
+                }
+            );
+
+    }
+
+    const count =
+        document.getElementById(
+            "customerCount"
+        );
+
+    if (count) {
+        count.textContent =
+            allCustomers.length;
+    }
+
+    if (!customers.length) {
+
+        wrap.innerHTML = `
+            <div class="empty">
+                暂无符合条件的用户
+            </div>
+        `;
+
+        return;
+    }
+
+    wrap.innerHTML = `
+        <table>
+            <thead>
+                <tr>
+                    <th>用户</th>
+                    <th>电话</th>
+                    <th>邮箱</th>
+                    <th>UID</th>
+                    <th>注册时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${customers.map(customer => {
+
+                    const name =
+                        customer.name ||
+                        customer.customername ||
+                        customer.customerName ||
+                        "未填写姓名";
+
+                    const email =
+                        customer.email ||
+                        customer.customerEmail ||
+                        "-";
+
+                    const phone =
+                        customer.phone ||
+                        "-";
+
+                    const uid =
+                        customer.uid ||
+                        customer.id ||
+                        "-";
+
+                    const createdAt =
+                        customer.createdAt ||
+                        customer.created_at ||
+                        customer.registeredAt ||
+                        customer.registered_at;
+
+                    return `
+                        <tr>
+                            <td>
+                                ${escapeHtml(name)}
+                            </td>
+                            <td>
+                                ${escapeHtml(phone)}
+                            </td>
+                            <td>
+                                ${escapeHtml(email)}
+                            </td>
+                            <td style="word-break:break-all;">
+                                ${escapeHtml(uid)}
+                            </td>
+                            <td>
+                                ${formatDate(createdAt)}
+                            </td>
+                        </tr>
+                    `;
+
+                }).join("")}
+            </tbody>
+        </table>
+    `;
+
+}
+
+
+/* =========================
    商家申请
 ========================= */
 
@@ -2442,6 +2752,43 @@ async function loadRestaurants() {
 /* =========================
    配送员数据
 ========================= */
+
+async function loadDeliveryApplications() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("deliveryApplications")
+                .get();
+
+        allDeliveryApplications = [];
+
+        snapshot.forEach(doc => {
+
+            allDeliveryApplications.push({
+                id: doc.id,
+                ...doc.data()
+            });
+
+        });
+
+        allDeliveryApplications.sort((a, b) => {
+            const dateA = getDateValue(a.createdAt);
+            const dateB = getDateValue(b.createdAt);
+            return (dateB ? dateB.getTime() : 0) - (dateA ? dateA.getTime() : 0);
+        });
+
+        renderDeliveryApplications();
+
+    } catch (error) {
+
+        console.error("加载配送员申请失败:", error);
+
+    }
+
+}
+
 
 async function loadDeliveries() {
 
@@ -4007,11 +4354,7 @@ function updatePlatformStats() {
     if (totalDeliveries) {
 
         totalDeliveries.textContent =
-            allDeliveries.filter(
-                item =>
-                    item.status ===
-                    "approved"
-            ).length;
+            allDeliveries.length;
 
     }
 
@@ -4025,9 +4368,9 @@ function updatePlatformStats() {
     if (pendingDeliveries) {
 
         pendingDeliveries.textContent =
-            allDeliveries.filter(
+            allDeliveryApplications.filter(
                 item =>
-                    item.status ===
+                    String(item.status || "pending") ===
                     "pending"
             ).length;
 
@@ -4056,36 +4399,29 @@ function updatePlatformStats() {
 
 function updateDeliveryStats() {
 
-    // 全部正式配送员
-    const all =
-        allDeliveries.length;
+    const activeDeliveries =
+        allDeliveries.filter(
+            delivery =>
+                delivery.enabled !== false
+        );
 
-
-    // 在线配送员
     const online =
-        allDeliveries.filter(
+        activeDeliveries.filter(
             delivery =>
-                delivery.online === true &&
-                delivery.enabled !== false
+                delivery.online === true
         );
 
-
-    // 可接单配送员
     const available =
-        allDeliveries.filter(
+        activeDeliveries.filter(
             delivery =>
-                delivery.available === true &&
-                delivery.enabled !== false
+                delivery.available === true
         );
 
-
-    // 停用配送员
     const disabled =
         allDeliveries.filter(
             delivery =>
                 delivery.enabled === false
         );
-
 
     const deliveryCount =
         document.getElementById(
@@ -4107,39 +4443,28 @@ function updateDeliveryStats() {
             "disabledDeliveryCount"
         );
 
-
     if (deliveryCount) {
-
         deliveryCount.textContent =
-            all;
-
+            activeDeliveries.length;
     }
-
 
     if (onlineCount) {
-
         onlineCount.textContent =
             online.length;
-
     }
-
 
     if (availableCount) {
-
         availableCount.textContent =
             available.length;
-
     }
 
-
     if (disabledCount) {
-
         disabledCount.textContent =
             disabled.length;
-
     }
 
 }
+
 
 
 /* =========================
@@ -4251,9 +4576,11 @@ function renderDeliveries() {
                 ) {
 
                     return (
-                        delivery.status ===
-                        "approved" &&
-                        delivery.enabled !== false
+                        delivery.enabled !== false &&
+                        (
+                            !delivery.status ||
+                            delivery.status === "approved"
+                        )
                     );
 
                 }
@@ -4278,10 +4605,9 @@ function renderDeliveries() {
                 ) {
 
                     return (
-                        delivery.status ===
-                        "approved" &&
                         delivery.online ===
-                        true
+                        true &&
+                        delivery.enabled !== false
                     );
 
                 }
@@ -4395,7 +4721,7 @@ function renderDeliveries() {
 
                             const status =
                                 delivery.status ||
-                                "pending";
+                                "approved";
 
 
                             const statusText =
@@ -4646,28 +4972,136 @@ function renderDeliveries() {
 }
 
 
-/* ========================
+/* =========================
+   配送员申请筛选
+========================= */
 
-                                    <td>
+function setDeliveryApplicationFilter(filter) {
 
-                                        ${actions}
+    deliveryApplicationFilter = filter;
 
-                                    </td>
+    [
+        "deliveryApplicationFilterAll",
+        "deliveryApplicationFilterPending",
+        "deliveryApplicationFilterApproved",
+        "deliveryApplicationFilterRejected"
+    ].forEach(id => {
+        const button = document.getElementById(id);
+        if (button) button.classList.remove("active");
+    });
 
-                                </tr>
+    const activeMap = {
+        all: "deliveryApplicationFilterAll",
+        pending: "deliveryApplicationFilterPending",
+        approved: "deliveryApplicationFilterApproved",
+        rejected: "deliveryApplicationFilterRejected"
+    };
 
-                            `;
+    const active = document.getElementById(activeMap[filter]);
+    if (active) active.classList.add("active");
 
-                        }
-                    ).join("")
-                }
+    renderDeliveryApplications();
+}
 
+
+/* =========================
+   配送员申请列表
+========================= */
+
+function renderDeliveryApplications() {
+
+    const wrap = document.getElementById("deliveryApplicationTableWrap");
+    if (!wrap) return;
+
+    const searchInput = document.getElementById("deliveryApplicationSearch");
+    const keyword = String(searchInput ? searchInput.value : "").trim().toLowerCase();
+
+    const total = allDeliveryApplications.length;
+    const pending = allDeliveryApplications.filter(item => String(item.status || "pending") === "pending").length;
+    const approved = allDeliveryApplications.filter(item => String(item.status || "pending") === "approved").length;
+    const rejected = allDeliveryApplications.filter(item => String(item.status || "pending") === "rejected").length;
+
+    const totalEl = document.getElementById("deliveryApplicationTotal");
+    const pendingEl = document.getElementById("deliveryApplicationPending");
+    const approvedEl = document.getElementById("deliveryApplicationApproved");
+    const rejectedEl = document.getElementById("deliveryApplicationRejected");
+
+    if (totalEl) totalEl.textContent = total;
+    if (pendingEl) pendingEl.textContent = pending;
+    if (approvedEl) approvedEl.textContent = approved;
+    if (rejectedEl) rejectedEl.textContent = rejected;
+
+    let applications = [...allDeliveryApplications];
+
+    if (deliveryApplicationFilter !== "all") {
+        applications = applications.filter(item => String(item.status || "pending") === deliveryApplicationFilter);
+    }
+
+    if (keyword) {
+        applications = applications.filter(item => {
+            const text = [
+                item.name, item.phone, item.email, item.idNumber,
+                item.id, item.uid, item.deliveryArea,
+                item.vehicleType, item.vehicleNumber
+            ].filter(Boolean).join(" ").toLowerCase();
+            return text.includes(keyword);
+        });
+    }
+
+    if (!applications.length) {
+        wrap.innerHTML = `<div class="empty">暂无符合条件的配送员申请</div>`;
+        return;
+    }
+
+    wrap.innerHTML = `
+        <table>
+            <thead>
+                <tr>
+                    <th>配送员</th>
+                    <th>联系方式</th>
+                    <th>配送区域</th>
+                    <th>车辆</th>
+                    <th>状态</th>
+                    <th>申请时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${applications.map(application => {
+                    const status = String(application.status || "pending");
+                    const statusClass = status === "approved" ? "approved" : status === "rejected" ? "rejected" : "pending";
+                    const statusText = status === "approved" ? "已通过" : status === "rejected" ? "已拒绝" : "待审核";
+                    let actions = "";
+                    if (status === "pending") {
+                        actions = `
+                            <button class="action-btn approve-btn" onclick="approveDelivery('${escapeHtml(application.id)}')">通过</button>
+                            <button class="action-btn reject-btn" onclick="rejectDelivery('${escapeHtml(application.id)}')">拒绝</button>
+                        `;
+                    }
+                    return `
+                        <tr>
+                            <td>
+                                <strong>${escapeHtml(application.name || "未命名")}</strong>
+                                <div style="color:#999;font-size:11px;margin-top:4px;">ID：${escapeHtml(application.id)}</div>
+                            </td>
+                            <td>
+                                <div>${escapeHtml(application.phone || "-")}</div>
+                                <div style="color:#888;font-size:12px;">${escapeHtml(application.email || "")}</div>
+                            </td>
+                            <td>${escapeHtml(application.deliveryArea || "-")}</td>
+                            <td>
+                                <div>${escapeHtml(application.vehicleType || "-")}</div>
+                                <div style="color:#888;font-size:12px;">${escapeHtml(application.vehicleNumber || "")}</div>
+                            </td>
+                            <td><span class="status ${statusClass}">${statusText}</span></td>
+                            <td>${formatDate(application.createdAt)}</td>
+                            <td>${actions || "-"}</td>
+                        </tr>
+                    `;
+                }).join("")}
             </tbody>
-
         </table>
-
     `;
-
 }
 
 
@@ -4680,7 +5114,7 @@ async function approveDelivery(
 ) {
 
     const application =
-        allDeliveries.find(
+        allDeliveryApplications.find(
             item =>
                 item.id === id
         );
@@ -6769,12 +7203,16 @@ async function refreshAll() {
 
         await loadDeliverySettlements();
 
+        await loadDeliveryApplications();
+
 
         await Promise.all([
 
             loadOrders(),
 
             loadReviews(),
+
+            loadCustomers(),
 
             loadApplications(),
 
@@ -6852,6 +7290,33 @@ if (deliverySettlementHistorySearch) {
             renderDeliverySettlementHistory
         );
 }
+
+const deliveryApplicationSearch =
+    document.getElementById(
+        "deliveryApplicationSearch"
+    );
+
+if (deliveryApplicationSearch) {
+    deliveryApplicationSearch.addEventListener(
+        "input",
+        renderDeliveryApplications
+    );
+}
+
+
+const customerSearch =
+    document.getElementById(
+        "customerSearch"
+    );
+
+if (customerSearch) {
+    customerSearch
+        .addEventListener(
+            "input",
+            renderCustomers
+        );
+}
+
 
 const deliverySearch =
     document.getElementById(
