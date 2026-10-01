@@ -1,202 +1,341 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MDY FOOD - 隐私政策</title>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<style>
-*{
-    box-sizing:border-box;
-}
+    <title>隐私政策 - MDY FOOD</title>
 
-body{
-    margin:0;
-    background:#f6f6f6;
-    color:#222;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;
-}
+    <script src="language.js"></script>
 
-.header{
-    height:60px;
-    background:#ff7a00;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    font-weight:700;
-    position:relative;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-.back{
-    position:absolute;
-    left:16px;
-    top:50%;
-    transform:translateY(-50%);
-    width:38px;
-    height:38px;
-    border:0;
-    border-radius:50%;
-    background:rgba(255,255,255,.18);
-    color:#fff;
-    font-size:24px;
-    cursor:pointer;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.8;
+        }
 
-.container{
-    max-width:760px;
-    margin:20px auto 40px;
-    padding:0 15px;
-}
+        header {
+            background: #ff5a1f;
+            color: white;
+            padding: 18px 20px;
+        }
 
-.card{
-    background:#fff;
-    border-radius:16px;
-    padding:22px;
-    box-shadow:0 2px 10px rgba(0,0,0,.06);
-}
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-h1{
-    font-size:24px;
-    margin:0 0 8px;
-}
+        .back {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
 
-.update{
-    color:#999;
-    font-size:13px;
-    margin-bottom:25px;
-}
+        .container {
+            max-width: 900px;
+            margin: 25px auto;
+            padding: 0 20px 40px;
+        }
 
-h2{
-    font-size:18px;
-    margin:25px 0 10px;
-}
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-p{
-    font-size:14px;
-    line-height:1.9;
-    margin:8px 0;
-    color:#555;
-}
+        h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+            color: #222;
+        }
 
-ul{
-    padding-left:22px;
-    color:#555;
-}
+        .updated {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
 
-li{
-    font-size:14px;
-    line-height:1.9;
-    margin:5px 0;
-}
+        h2 {
+            font-size: 20px;
+            margin-top: 28px;
+            margin-bottom: 10px;
+            color: #222;
+        }
 
-.footer{
-    text-align:center;
-    color:#999;
-    font-size:12px;
-    margin-top:20px;
-}
-</style>
+        p {
+            margin: 10px 0;
+        }
 
+        ul {
+            padding-left: 24px;
+        }
+
+        li {
+            margin: 6px 0;
+        }
+
+        .footer-links {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #ff5a1f;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px 12px 30px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="header">
-    <button class="back" onclick="history.back()">‹</button>
-    <span>隐私政策</span>
-</div>
+<header>
+    <div class="header-inner">
+        <a
+            href="settings.html"
+            class="back"
+            data-i18n="back"
+        >
+            ← 返回
+        </a>
+    </div>
+</header>
 
 <div class="container">
 
-```
-<div class="card">
+    <div class="card">
 
-    <h1>MDY FOOD 隐私政策</h1>
+        <h1 data-i18n="privacyMainTitle">
+            MDY FOOD 隐私政策
+        </h1>
 
-    <div class="update">
-        更新日期：2026年
+        <div class="updated">
+            <span data-i18n="updatedDate">
+                最后更新时间：2026年
+            </span>
+        </div>
+
+        <section>
+            <h2 data-i18n="privacySection1Title">
+                1. 信息收集
+            </h2>
+
+            <p data-i18n="privacySection1">
+                当您使用 MDY FOOD 的相关服务时，我们可能会根据服务需要收集必要的信息，例如账户信息、联系方式、配送地址、订单信息以及评价内容等。
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="privacySection2Title">
+                2. 信息使用
+            </h2>
+
+            <p data-i18n="privacySection2">
+                我们收集的信息主要用于处理订单、提供配送服务、改善平台功能、处理客户服务请求以及保障平台正常运行。
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="privacySection3Title">
+                3. 账户信息
+            </h2>
+
+            <p data-i18n="privacySection3">
+                用户注册账户后，需要对自己的账户信息和登录凭证负责。请妥善保管您的账户信息，不要将密码或验证码提供给他人。
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="privacySection4Title">
+                4. 订单信息
+            </h2>
+
+            <p data-i18n="privacySection4">
+                为完成订单和配送，我们可能需要使用用户提供的姓名、电话号码、配送地址、订单内容以及支付方式等相关信息。
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="privacySection5Title">
+                5. 信息保护
+            </h2>
+
+            <p data-i18n="privacySection5">
+                我们会采取合理措施保护用户信息，防止未经授权的访问、使用或披露。但互联网传输不存在绝对安全的保证。
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="privacySection6Title">
+                6. 信息共享
+            </h2>
+
+            <p data-i18n="privacySection6">
+                为完成用户订单，必要的信息可能会提供给参与订单处理和配送的商家或配送人员。除法律要求或服务所必需的情况外，我们不会随意出售用户个人信息。
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="privacySection7Title">
+                7. Cookie及本地存储
+            </h2>
+
+            <p data-i18n="privacySection7">
+                平台可能使用浏览器本地存储等技术保存必要的用户设置，例如语言选择和购物车信息，以改善使用体验。
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="privacySection8Title">
+                8. 第三方服务
+            </h2>
+
+            <p data-i18n="privacySection8">
+                平台部分功能可能依赖第三方技术服务，例如 Firebase 等。相关信息可能按照第三方服务提供商的规则进行处理。
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="privacySection9Title">
+                9. 未成年人
+            </h2>
+
+            <p data-i18n="privacySection9">
+                如果您是未成年人，请在监护人的指导和同意下使用相关服务。
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="privacySection10Title">
+                10. 政策更新
+            </h2>
+
+            <p data-i18n="privacySection10">
+                我们可能根据平台功能、法律法规或业务需要更新本隐私政策。更新后的政策将在本页面公布。
+            </p>
+        </section>
+
+        <div class="footer-links">
+            <a
+                href="user-agreement.html"
+                data-i18n="userAgreement"
+            >
+                用户协议
+            </a>
+
+            <a
+                href="about.html"
+                data-i18n="aboutUs"
+            >
+                关于我们
+            </a>
+        </div>
+
     </div>
 
-    <h2>一、隐私说明</h2>
-
-    <p>
-        MDY FOOD 重视用户个人信息的保护。本隐私政策用于说明我们在用户使用平台服务过程中可能涉及的信息收集、使用、保存及保护方式。
-    </p>
-
-    <h2>二、我们可能收集的信息</h2>
-
-    <p>根据你使用的功能，我们可能需要处理以下信息：</p>
-
-    <ul>
-        <li>账户注册信息，例如邮箱等。</li>
-        <li>用户主动填写的姓名、电话号码及收货地址。</li>
-        <li>订单信息，例如餐厅、商品、订单金额及订单状态。</li>
-        <li>评价信息，例如评分及评价内容。</li>
-        <li>设备或浏览器产生的必要技术信息。</li>
-    </ul>
-
-    <h2>三、信息用途</h2>
-
-    <p>
-        收集的信息主要用于提供订单、配送、账户管理、客户服务以及平台正常运行所需要的功能。
-    </p>
-
-    <h2>四、订单信息</h2>
-
-    <p>
-        当用户提交订单时，平台需要使用订单相关信息来完成订单处理及配送服务。
-    </p>
-
-    <h2>五、信息安全</h2>
-
-    <p>
-        我们会采取合理的技术和管理措施保护用户信息，减少未经授权访问、使用或泄露的风险。
-    </p>
-
-    <h2>六、信息共享</h2>
-
-    <p>
-        为完成订单及配送服务，部分必要的信息可能需要提供给参与订单服务的餐厅或配送人员。
-    </p>
-
-    <p>
-        除完成服务、法律法规要求或保护平台及用户合法权益等必要情况外，我们不会无正当理由公开用户个人信息。
-    </p>
-
-    <h2>七、Cookie 与本地存储</h2>
-
-    <p>
-        网站部分功能可能使用浏览器本地存储保存用户偏好设置，例如深色模式、通知设置及语言选择。
-    </p>
-
-    <h2>八、用户账户</h2>
-
-    <p>
-        用户应妥善保管自己的账户信息，不应将账户密码或登录信息提供给他人。
-    </p>
-
-    <h2>九、隐私政策更新</h2>
-
-    <p>
-        随着平台功能及服务变化，本隐私政策可能进行更新。更新后的内容会在本页面公布。
-    </p>
-
-    <h2>十、联系我们</h2>
-
-    <p>
-        如果你对本隐私政策或个人信息保护存在疑问，可以通过 MDY FOOD 平台提供的联系方式与我们联系。
-    </p>
-
 </div>
 
-<div class="footer">
-    © 2026 MDY FOOD
-</div>
+<script>
 
-</div>
+    function t(key, fallback) {
+
+        if (
+            window.MDYLanguage &&
+            typeof window.MDYLanguage.t === "function"
+        ) {
+            return window.MDYLanguage.t(
+                key,
+                {},
+                fallback || key
+            );
+        }
+
+        return fallback || key;
+    }
+
+
+    function applyPageLanguage() {
+
+        document
+            .querySelectorAll("[data-i18n]")
+            .forEach(function(element) {
+
+                const key =
+                    element.getAttribute("data-i18n");
+
+                const fallback =
+                    element.textContent.trim();
+
+                const translated =
+                    t(key, fallback);
+
+                if (translated) {
+                    element.textContent =
+                        translated;
+                }
+
+            });
+
+
+        document.title =
+            t(
+                "privacyTitle",
+                "隐私政策"
+            ) +
+            " - MDY FOOD";
+
+    }
+
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+            applyPageLanguage();
+        }
+    );
+
+
+    window.addEventListener(
+        "mdyLanguageChanged",
+        function() {
+            applyPageLanguage();
+        }
+    );
+
+</script>
 
 </body>
 </html>
