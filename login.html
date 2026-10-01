@@ -27,6 +27,7 @@ body {
 
 body {
     min-height: 100vh;
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -564,6 +565,7 @@ button {
         top: 12px;
         right: 12px;
     }
+
 }
 
 </style>
@@ -574,19 +576,11 @@ button {
 
 <div class="page">
 
-    <!-- =========================
-         语言
-    ========================== -->
-
     <div
         id="languageSelector"
         class="language-box"
     ></div>
 
-
-    <!-- =========================
-         登录卡片
-    ========================== -->
 
     <div class="login-card">
 
@@ -878,7 +872,6 @@ button {
 
 /* =========================================================
    Firebase 配置
-   这里完全按照 Firebase Console 当前配置
 ========================================================= */
 
 const firebaseConfig = {
@@ -903,22 +896,91 @@ const firebaseConfig = {
 
     measurementId:
         "G-6Q5G2862XQ"
+
 };
 
 
 /* =========================================================
-   初始化 Firebase
+   Firebase 初始化
 ========================================================= */
 
-if (!firebase.apps.length) {
+try {
 
-    firebase.initializeApp(
-        firebaseConfig
+    if (!firebase.apps.length) {
+
+        firebase.initializeApp(
+            firebaseConfig
+        );
+
+    }
+
+} catch (error) {
+
+    console.error(
+        "Firebase 初始化失败:",
+        error
     );
 
 }
 
+
+/* =========================================================
+   Firebase Auth
+========================================================= */
+
 const auth = firebase.auth();
+
+
+/* =========================================================
+   Firebase 实际配置检测
+========================================================= */
+
+try {
+
+    const actualFirebaseConfig =
+        firebase.app().options;
+
+    console.log(
+        "========== MDY FOOD Firebase 检测 =========="
+    );
+
+    console.log(
+        "Firebase Project ID:",
+        actualFirebaseConfig.projectId
+    );
+
+    console.log(
+        "Firebase Auth Domain:",
+        actualFirebaseConfig.authDomain
+    );
+
+    console.log(
+        "Firebase API Key:",
+        actualFirebaseConfig.apiKey
+    );
+
+    console.log(
+        "Firebase App ID:",
+        actualFirebaseConfig.appId
+    );
+
+    console.log(
+        "Firebase Auth:",
+        auth
+    );
+
+    console.log(
+        "============================================"
+    );
+
+} catch (error) {
+
+    console.error(
+        "Firebase 配置检测失败:",
+        error
+    );
+
+}
 
 
 /* =========================================================
@@ -933,7 +995,7 @@ let countdownTimer = null;
 
 
 /* =========================================================
-   翻译
+   翻译函数
 ========================================================= */
 
 function t(key, fallback) {
@@ -963,6 +1025,7 @@ function t(key, fallback) {
     }
 
     return fallback || key;
+
 }
 
 
@@ -985,11 +1048,15 @@ function getCurrentLanguage() {
 
     } catch (error) {
 
-        console.warn(error);
+        console.warn(
+            "读取当前语言失败:",
+            error
+        );
 
     }
 
     return "zh";
+
 }
 
 
@@ -1250,7 +1317,8 @@ function clearMessage(
     }
 
 
-    element.textContent = "";
+    element.textContent =
+        "";
 
     element.className =
         "message";
@@ -1415,20 +1483,16 @@ function getFirebaseErrorMessage(
         default:
 
             return (
-
                 t(
                     "loginFailed",
                     "登录失败"
                 ) +
-
                 " (" +
-
                 (
                     error.message ||
                     code ||
                     "Unknown error"
                 ) +
-
                 ")"
             );
 
@@ -1511,7 +1575,8 @@ async function login() {
         );
 
 
-    button.disabled = true;
+    button.disabled =
+        true;
 
 
     button.textContent =
@@ -1589,7 +1654,8 @@ async function login() {
         );
 
 
-        button.disabled = false;
+        button.disabled =
+            false;
 
 
         button.textContent =
@@ -1620,7 +1686,8 @@ async function googleLogin() {
         );
 
 
-    button.disabled = true;
+    button.disabled =
+        true;
 
 
     const textElement =
@@ -1737,7 +1804,8 @@ async function googleLogin() {
         }
 
 
-        button.disabled = false;
+        button.disabled =
+            false;
 
 
         textElement.textContent =
@@ -1831,7 +1899,8 @@ function createRecaptcha() {
                 "recaptcha-container",
                 {
 
-                    size: "normal",
+                    size:
+                        "normal",
 
                     callback:
                         function() {
@@ -1939,7 +2008,8 @@ async function sendVerificationCode() {
         );
 
 
-    button.disabled = true;
+    button.disabled =
+        true;
 
 
     button.textContent =
@@ -2004,7 +2074,8 @@ async function sendVerificationCode() {
         );
 
 
-        button.disabled = false;
+        button.disabled =
+            false;
 
 
         button.textContent =
@@ -2033,10 +2104,13 @@ function startCodeCountdown() {
         );
 
 
-    let seconds = 60;
+    let seconds =
+        60;
 
 
-    button.disabled = true;
+    button.disabled =
+        true;
+
 
     button.textContent =
         seconds + "s";
@@ -2061,7 +2135,8 @@ function startCodeCountdown() {
                     );
 
 
-                    button.disabled = false;
+                    button.disabled =
+                        false;
 
 
                     button.textContent =
@@ -2142,7 +2217,8 @@ async function phoneLogin() {
         );
 
 
-    button.disabled = true;
+    button.disabled =
+        true;
 
 
     button.textContent =
@@ -2218,7 +2294,8 @@ async function phoneLogin() {
         );
 
 
-        button.disabled = false;
+        button.disabled =
+            false;
 
 
         button.textContent =
@@ -2256,7 +2333,8 @@ function resetRecaptcha() {
     }
 
 
-    recaptchaVerifier = null;
+    recaptchaVerifier =
+        null;
 
 
     const container =
@@ -2267,7 +2345,8 @@ function resetRecaptcha() {
 
     if (container) {
 
-        container.innerHTML = "";
+        container.innerHTML =
+            "";
 
     }
 
@@ -2336,19 +2415,12 @@ function renderLanguageSelector() {
 
 
 /* =========================================================
-   语言切换事件
+   语言切换
 ========================================================= */
 
 window.addEventListener(
     "mdyLanguageChanged",
     function() {
-
-        /*
-         * 这里只重新渲染页面文字。
-         *
-         * 不调用 MDYLanguage.apply()
-         * 避免递归触发语言事件。
-         */
 
         renderLoginLanguage();
 
@@ -2389,10 +2461,6 @@ document.addEventListener(
 ========================================================= */
 
 async function initLoginPage() {
-
-    /*
-     * 保持 Firebase Auth 登录状态。
-     */
 
     try {
 
