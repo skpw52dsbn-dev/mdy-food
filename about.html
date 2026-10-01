@@ -1,258 +1,476 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MDY FOOD - 关于我们</title>
 
-<style>
-*{
-    box-sizing:border-box;
-}
+    <meta charset="UTF-8">
 
-body{
-    margin:0;
-    background:#f6f6f6;
-    color:#222;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;
-}
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-.header{
-    height:60px;
-    background:#ff7a00;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    font-weight:700;
-    position:relative;
-}
+    <title>关于我们 - MDY FOOD</title>
 
-.back{
-    position:absolute;
-    left:16px;
-    top:50%;
-    transform:translateY(-50%);
-    width:38px;
-    height:38px;
-    border:0;
-    border-radius:50%;
-    background:rgba(255,255,255,.18);
-    color:#fff;
-    font-size:24px;
-    cursor:pointer;
-}
+    <script src="language.js"></script>
 
-.container{
-    max-width:760px;
-    margin:20px auto 40px;
-    padding:0 15px;
-}
+    <style>
 
-.card{
-    background:#fff;
-    border-radius:16px;
-    padding:25px;
-    margin-bottom:16px;
-    box-shadow:0 2px 10px rgba(0,0,0,.06);
-}
+        * {
+            box-sizing: border-box;
+        }
 
-.logo{
-    width:82px;
-    height:82px;
-    border-radius:22px;
-    background:#ff7a00;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:0 auto 15px;
-    font-size:20px;
-    font-weight:800;
-}
 
-.title{
-    text-align:center;
-    font-size:25px;
-    font-weight:800;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
 
-.subtitle{
-    text-align:center;
-    color:#999;
-    font-size:14px;
-    margin-top:7px;
-}
 
-h2{
-    font-size:18px;
-    margin:5px 0 12px;
-}
+        header {
+            background: #ff5a1f;
+            color: white;
+            padding: 18px 20px;
+        }
 
-p{
-    color:#555;
-    font-size:14px;
-    line-height:1.9;
-    margin:8px 0;
-}
 
-.features{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-}
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-.feature{
-    border:1px solid #eee;
-    border-radius:14px;
-    padding:16px;
-    text-align:center;
-}
 
-.feature-icon{
-    font-size:28px;
-    margin-bottom:8px;
-}
+        .back {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
 
-.feature-name{
-    font-size:15px;
-    font-weight:700;
-}
 
-.feature-desc{
-    color:#999;
-    font-size:12px;
-    margin-top:5px;
-    line-height:1.6;
-}
+        .container {
+            max-width: 900px;
+            margin: 25px auto;
+            padding: 0 20px 40px;
+        }
 
-.version{
-    text-align:center;
-    color:#999;
-    font-size:13px;
-    margin-top:20px;
-}
 
-.footer{
-    text-align:center;
-    color:#999;
-    font-size:12px;
-    margin-top:20px;
-}
+        .hero {
+            background: white;
+            border-radius: 16px;
+            padding: 35px 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-@media(max-width:500px){
-    .features{
-        grid-template-columns:1fr;
-    }
-}
-</style>
+
+        .logo {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+
+        .hero h1 {
+            margin: 0;
+            font-size: 32px;
+            color: #ff5a1f;
+        }
+
+
+        .hero p {
+            margin: 8px 0 0;
+            color: #777;
+            font-size: 16px;
+        }
+
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 28px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+
+        h2 {
+            margin-top: 0;
+            font-size: 22px;
+            color: #222;
+        }
+
+
+        p {
+            line-height: 1.8;
+        }
+
+
+        .features {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+
+        .feature {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+
+        .feature-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+
+        .feature h3 {
+            margin: 0 0 6px;
+            font-size: 17px;
+        }
+
+
+        .feature p {
+            margin: 0;
+            color: #777;
+            font-size: 14px;
+        }
+
+
+        .goal {
+            text-align: center;
+            background: #fff7f3;
+        }
+
+
+        .version {
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+
+        .footer-links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+
+        .footer-links a {
+            color: #ff5a1f;
+            text-decoration: none;
+        }
+
+
+        @media (max-width: 600px) {
+
+            .container {
+                padding: 15px 12px 30px;
+            }
+
+
+            .hero {
+                padding: 28px 20px;
+            }
+
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+
+            .card {
+                padding: 22px 20px;
+            }
+
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<div class="header">
-    <button class="back" onclick="history.back()">‹</button>
-    <span>关于 MDY FOOD</span>
-</div>
+
+<header>
+
+    <div class="header-inner">
+
+        <a
+            href="settings.html"
+            class="back"
+            data-i18n="back"
+        >
+            ← 返回
+        </a>
+
+    </div>
+
+</header>
+
 
 <div class="container">
 
-```
-<div class="card">
 
-    <div class="logo">
-        MDY
-    </div>
+    <div class="hero">
 
-    <div class="title">
-        MDY FOOD
-    </div>
-
-    <div class="subtitle">
-        让点餐和配送更加简单
-    </div>
-
-</div>
-
-<div class="card">
-
-    <h2>关于我们</h2>
-
-    <p>
-        MDY FOOD 是一个面向缅甸用户的在线餐饮点餐与配送平台。
-    </p>
-
-    <p>
-        用户可以通过平台浏览餐厅和商品、提交订单，并查看订单及配送状态。
-    </p>
-
-</div>
-
-<div class="card">
-
-    <h2>平台功能</h2>
-
-    <div class="features">
-
-        <div class="feature">
-            <div class="feature-icon">🍔</div>
-            <div class="feature-name">在线点餐</div>
-            <div class="feature-desc">
-                浏览餐厅和商品，在线提交订单
-            </div>
+        <div class="logo">
+            🍜
         </div>
 
-        <div class="feature">
-            <div class="feature-icon">🚴</div>
-            <div class="feature-name">配送服务</div>
-            <div class="feature-desc">
-                查看配送状态及订单进度
-            </div>
-        </div>
+        <h1 data-i18n="aboutTitle">
+            关于 MDY FOOD
+        </h1>
 
-        <div class="feature">
-            <div class="feature-icon">⭐</div>
-            <div class="feature-name">用户评价</div>
-            <div class="feature-desc">
-                完成订单后可以进行评分和评价
-            </div>
-        </div>
-
-        <div class="feature">
-            <div class="feature-icon">🏪</div>
-            <div class="feature-name">餐厅服务</div>
-            <div class="feature-desc">
-                为餐厅提供订单及经营管理功能
-            </div>
-        </div>
+        <p data-i18n="aboutSubtitle">
+            让点餐更简单，让美食更近
+        </p>
 
     </div>
 
+
+    <div class="card">
+
+        <h2 data-i18n="aboutUsTitle">
+            关于我们
+        </h2>
+
+        <p data-i18n="aboutParagraph1">
+            MDY FOOD 是一个面向缅甸用户的在线餐饮服务平台，致力于连接用户、餐厅和配送人员，让用户能够更加方便地浏览餐厅、选择菜品、提交订单并享受配送服务。
+        </p>
+
+        <p data-i18n="aboutParagraph2">
+            我们希望通过简单、方便的线上点餐体验，为用户和本地餐饮商家提供更加高效的服务方式。
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2 data-i18n="platformFeatures">
+            平台功能
+        </h2>
+
+
+        <div class="features">
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🍔
+                </div>
+
+                <h3 data-i18n="onlineOrdering">
+                    在线点餐
+                </h3>
+
+                <p data-i18n="onlineOrderingDesc">
+                    浏览餐厅和菜品，在线提交订单。
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🛵
+                </div>
+
+                <h3 data-i18n="deliveryService">
+                    配送服务
+                </h3>
+
+                <p data-i18n="deliveryServiceDesc">
+                    通过配送人员将订单送到用户指定地点。
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    ⭐
+                </div>
+
+                <h3 data-i18n="userReviews">
+                    用户评价
+                </h3>
+
+                <p data-i18n="userReviewsDesc">
+                    用户可以对完成的订单进行评价。
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🏪
+                </div>
+
+                <h3 data-i18n="restaurantService">
+                    餐厅服务
+                </h3>
+
+                <p data-i18n="restaurantServiceDesc">
+                    为本地餐饮商家提供线上展示和订单服务。
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="card goal">
+
+        <h2 data-i18n="ourGoal">
+            我们的目标
+        </h2>
+
+        <p data-i18n="aboutGoal">
+            通过持续改善平台体验，让用户能够更加轻松地找到喜欢的美食，让餐厅和配送人员获得更加方便的线上服务工具。
+        </p>
+
+    </div>
+
+
+    <div class="version">
+
+        <span data-i18n="version">
+            MDY FOOD 当前版本
+        </span>
+
+    </div>
+
+
+    <div class="footer-links">
+
+        <a
+            href="user-agreement.html"
+            data-i18n="userAgreement"
+        >
+            用户协议
+        </a>
+
+
+        <a
+            href="privacy.html"
+            data-i18n="privacyPolicy"
+        >
+            隐私政策
+        </a>
+
+    </div>
+
+
 </div>
 
-<div class="card">
 
-    <h2>我们的目标</h2>
+<script>
 
-    <p>
-        我们希望通过简单、方便的线上点餐方式，让用户更容易找到喜欢的餐厅和食物，同时帮助餐厅与配送人员更高效地完成订单服务。
-    </p>
+    function t(key, fallback) {
 
-</div>
+        if (
+            window.MDYLanguage &&
+            typeof window.MDYLanguage.t === "function"
+        ) {
 
-<div class="version">
-    MDY FOOD · Version 1.0
-</div>
+            return window.MDYLanguage.t(
+                key,
+                {},
+                fallback || key
+            );
 
-<div class="footer">
-    © 2026 MDY FOOD
-</div>
-```
+        }
 
-</div>
+        return fallback || key;
+
+    }
+
+
+    function applyPageLanguage() {
+
+        document
+            .querySelectorAll("[data-i18n]")
+            .forEach(function(element) {
+
+                const key =
+                    element.getAttribute(
+                        "data-i18n"
+                    );
+
+                const fallback =
+                    element.textContent.trim();
+
+                const translated =
+                    t(
+                        key,
+                        fallback
+                    );
+
+                if (translated) {
+
+                    element.textContent =
+                        translated;
+
+                }
+
+            });
+
+
+        document.title =
+            t(
+                "aboutTitle",
+                "关于我们"
+            ) +
+            " - MDY FOOD";
+
+    }
+
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            applyPageLanguage();
+
+        }
+    );
+
+
+    window.addEventListener(
+        "mdyLanguageChanged",
+        function() {
+
+            applyPageLanguage();
+
+        }
+    );
+
+</script>
+
 
 </body>
+
 </html>
