@@ -1,175 +1,379 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MDY FOOD - 用户协议</title>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<style>
-*{
-    box-sizing:border-box;
-}
+    <title>用户协议 - MDY FOOD</title>
 
-body{
-    margin:0;
-    background:#f6f6f6;
-    color:#222;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;
-}
+    <script src="language.js"></script>
 
-.header{
-    height:60px;
-    background:#ff7a00;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    font-weight:700;
-    position:relative;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-.back{
-    position:absolute;
-    left:16px;
-    top:50%;
-    transform:translateY(-50%);
-    width:38px;
-    height:38px;
-    border:0;
-    border-radius:50%;
-    background:rgba(255,255,255,.18);
-    color:#fff;
-    font-size:24px;
-    cursor:pointer;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.8;
+        }
 
-.container{
-    max-width:760px;
-    margin:20px auto 40px;
-    padding:0 15px;
-}
+        header {
+            background: #ff5a1f;
+            color: white;
+            padding: 18px 20px;
+        }
 
-.card{
-    background:#fff;
-    border-radius:16px;
-    padding:22px;
-    box-shadow:0 2px 10px rgba(0,0,0,.06);
-}
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-h1{
-    font-size:24px;
-    margin:0 0 8px;
-}
+        .back {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
 
-.update{
-    color:#999;
-    font-size:13px;
-    margin-bottom:25px;
-}
+        .container {
+            max-width: 900px;
+            margin: 25px auto;
+            padding: 0 20px 40px;
+        }
 
-h2{
-    font-size:18px;
-    margin:25px 0 10px;
-}
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-p{
-    font-size:14px;
-    line-height:1.9;
-    margin:8px 0;
-    color:#555;
-}
+        h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+            color: #222;
+        }
 
-.footer{
-    text-align:center;
-    color:#999;
-    font-size:12px;
-    margin-top:20px;
-}
-</style>
+        .updated {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
 
+        h2 {
+            font-size: 20px;
+            margin-top: 28px;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        ul {
+            padding-left: 24px;
+        }
+
+        li {
+            margin: 6px 0;
+        }
+
+        .footer-links {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #ff5a1f;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                padding: 15px 12px 30px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="header">
-    <button class="back" onclick="history.back()">‹</button>
-    <span>用户协议</span>
-</div>
+<header>
+
+    <div class="header-inner">
+
+        <a
+            href="settings.html"
+            class="back"
+            data-i18n="back"
+        >
+            ← 返回
+        </a>
+
+    </div>
+
+</header>
+
 
 <div class="container">
 
-```
-<div class="card">
+    <div class="card">
 
-    <h1>MDY FOOD 用户协议</h1>
+        <h1 data-i18n="agreementMainTitle">
+            MDY FOOD 用户服务协议
+        </h1>
 
-    <div class="update">
-        更新日期：2026年
+        <div class="updated">
+
+            <span data-i18n="updatedDate">
+                最后更新时间：2026年
+            </span>
+
+        </div>
+
+
+        <section>
+
+            <h2 data-i18n="agreementSection1Title">
+                1. 协议接受
+            </h2>
+
+            <p data-i18n="agreementSection1">
+                当您注册、登录或使用 MDY FOOD 平台服务时，即表示您已经阅读、理解并同意遵守本用户服务协议。
+            </p>
+
+        </section>
+
+
+        <section>
+
+            <h2 data-i18n="agreementSection2Title">
+                2. 用户账户
+            </h2>
+
+            <p data-i18n="agreementSection2">
+                用户可以根据平台要求注册账户。用户应提供真实、准确的信息，并负责维护账户信息的安全。
+            </p>
+
+        </section>
+
+
+        <section>
+
+            <h2 data-i18n="agreementSection3Title">
+                3. 平台服务
+            </h2>
+
+            <p data-i18n="agreementSection3">
+                MDY FOOD 为用户提供餐厅浏览、在线点餐、订单管理、配送以及评价等相关服务。具体服务内容可能根据平台运营情况进行调整。
+            </p>
+
+        </section>
+
+
+        <section>
+
+            <h2 data-i18n="agreementSection4Title">
+                4. 订单与支付
+            </h2>
+
+            <p data-i18n="agreementSection4">
+                用户提交订单后，应确认订单内容、配送信息和支付方式。订单是否接受以及实际配送情况可能受到商家营业状态、配送能力等因素影响。
+            </p>
+
+        </section>
+
+
+        <section>
+
+            <h2 data-i18n="agreementSection5Title">
+                5. 用户行为
+            </h2>
+
+            <p data-i18n="agreementSection5">
+                用户不得利用平台从事违法活动，不得恶意干扰平台运行，不得发布虚假、欺诈、侵权或其他违反法律法规的信息。
+            </p>
+
+        </section>
+
+
+        <section>
+
+            <h2 data-i18n="agreementSection6Title">
+                6. 商家与配送服务
+            </h2>
+
+            <p data-i18n="agreementSection6">
+                平台上的餐品由对应商家提供，配送服务由平台安排的配送人员执行。餐品质量、实际配送时间等可能受到实际运营情况影响。
+            </p>
+
+        </section>
+
+
+        <section>
+
+            <h2 data-i18n="agreementSection7Title">
+                7. 用户评价
+            </h2>
+
+            <p data-i18n="agreementSection7">
+                用户可以根据实际订单体验提交评价。评价内容应真实、客观，不得包含违法、侮辱、诽谤或侵犯他人权益的内容。
+            </p>
+
+        </section>
+
+
+        <section>
+
+            <h2 data-i18n="agreementSection8Title">
+                8. 服务变更与终止
+            </h2>
+
+            <p data-i18n="agreementSection8">
+                在必要情况下，平台可能对部分功能进行调整、暂停或终止。对于违反平台规则的账户，平台可以根据实际情况采取限制或终止服务等措施。
+            </p>
+
+        </section>
+
+
+        <section>
+
+            <h2 data-i18n="agreementSection9Title">
+                9. 协议更新
+            </h2>
+
+            <p data-i18n="agreementSection9">
+                平台可能根据业务发展和相关法律法规更新本协议。更新后的协议将在平台页面公布。
+            </p>
+
+        </section>
+
+
+        <div class="footer-links">
+
+            <a
+                href="privacy.html"
+                data-i18n="privacyPolicy"
+            >
+                隐私政策
+            </a>
+
+            <a
+                href="about.html"
+                data-i18n="aboutUs"
+            >
+                关于我们
+            </a>
+
+        </div>
+
     </div>
 
-    <h2>一、协议说明</h2>
-    <p>
-        欢迎使用 MDY FOOD。使用 MDY FOOD 网站及相关服务，即表示你已阅读并理解本用户协议，并同意遵守相关规定。
-    </p>
-
-    <h2>二、账户使用</h2>
-    <p>
-        用户在注册账户时，应提供真实、准确的信息，并妥善保管自己的账户信息。
-    </p>
-
-    <p>
-        用户不得冒用他人身份注册或使用账户，也不得利用平台从事违法或损害他人权益的活动。
-    </p>
-
-    <h2>三、订单服务</h2>
-    <p>
-        用户可以通过平台浏览餐厅及商品信息，并根据实际需要提交订单。
-    </p>
-
-    <p>
-        订单提交后，具体配送时间、商品供应情况以及餐厅接单情况可能受到实际经营情况影响。
-    </p>
-
-    <h2>四、付款</h2>
-    <p>
-        用户应根据页面显示的订单金额完成付款。订单金额可能包括商品费用、配送费用以及平台页面显示的其他费用。
-    </p>
-
-    <h2>五、配送</h2>
-    <p>
-        配送服务由平台配送人员或相关配送服务人员完成。由于天气、道路、交通以及其他实际情况，配送时间可能发生变化。
-    </p>
-
-    <h2>六、用户行为</h2>
-    <p>
-        用户在使用平台时，应遵守适用法律法规，不得发布违法内容，不得恶意下单、恶意评价、攻击平台系统或干扰其他用户正常使用服务。
-    </p>
-
-    <h2>七、餐厅与商品信息</h2>
-    <p>
-        餐厅商品、价格、图片及其他信息可能由相关餐厅提供。实际商品以用户最终收到的商品为准。
-    </p>
-
-    <h2>八、协议修改</h2>
-    <p>
-        MDY FOOD 可能根据服务发展及实际情况对本协议进行更新。更新后的协议将在平台页面公布。
-    </p>
-
-    <h2>九、联系我们</h2>
-    <p>
-        如果你对本协议存在疑问，可以通过 MDY FOOD 平台提供的联系方式与我们联系。
-    </p>
-
 </div>
 
-<div class="footer">
-    © 2026 MDY FOOD
-</div>
-```
 
-</div>
+<script>
+
+    function t(key, fallback) {
+
+        if (
+            window.MDYLanguage &&
+            typeof window.MDYLanguage.t === "function"
+        ) {
+
+            return window.MDYLanguage.t(
+                key,
+                {},
+                fallback || key
+            );
+
+        }
+
+        return fallback || key;
+    }
+
+
+    function applyPageLanguage() {
+
+        document
+            .querySelectorAll("[data-i18n]")
+            .forEach(function(element) {
+
+                const key =
+                    element.getAttribute("data-i18n");
+
+                const fallback =
+                    element.textContent.trim();
+
+                const translated =
+                    t(
+                        key,
+                        fallback
+                    );
+
+                if (translated) {
+                    element.textContent =
+                        translated;
+                }
+
+            });
+
+
+        document.title =
+            t(
+                "agreementTitle",
+                "用户协议"
+            ) +
+            " - MDY FOOD";
+
+    }
+
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            applyPageLanguage();
+
+        }
+    );
+
+
+    window.addEventListener(
+        "mdyLanguageChanged",
+        function() {
+
+            applyPageLanguage();
+
+        }
+    );
+
+</script>
 
 </body>
 </html>
