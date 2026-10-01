@@ -16,6 +16,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
+<script src="language.js"></script>
+
 <style>
 
 * {
@@ -47,11 +49,6 @@ button {
     cursor: pointer;
 }
 
-
-/* =========================
-   顶部
-========================= */
-
 .header {
     background:
         linear-gradient(
@@ -81,6 +78,8 @@ button {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    gap: 10px;
 }
 
 .back-button {
@@ -111,10 +110,9 @@ button {
     width: 40px;
 }
 
-
-/* =========================
-   主体
-========================= */
+.language-box {
+    min-width: 105px;
+}
 
 .container {
     width: 100%;
@@ -122,11 +120,6 @@ button {
     margin: auto;
     padding: 15px;
 }
-
-
-/* =========================
-   用户卡片
-========================= */
 
 .user-card {
 
@@ -216,11 +209,6 @@ button {
     flex-shrink: 0;
 }
 
-
-/* =========================
-   未登录
-========================= */
-
 .login-card {
 
     display: none;
@@ -278,11 +266,6 @@ button {
     font-weight: bold;
 }
 
-
-/* =========================
-   快捷功能
-========================= */
-
 .quick-grid {
 
     display: grid;
@@ -326,11 +309,6 @@ button {
     font-weight: 600;
 }
 
-
-/* =========================
-   区块标题
-========================= */
-
 .section-title {
 
     font-size: 18px;
@@ -342,11 +320,6 @@ button {
         2px
         10px;
 }
-
-
-/* =========================
-   功能菜单
-========================= */
 
 .menu-card {
 
@@ -423,11 +396,6 @@ button {
     font-size: 18px;
 }
 
-
-/* =========================
-   退出登录
-========================= */
-
 .logout-button {
 
     display: none;
@@ -454,11 +422,6 @@ button {
         0 2px 10px
         rgba(0,0,0,0.05);
 }
-
-
-/* =========================
-   底部导航
-========================= */
 
 .bottom-nav {
 
@@ -565,11 +528,6 @@ button {
         5px;
 }
 
-
-/* =========================
-   手机
-========================= */
-
 @media (max-width: 500px) {
 
     body {
@@ -616,12 +574,11 @@ button {
         font-size: 10px;
     }
 
+    .header-title {
+        font-size: 19px;
+    }
+
 }
-
-
-/* =========================
-   小手机
-========================= */
 
 @media (max-width: 360px) {
 
@@ -643,10 +600,6 @@ button {
 <body>
 
 
-<!-- =========================
-     顶部
-========================= -->
-
 <header class="header">
 
     <div class="header-top">
@@ -658,11 +611,19 @@ button {
             ←
         </button>
 
-        <div class="header-title">
+
+        <div
+            class="header-title"
+            data-i18n="profile"
+        >
             我的
         </div>
 
-        <div class="header-placeholder"></div>
+
+        <div
+            id="languageSelector"
+            class="language-box"
+        ></div>
 
     </div>
 
@@ -672,9 +633,7 @@ button {
 <div class="container">
 
 
-<!-- =========================
-     已登录用户
-========================= -->
+<!-- 已登录 -->
 
 <div
     id="userCard"
@@ -685,27 +644,33 @@ button {
         👤
     </div>
 
+
     <div class="user-info">
 
         <div
             id="userName"
             class="user-name"
+            data-i18n="myAccount"
         >
             我的账户
         </div>
 
+
         <div
             id="userEmail"
             class="user-sub"
+            data-i18n="checkingLogin"
         >
             正在读取账户信息...
         </div>
 
     </div>
 
+
     <button
         class="user-login-button"
         onclick="editProfile()"
+        data-i18n="editProfile"
     >
         编辑
     </button>
@@ -713,9 +678,7 @@ button {
 </div>
 
 
-<!-- =========================
-     未登录
-========================= -->
+<!-- 未登录 -->
 
 <div
     id="loginCard"
@@ -726,17 +689,27 @@ button {
         👤
     </div>
 
-    <div class="login-title">
+
+    <div
+        class="login-title"
+        data-i18n="loginTitle"
+    >
         登录 MDY FOOD
     </div>
 
-    <div class="login-sub">
+
+    <div
+        class="login-sub"
+        data-i18n="loginConvenient"
+    >
         登录后可以管理订单、收藏和收货地址
     </div>
+
 
     <a
         href="login.html"
         class="login-button"
+        data-i18n="loginRegister"
     >
         登录 / 注册
     </a>
@@ -744,11 +717,10 @@ button {
 </div>
 
 
-<!-- =========================
-     快捷入口
-========================= -->
+<!-- 快捷功能 -->
 
 <div class="quick-grid">
+
 
     <a
         href="orders.html"
@@ -759,7 +731,10 @@ button {
             📦
         </div>
 
-        <div class="quick-text">
+        <div
+            class="quick-text"
+            data-i18n="quickOrders"
+        >
             我的订单
         </div>
 
@@ -775,7 +750,10 @@ button {
             ❤️
         </div>
 
-        <div class="quick-text">
+        <div
+            class="quick-text"
+            data-i18n="quickFavorites"
+        >
             我的收藏
         </div>
 
@@ -791,7 +769,10 @@ button {
             📍
         </div>
 
-        <div class="quick-text">
+        <div
+            class="quick-text"
+            data-i18n="quickAddresses"
+        >
             收货地址
         </div>
 
@@ -807,7 +788,10 @@ button {
             🍜
         </div>
 
-        <div class="quick-text">
+        <div
+            class="quick-text"
+            data-i18n="quickRestaurants"
+        >
             找餐厅
         </div>
 
@@ -816,11 +800,12 @@ button {
 </div>
 
 
-<!-- =========================
-     我的服务
-========================= -->
+<!-- 我的服务 -->
 
-<div class="section-title">
+<div
+    class="section-title"
+    data-i18n="service"
+>
     我的服务
 </div>
 
@@ -839,11 +824,17 @@ button {
 
         <div class="menu-content">
 
-            <div class="menu-title">
+            <div
+                class="menu-title"
+                data-i18n="orders"
+            >
                 我的订单
             </div>
 
-            <div class="menu-sub">
+            <div
+                class="menu-sub"
+                data-i18n="ordersSub"
+            >
                 查看全部订单和订单状态
             </div>
 
@@ -867,11 +858,17 @@ button {
 
         <div class="menu-content">
 
-            <div class="menu-title">
+            <div
+                class="menu-title"
+                data-i18n="favorites"
+            >
                 我的收藏
             </div>
 
-            <div class="menu-sub">
+            <div
+                class="menu-sub"
+                data-i18n="favoritesSub"
+            >
                 收藏的餐厅和美食
             </div>
 
@@ -895,11 +892,17 @@ button {
 
         <div class="menu-content">
 
-            <div class="menu-title">
+            <div
+                class="menu-title"
+                data-i18n="addresses"
+            >
                 收货地址
             </div>
 
-            <div class="menu-sub">
+            <div
+                class="menu-sub"
+                data-i18n="addressesSub"
+            >
                 管理送餐地址
             </div>
 
@@ -923,11 +926,17 @@ button {
 
         <div class="menu-content">
 
-            <div class="menu-title">
+            <div
+                class="menu-title"
+                data-i18n="coupons"
+            >
                 我的优惠券
             </div>
 
-            <div class="menu-sub">
+            <div
+                class="menu-sub"
+                data-i18n="couponsSub"
+            >
                 查看可使用的优惠券
             </div>
 
@@ -951,11 +960,17 @@ button {
 
         <div class="menu-content">
 
-            <div class="menu-title">
+            <div
+                class="menu-title"
+                data-i18n="myReviews"
+            >
                 我的评价
             </div>
 
-            <div class="menu-sub">
+            <div
+                class="menu-sub"
+                data-i18n="reviewsSub"
+            >
                 查看我发布过的评价
             </div>
 
@@ -971,11 +986,12 @@ button {
 </div>
 
 
-<!-- =========================
-     其他
-========================= -->
+<!-- 其他 -->
 
-<div class="section-title">
+<div
+    class="section-title"
+    data-i18n="other"
+>
     其他
 </div>
 
@@ -994,11 +1010,17 @@ button {
 
         <div class="menu-content">
 
-            <div class="menu-title">
+            <div
+                class="menu-title"
+                data-i18n="settingsTitle"
+            >
                 设置
             </div>
 
-            <div class="menu-sub">
+            <div
+                class="menu-sub"
+                data-i18n="generalTitle"
+            >
                 账户和应用设置
             </div>
 
@@ -1022,11 +1044,17 @@ button {
 
         <div class="menu-content">
 
-            <div class="menu-title">
+            <div
+                class="menu-title"
+                data-i18n="aboutUs"
+            >
                 关于 MDY FOOD
             </div>
 
-            <div class="menu-sub">
+            <div
+                class="menu-sub"
+                data-i18n="aboutSubtitle"
+            >
                 平台信息
             </div>
 
@@ -1042,14 +1070,13 @@ button {
 </div>
 
 
-<!-- =========================
-     退出登录
-========================= -->
+<!-- 退出 -->
 
 <button
     id="logoutButton"
     class="logout-button"
     onclick="logout()"
+    data-i18n="logout"
 >
     退出登录
 </button>
@@ -1058,9 +1085,7 @@ button {
 </div>
 
 
-<!-- =========================
-     底部导航
-========================= -->
+<!-- 底部导航 -->
 
 <nav class="bottom-nav">
 
@@ -1076,7 +1101,7 @@ button {
                 🏠
             </div>
 
-            <div>
+            <div data-i18n="home">
                 首页
             </div>
 
@@ -1092,7 +1117,7 @@ button {
                 🍜
             </div>
 
-            <div>
+            <div data-i18n="restaurants">
                 餐厅
             </div>
 
@@ -1108,7 +1133,7 @@ button {
                 📦
             </div>
 
-            <div>
+            <div data-i18n="orders">
                 订单
             </div>
 
@@ -1124,7 +1149,7 @@ button {
                 👤
             </div>
 
-            <div>
+            <div data-i18n="profile">
                 我的
             </div>
 
@@ -1136,17 +1161,16 @@ button {
 </nav>
 
 
-<!-- =========================
-     Firebase
-========================= -->
-
 <script>
 
+/* =========================================================
+   Firebase
+========================================================= */
 
 const firebaseConfig = {
 
     apiKey:
-        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngcFhNfWPUlv0",
 
     authDomain:
         "mdy-food.firebaseapp.com",
@@ -1165,12 +1189,17 @@ const firebaseConfig = {
 
     measurementId:
         "G-6Q5G2862XQ"
+
 };
 
 
-firebase.initializeApp(
-    firebaseConfig
-);
+if (!firebase.apps.length) {
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+}
 
 
 const db =
@@ -1181,9 +1210,70 @@ const auth =
     firebase.auth();
 
 
-/* =========================
+/* =========================================================
+   翻译
+========================================================= */
+
+function t(
+    key,
+    fallback
+) {
+
+    if (
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t ===
+            "function"
+    ) {
+
+        return window.MDYLanguage.t(
+            key,
+            {},
+            fallback
+        );
+
+    }
+
+    return fallback || key;
+
+}
+
+
+function applyPageTranslations() {
+
+    document
+        .querySelectorAll(
+            "[data-i18n]"
+        )
+        .forEach(
+            function(element) {
+
+                const key =
+                    element.dataset.i18n;
+
+                element.innerText =
+                    t(
+                        key,
+                        element.innerText
+                    );
+
+            }
+        );
+
+
+    document.title =
+        "MDY FOOD - " +
+        t(
+            "profile",
+            "我的"
+        );
+
+}
+
+
+
+/* =========================================================
    返回首页
-========================= */
+========================================================= */
 
 function goHome() {
 
@@ -1193,40 +1283,50 @@ function goHome() {
 }
 
 
-/* =========================
+
+/* =========================================================
    编辑个人资料
-========================= */
+========================================================= */
 
 function editProfile() {
 
-    alert(
-        "个人资料功能正在开发中"
-    );
+    window.location.href =
+        "edit-profile.html";
 
 }
 
 
-/* =========================
+
+/* =========================================================
    退出登录
-========================= */
+========================================================= */
 
 async function logout() {
 
     const confirmed =
         confirm(
-            "确定要退出登录吗？"
+            t(
+                "confirmLogout",
+                "确定要退出登录吗？"
+            )
         );
 
+
     if (!confirmed) {
+
         return;
+
     }
+
 
     try {
 
         await auth.signOut();
 
+
         window.location.href =
             "index.html";
+
 
     } catch (error) {
 
@@ -1235,8 +1335,12 @@ async function logout() {
             error
         );
 
+
         alert(
-            "退出登录失败，请稍后再试"
+            t(
+                "logoutError",
+                "退出登录失败，请稍后再试"
+            )
         );
 
     }
@@ -1244,9 +1348,10 @@ async function logout() {
 }
 
 
-/* =========================
+
+/* =========================================================
    登录状态
-========================= */
+========================================================= */
 
 auth.onAuthStateChanged(
     function(user) {
@@ -1256,20 +1361,24 @@ auth.onAuthStateChanged(
                 "userCard"
             );
 
+
         const loginCard =
             document.getElementById(
                 "loginCard"
             );
+
 
         const logoutButton =
             document.getElementById(
                 "logoutButton"
             );
 
+
         const userName =
             document.getElementById(
                 "userName"
             );
+
 
         const userEmail =
             document.getElementById(
@@ -1296,7 +1405,10 @@ auth.onAuthStateChanged(
             if (!displayName) {
 
                 displayName =
-                    "MDY FOOD 用户";
+                    t(
+                        "defaultUserName",
+                        "MDY FOOD 用户"
+                    );
 
             }
 
@@ -1310,7 +1422,9 @@ auth.onAuthStateChanged(
                 userEmail.innerText =
                     user.email;
 
-            } else if (user.phoneNumber) {
+            } else if (
+                user.phoneNumber
+            ) {
 
                 userEmail.innerText =
                     user.phoneNumber;
@@ -1318,9 +1432,13 @@ auth.onAuthStateChanged(
             } else {
 
                 userEmail.innerText =
-                    "已登录";
+                    t(
+                        "loggedIn",
+                        "已登录"
+                    );
 
             }
+
 
         } else {
 
@@ -1338,6 +1456,41 @@ auth.onAuthStateChanged(
     }
 );
 
+
+
+/* =========================================================
+   language.js
+========================================================= */
+
+if (
+    window.MDYLanguage &&
+    typeof
+    window.MDYLanguage
+        .renderLanguageSelector
+    === "function"
+) {
+
+    window.MDYLanguage
+        .renderLanguageSelector(
+            document.getElementById(
+                "languageSelector"
+            )
+        );
+
+}
+
+
+applyPageTranslations();
+
+
+window.addEventListener(
+    "mdyLanguageChanged",
+    function() {
+
+        applyPageTranslations();
+
+    }
+);
 
 </script>
 
