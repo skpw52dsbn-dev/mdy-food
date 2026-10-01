@@ -835,9 +835,8 @@ body.dark .message.error {
 
 <script>
 
-
 /* =====================================================
-   Firebase
+   Firebase 配置
 ===================================================== */
 
 const firebaseConfig = {
@@ -866,9 +865,17 @@ const firebaseConfig = {
 };
 
 
-firebase.initializeApp(
-    firebaseConfig
-);
+/* =====================================================
+   Firebase 初始化
+===================================================== */
+
+if (!firebase.apps.length) {
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+}
 
 
 const auth =
@@ -878,6 +885,24 @@ const auth =
 const db =
     firebase.firestore();
 
+
+/*
+   保持登录状态。
+   如果登录页面已经设置过 LOCAL，
+   这里再次确认不会破坏登录状态。
+*/
+
+auth.setPersistence(
+    firebase.auth.Auth.Persistence.LOCAL
+)
+.catch(function(error) {
+
+    console.warn(
+        "Firebase 登录持久化设置失败:",
+        error
+    );
+
+});
 
 
 /* =====================================================
@@ -1035,6 +1060,14 @@ const profileMessage =
     );
 
 
+/* =====================================================
+   当前登录用户
+===================================================== */
+
+let currentUser = null;
+
+let authReady = false;
+
 
 /* =====================================================
    语言辅助函数
@@ -1047,12 +1080,13 @@ function translate(
 
     if (
         window.MDYLanguage &&
-        typeof MDYLanguage.t === "function"
+        typeof window.MDYLanguage.t === "function"
     ) {
 
         const result =
-            MDYLanguage.t(
+            window.MDYLanguage.t(
                 key,
+                {},
                 fallback
             );
 
@@ -1072,234 +1106,358 @@ function translate(
 }
 
 
-
 /* =====================================================
    更新页面语言
 ===================================================== */
 
 function renderLanguage() {
 
-    const lang =
-        window.MDYLanguage
-            ? MDYLanguage.getLanguage()
-            : (
-                localStorage.getItem(
-                    "mdyLanguage"
-                ) || "zh"
+    let lang = "zh";
+
+
+    if (
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.getLanguage === "function"
+    ) {
+
+        lang =
+            window.MDYLanguage.getLanguage();
+
+    }
+
+    else {
+
+        const savedLanguage =
+            localStorage.getItem(
+                "mdyLanguage"
             );
 
 
-    /*
-       这里只读取当前语言。
-       不在这里修改 localStorage。
-    */
+        if (
+            savedLanguage === "zh" ||
+            savedLanguage === "my" ||
+            savedLanguage === "en"
+        ) {
 
-    languageSelect.value =
-        lang;
+            lang =
+                savedLanguage;
 
+        }
+
+    }
+
+
+    /* 当前语言选择 */
+
+    if (languageSelect) {
+
+        languageSelect.value =
+            lang;
+
+    }
 
 
     /* 页面标题 */
 
-    pageTitle.querySelector("span").textContent =
-        translate(
-            "settingsTitle",
-            "设置"
-        );
+    if (pageTitle) {
 
+        const titleSpan =
+            pageTitle.querySelector(
+                "span"
+            );
+
+
+        if (titleSpan) {
+
+            titleSpan.textContent =
+                translate(
+                    "settingsTitle",
+                    "设置"
+                );
+
+        }
+
+    }
 
 
     /* 返回按钮 */
 
-    backButton.setAttribute(
-        "aria-label",
-        translate(
-            "back",
-            "返回"
-        )
-    );
+    if (backButton) {
 
+        backButton.setAttribute(
+            "aria-label",
+            translate(
+                "back",
+                "返回"
+            )
+        );
+
+    }
 
 
     /* 个人资料 */
 
-    profileSettingsTitle.textContent =
-        translate(
-            "profileSettings",
-            "个人资料"
-        );
+    if (profileSettingsTitle) {
+
+        profileSettingsTitle.textContent =
+            translate(
+                "profileSettings",
+                "个人资料"
+            );
+
+    }
 
 
-    nameLabel.textContent =
-        translate(
-            "name",
-            "姓名"
-        );
+    if (nameLabel) {
+
+        nameLabel.textContent =
+            translate(
+                "name",
+                "姓名"
+            );
+
+    }
 
 
-    phoneLabel.textContent =
-        translate(
-            "phone",
-            "手机号"
-        );
+    if (phoneLabel) {
+
+        phoneLabel.textContent =
+            translate(
+                "phone",
+                "手机号"
+            );
+
+    }
 
 
-    nameInput.placeholder =
-        translate(
-            "name",
-            "姓名"
-        );
+    if (nameInput) {
+
+        nameInput.placeholder =
+            translate(
+                "name",
+                "姓名"
+            );
+
+    }
 
 
-    phoneInput.placeholder =
-        translate(
-            "phone",
-            "手机号"
-        );
+    if (phoneInput) {
+
+        phoneInput.placeholder =
+            translate(
+                "phone",
+                "手机号"
+            );
+
+    }
 
 
-    saveProfileBtn.textContent =
-        translate(
-            "save",
-            "保存"
-        );
+    if (saveProfileBtn) {
+
+        saveProfileBtn.textContent =
+            translate(
+                "save",
+                "保存"
+            );
+
+    }
 
 
-    /* 自动保存状态 */
+    if (saveStatus) {
 
-    saveStatus.textContent =
-        translate(
-            "saveSuccess",
-            "已保存"
-        );
+        saveStatus.textContent =
+            translate(
+                "saveSuccess",
+                "已保存"
+            );
 
+    }
 
 
     /* 通用设置 */
 
-    generalTitle.textContent =
-        translate(
-            "settings",
-            "通用设置"
-        );
+    if (generalTitle) {
+
+        generalTitle.textContent =
+            translate(
+                "settings",
+                "通用设置"
+            );
+
+    }
 
 
-    languageTitle.textContent =
-        translate(
-            "language",
-            "语言"
-        );
+    if (languageTitle) {
+
+        languageTitle.textContent =
+            translate(
+                "language",
+                "语言"
+            );
+
+    }
 
 
-    languageDesc.textContent =
-        translate(
-            "languageDesc",
-            "选择网站显示语言"
-        );
+    if (languageDesc) {
+
+        languageDesc.textContent =
+            translate(
+                "languageDesc",
+                "选择网站显示语言"
+            );
+
+    }
 
 
-    notificationTitle.textContent =
-        translate(
-            "notification",
-            "通知"
-        );
+    if (notificationTitle) {
+
+        notificationTitle.textContent =
+            translate(
+                "notification",
+                "通知"
+            );
+
+    }
 
 
-    notificationDesc.textContent =
-        translate(
-            "notificationDesc",
-            "接收订单和系统通知"
-        );
+    if (notificationDesc) {
+
+        notificationDesc.textContent =
+            translate(
+                "notificationDesc",
+                "接收订单和系统通知"
+            );
+
+    }
 
 
-    darkTitle.textContent =
-        translate(
-            "darkMode",
-            "深色模式"
-        );
+    if (darkTitle) {
+
+        darkTitle.textContent =
+            translate(
+                "darkMode",
+                "深色模式"
+            );
+
+    }
 
 
-    darkDesc.textContent =
-        translate(
-            "darkModeDesc",
-            "使用深色界面"
-        );
+    if (darkDesc) {
 
+        darkDesc.textContent =
+            translate(
+                "darkModeDesc",
+                "使用深色界面"
+            );
+
+    }
 
 
     /* 其他 */
 
-    otherTitle.textContent =
-        translate(
-            "other",
-            "其他"
-        );
+    if (otherTitle) {
+
+        otherTitle.textContent =
+            translate(
+                "other",
+                "其他"
+            );
+
+    }
 
 
-    agreementText.textContent =
-        translate(
-            "userAgreement",
-            "用户协议"
-        );
+    if (agreementText) {
+
+        agreementText.textContent =
+            translate(
+                "userAgreement",
+                "用户协议"
+            );
+
+    }
 
 
-    privacyText.textContent =
-        translate(
-            "privacyPolicy",
-            "隐私政策"
-        );
+    if (privacyText) {
+
+        privacyText.textContent =
+            translate(
+                "privacyPolicy",
+                "隐私政策"
+            );
+
+    }
 
 
-    aboutText.textContent =
-        translate(
-            "aboutUs",
-            "关于 MDY FOOD"
-        );
+    if (aboutText) {
 
+        aboutText.textContent =
+            translate(
+                "aboutUs",
+                "关于 MDY FOOD"
+            );
+
+    }
 
 
     /* 账户状态 */
 
-    accountStatusTitle.textContent =
-        translate(
-            "accountStatus",
-            "账户状态"
-        );
+    if (accountStatusTitle) {
 
+        accountStatusTitle.textContent =
+            translate(
+                "accountStatus",
+                "账户状态"
+            );
+
+    }
 
 
     /* 退出 */
 
-    logoutBtn.textContent =
-        translate(
-            "logout",
-            "退出登录"
-        );
+    if (logoutBtn) {
 
+        logoutBtn.textContent =
+            translate(
+                "logout",
+                "退出登录"
+            );
+
+    }
 
 
     /* 底部导航 */
 
-    navHome.textContent =
-        translate(
-            "home",
-            "首页"
-        );
+    if (navHome) {
+
+        navHome.textContent =
+            translate(
+                "home",
+                "首页"
+            );
+
+    }
 
 
-    navOrders.textContent =
-        translate(
-            "orders",
-            "订单"
-        );
+    if (navOrders) {
+
+        navOrders.textContent =
+            translate(
+                "orders",
+                "订单"
+            );
+
+    }
 
 
-    navProfile.textContent =
-        translate(
-            "profile",
-            "我的"
-        );
+    if (navProfile) {
 
+        navProfile.textContent =
+            translate(
+                "profile",
+                "我的"
+            );
+
+    }
 
 
     /* HTML lang */
@@ -1326,7 +1484,6 @@ function renderLanguage() {
     }
 
 
-
     /* 浏览器标题 */
 
     document.title =
@@ -1337,56 +1494,73 @@ function renderLanguage() {
         );
 
 
+    /*
+       这里使用 currentUser，
+       不再直接依赖 auth.currentUser。
+    */
+
     updateLoginStatus();
 
 }
 
 
-
 /* =====================================================
    语言选择
-   选择后立即保存 + 立即切换
 ===================================================== */
 
-languageSelect.addEventListener(
-    "change",
-    function () {
+if (languageSelect) {
 
-        const selectedLanguage =
-            this.value;
+    languageSelect.addEventListener(
+        "change",
+        function() {
+
+            const selectedLanguage =
+                this.value;
 
 
-        if (
-            !window.MDYLanguage ||
-            typeof MDYLanguage.setLanguage !== "function"
-        ) {
+            if (
+                !window.MDYLanguage ||
+                typeof window.MDYLanguage.setLanguage !== "function"
+            ) {
 
-            console.error(
-                "language.js 没有成功加载"
+                console.error(
+                    "language.js 没有成功加载"
+                );
+
+                return;
+
+            }
+
+
+            if (
+                selectedLanguage !== "zh" &&
+                selectedLanguage !== "my" &&
+                selectedLanguage !== "en"
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+               setLanguage 会：
+
+               1. 保存 mdyLanguage
+               2. 应用语言
+               3. 触发 mdyLanguageChanged
+
+               这里不再自己保存。
+            */
+
+            window.MDYLanguage.setLanguage(
+                selectedLanguage
             );
 
-            return;
-
         }
+    );
 
-
-        /*
-           setLanguage 本身负责：
-
-           1. 写入 localStorage
-           2. 切换当前页面语言
-           3. 触发 mdyLanguageChanged
-
-           这里不再重复保存。
-        */
-
-        MDYLanguage.setLanguage(
-            selectedLanguage
-        );
-
-    }
-);
-
+}
 
 
 /* =====================================================
@@ -1395,13 +1569,12 @@ languageSelect.addEventListener(
 
 window.addEventListener(
     "mdyLanguageChanged",
-    function () {
+    function() {
 
         renderLanguage();
 
     }
 );
-
 
 
 /* =====================================================
@@ -1414,8 +1587,12 @@ const savedDarkMode =
     ) === "true";
 
 
-darkToggle.checked =
-    savedDarkMode;
+if (darkToggle) {
+
+    darkToggle.checked =
+        savedDarkMode;
+
+}
 
 
 if (savedDarkMode) {
@@ -1427,65 +1604,79 @@ if (savedDarkMode) {
 }
 
 
-darkToggle.addEventListener(
-    "change",
-    function () {
+if (darkToggle) {
 
-        if (this.checked) {
+    darkToggle.addEventListener(
+        "change",
+        function() {
 
-            document.body.classList.add(
-                "dark"
-            );
+            if (this.checked) {
 
-            localStorage.setItem(
-                "mdyDarkMode",
-                "true"
-            );
+                document.body.classList.add(
+                    "dark"
+                );
+
+                localStorage.setItem(
+                    "mdyDarkMode",
+                    "true"
+                );
+
+            }
+
+            else {
+
+                document.body.classList.remove(
+                    "dark"
+                );
+
+                localStorage.setItem(
+                    "mdyDarkMode",
+                    "false"
+                );
+
+            }
 
         }
+    );
 
-        else {
-
-            document.body.classList.remove(
-                "dark"
-            );
-
-            localStorage.setItem(
-                "mdyDarkMode",
-                "false"
-            );
-
-        }
-
-    }
-);
-
+}
 
 
 /* =====================================================
    通知
 ===================================================== */
 
-notificationToggle.checked =
+const savedNotification =
     localStorage.getItem(
         "mdyNotification"
-    ) !== "false";
+    );
 
 
-notificationToggle.addEventListener(
-    "change",
-    function () {
+if (notificationToggle) {
 
-        localStorage.setItem(
-            "mdyNotification",
-            this.checked
-                ? "true"
-                : "false"
-        );
+    notificationToggle.checked =
+        savedNotification !== "false";
 
-    }
-);
+}
 
+
+if (notificationToggle) {
+
+    notificationToggle.addEventListener(
+        "change",
+        function() {
+
+            localStorage.setItem(
+                "mdyNotification",
+                this.checked
+                    ? "true"
+                    : "false"
+            );
+
+        }
+    );
+
+}
 
 
 /* =====================================================
@@ -1499,11 +1690,26 @@ function updateLoginStatus() {
     }
 
 
-    const user =
-        auth.currentUser;
+    /*
+       authReady 之前显示检查状态，
+       避免 Firebase 尚未恢复登录时
+       短暂显示“未登录”。
+    */
+
+    if (!authReady) {
+
+        loginStatusText.textContent =
+            translate(
+                "checkingLogin",
+                "检查登录状态..."
+            );
+
+        return;
+
+    }
 
 
-    if (user) {
+    if (currentUser) {
 
         const loggedInText =
             translate(
@@ -1513,14 +1719,22 @@ function updateLoginStatus() {
 
 
         const email =
-            user.email || "";
+            currentUser.email || "";
+
+
+        const phone =
+            currentUser.phoneNumber || "";
+
+
+        let contact =
+            email || phone;
 
 
         loginStatusText.textContent =
             loggedInText +
             (
-                email
-                    ? " · " + email
+                contact
+                    ? " · " + contact
                     : ""
             );
 
@@ -1537,7 +1751,6 @@ function updateLoginStatus() {
     }
 
 }
-
 
 
 /* =====================================================
@@ -1566,7 +1779,7 @@ function showAutoSaveStatus() {
 
     saveStatusTimer =
         setTimeout(
-            function () {
+            function() {
 
                 saveStatus.classList.remove(
                     "show"
@@ -1577,7 +1790,6 @@ function showAutoSaveStatus() {
         );
 
 }
-
 
 
 /* =====================================================
@@ -1612,7 +1824,7 @@ function showMessage(
 
     profileMessageTimer =
         setTimeout(
-            function () {
+            function() {
 
                 profileMessage.className =
                     "message";
@@ -1627,13 +1839,11 @@ function showMessage(
 }
 
 
-
 /* =====================================================
    防止重复保存
 ===================================================== */
 
 let isSavingProfile = false;
-
 
 
 /* =====================================================
@@ -1645,7 +1855,7 @@ async function saveProfile(
 ) {
 
     const user =
-        auth.currentUser;
+        currentUser;
 
 
     if (!user) {
@@ -1673,7 +1883,8 @@ async function saveProfile(
     }
 
 
-    isSavingProfile = true;
+    isSavingProfile =
+        true;
 
 
     saveProfileBtn.disabled =
@@ -1737,12 +1948,12 @@ async function saveProfile(
 
         return true;
 
-
     }
 
     catch (error) {
 
         console.error(
+            "保存个人资料失败:",
             error
         );
 
@@ -1777,22 +1988,24 @@ async function saveProfile(
 }
 
 
-
 /* =====================================================
    保存按钮
 ===================================================== */
 
-saveProfileBtn.addEventListener(
-    "click",
-    async function () {
+if (saveProfileBtn) {
 
-        await saveProfile(
-            true
-        );
+    saveProfileBtn.addEventListener(
+        "click",
+        async function() {
 
-    }
-);
+            await saveProfile(
+                true
+            );
 
+        }
+    );
+
+}
 
 
 /* =====================================================
@@ -1811,13 +2024,14 @@ function scheduleAutoSave() {
 
     autoSaveTimer =
         setTimeout(
-            async function () {
+            async function() {
 
-                const user =
-                    auth.currentUser;
+                if (!authReady) {
+                    return;
+                }
 
 
-                if (!user) {
+                if (!currentUser) {
                     return;
                 }
 
@@ -1833,38 +2047,52 @@ function scheduleAutoSave() {
 }
 
 
-nameInput.addEventListener(
-    "blur",
-    function () {
+if (nameInput) {
 
-        scheduleAutoSave();
+    nameInput.addEventListener(
+        "blur",
+        function() {
 
-    }
-);
+            scheduleAutoSave();
+
+        }
+    );
+
+}
 
 
-phoneInput.addEventListener(
-    "blur",
-    function () {
+if (phoneInput) {
 
-        scheduleAutoSave();
+    phoneInput.addEventListener(
+        "blur",
+        function() {
 
-    }
-);
+            scheduleAutoSave();
 
+        }
+    );
+
+}
 
 
 /* =====================================================
-   登录状态 + 读取个人资料
+   Firebase 登录状态监听
 ===================================================== */
 
 auth.onAuthStateChanged(
-    async function (user) {
+    async function(user) {
+
+        currentUser =
+            user || null;
+
+        authReady =
+            true;
+
 
         updateLoginStatus();
 
 
-        if (!user) {
+        if (!currentUser) {
 
             nameInput.value =
                 "";
@@ -1885,7 +2113,7 @@ auth.onAuthStateChanged(
                         "customers"
                     )
                     .doc(
-                        user.uid
+                        currentUser.uid
                     )
                     .get();
 
@@ -1914,6 +2142,7 @@ auth.onAuthStateChanged(
         catch (error) {
 
             console.error(
+                "读取个人资料失败:",
                 error
             );
 
@@ -1921,76 +2150,87 @@ auth.onAuthStateChanged(
 
     }
 );
-
 
 
 /* =====================================================
    退出登录
 ===================================================== */
 
-logoutBtn.addEventListener(
-    "click",
-    async function () {
+if (logoutBtn) {
 
-        const confirmText =
-            translate(
-                "confirmLogout",
+    logoutBtn.addEventListener(
+        "click",
+        async function() {
+
+            const confirmText =
                 translate(
-                    "confirm",
-                    "确定要退出登录吗？"
+                    "confirmLogout",
+                    translate(
+                        "confirm",
+                        "确定要退出登录吗？"
+                    )
+                );
+
+
+            if (
+                !window.confirm(
+                    confirmText
                 )
-            );
+            ) {
+
+                return;
+
+            }
 
 
-        if (
-            !window.confirm(
-                confirmText
-            )
-        ) {
+            try {
 
-            return;
+                await auth.signOut();
+
+
+                currentUser =
+                    null;
+
+
+                window.location.href =
+                    "login.html";
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "退出登录失败:",
+                    error
+                );
+
+
+                alert(
+                    translate(
+                        "operationFailed",
+                        "操作失败，请稍后重试"
+                    )
+                );
+
+            }
 
         }
+    );
 
-
-        try {
-
-            await auth.signOut();
-
-
-            window.location.href =
-                "login.html";
-
-        }
-
-        catch (error) {
-
-            console.error(
-                error
-            );
-
-
-            alert(
-                translate(
-                    "operationFailed",
-                    "操作失败，请稍后重试"
-                )
-            );
-
-        }
-
-    }
-);
-
+}
 
 
 /* =====================================================
    初始化
 ===================================================== */
 
-renderLanguage();
+/*
+   language.js 自己会初始化语言。
+   这里仅根据当前语言渲染本页面，
+   不修改 mdyLanguage。
+*/
 
-updateLoginStatus();
+renderLanguage();
 
 </script>
 
