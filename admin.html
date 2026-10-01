@@ -552,7 +552,6 @@ header {
     font-weight: bold;
 }
 
-
 /* =========================
    商家工具栏 / 订单筛选
 ========================= */
@@ -647,13 +646,215 @@ header {
     color: #2e8b57;
 }
 
+/* =========================
+   顾客评价
+========================= */
+
+.review-summary {
+    background: #fff8f2;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 15px;
+}
+
+.review-summary-top {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.review-average {
+    font-size: 34px;
+    font-weight: bold;
+    color: #ff5a1f;
+    min-width: 70px;
+}
+
+.review-stars {
+    color: #ffb000;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.review-count {
+    color: #777;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.review-distribution {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.review-distribution-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.review-distribution-label {
+    width: 35px;
+    flex-shrink: 0;
+    color: #555;
+}
+
+.review-bar {
+    flex: 1;
+    height: 8px;
+    background: #e9e9e9;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.review-bar-fill {
+    height: 100%;
+    background: #ffb000;
+    border-radius: 10px;
+    transition: width 0.25s ease;
+}
+
+.review-distribution-count {
+    width: 30px;
+    text-align: right;
+    color: #777;
+}
+
+.review-toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.review-filter-buttons {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.review-filter-buttons button {
+    border: 1px solid #ddd;
+    background: white;
+    color: #555;
+    padding: 7px 11px;
+    border-radius: 18px;
+    cursor: pointer;
+}
+
+.review-filter-buttons button.active {
+    background: #ff5a1f;
+    border-color: #ff5a1f;
+    color: white;
+}
+
+.review-list-count {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.review-card {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+    background: #fff;
+}
+
+.review-card:hover {
+    border-color: #ffd2bf;
+}
+
+.review-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 7px;
+}
+
+.review-user {
+    font-weight: bold;
+}
+
+.review-time {
+    color: #999;
+    font-size: 12px;
+}
+
+.review-comment {
+    margin-top: 8px;
+    line-height: 1.7;
+    color: #444;
+    white-space: pre-wrap;
+}
+
+.review-order {
+    color: #888;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.review-rating-number {
+    color: #777;
+    font-size: 13px;
+    margin-left: 5px;
+}
+
+.review-empty {
+    padding: 30px 15px;
+    text-align: center;
+    color: #888;
+    background: #fafafa;
+    border-radius: 10px;
+}
+
+.review-loading {
+    padding: 25px;
+    text-align: center;
+    color: #888;
+}
+
+.review-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #2e8b57;
+    background: #effff4;
+    padding: 5px 9px;
+    border-radius: 15px;
+}
+
+.review-live-dot {
+    width: 7px;
+    height: 7px;
+    background: #2e8b57;
+    border-radius: 50%;
+}
+
 @media (max-width: 600px) {
+
     .toolbar {
         flex-direction: column;
     }
 
     .search-input,
     .refresh-btn {
+        width: 100%;
+    }
+
+    .review-toolbar {
+        flex-direction: column;
+    }
+
+    .review-toolbar .search-input {
         width: 100%;
     }
 }
@@ -703,73 +904,15 @@ header {
     .order {
         padding: 14px;
     }
-}
 
-.review-summary {
-    display:flex;
-    gap:14px;
-    align-items:center;
-    flex-wrap:wrap;
-    background:#fff8f2;
-    border-radius:10px;
-    padding:14px;
-    margin-bottom:15px;
-}
+    .review-summary-top {
+        align-items: flex-start;
+    }
 
-.review-average {
-    font-size:30px;
-    font-weight:bold;
-    color:#ff5a1f;
+    .review-average {
+        font-size: 30px;
+    }
 }
-
-.review-stars {
-    color:#ffb000;
-    font-size:20px;
-    letter-spacing:2px;
-}
-
-.review-count {
-    color:#777;
-    font-size:13px;
-}
-
-.review-card {
-    border:1px solid #eee;
-    border-radius:10px;
-    padding:14px;
-    margin-bottom:12px;
-}
-
-.review-top {
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:7px;
-}
-
-.review-user {
-    font-weight:bold;
-}
-
-.review-time {
-    color:#999;
-    font-size:12px;
-}
-
-.review-comment {
-    margin-top:8px;
-    line-height:1.7;
-    color:#444;
-    white-space:pre-wrap;
-}
-
-.review-order {
-    color:#888;
-    font-size:12px;
-    margin-top:8px;
-}
-
 </style>
 </head>
 
@@ -880,10 +1023,6 @@ header {
     </div>
 
 
-    <!-- 添加菜品 -->
-
-    <div class="section">
-
     <!-- =========================
          顾客评价
     ========================== -->
@@ -891,32 +1030,119 @@ header {
     <div class="section">
 
         <div class="section-title">
-            ⭐ 顾客评价
+            ⭐ 顾客评价管理
         </div>
 
         <div id="reviewSummary" class="review-summary">
 
-            <div class="review-average">
-                暂无
+            <div class="review-summary-top">
+
+                <div class="review-average">
+                    暂无
+                </div>
+
+                <div>
+
+                    <div class="review-stars">
+                        ☆☆☆☆☆
+                    </div>
+
+                    <div class="review-count">
+                        正在读取评价...
+                    </div>
+
+                </div>
+
+                <div class="review-live">
+                    <span class="review-live-dot"></span>
+                    实时更新
+                </div>
+
             </div>
 
-            <div>
-
-                <div class="review-stars">
-                    ☆☆☆☆☆
-                </div>
-
-                <div class="review-count">
-                    正在读取评价...
-                </div>
+            <div id="reviewDistribution"
+                 class="review-distribution">
 
             </div>
 
         </div>
 
+
+        <div class="review-toolbar">
+
+            <input
+                id="reviewSearch"
+                class="search-input"
+                type="text"
+                placeholder="搜索顾客姓名、评价内容、订单号..."
+                oninput="renderReviews()">
+
+        </div>
+
+
+        <div class="review-filter-buttons">
+
+            <button
+                id="review-filter-all"
+                class="active"
+                onclick="setReviewFilter(0)">
+
+                全部
+
+            </button>
+
+            <button
+                id="review-filter-5"
+                onclick="setReviewFilter(5)">
+
+                ⭐ 5星
+
+            </button>
+
+            <button
+                id="review-filter-4"
+                onclick="setReviewFilter(4)">
+
+                ⭐ 4星
+
+            </button>
+
+            <button
+                id="review-filter-3"
+                onclick="setReviewFilter(3)">
+
+                ⭐ 3星
+
+            </button>
+
+            <button
+                id="review-filter-2"
+                onclick="setReviewFilter(2)">
+
+                ⭐ 2星
+
+            </button>
+
+            <button
+                id="review-filter-1"
+                onclick="setReviewFilter(1)">
+
+                ⭐ 1星
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="reviewListCount"
+            class="review-list-count">
+        </div>
+
+
         <div id="reviews">
 
-            <div class="empty">
+            <div class="review-loading">
                 ⭐ 正在读取顾客评价...
             </div>
 
@@ -924,6 +1150,12 @@ header {
 
     </div>
 
+
+    <!-- =========================
+         添加菜品
+    ========================== -->
+
+    <div class="section">
 
         <div class="section-title">
             ➕ 添加菜品
@@ -1245,6 +1477,7 @@ if (!restaurantId) {
     localStorage.removeItem("merchantLogin");
 
     window.location.href = "admin-login.html";
+
 }
 
 
@@ -1277,6 +1510,17 @@ let allOrders = [];
 let currentOrderFilter = "全部";
 
 let lastPendingOrderCount = 0;
+
+
+// ========================================
+// 顾客评价数据
+// ========================================
+
+let allReviews = [];
+
+let currentReviewFilter = 0;
+
+let reviewsUnsubscribe = null;
 
 
 // ========================================
@@ -2213,9 +2457,6 @@ function filterFoods() {
     const foodCards =
         document.querySelectorAll("#foods .food");
 
-    let visibleCount = 0;
-
-
     foodCards.forEach(function(card) {
 
         const text =
@@ -2228,8 +2469,6 @@ function filterFoods() {
         ) {
 
             card.classList.remove("food-hidden");
-
-            visibleCount++;
 
         } else {
 
@@ -3481,13 +3720,23 @@ function getReviewUser(data) {
 }
 
 
-function getReviewTime(data) {
+function getReviewTimeValue(data) {
 
-    const value =
+    return (
         data.created_at ||
         data.createdAt ||
         data.timestamp ||
-        data.time;
+        data.time ||
+        null
+    );
+
+}
+
+
+function getReviewTime(data) {
+
+    const value =
+        getReviewTimeValue(data);
 
 
     if (!value) {
@@ -3513,6 +3762,56 @@ function getReviewTime(data) {
     } catch (e) {
 
         return "";
+
+    }
+
+}
+
+
+function getReviewTimeMillis(data) {
+
+    const value =
+        getReviewTimeValue(data);
+
+
+    if (!value) {
+        return 0;
+    }
+
+
+    try {
+
+        if (
+            typeof value.toMillis === "function"
+        ) {
+
+            return value.toMillis();
+
+        }
+
+
+        if (
+            typeof value.toDate === "function"
+        ) {
+
+            return value.toDate().getTime();
+
+        }
+
+
+        const date =
+            new Date(value);
+
+
+        return Number.isNaN(
+            date.getTime()
+        )
+            ? 0
+            : date.getTime();
+
+    } catch (error) {
+
+        return 0;
 
     }
 
@@ -3559,13 +3858,73 @@ function renderStars(rating) {
 }
 
 
-async function loadReviews() {
+// ========================================
+// 设置评价筛选
+// ========================================
 
-    const summaryBox =
-        document.getElementById(
-            "reviewSummary"
+function setReviewFilter(rating) {
+
+    currentReviewFilter =
+        Number(rating) || 0;
+
+
+    const buttonIds = [
+
+        "review-filter-all",
+        "review-filter-5",
+        "review-filter-4",
+        "review-filter-3",
+        "review-filter-2",
+        "review-filter-1"
+
+    ];
+
+
+    buttonIds.forEach(function(id) {
+
+        const button =
+            document.getElementById(id);
+
+
+        if (!button) {
+            return;
+        }
+
+
+        let buttonRating = 0;
+
+
+        if (id !== "review-filter-all") {
+
+            buttonRating =
+                Number(
+                    id.replace(
+                        "review-filter-",
+                        ""
+                    )
+                );
+
+        }
+
+
+        button.classList.toggle(
+            "active",
+            buttonRating === currentReviewFilter
         );
 
+    });
+
+
+    renderReviews();
+
+}
+
+
+// ========================================
+// 读取并监听当前商家评价
+// ========================================
+
+function loadReviews() {
 
     const box =
         document.getElementById(
@@ -3573,216 +3932,564 @@ async function loadReviews() {
         );
 
 
-    if (!summaryBox || !box) {
+    if (!box) {
         return;
     }
 
 
+    if (reviewsUnsubscribe) {
+
+        try {
+
+            reviewsUnsubscribe();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+        reviewsUnsubscribe = null;
+
+    }
+
+
+    box.innerHTML = `
+
+        <div class="review-loading">
+
+            ⭐ 正在读取顾客评价...
+
+        </div>
+
+    `;
+
+
     try {
 
-        const reviewMap =
-            new Map();
+        reviewsUnsubscribe =
+            db
+                .collection("reviews")
+                .where(
+                    "restaurantId",
+                    "==",
+                    restaurantId
+                )
+                .onSnapshot(
+
+                    function(snapshot) {
+
+                        allReviews = [];
 
 
-        // 先读取独立 reviews 集合
+                        snapshot.forEach(function(doc) {
 
-        try {
-
-            const reviewSnapshot =
-                await db
-                    .collection("reviews")
-                    .where(
-                        "restaurantId",
-                        "==",
-                        restaurantId
-                    )
-                    .get();
+                            const data =
+                                doc.data() || {};
 
 
-            reviewSnapshot.forEach(doc => {
+                            if (!isReviewData(data)) {
+                                return;
+                            }
 
-                const data =
-                    doc.data() || {};
+
+                            allReviews.push({
+
+                                id: doc.id,
+
+                                ...data
+
+                            });
+
+                        });
 
 
-                if (isReviewData(data)) {
+                        allReviews.sort(
+                            function(a, b) {
 
-                    reviewMap.set(
-                        "review:" + doc.id,
-                        {
-                            id: doc.id,
-                            ...data
+                                return (
+                                    getReviewTimeMillis(b) -
+                                    getReviewTimeMillis(a)
+                                );
+
+                            }
+                        );
+
+
+                        updateReviewSummary();
+
+                        renderReviews();
+
+                    },
+
+                    function(error) {
+
+                        console.error(
+                            "实时读取评价失败：",
+                            error
+                        );
+
+
+                        const summaryBox =
+                            document.getElementById(
+                                "reviewSummary"
+                            );
+
+
+                        if (summaryBox) {
+
+                            summaryBox.innerHTML = `
+
+                                <div class="review-summary-top">
+
+                                    <div class="review-average">
+                                        暂无
+                                    </div>
+
+                                    <div>
+
+                                        <div class="review-stars">
+                                            ☆☆☆☆☆
+                                        </div>
+
+                                        <div class="review-count">
+                                            评价暂时无法读取
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            `;
+
                         }
-                    );
-
-                }
-
-            });
-
-        } catch (reviewError) {
-
-            console.log(
-                "独立 reviews 集合读取失败，继续检查订单评价：",
-                reviewError
-            );
-
-        }
 
 
-        // 再检查订单里是否直接保存了评价
+                        box.innerHTML = `
 
-        try {
+                            <div class="error">
 
-            const orderSnapshot =
-                await db
-                    .collection("orders")
-                    .where(
-                        "restaurantId",
-                        "==",
-                        restaurantId
-                    )
-                    .get();
+                                ❌ 读取评价失败
 
+                                <br><br>
 
-            orderSnapshot.forEach(doc => {
+                                ${escapeHtml(
+                                    error.message
+                                )}
 
-                const data =
-                    doc.data() || {};
+                            </div>
 
+                        `;
 
-                if (isReviewData(data)) {
-
-                    reviewMap.set(
-                        "order:" + doc.id,
-                        {
-                            id: doc.id,
-                            orderId: doc.id,
-                            ...data
-                        }
-                    );
-
-                }
-
-            });
-
-        } catch (orderReviewError) {
-
-            console.log(
-                "订单评价读取失败：",
-                orderReviewError
-            );
-
-        }
-
-
-        const reviews =
-            Array.from(
-                reviewMap.values()
-            );
-
-
-        reviews.sort((a, b) => {
-
-            const aValue =
-                a.created_at?.seconds ||
-                a.createdAt?.seconds ||
-                0;
-
-
-            const bValue =
-                b.created_at?.seconds ||
-                b.createdAt?.seconds ||
-                0;
-
-
-            return bValue - aValue;
-
-        });
-
-
-        const rated =
-            reviews.filter(
-                item =>
-                    getReviewRating(item) > 0
-            );
-
-
-        const average =
-            rated.length
-                ? rated.reduce(
-                    (sum, item) =>
-                        sum +
-                        getReviewRating(item),
-                    0
-                ) / rated.length
-                : 0;
-
-
-        summaryBox.innerHTML = `
-
-            <div class="review-average">
-
-                ${average ? average.toFixed(1) : "暂无"}
-
-            </div>
-
-            <div>
-
-                <div class="review-stars">
-
-                    ${
-                        average
-                            ? renderStars(average)
-                            : "☆☆☆☆☆"
                     }
 
-                </div>
+                );
 
-                <div class="review-count">
+    } catch (error) {
 
-                    共 ${reviews.length} 条评价
-                    ${
-                        rated.length
-                            ? " · " +
-                              rated.length +
-                              " 条有评分"
-                            : ""
-                    }
+        console.error(
+            "加载评价监听失败：",
+            error
+        );
 
-                </div>
+
+        box.innerHTML = `
+
+            <div class="error">
+
+                ❌ 读取评价失败
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
 
             </div>
 
         `;
 
+    }
 
-        if (!reviews.length) {
+}
 
-            box.innerHTML = `
 
-                <div
-                    class="empty"
-                    style="
-                        padding:20px;
-                        text-align:center;
-                        color:#888;
-                    ">
+// ========================================
+// 更新评价统计
+// ========================================
 
-                    ⭐ 暂时还没有顾客评价
+function updateReviewSummary() {
+
+    const summaryBox =
+        document.getElementById(
+            "reviewSummary"
+        );
+
+
+    const distributionBox =
+        document.getElementById(
+            "reviewDistribution"
+        );
+
+
+    if (!summaryBox) {
+        return;
+    }
+
+
+    const ratedReviews =
+        allReviews.filter(
+            function(review) {
+
+                return getReviewRating(review) > 0;
+
+            }
+        );
+
+
+    const total =
+        allReviews.length;
+
+
+    const ratingTotal =
+        ratedReviews.reduce(
+            function(sum, review) {
+
+                return (
+                    sum +
+                    getReviewRating(review)
+                );
+
+            },
+            0
+        );
+
+
+    const average =
+        ratedReviews.length
+            ? ratingTotal /
+              ratedReviews.length
+            : 0;
+
+
+    const starCounts = {
+
+        5: 0,
+        4: 0,
+        3: 0,
+        2: 0,
+        1: 0
+
+    };
+
+
+    ratedReviews.forEach(
+        function(review) {
+
+            const rating =
+                Math.round(
+                    getReviewRating(review)
+                );
+
+
+            if (
+                rating >= 1 &&
+                rating <= 5
+            ) {
+
+                starCounts[rating]++;
+
+            }
+
+        }
+    );
+
+
+    summaryBox.querySelector(
+        ".review-summary-top"
+    ).innerHTML = `
+
+        <div class="review-average">
+
+            ${
+                average
+                    ? average.toFixed(1)
+                    : "暂无"
+            }
+
+        </div>
+
+
+        <div>
+
+            <div class="review-stars">
+
+                ${
+                    average
+                        ? renderStars(average)
+                        : "☆☆☆☆☆"
+                }
+
+            </div>
+
+            <div class="review-count">
+
+                共 ${total} 条评价
+
+                ${
+                    ratedReviews.length
+                        ? " · " +
+                          ratedReviews.length +
+                          " 条有评分"
+                        : ""
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="review-live">
+
+            <span class="review-live-dot"></span>
+
+            实时更新
+
+        </div>
+
+    `;
+
+
+    if (!distributionBox) {
+        return;
+    }
+
+
+    if (!ratedReviews.length) {
+
+        distributionBox.innerHTML = `
+
+            <div style="
+                color:#999;
+                font-size:13px;
+            ">
+
+                暂无评分统计
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let distributionHTML = "";
+
+
+    [5, 4, 3, 2, 1].forEach(
+        function(star) {
+
+            const count =
+                starCounts[star];
+
+
+            const percentage =
+                ratedReviews.length
+                    ? (
+                        count /
+                        ratedReviews.length *
+                        100
+                    )
+                    : 0;
+
+
+            distributionHTML += `
+
+                <div class="review-distribution-row">
+
+                    <div class="review-distribution-label">
+
+                        ${star} 星
+
+                    </div>
+
+                    <div class="review-bar">
+
+                        <div
+                            class="review-bar-fill"
+                            style="
+                                width:${percentage}%;
+                            ">
+                        </div>
+
+                    </div>
+
+                    <div class="review-distribution-count">
+
+                        ${count}
+
+                    </div>
 
                 </div>
 
             `;
 
-            return;
-
         }
+    );
 
 
-        box.innerHTML = "";
+    distributionBox.innerHTML =
+        distributionHTML;
+
+}
 
 
-        reviews.forEach(review => {
+// ========================================
+// 渲染评价列表
+// ========================================
+
+function renderReviews() {
+
+    const box =
+        document.getElementById(
+            "reviews"
+        );
+
+
+    const countBox =
+        document.getElementById(
+            "reviewListCount"
+        );
+
+
+    if (!box) {
+        return;
+    }
+
+
+    const searchInput =
+        document.getElementById(
+            "reviewSearch"
+        );
+
+
+    const keyword =
+        searchInput
+            ? searchInput.value
+                .trim()
+                .toLowerCase()
+            : "";
+
+
+    const filteredReviews =
+        allReviews.filter(
+            function(review) {
+
+                const rating =
+                    Math.round(
+                        getReviewRating(review)
+                    );
+
+
+                if (
+                    currentReviewFilter > 0 &&
+                    rating !== currentReviewFilter
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (!keyword) {
+
+                    return true;
+
+                }
+
+
+                const searchText = [
+
+                    getReviewUser(review),
+
+                    getReviewComment(review),
+
+                    review.order_number || "",
+
+                    review.orderNumber || "",
+
+                    review.orderId || ""
+
+                ]
+                    .join(" ")
+                    .toLowerCase();
+
+
+                return searchText.includes(
+                    keyword
+                );
+
+            }
+        );
+
+
+    if (countBox) {
+
+        countBox.innerText =
+            "当前显示 " +
+            filteredReviews.length +
+            " 条评价 / 共 " +
+            allReviews.length +
+            " 条评价";
+
+    }
+
+
+    if (!allReviews.length) {
+
+        box.innerHTML = `
+
+            <div class="review-empty">
+
+                ⭐ 暂时还没有顾客评价
+
+                <br><br>
+
+                顾客完成订单并提交评价后，会自动显示在这里。
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    if (!filteredReviews.length) {
+
+        box.innerHTML = `
+
+            <div class="review-empty">
+
+                🔍 没有找到符合条件的评价
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    box.innerHTML = "";
+
+
+    filteredReviews.forEach(
+        function(review) {
 
             const rating =
                 getReviewRating(review);
@@ -3840,10 +4547,10 @@ async function loadReviews() {
                     ${
                         rating
                             ? renderStars(rating) +
-                              " " +
-                              rating +
-                              "/5"
-                            : "暂无评分"
+                              `<span class="review-rating-number">
+                                  ${rating}/5
+                              </span>`
+                            : "☆☆☆☆☆"
                     }
 
                 </div>
@@ -3852,25 +4559,39 @@ async function loadReviews() {
                 ${
                     comment
                         ? `
+
                             <div class="review-comment">
 
                                 ${escapeHtml(comment)}
 
                             </div>
+
                         `
-                        : ""
+                        : `
+
+                            <div
+                                class="review-comment"
+                                style="color:#999;">
+
+                                顾客没有填写文字评价
+
+                            </div>
+
+                        `
                 }
 
 
                 ${
                     orderNumber
                         ? `
+
                             <div class="review-order">
 
                                 📦 订单：
                                 ${escapeHtml(orderNumber)}
 
                             </div>
+
                         `
                         : ""
                 }
@@ -3880,36 +4601,8 @@ async function loadReviews() {
 
             box.appendChild(div);
 
-        });
-
-
-    } catch (error) {
-
-        console.error(
-            "读取评价失败：",
-            error
-        );
-
-
-        summaryBox.innerHTML =
-            "⭐ 评价统计暂时无法读取";
-
-
-        box.innerHTML = `
-
-            <div class="error">
-
-                ❌ 读取评价失败
-
-                <br><br>
-
-                ${escapeHtml(error.message)}
-
-            </div>
-
-        `;
-
-    }
+        }
+    );
 
 }
 
@@ -3946,11 +4639,15 @@ async function manualRefresh() {
 
         loadOrders(),
 
-        loadStats(),
-
-        loadReviews()
+        loadStats()
 
     ]);
+
+
+    /*
+       顾客评价使用 onSnapshot 实时监听，
+       所以这里不需要再次读取评价。
+    */
 
 
     if (button) {
@@ -4093,6 +4790,23 @@ async function changeStatus(
 
 function logout() {
 
+    if (reviewsUnsubscribe) {
+
+        try {
+
+            reviewsUnsubscribe();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+        reviewsUnsubscribe = null;
+
+    }
+
+
     localStorage.removeItem(
         "merchantLogin"
     );
@@ -4133,8 +4847,10 @@ loadStats();
 loadReviews();
 
 
-// 注意：这里已经删除 3 秒自动刷新
-// 不再每 3 秒重复读取 Firestore
+// 注意：
+// 订单仍然使用手动刷新，避免高频 Firestore 读取。
+// 顾客评价使用 onSnapshot 实时监听，
+// 顾客提交新评价后商家后台会自动更新。
 
 </script>
 
