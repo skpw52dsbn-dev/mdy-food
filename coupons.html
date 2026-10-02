@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>MDY FOOD - 我的优惠券</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="language.js"></script>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0 0 85px;
+    font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    background: #f6f6f6;
+    color: #222;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff6a2a,
+            #ff4d1f
+        );
+
+    color: white;
+
+    padding:
+        20px
+        16px
+        30px;
+
+    border-radius:
+        0
+        0
+        28px
+        28px;
+}
+
+.header-top {
+
+    max-width: 900px;
+    margin: 0 auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.back-button {
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,0.18);
+
+    color: white;
+
+    font-size: 21px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.header-title {
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+    flex: 1;
+
+    text-align: center;
+}
+
+.language-box {
+
+    min-width: 105px;
+}
+
+
+/* =========================
+   主容器
+========================= */
+
+.container {
+
+    width: 100%;
+
+    max-width: 900px;
+
+    margin: auto;
+
+    padding: 15px;
+}
+
+
+/* =========================
+   登录提示
+========================= */
+
+.login-card {
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 30px 20px;
+
+    margin-top: -20px;
+
+    text-align: center;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.08);
+}
+
+.login-icon {
+
+    font-size: 48px;
+
+    margin-bottom: 10px;
+}
+
+.login-title {
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    margin-bottom: 7px;
+}
+
+.login-sub {
+
+    color: #999;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    margin-bottom: 18px;
+}
+
+.login-button {
+
+    display: inline-block;
+
+    background: #ff5a1f;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding:
+        12px
+        28px;
+
+    border-radius: 11px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   顶部统计
+========================= */
+
+.summary-card {
+
+    margin-top: -20px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 18px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.08);
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+}
+
+.summary-item {
+
+    text-align: center;
+
+    padding: 5px;
+}
+
+.summary-number {
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+    color: #ff5a1f;
+
+    margin-bottom: 4px;
+}
+
+.summary-label {
+
+    font-size: 11px;
+
+    color: #999;
+}
+
+
+/* =========================
+   Tab
+========================= */
+
+.tabs {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    margin-top: 16px;
+}
+
+.tab-button {
+
+    border: none;
+
+    background: white;
+
+    color: #777;
+
+    padding: 11px 5px;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0,0,0,0.04);
+}
+
+.tab-button.active {
+
+    background: #ff5a1f;
+
+    color: white;
+}
+
+
+/* =========================
+   优惠券列表
+========================= */
+
+.coupon-list {
+
+    margin-top: 14px;
+}
+
+.coupon-card {
+
+    background: white;
+
+    border-radius: 18px;
+
+    margin-bottom: 12px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.06);
+
+    position: relative;
+}
+
+.coupon-main {
+
+    display: flex;
+
+    min-height: 125px;
+}
+
+.coupon-left {
+
+    width: 125px;
+
+    flex-shrink: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff6a2a,
+            #ff4d1f
+        );
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 12px;
+}
+
+.coupon-value {
+
+    font-size: 30px;
+
+    font-weight: 900;
+
+    line-height: 1;
+}
+
+.coupon-unit {
+
+    font-size: 11px;
+
+    margin-top: 6px;
+
+    opacity: 0.9;
+}
+
+.coupon-right {
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 15px;
+}
+
+.coupon-name {
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    margin-bottom: 7px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.coupon-condition {
+
+    font-size: 12px;
+
+    color: #666;
+
+    margin-bottom: 7px;
+
+    line-height: 1.5;
+}
+
+.coupon-time {
+
+    font-size: 11px;
+
+    color: #aaa;
+
+    line-height: 1.5;
+}
+
+.coupon-status {
+
+    position: absolute;
+
+    right: 12px;
+
+    top: 12px;
+
+    font-size: 10px;
+
+    padding:
+        4px
+        7px;
+
+    border-radius: 7px;
+
+    background: #fff1eb;
+
+    color: #ff5a1f;
+}
+
+.coupon-status.used {
+
+    background: #f2f2f2;
+
+    color: #999;
+}
+
+.coupon-status.expired {
+
+    background: #f2f2f2;
+
+    color: #999;
+}
+
+
+/* =========================
+   使用按钮
+========================= */
+
+.coupon-footer {
+
+    border-top:
+        1px solid #f1f1f1;
+
+    padding:
+        10px
+        13px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.coupon-code {
+
+    color: #aaa;
+
+    font-size: 10px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.use-button {
+
+    border: none;
+
+    background: #ff5a1f;
+
+    color: white;
+
+    border-radius: 9px;
+
+    padding:
+        8px
+        15px;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    flex-shrink: 0;
+}
+
+.use-button.disabled {
+
+    background: #ddd;
+
+    color: #999;
+
+    cursor: default;
+}
+
+
+/* =========================
+   空状态
+========================= */
+
+.empty-card {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 45px 20px;
+
+    text-align: center;
+
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.05);
+}
+
+.empty-icon {
+
+    font-size: 50px;
+
+    margin-bottom: 10px;
+}
+
+.empty-title {
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    margin-bottom: 6px;
+}
+
+.empty-sub {
+
+    color: #aaa;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   加载
+========================= */
+
+.loading-card {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 40px 20px;
+
+    text-align: center;
+
+    color: #999;
+
+    font-size: 13px;
+}
+
+.loading-icon {
+
+    font-size: 30px;
+
+    margin-bottom: 10px;
+}
+
+
+/* =========================
+   底部导航
+========================= */
+
+.bottom-nav {
+
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 9999;
+
+    height: 68px;
+
+    background:
+        rgba(255,255,255,0.97);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    border-top:
+        1px solid #eee;
+
+    box-shadow:
+        0 -3px 15px
+        rgba(0,0,0,0.08);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.bottom-nav-inner {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    height: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+}
+
+.nav-item {
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 3px;
+
+    text-decoration: none;
+
+    color: #888;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.nav-icon {
+
+    font-size: 21px;
+
+    line-height: 1;
+}
+
+
+/* =========================
+   手机适配
+========================= */
+
+@media (max-width: 500px) {
+
+    body {
+
+        padding-bottom: 78px;
+    }
+
+    .header {
+
+        padding:
+            17px
+            13px
+            28px;
+    }
+
+    .container {
+
+        padding:
+            13px;
+    }
+
+    .header-title {
+
+        font-size: 19px;
+    }
+
+    .summary-card {
+
+        padding: 15px 10px;
+    }
+
+    .summary-number {
+
+        font-size: 19px;
+    }
+
+    .coupon-left {
+
+        width: 105px;
+    }
+
+    .coupon-value {
+
+        font-size: 26px;
+    }
+
+    .coupon-right {
+
+        padding: 13px 12px;
+    }
+
+    .coupon-name {
+
+        font-size: 14px;
+
+        padding-right: 35px;
+    }
+
+    .coupon-condition {
+
+        font-size: 11px;
+    }
+
+}
+
+@media (max-width: 360px) {
+
+    .coupon-left {
+
+        width: 92px;
+    }
+
+    .coupon-value {
+
+        font-size: 23px;
+    }
+
+    .coupon-footer {
+
+        padding:
+            9px;
+    }
+
+    .use-button {
+
+        padding:
+            7px
+            11px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+    <div class="header-top">
+
+        <button
+            class="back-button"
+            onclick="goBack()"
+            aria-label="返回"
+        >
+            ←
+        </button>
+
+        <div
+            class="header-title"
+            data-i18n="coupons"
+        >
+            我的优惠券
+        </div>
+
+        <div
+            id="languageSelector"
+            class="language-box"
+        ></div>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- 未登录 -->
+
+    <div
+        id="loginCard"
+        class="login-card"
+        style="display:none;"
+    >
+
+        <div class="login-icon">
+            🎟️
+        </div>
+
+        <div
+            class="login-title"
+        >
+            登录后查看优惠券
+        </div>
+
+        <div
+            class="login-sub"
+        >
+            登录 MDY FOOD 后，可以查看和使用属于你的优惠券。
+        </div>
+
+        <a
+            href="login.html"
+            class="login-button"
+        >
+            登录 / 注册
+        </a>
+
+    </div>
+
+
+    <!-- 已登录 -->
+
+    <div
+        id="couponContent"
+        style="display:none;"
+    >
+
+        <!-- 统计 -->
+
+        <div class="summary-card">
+
+            <div class="summary-item">
+
+                <div
+                    id="availableCount"
+                    class="summary-number"
+                >
+                    0
+                </div>
+
+                <div class="summary-label">
+                    可使用
+                </div>
+
+            </div>
+
+            <div class="summary-item">
+
+                <div
+                    id="usedCount"
+                    class="summary-number"
+                >
+                    0
+                </div>
+
+                <div class="summary-label">
+                    已使用
+                </div>
+
+            </div>
+
+            <div class="summary-item">
+
+                <div
+                    id="expiredCount"
+                    class="summary-number"
+                >
+                    0
+                </div>
+
+                <div class="summary-label">
+                    已过期
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- 分类 -->
+
+        <div class="tabs">
+
+            <button
+                id="tabAvailable"
+                class="tab-button active"
+                onclick="switchTab('available')"
+            >
+                可使用
+            </button>
+
+            <button
+                id="tabUsed"
+                class="tab-button"
+                onclick="switchTab('used')"
+            >
+                已使用
+            </button>
+
+            <button
+                id="tabExpired"
+                class="tab-button"
+                onclick="switchTab('expired')"
+            >
+                已过期
+            </button>
+
+        </div>
+
+
+        <!-- 优惠券 -->
+
+        <div
+            id="couponList"
+            class="coupon-list"
+        >
+
+            <div class="loading-card">
+
+                <div class="loading-icon">
+                    ⏳
+                </div>
+
+                正在读取优惠券...
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- 底部导航 -->
+
+<nav class="bottom-nav">
+
+    <div class="bottom-nav-inner">
+
+        <a
+            href="index.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                🏠
+            </div>
+
+            <div>
+                首页
+            </div>
+
+        </a>
+
+
+        <a
+            href="restaurants.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                🍜
+            </div>
+
+            <div>
+                餐厅
+            </div>
+
+        </a>
+
+
+        <a
+            href="orders.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                📦
+            </div>
+
+            <div>
+                订单
+            </div>
+
+        </a>
+
+
+        <a
+            href="profile.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                👤
+            </div>
+
+            <div>
+                我的
+            </div>
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+<script>
+
+/* =========================================================
+   Firebase 配置
+========================================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+
+    authDomain:
+        "mdy-food.firebaseapp.com",
+
+    projectId:
+        "mdy-food",
+
+    storageBucket:
+        "mdy-food.firebasestorage.app",
+
+    messagingSenderId:
+        "498327590625",
+
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0",
+
+    measurementId:
+        "G-6Q5G2862XQ"
+
+};
+
+
+/* =========================================================
+   Firebase 初始化
+========================================================= */
+
+if (!firebase.apps.length) {
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+}
+
+const db =
+    firebase.firestore();
+
+const auth =
+    firebase.auth();
+
+
+/* =========================================================
+   全局变量
+========================================================= */
+
+let currentUser = null;
+
+let allCoupons = [];
+
+let currentTab = "available";
+
+
+/* =========================================================
+   返回
+========================================================= */
+
+function goBack() {
+
+    if (
+        document.referrer &&
+        document.referrer.includes(
+            window.location.host
+        )
+    ) {
+
+        window.history.back();
+
+    }
+
+    else {
+
+        window.location.href =
+            "profile.html";
+
+    }
+
+}
+
+
+/* =========================================================
+   翻译
+========================================================= */
+
+function t(key, fallback) {
+
+    if (
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t ===
+            "function"
+    ) {
+
+        return window.MDYLanguage.t(
+            key,
+            {},
+            fallback
+        );
+
+    }
+
+    return fallback || key;
+
+}
+
+
+/* =========================================================
+   语言选择器
+========================================================= */
+
+function renderLanguageSelector() {
+
+    const selector =
+        document.getElementById(
+            "languageSelector"
+        );
+
+    if (
+        !selector ||
+        !window.MDYLanguage ||
+        typeof window.MDYLanguage.renderLanguageSelector !==
+            "function"
+    ) {
+
+        return;
+
+    }
+
+    window.MDYLanguage.renderLanguageSelector(
+        selector
+    );
+
+}
+
+
+/* =========================================================
+   时间转换
+========================================================= */
+
+function getDateValue(value) {
+
+    if (!value) {
+
+        return null;
+
+    }
+
+    if (
+        value instanceof firebase.firestore.Timestamp
+    ) {
+
+        return value.toDate();
+
+    }
+
+    if (
+        value instanceof Date
+    ) {
+
+        return value;
+
+    }
+
+    if (
+        typeof value.toDate ===
+            "function"
+    ) {
+
+        try {
+
+            return value.toDate();
+
+        }
+
+        catch (e) {}
+
+    }
+
+    if (
+        typeof value === "string"
+    ) {
+
+        const date =
+            new Date(value);
+
+        if (
+            !isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return date;
+
+        }
+
+    }
+
+    if (
+        typeof value === "number"
+    ) {
+
+        const date =
+            new Date(value);
+
+        if (
+            !isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return date;
+
+        }
+
+    }
+
+    return null;
+
+}
+
+
+/* =========================================================
+   日期格式
+========================================================= */
+
+function formatDate(value) {
+
+    const date =
+        getDateValue(value);
+
+    if (!date) {
+
+        return "长期有效";
+
+    }
+
+    const y =
+        date.getFullYear();
+
+    const m =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0");
+
+    const d =
+        String(
+            date.getDate()
+        ).padStart(2, "0");
+
+    return (
+        y +
+        "-" +
+        m +
+        "-" +
+        d
+    );
+
+}
+
+
+/* =========================================================
+   判断优惠券状态
+========================================================= */
+
+function getCouponStatus(coupon) {
+
+    const used =
+        coupon.used === true ||
+        coupon.isUsed === true ||
+        coupon.status === "used" ||
+        coupon.status === "已使用";
+
+    if (used) {
+
+        return "used";
+
+    }
+
+    const now =
+        new Date();
+
+    const expireValue =
+        coupon.expireAt ||
+        coupon.expiresAt ||
+        coupon.endAt ||
+        coupon.endDate ||
+        coupon.validUntil;
+
+    const expireDate =
+        getDateValue(
+            expireValue
+        );
+
+    if (
+        expireDate &&
+        expireDate.getTime() < now.getTime()
+    ) {
+
+        return "expired";
+
+    }
+
+    if (
+        coupon.status === "expired" ||
+        coupon.status === "过期" ||
+        coupon.status === "已过期"
+    ) {
+
+        return "expired";
+
+    }
+
+    return "available";
+
+}
+
+
+/* =========================================================
+   获取优惠金额
+========================================================= */
+
+function getCouponValue(coupon) {
+
+    const value =
+        coupon.amount ??
+        coupon.discount ??
+        coupon.value ??
+        coupon.couponAmount ??
+        0;
+
+    const number =
+        Number(value);
+
+    if (
+        isNaN(number)
+    ) {
+
+        return "0";
+
+    }
+
+    return number.toLocaleString();
+
+}
+
+
+/* =========================================================
+   获取优惠条件
+========================================================= */
+
+function getCouponCondition(coupon) {
+
+    const minAmount =
+        coupon.minAmount ??
+        coupon.minimumAmount ??
+        coupon.minOrderAmount ??
+        coupon.threshold ??
+        0;
+
+    const min =
+        Number(minAmount);
+
+    if (
+        min > 0
+    ) {
+
+        return (
+            "满 " +
+            min.toLocaleString() +
+            " Ks 可使用"
+        );
+
+    }
+
+    return "无最低消费限制";
+
+}
+
+
+/* =========================================================
+   获取优惠券名称
+========================================================= */
+
+function getCouponName(coupon) {
+
+    return (
+        coupon.name ||
+        coupon.title ||
+        coupon.couponName ||
+        coupon.description ||
+        "MDY FOOD 优惠券"
+    );
+
+}
+
+
+/* =========================================================
+   获取优惠券代码
+========================================================= */
+
+function getCouponCode(coupon) {
+
+    return (
+        coupon.code ||
+        coupon.couponCode ||
+        coupon.id ||
+        "MDYFOOD"
+    );
+
+}
+
+
+/* =========================================================
+   获取有效期
+========================================================= */
+
+function getCouponTime(coupon) {
+
+    const start =
+        coupon.startAt ||
+        coupon.startsAt ||
+        coupon.startDate ||
+        coupon.validFrom;
+
+    const end =
+        coupon.expireAt ||
+        coupon.expiresAt ||
+        coupon.endAt ||
+        coupon.endDate ||
+        coupon.validUntil;
+
+    const startDate =
+        getDateValue(start);
+
+    const endDate =
+        getDateValue(end);
+
+    if (
+        startDate &&
+        endDate
+    ) {
+
+        return (
+            "有效期：" +
+            formatDate(startDate) +
+            " 至 " +
+            formatDate(endDate)
+        );
+
+    }
+
+    if (endDate) {
+
+        return (
+            "有效期至：" +
+            formatDate(endDate)
+        );
+
+    }
+
+    if (startDate) {
+
+        return (
+            "开始使用：" +
+            formatDate(startDate)
+        );
+
+    }
+
+    return "长期有效";
+
+}
+
+
+/* =========================================================
+   更新统计
+========================================================= */
+
+function updateSummary() {
+
+    let available = 0;
+
+    let used = 0;
+
+    let expired = 0;
+
+    allCoupons.forEach(
+        function(coupon) {
+
+            const status =
+                getCouponStatus(
+                    coupon
+                );
+
+            if (
+                status === "available"
+            ) {
+
+                available++;
+
+            }
+
+            else if (
+                status === "used"
+            ) {
+
+                used++;
+
+            }
+
+            else {
+
+                expired++;
+
+            }
+
+        }
+    );
+
+    document.getElementById(
+        "availableCount"
+    ).innerText =
+        available;
+
+    document.getElementById(
+        "usedCount"
+    ).innerText =
+        used;
+
+    document.getElementById(
+        "expiredCount"
+    ).innerText =
+        expired;
+
+}
+
+
+/* =========================================================
+   切换 Tab
+========================================================= */
+
+function switchTab(tab) {
+
+    currentTab =
+        tab;
+
+    document
+        .querySelectorAll(
+            ".tab-button"
+        )
+        .forEach(
+            function(button) {
+
+                button.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+    if (
+        tab === "available"
+    ) {
+
+        document.getElementById(
+            "tabAvailable"
+        ).classList.add(
+            "active"
+        );
+
+    }
+
+    else if (
+        tab === "used"
+    ) {
+
+        document.getElementById(
+            "tabUsed"
+        ).classList.add(
+            "active"
+        );
+
+    }
+
+    else {
+
+        document.getElementById(
+            "tabExpired"
+        ).classList.add(
+            "active"
+        );
+
+    }
+
+    renderCoupons();
+
+}
+
+
+/* =========================================================
+   使用优惠券
+========================================================= */
+
+function useCoupon(couponId) {
+
+    const coupon =
+        allCoupons.find(
+            function(item) {
+
+                return item.id ===
+                    couponId;
+
+            }
+        );
+
+    if (!coupon) {
+
+        return;
+
+    }
+
+    if (
+        getCouponStatus(coupon) !==
+            "available"
+    ) {
+
+        return;
+
+    }
+
+    /*
+       当前阶段：
+       点击后跳转到结算页面。
+
+       真正的优惠金额计算，
+       下一步接 checkout.html。
+    */
+
+    window.location.href =
+        "checkout.html?couponId=" +
+        encodeURIComponent(
+            couponId
+        );
+
+}
+
+
+/* =========================================================
+   渲染优惠券
+========================================================= */
+
+function renderCoupons() {
+
+    const list =
+        document.getElementById(
+            "couponList"
+        );
+
+    if (!list) {
+
+        return;
+
+    }
+
+    const coupons =
+        allCoupons.filter(
+            function(coupon) {
+
+                return (
+                    getCouponStatus(coupon) ===
+                    currentTab
+                );
+
+            }
+        );
+
+
+    if (
+        coupons.length === 0
+    ) {
+
+        let title =
+            "暂无优惠券";
+
+        let sub =
+            "目前没有符合条件的优惠券";
+
+        if (
+            currentTab === "available"
+        ) {
+
+            title =
+                "暂无可使用优惠券";
+
+            sub =
+                "有新的优惠券时会显示在这里";
+
+        }
+
+        else if (
+            currentTab === "used"
+        ) {
+
+            title =
+                "暂无已使用优惠券";
+
+            sub =
+                "你使用过的优惠券会显示在这里";
+
+        }
+
+        else {
+
+            title =
+                "暂无已过期优惠券";
+
+            sub =
+                "已过期的优惠券会显示在这里";
+
+        }
+
+        list.innerHTML =
+
+            '<div class="empty-card">' +
+
+                '<div class="empty-icon">🎟️</div>' +
+
+                '<div class="empty-title">' +
+                    title +
+                '</div>' +
+
+                '<div class="empty-sub">' +
+                    sub +
+                '</div>' +
+
+            '</div>';
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+    coupons.forEach(
+        function(coupon) {
+
+            const status =
+                getCouponStatus(
+                    coupon
+                );
+
+            const value =
+                getCouponValue(
+                    coupon
+                );
+
+            const name =
+                getCouponName(
+                    coupon
+                );
+
+            const condition =
+                getCouponCondition(
+                    coupon
+                );
+
+            const time =
+                getCouponTime(
+                    coupon
+                );
+
+            const code =
+                getCouponCode(
+                    coupon
+                );
+
+            let statusText =
+                "可使用";
+
+            if (
+                status === "used"
+            ) {
+
+                statusText =
+                    "已使用";
+
+            }
+
+            else if (
+                status === "expired"
+            ) {
+
+                statusText =
+                    "已过期";
+
+            }
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "coupon-card";
+
+
+            const buttonDisabled =
+                status !== "available";
+
+
+            card.innerHTML =
+
+                '<div class="coupon-main">' +
+
+                    '<div class="coupon-left">' +
+
+                        '<div class="coupon-value">' +
+                            value +
+                        '</div>' +
+
+                        '<div class="coupon-unit">' +
+                            'Ks 优惠' +
+                        '</div>' +
+
+                    '</div>' +
+
+
+                    '<div class="coupon-right">' +
+
+                        '<div class="coupon-name">' +
+                            escapeHtml(name) +
+                        '</div>' +
+
+                        '<div class="coupon-condition">' +
+                            escapeHtml(condition) +
+                        '</div>' +
+
+                        '<div class="coupon-time">' +
+                            escapeHtml(time) +
+                        '</div>' +
+
+                    '</div>' +
+
+
+                    '<div class="coupon-status ' +
+                        (
+                            status !== "available"
+                                ? status
+                                : ""
+                        ) +
+                    '">' +
+                        statusText +
+                    '</div>' +
+
+                '</div>' +
+
+
+                '<div class="coupon-footer">' +
+
+                    '<div class="coupon-code">' +
+                        "券码：" +
+                        escapeHtml(code) +
+                    '</div>' +
+
+                    (
+                        buttonDisabled
+
+                            ?
+
+                            '<button class="use-button disabled" disabled>' +
+                                statusText +
+                            '</button>'
+
+                            :
+
+                            '<button class="use-button" onclick="useCoupon(\'' +
+                                escapeJs(coupon.id) +
+                            '\')">' +
+                                '去使用' +
+                            '</button>'
+                    ) +
+
+                '</div>';
+
+
+            list.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   HTML 安全处理
+========================================================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+function escapeJs(value) {
+
+    return String(value)
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+        .replace(
+            /'/g,
+            "\\'"
+        );
+
+}
+
+
+/* =========================================================
+   读取优惠券
+========================================================= */
+
+async function loadCoupons() {
+
+    const list =
+        document.getElementById(
+            "couponList"
+        );
+
+    if (!currentUser) {
+
+        return;
+
+    }
+
+    try {
+
+        /*
+           优先按照 uid 查询。
+
+           你的优惠券以后只需要保存：
+
+           uid: 用户 Firebase UID
+
+           就可以自动显示给该用户。
+        */
+
+        let snapshot =
+            await db
+                .collection("coupons")
+                .where(
+                    "uid",
+                    "==",
+                    currentUser.uid
+                )
+                .get();
+
+
+        /*
+           如果未来后台使用 userId，
+           这里也兼容。
+        */
+
+        if (
+            snapshot.empty
+        ) {
+
+            snapshot =
+                await db
+                    .collection("coupons")
+                    .where(
+                        "userId",
+                        "==",
+                        currentUser.uid
+                    )
+                    .get();
+
+        }
+
+
+        allCoupons = [];
+
+        snapshot.forEach(
+            function(doc) {
+
+                allCoupons.push({
+
+                    id:
+                        doc.id,
+
+                    ...doc.data()
+
+                });
+
+            }
+        );
+
+
+        /*
+           如果数据库有多个优惠券，
+           按创建时间倒序。
+        */
+
+        allCoupons.sort(
+            function(a, b) {
+
+                const aDate =
+                    getDateValue(
+                        a.createdAt
+                    );
+
+                const bDate =
+                    getDateValue(
+                        b.createdAt
+                    );
+
+                if (
+                    !aDate &&
+                    !bDate
+                ) {
+
+                    return 0;
+
+                }
+
+                if (!aDate) {
+
+                    return 1;
+
+                }
+
+                if (!bDate) {
+
+                    return -1;
+
+                }
+
+                return (
+                    bDate.getTime() -
+                    aDate.getTime()
+                );
+
+            }
+        );
+
+
+        updateSummary();
+
+        renderCoupons();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "读取优惠券失败:",
+            error
+        );
+
+        list.innerHTML =
+
+            '<div class="empty-card">' +
+
+                '<div class="empty-icon">⚠️</div>' +
+
+                '<div class="empty-title">' +
+                    '优惠券读取失败' +
+                '</div>' +
+
+                '<div class="empty-sub">' +
+                    '请检查 Firebase Firestore 权限设置，然后刷新页面。' +
+                '</div>' +
+
+            '</div>';
+
+    }
+
+}
+
+
+/* =========================================================
+   Firebase 登录状态
+========================================================= */
+
+auth.onAuthStateChanged(
+    function(user) {
+
+        currentUser =
+            user || null;
+
+
+        const loginCard =
+            document.getElementById(
+                "loginCard"
+            );
+
+        const couponContent =
+            document.getElementById(
+                "couponContent"
+            );
+
+
+        if (user) {
+
+            loginCard.style.display =
+                "none";
+
+            couponContent.style.display =
+                "block";
+
+            loadCoupons();
+
+        }
+
+        else {
+
+            loginCard.style.display =
+                "block";
+
+            couponContent.style.display =
+                "none";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   语言变化
+========================================================= */
+
+window.addEventListener(
+    "mdyLanguageChanged",
+    function() {
+
+        renderLanguageSelector();
+
+    }
+);
+
+
+/* =========================================================
+   初始化
+========================================================= */
+
+renderLanguageSelector();
+
+</script>
+
+
+</body>
+
+</html>
