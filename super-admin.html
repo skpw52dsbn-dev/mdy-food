@@ -15,6 +15,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <style>
 
@@ -742,12 +743,21 @@ th {
         <p>平台运营、商家、配送员、订单、财务与评价管理中心</p>
     </div>
 
-    <button
-        class="refresh-btn"
-        onclick="refreshAll()"
-    >
-        🔄 刷新全部数据
-    </button>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+        <button
+            class="refresh-btn"
+            onclick="refreshAll()"
+        >
+            🔄 刷新全部数据
+        </button>
+        <button
+            class="refresh-btn"
+            onclick="superadminLogout()"
+            style="background:#fee2e2;color:#991b1b;"
+        >
+            🚪 退出管理员
+        </button>
+    </div>
 
 </header>
 
@@ -1647,6 +1657,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
+const auth = firebase.auth();
 
 
 /* =========================
@@ -1811,7 +1822,8 @@ function getWeekStart() {
     const day =
         now.getDay();
 
-    const diff =        day === 0
+    const diff =
+        day === 0
             ? 6
             : day - 1;
 
@@ -3623,6 +3635,7 @@ function renderMerchantFinance() {
                     allSettlements[
                         restaurantId
                     ] || {};
+
 
                 const settledAmount =
                     Number(
@@ -7240,12 +7253,73 @@ async function loadOpsLogs(){
 }
 
 /* =========================
-   启动
+   Superadmin 安全保护
+   必须 Firebase 登录 + admins/{uid}.role = superadmin
 ========================= */
 
-loadPlatformCoupons();
-loadOpsLogs();
-refreshAll();
+let superadminAuthorized = false;
+
+async function checkSuperadminAccess(user) {
+    if (!user) return false;
+
+    try {
+        const adminDoc = await db.collection("admins").doc(user.uid).get();
+        if (!adminDoc.exists) return false;
+
+        const data = adminDoc.data() || {};
+        return data.role === "superadmin" || data.role === "admin";
+    } catch (error) {
+        console.error("检查管理员权限失败:", error);
+        return false;
+    }
+}
+
+function showSecurityLoading() {
+    const box = document.createElement("div");
+    box.id = "superadminSecurityOverlay";
+    box.style.cssText = "position:fixed;inset:0;z-index:99999;background:#f5f6fa;display:flex;align-items:center;justify-content:center;font-family:Arial,'Microsoft YaHei',sans-serif;";
+    box.innerHTML = '<div style="background:#fff;padding:28px 34px;border-radius:16px;box-shadow:0 10px 35px rgba(0,0,0,.12);text-align:center;max-width:360px"><div style="font-size:36px">🔐</div><div style="font-size:18px;font-weight:800;margin-top:10px">正在验证管理员权限</div><div style="font-size:13px;color:#888;margin-top:8px">MDY FOOD Superadmin</div></div>';
+    document.body.appendChild(box);
+}
+
+function removeSecurityLoading() {
+    const box = document.getElementById("superadminSecurityOverlay");
+    if (box) box.remove();
+}
+
+async function superadminLogout() {
+    try {
+        await auth.signOut();
+    } catch (error) {
+        console.error("管理员退出失败:", error);
+    }
+    window.location.href = "superadmin-login.html";
+}
+
+showSecurityLoading();
+
+auth.onAuthStateChanged(async function(user) {
+    if (!user) {
+        window.location.replace("superadmin-login.html");
+        return;
+    }
+
+    const allowed = await checkSuperadminAccess(user);
+
+    if (!allowed) {
+        alert("该账号没有超级管理员权限。");
+        await auth.signOut();
+        window.location.replace("superadmin-login.html");
+        return;
+    }
+
+    superadminAuthorized = true;
+    removeSecurityLoading();
+
+    loadPlatformCoupons();
+    loadOpsLogs();
+    refreshAll();
+});
 
 </script>
 
