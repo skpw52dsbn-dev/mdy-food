@@ -1,3655 +1,659 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#ff5a1f">
 <title>MDY FOOD</title>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
-<!-- MDY FOOD 统一语言系统 -->
 <script src="language.js"></script>
 
-
 <style>
-
-/* =========================================================
-   基础
-========================================================= */
-
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    margin: 0;
-    padding: 0 0 82px;
-    font-family:
-        Arial,
-        "Microsoft YaHei",
-        sans-serif;
-    background: #f6f6f6;
-    color: #222;
-}
-
-button,
-input {
-    font-family: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-
-/* =========================================================
-   顶部
-========================================================= */
-
-.header {
-    background:
-        linear-gradient(
-            135deg,
-            #ff6a2a,
-            #ff4d1f
-        );
-    color: white;
-    padding:
-        22px
-        16px
-        24px;
-    border-radius:
-        0
-        0
-        24px
-        24px;
-}
-
-.header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 900px;
-    margin: 0 auto 18px;
-}
-
-.logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logo-icon {
-    width: 42px;
-    height: 42px;
-    background: rgba(255,255,255,0.18);
-    border-radius: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 23px;
-}
-
-.logo-text {
-    font-size: 23px;
-    font-weight: 800;
-}
-
-.logo-sub {
-    font-size: 11px;
-    opacity: 0.85;
-    margin-top: 2px;
-}
-
-.header-account {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255,255,255,0.18);
-    color: white;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.header-title {
-    max-width: 900px;
-    margin: auto;
-}
-
-.header-title h1 {
-    margin: 0;
-    font-size: 25px;
-    line-height: 1.3;
-}
-
-.header-title p {
-    margin: 6px 0 0;
-    font-size: 13px;
-    opacity: 0.9;
-}
-
-
-/* =========================================================
-   主体
-========================================================= */
-
-.container {
-    width: 100%;
-    max-width: 900px;
-    margin: auto;
-    padding: 15px;
-}
-
-
-/* =========================================================
-   搜索
-========================================================= */
-
-.search-wrapper {
-    margin-top: -8px;
-    margin-bottom: 17px;
-    position: relative;
-}
-
-.search-box {
-    width: 100%;
-    height: 52px;
-    border: none;
-    outline: none;
-    background: white;
-    border-radius: 15px;
-    padding:
-        0
-        16px
-        0
-        48px;
-    font-size: 15px;
-    box-shadow:
-        0 4px 16px
-        rgba(0,0,0,0.10);
-}
-
-.search-icon {
-    position: absolute;
-    left: 17px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 19px;
-    color: #999;
-    pointer-events: none;
-}
-
-.search-box:focus {
-    box-shadow:
-        0 0 0 2px #ff5a1f,
-        0 4px 16px rgba(0,0,0,0.08);
-}
-
-
-/* =========================================================
-   快捷入口
-========================================================= */
-
-.quick-links {
-    display: grid;
-    grid-template-columns:
-        repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.quick-item {
-    background: white;
-    border-radius: 14px;
-    padding: 13px 5px;
-    text-align: center;
-    text-decoration: none;
-    color: #444;
-    box-shadow:
-        0 2px 10px
-        rgba(0,0,0,0.05);
-    transition:
-        transform .15s;
-}
-
-.quick-item:active {
-    transform: scale(.96);
-}
-
-.quick-icon {
-    font-size: 23px;
-    margin-bottom: 6px;
-}
-
-.quick-text {
-    font-size: 12px;
-    font-weight: 600;
-}
-
-
-/* =========================================================
-   分类
-========================================================= */
-
-.section-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin:
-        5px
-        2px
-        11px;
-}
-
-.section-title {
-    font-size: 19px;
-    font-weight: 800;
-}
-
-.section-more {
-    font-size: 13px;
-    color: #ff5a1f;
-    text-decoration: none;
-}
-
-.category-bar {
-    display: flex;
-    gap: 9px;
-    overflow-x: auto;
-    padding:
-        1px
-        2px
-        5px;
-    margin-bottom: 19px;
-    scrollbar-width: none;
-}
-
-.category-bar::-webkit-scrollbar {
-    display: none;
-}
-
-.category-btn {
-    flex-shrink: 0;
-    border: none;
-    background: white;
-    color: #555;
-    padding:
-        10px
-        15px;
-    border-radius: 22px;
-    font-size: 13px;
-    box-shadow:
-        0 2px 7px
-        rgba(0,0,0,0.06);
-}
-
-.category-btn.active {
-    background: #ff5a1f;
-    color: white;
-    font-weight: bold;
-}
-
-
-/* =========================================================
-   登录提示
-========================================================= */
-
-.login-banner {
-    display: none;
-    background: white;
-    border-radius: 15px;
-    padding: 15px;
-    margin-bottom: 18px;
-    box-shadow:
-        0 2px 10px
-        rgba(0,0,0,0.06);
-}
-
-.login-banner-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.login-banner-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.login-banner-icon {
-    width: 40px;
-    height: 40px;
-    background: #fff0eb;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-}
-
-.login-banner-title {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.login-banner-sub {
-    font-size: 12px;
-    color: #999;
-    margin-top: 3px;
-}
-
-.login-banner-btn {
-    flex-shrink: 0;
-    background: #ff5a1f;
-    color: white;
-    border-radius: 9px;
-    padding: 9px 13px;
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-
-/* =========================================================
-   餐厅
-========================================================= */
-
-.restaurant {
-    background: white;
-    border-radius: 17px;
-    margin-bottom: 17px;
-    overflow: hidden;
-    box-shadow:
-        0 3px 14px
-        rgba(0,0,0,0.07);
-}
-
-.restaurant-image-box {
-    position: relative;
-    width: 100%;
-    height: 190px;
-    overflow: hidden;
-    background: #eee;
-}
-
-.restaurant-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.image-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background:
-        linear-gradient(
-            135deg,
-            #fff1eb,
-            #ffe0d4
-        );
-    color: #ff5a1f;
-    font-size: 55px;
-}
-
-.status-badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    padding:
-        7px
-        11px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    background: white;
-    box-shadow:
-        0 2px 7px
-        rgba(0,0,0,0.14);
-}
-
-.status-badge.open {
-    color: #16864b;
-}
-
-.status-badge.closed {
-    color: #d33;
-}
-
-
-/* =========================================================
-   收藏按钮
-   纯爱心圆形设计
-========================================================= */
-
-.favorite-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
-
-    border: none;
-    border-radius: 50%;
-
-    background: rgba(255,255,255,0.94);
-
-    color: #777;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 25px;
-    line-height: 1;
-
-    padding: 0;
-
-    box-shadow:
-        0 3px 12px
-        rgba(0,0,0,0.16);
-
-    z-index: 10;
-
-    transition:
-        transform .15s ease,
-        color .15s ease,
-        background .15s ease,
-        box-shadow .15s ease;
-
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
-
-.favorite-button:active {
-    transform: scale(.84);
-}
-
-.favorite-button.active {
-    color: #ff3b30;
-    background: rgba(255,255,255,0.98);
-
-    box-shadow:
-        0 3px 12px
-        rgba(255,59,48,0.22);
-}
-
-.favorite-button.loading {
-    opacity: .55;
-    pointer-events: none;
-}
-
-.favorite-button .favorite-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 100%;
-    height: 100%;
-
-    line-height: 1;
-}
-
-
-/* =========================================================
-   餐厅内容
-========================================================= */
-
-.restaurant-content {
-    padding: 16px;
-}
-
-.restaurant h2 {
-    margin:
-        0
-        0
-        6px;
-    font-size: 20px;
-}
-
-.category {
-    color: #888;
-    font-size: 13px;
-    margin-bottom: 7px;
-}
-
-.description {
-    color: #666;
-    font-size: 13px;
-    line-height: 1.6;
-    margin-bottom: 10px;
-}
-
-.restaurant-info {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-bottom: 13px;
-    font-size: 12px;
-    color: #777;
-}
-
-.restaurant-rating {
-    color: #f59e0b;
-    font-weight: bold;
-}
-
-.food-count {
-    color: #777;
-}
-
-.food-match {
-    display: none;
-    margin-bottom: 12px;
-    padding:
-        9px
-        12px;
-    background: #fff5f1;
-    border-radius: 9px;
-    color: #ff5a1f;
-    font-size: 12px;
-}
-
-.restaurant-button {
-    width: 100%;
-    border: none;
-    background: #ff5a1f;
-    color: white;
-    padding: 13px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.restaurant-button.closed {
-    background: #999 !important;
-}
-
-
-/* =========================================================
-   Loading
-========================================================= */
-
-.loading {
-    background: white;
-    border-radius: 16px;
-    padding:
-        45px
-        15px;
-    text-align: center;
-    color: #777;
-    box-shadow:
-        0 2px 10px
-        rgba(0,0,0,0.05);
-}
-
-.loading-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
-    animation:
-        loadingSpin 1.5s infinite;
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;padding:0 0 86px;background:#f7f7f5;color:#202020;font-family:Arial,"Microsoft YaHei",sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+:root{--orange:#ff5a1f;--orange2:#ff7a24;--green:#138a55;--dark:#20231f;--muted:#8a8a84;--line:#eeeae5}
+
+/* 顶部 */
+.header{position:relative;overflow:hidden;color:#fff;padding:18px 15px 64px;background:linear-gradient(145deg,#ff7a24 0%,#ff5a1f 52%,#ef3e1b 100%);border-radius:0 0 30px 30px}
+.header:before{content:"";position:absolute;width:210px;height:210px;right:-85px;top:-105px;border-radius:50%;background:rgba(255,255,255,.11)}
+.header:after{content:"";position:absolute;width:150px;height:150px;left:-80px;bottom:-100px;border-radius:50%;background:rgba(255,255,255,.07)}
+.header-inner{position:relative;z-index:2;max-width:900px;margin:auto}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:43px;height:43px;border-radius:14px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:23px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.brand-name{font-size:21px;font-weight:900;letter-spacing:.4px}
+.brand-sub{font-size:10px;opacity:.82;margin-top:2px}
+.account{width:41px;height:41px;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:19px}
+.greeting{font-size:25px;line-height:1.3;font-weight:900;max-width:620px}
+.greeting-sub{font-size:13px;line-height:1.6;opacity:.9;margin-top:5px}
+
+/* 搜索 */
+.main{max-width:900px;margin:auto;padding:0 14px}
+.search-wrap{position:relative;margin:-29px auto 18px;z-index:5}
+.search-box{width:100%;height:57px;border:0;outline:0;border-radius:18px;background:#fff;padding:0 48px 0 48px;font-size:15px;box-shadow:0 8px 24px rgba(45,35,25,.13)}
+.search-box::placeholder{color:#aaa}
+.search-icon{position:absolute;left:17px;top:50%;transform:translateY(-50%);font-size:19px;color:#8d8d87}
+.clear-search{display:none;position:absolute;right:11px;top:50%;transform:translateY(-50%);width:35px;height:35px;border:0;border-radius:50%;background:#f2f2ef;color:#777}
+
+/* 快捷入口 */
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:23px}
+.quick{background:#fff;border:1px solid #f0ede8;border-radius:16px;padding:12px 4px;text-align:center;text-decoration:none;color:#333;box-shadow:0 3px 12px rgba(0,0,0,.045)}
+.quick:active{transform:scale(.97)}
+.quick-icon{font-size:22px;margin-bottom:5px}
+.quick-text{font-size:11px;font-weight:700;white-space:nowrap}
+
+/* 标题 */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 11px}
+.section-title{font-size:19px;font-weight:900;letter-spacing:-.2px}
+.section-title small{display:block;font-size:11px;color:#aaa;font-weight:500;margin-top:2px}
+.more{color:var(--orange);font-size:12px;text-decoration:none;font-weight:700}
+
+/* 分类 */
+.category-bar{display:flex;gap:9px;overflow-x:auto;padding:1px 2px 8px;margin-bottom:18px;scrollbar-width:none}
+.category-bar::-webkit-scrollbar{display:none}
+.category-btn{flex-shrink:0;border:1px solid #eeeae4;background:#fff;color:#666;border-radius:24px;padding:10px 15px;font-size:13px;font-weight:700;box-shadow:0 2px 7px rgba(0,0,0,.035)}
+.category-btn.active{border-color:var(--orange);background:var(--orange);color:#fff;box-shadow:0 5px 13px rgba(255,90,31,.22)}
+
+/* 登录 */
+.login-banner{display:none;margin:0 0 18px;padding:13px;background:#fff7f1;border:1px solid #ffe4d5;border-radius:16px}
+.login-content{display:flex;align-items:center;gap:10px}
+.login-icon{width:38px;height:38px;border-radius:12px;background:#fff;color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.login-title{font-size:13px;font-weight:800}
+.login-sub{font-size:11px;color:#999;margin-top:2px}
+.login-btn{margin-left:auto;flex-shrink:0;background:var(--orange);color:#fff;border-radius:10px;padding:9px 12px;text-decoration:none;font-size:11px;font-weight:800}
+
+/* 推荐 */
+.featured-wrap{margin-bottom:23px}
+.featured-list{display:flex;gap:11px;overflow-x:auto;padding:2px 2px 7px;scrollbar-width:none}
+.featured-list::-webkit-scrollbar{display:none}
+.featured-card{position:relative;flex:0 0 215px;height:116px;border-radius:17px;overflow:hidden;background:#222;box-shadow:0 5px 15px rgba(0,0,0,.09);cursor:pointer}
+.featured-card img{width:100%;height:100%;object-fit:cover;display:block;opacity:.76}
+.featured-shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.72),rgba(0,0,0,.04))}
+.featured-info{position:absolute;left:12px;right:10px;bottom:10px;color:#fff}
+.featured-name{font-size:15px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.featured-meta{font-size:10px;margin-top:3px;opacity:.92}
+.featured-badge{position:absolute;top:9px;left:9px;background:rgba(255,255,255,.93);color:var(--orange);padding:5px 8px;border-radius:10px;font-size:10px;font-weight:800}
+
+/* 餐厅卡片 */
+.restaurant{background:#fff;border:1px solid #eeeae5;border-radius:19px;overflow:hidden;margin-bottom:15px;box-shadow:0 4px 16px rgba(0,0,0,.055)}
+.restaurant-image-box{height:188px;position:relative;background:#eee;overflow:hidden}
+.restaurant-image{width:100%;height:100%;object-fit:cover;display:block}
+.image-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff0e7,#ffe0cf);font-size:55px}
+.status-badge{position:absolute;top:11px;left:11px;background:rgba(255,255,255,.95);padding:6px 9px;border-radius:12px;font-size:11px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.status-badge.open{color:var(--green)}
+.status-badge.closed{color:#d64545}
+.favorite-button{position:absolute;top:10px;right:10px;width:41px;height:41px;border:0;border-radius:50%;background:rgba(255,255,255,.95);color:#777;font-size:24px;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 3px 12px rgba(0,0,0,.14);z-index:3}
+.favorite-button.active{color:#ff3b30}
+.favorite-button.loading{opacity:.5;pointer-events:none}
+.restaurant-content{padding:14px 15px 15px}
+.restaurant-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.restaurant h2{margin:0;font-size:19px;line-height:1.3}
+.category{font-size:11px;color:#999;margin-top:4px}
+.description{font-size:12px;color:#777;line-height:1.5;margin:8px 0}
+.restaurant-info{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:11px;color:#888;margin:7px 0 13px}
+.restaurant-rating{color:#f29b12;font-weight:800}
+.restaurant-button{width:100%;border:0;border-radius:11px;background:var(--orange);color:#fff;padding:12px;font-size:13px;font-weight:800}
+.restaurant-button.closed{background:#aaa!important}
+.food-match{display:none;margin:7px 0;padding:8px 10px;background:#fff5ef;border-radius:9px;color:var(--orange);font-size:11px}
+
+/* 状态 */
+.loading,.no-result,.error-box{background:#fff;border-radius:17px;padding:42px 15px;text-align:center;color:#888;border:1px solid #eeeae5}
+.loading-icon,.no-result-icon{font-size:39px;margin-bottom:9px}
+.loading-icon{animation:pulse 1.4s infinite}
+.no-result-title{font-size:16px;color:#555;font-weight:800;margin-bottom:5px}
+@keyframes pulse{50%{transform:scale(1.08)}}
+
+/* 底部导航 */
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;height:70px;background:rgba(255,255,255,.97);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);border-top:1px solid #eee;box-shadow:0 -5px 18px rgba(0,0,0,.07);z-index:9999}
+.bottom-inner{height:100%;max-width:700px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.nav-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:#999;font-size:10px;font-weight:700}
+.nav-icon{font-size:21px;line-height:1}
+.nav-item.active{color:var(--orange)}
+.nav-item.active:before{content:"";position:absolute;top:0;width:28px;height:3px;background:var(--orange);border-radius:0 0 5px 5px}
+
+/* 小屏 */
+@media(max-width:500px){
+ body{padding-bottom:82px}
+ .header{padding:17px 13px 60px}
+ .greeting{font-size:23px}
+ .main{padding:0 12px}
+ .search-box{height:55px;border-radius:17px}
+ .quick-grid{gap:7px}
+ .quick{border-radius:15px;padding:11px 3px}
+ .featured-card{flex-basis:200px;height:112px}
+ .restaurant-image-box{height:175px}
+}
+@media(max-width:360px){
+ .brand-name{font-size:19px}
+ .greeting{font-size:21px}
+ .quick-text{font-size:10px}
+ .featured-card{flex-basis:185px}
 }
-
-@keyframes loadingSpin {
-
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.12);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-
-}
-
-
-/* =========================================================
-   无结果 / 错误
-========================================================= */
-
-.no-result,
-.error-box {
-    display: none;
-    background: white;
-    border-radius: 16px;
-    padding:
-        40px
-        15px;
-    text-align: center;
-    color: #777;
-    box-shadow:
-        0 2px 10px
-        rgba(0,0,0,0.05);
-}
-
-.no-result-icon {
-    font-size: 43px;
-    margin-bottom: 10px;
-}
-
-.no-result-title {
-    color: #555;
-    font-size: 17px;
-    font-weight: bold;
-    margin-bottom: 6px;
-}
-
-
-/* =========================================================
-   底部导航
-========================================================= */
-
-.bottom-nav {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999;
-    height: 68px;
-    background:
-        rgba(255,255,255,0.97);
-    backdrop-filter:
-        blur(12px);
-    -webkit-backdrop-filter:
-        blur(12px);
-    border-top:
-        1px solid #eee;
-    box-shadow:
-        0 -3px 15px
-        rgba(0,0,0,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bottom-nav-inner {
-    width: 100%;
-    max-width: 700px;
-    height: 100%;
-    display: grid;
-    grid-template-columns:
-        repeat(4, 1fr);
-}
-
-.nav-item {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    text-decoration: none;
-    color: #888;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.nav-icon {
-    font-size: 21px;
-    line-height: 1;
-}
-
-.nav-item.active {
-    color: #ff5a1f;
-}
-
-.nav-item.active::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 28px;
-    height: 3px;
-    background: #ff5a1f;
-    border-radius:
-        0
-        0
-        5px
-        5px;
-}
-
-
-/* =========================================================
-   小屏幕
-========================================================= */
-
-@media (max-width: 500px) {
-
-    body {
-        padding-bottom: 78px;
-    }
-
-    .header {
-        padding:
-            18px
-            13px
-            23px;
-    }
-
-    .header-title h1 {
-        font-size: 23px;
-    }
-
-    .container {
-        padding:
-            13px;
-    }
-
-    .restaurant-image-box {
-        height: 175px;
-    }
-
-    .quick-links {
-        gap: 7px;
-    }
-
-    .quick-item {
-        padding:
-            12px
-            3px;
-    }
-
-    .quick-text {
-        font-size: 11px;
-    }
-
-    /* 手机收藏按钮 */
-
-    .favorite-button {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-
-        font-size: 23px;
-
-        top: 9px;
-        right: 9px;
-    }
-
-}
-
-
-/* =========================================================
-   更小手机
-========================================================= */
-
-@media (max-width: 360px) {
-
-    .quick-icon {
-        font-size: 20px;
-    }
-
-    .quick-text {
-        font-size: 10px;
-    }
-
-    .header-title h1 {
-        font-size: 21px;
-    }
-
-}
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================================================
-     顶部
-========================================================= -->
-
 <header class="header">
-
+  <div class="header-inner">
     <div class="header-top">
-
-        <div class="logo-area">
-
-            <div class="logo-icon">
-                🍜
-            </div>
-
-            <div>
-
-                <div class="logo-text">
-                    MDY FOOD
-                </div>
-
-                <div class="logo-sub">
-                    Mandalay Food Delivery
-                </div>
-
-            </div>
-
+      <div class="brand">
+        <div class="brand-icon">🍜</div>
+        <div>
+          <div class="brand-name">MDY FOOD</div>
+          <div class="brand-sub">Mandalay Food Delivery · မန္တလေး</div>
         </div>
-
-
-        <button
-            class="header-account"
-            onclick="goToProfile()"
-            aria-label="Profile"
-        >
-            👤
-        </button>
-
+      </div>
+      <button class="account" onclick="goToProfile()" aria-label="Profile">👤</button>
     </div>
 
-
-    <div class="header-title">
-
-        <h1 data-i18n="homeTitle">
-            今天想吃点什么？
-        </h1>
-
-        <p data-i18n="homeSubtitle">
-            找到你喜欢的餐厅和美食 🍽️
-        </p>
-
-    </div>
-
+    <div class="greeting" data-i18n="homeTitle">今天想吃点什么？</div>
+    <div class="greeting-sub" data-i18n="homeSubtitle">找到你喜欢的餐厅和美食 🍽️</div>
+  </div>
 </header>
 
+<main class="main">
 
-<div class="container">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input id="searchInput" class="search-box" type="text"
+      data-i18n-placeholder="searchRestaurantsPlaceholder"
+      placeholder="搜索餐厅、菜品..." oninput="searchRestaurants()">
+    <button id="clearSearch" class="clear-search" onclick="clearSearch()">✕</button>
+  </div>
 
+  <div class="quick-grid">
+    <a href="restaurants.html" class="quick">
+      <div class="quick-icon">🍜</div>
+      <div class="quick-text" data-i18n="allRestaurants">全部餐厅</div>
+    </a>
+    <a href="orders.html" class="quick">
+      <div class="quick-icon">📦</div>
+      <div class="quick-text" data-i18n="myOrders">我的订单</div>
+    </a>
+    <a href="profile.html" class="quick">
+      <div class="quick-icon">❤️</div>
+      <div class="quick-text" data-i18n="myFavorites">我的收藏</div>
+    </a>
+    <a href="profile.html" class="quick">
+      <div class="quick-icon">📍</div>
+      <div class="quick-text" data-i18n="myAddresses">收货地址</div>
+    </a>
+  </div>
 
-    <!-- =====================================================
-         搜索
-    ====================================================== -->
-
-    <div class="search-wrapper">
-
-        <span class="search-icon">
-            🔍
-        </span>
-
-        <input
-            id="searchInput"
-            class="search-box"
-            type="text"
-            data-i18n-placeholder="searchRestaurantsPlaceholder"
-            placeholder="搜索餐厅、菜品..."
-            oninput="searchRestaurants()"
-        >
-
+  <div id="loginBanner" class="login-banner">
+    <div class="login-content">
+      <div class="login-icon">👤</div>
+      <div>
+        <div class="login-title" data-i18n="loginConvenient">登录后点餐更方便</div>
+        <div class="login-sub" data-i18n="saveOrdersAddress">保存订单和收货地址</div>
+      </div>
+      <a href="login.html" class="login-btn" data-i18n="loginRegister">登录 / 注册</a>
     </div>
+  </div>
 
-
-    <!-- =====================================================
-         快捷入口
-    ====================================================== -->
-
-    <div class="quick-links">
-
-        <a
-            href="restaurants.html"
-            class="quick-item"
-        >
-
-            <div class="quick-icon">
-                🍜
-            </div>
-
-            <div
-                class="quick-text"
-                data-i18n="allRestaurants"
-            >
-                全部餐厅
-            </div>
-
-        </a>
-
-
-        <a
-            href="orders.html"
-            class="quick-item"
-        >
-
-            <div class="quick-icon">
-                📦
-            </div>
-
-            <div
-                class="quick-text"
-                data-i18n="myOrders"
-            >
-                我的订单
-            </div>
-
-        </a>
-
-
-        <a
-            href="profile.html"
-            class="quick-item"
-        >
-
-            <div class="quick-icon">
-                ❤️
-            </div>
-
-            <div
-                class="quick-text"
-                data-i18n="myFavorites"
-            >
-                我的收藏
-            </div>
-
-        </a>
-
-
-        <a
-            href="profile.html"
-            class="quick-item"
-        >
-
-            <div class="quick-icon">
-                📍
-            </div>
-
-            <div
-                class="quick-text"
-                data-i18n="myAddresses"
-            >
-                收货地址
-            </div>
-
-        </a>
-
+  <section class="featured-wrap" id="featuredSection" style="display:none">
+    <div class="section-head">
+      <div>
+        <div class="section-title">🔥 <span data-i18n="recommended">推荐餐厅</span></div>
+        <small>Popular around Mandalay</small>
+      </div>
+      <a href="restaurants.html" class="more" data-i18n="allArrow">全部 →</a>
     </div>
+    <div id="featuredList" class="featured-list"></div>
+  </section>
 
-
-    <!-- =====================================================
-         登录提示
-    ====================================================== -->
-
-    <div
-        class="login-banner"
-        id="loginBanner"
-    >
-
-        <div class="login-banner-content">
-
-            <div class="login-banner-left">
-
-                <div class="login-banner-icon">
-                    👤
-                </div>
-
-                <div>
-
-                    <div
-                        class="login-banner-title"
-                        data-i18n="loginConvenient"
-                    >
-                        登录后点餐更方便
-                    </div>
-
-                    <div
-                        class="login-banner-sub"
-                        data-i18n="saveOrdersAddress"
-                    >
-                        保存订单和收货地址
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <a
-                href="login.html"
-                class="login-banner-btn"
-                data-i18n="loginRegister"
-            >
-                登录 / 注册
-            </a>
-
-        </div>
-
+  <div class="section-head">
+    <div>
+      <div class="section-title" data-i18n="foodCategories">美食分类</div>
+      <small>Choose what you love</small>
     </div>
+    <a href="restaurants.html" class="more" data-i18n="viewAllArrow">查看全部 →</a>
+  </div>
 
+  <div class="category-bar">
+    <button class="category-btn active" data-category-code="all" onclick="filterCategory('all',this)">🍜 <span data-i18n="categoryAll">全部</span></button>
+    <button class="category-btn" data-category-code="sichuan" onclick="filterCategory('sichuan',this)">🌶️ <span data-i18n="categorySichuan">川菜</span></button>
+    <button class="category-btn" data-category-code="myanmar" onclick="filterCategory('myanmar',this)">🇲🇲 <span data-i18n="categoryMyanmar">缅甸菜</span></button>
+    <button class="category-btn" data-category-code="bbq" onclick="filterCategory('bbq',this)">🔥 <span data-i18n="categoryBBQ">烧烤</span></button>
+    <button class="category-btn" data-category-code="other" onclick="filterCategory('other',this)">🍱 <span data-i18n="categoryOther">其他</span></button>
+  </div>
 
-    <!-- =====================================================
-         分类
-    ====================================================== -->
-
-    <div class="section-title-row">
-
-        <div
-            class="section-title"
-            data-i18n="foodCategories"
-        >
-            美食分类
-        </div>
-
-        <a
-            href="restaurants.html"
-            class="section-more"
-            data-i18n="viewAllArrow"
-        >
-            查看全部 →
-        </a>
-
+  <div class="section-head">
+    <div>
+      <div class="section-title" data-i18n="nearbyRestaurants">附近餐厅</div>
+      <small>Restaurants in Mandalay</small>
     </div>
+    <a href="restaurants.html" class="more" data-i18n="allArrow">全部 →</a>
+  </div>
 
-
-    <div class="category-bar">
-
-        <button
-            class="category-btn active"
-            data-category-code="all"
-            onclick="filterCategory('all', this)"
-        >
-
-            🍜
-
-            <span data-i18n="categoryAll">
-                全部
-            </span>
-
-        </button>
-
-
-        <button
-            class="category-btn"
-            data-category-code="sichuan"
-            onclick="filterCategory('sichuan', this)"
-        >
-
-            🌶️
-
-            <span data-i18n="categorySichuan">
-                川菜
-            </span>
-
-        </button>
-
-
-        <button
-            class="category-btn"
-            data-category-code="myanmar"
-            onclick="filterCategory('myanmar', this)"
-        >
-
-            🇲🇲
-
-            <span data-i18n="categoryMyanmar">
-                缅甸菜
-            </span>
-
-        </button>
-
-
-        <button
-            class="category-btn"
-            data-category-code="bbq"
-            onclick="filterCategory('bbq', this)"
-        >
-
-            🔥
-
-            <span data-i18n="categoryBBQ">
-                烧烤
-            </span>
-
-        </button>
-
-
-        <button
-            class="category-btn"
-            data-category-code="other"
-            onclick="filterCategory('other', this)"
-        >
-
-            🍱
-
-            <span data-i18n="categoryOther">
-                其他
-            </span>
-
-        </button>
-
+  <div id="restaurantList">
+    <div class="loading">
+      <div class="loading-icon">🍜</div>
+      <span data-i18n="loadingRestaurants">正在读取餐厅...</span>
     </div>
+  </div>
 
+  <div id="noResult" class="no-result" style="display:none">
+    <div class="no-result-icon">🔍</div>
+    <div class="no-result-title" data-i18n="noRestaurants">没有找到相关餐厅</div>
+    <div data-i18n="tryAnotherKeyword">换一个关键词试试看</div>
+  </div>
 
-    <!-- =====================================================
-         餐厅标题
-    ====================================================== -->
-
-    <div class="section-title-row">
-
-        <div
-            class="section-title"
-            data-i18n="nearbyRestaurants"
-        >
-            附近餐厅
-        </div>
-
-        <a
-            href="restaurants.html"
-            class="section-more"
-            data-i18n="allArrow"
-        >
-            全部 →
-        </a>
-
-    </div>
-
-
-    <!-- =====================================================
-         餐厅列表
-    ====================================================== -->
-
-    <div id="restaurantList">
-
-        <div class="loading">
-
-            <div class="loading-icon">
-                🍜
-            </div>
-
-            <span data-i18n="loadingRestaurants">
-                正在读取餐厅...
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         无结果
-    ====================================================== -->
-
-    <div
-        id="noResult"
-        class="no-result"
-    >
-
-        <div class="no-result-icon">
-            🔍
-        </div>
-
-        <div
-            class="no-result-title"
-            data-i18n="noRestaurants"
-        >
-            没有找到相关餐厅
-        </div>
-
-        <div data-i18n="tryAnotherKeyword">
-            换一个关键词试试看
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     底部导航
-========================================================= -->
+</main>
 
 <nav class="bottom-nav">
-
-    <div class="bottom-nav-inner">
-
-        <a
-            href="index.html"
-            class="nav-item active"
-        >
-
-            <div class="nav-icon">
-                🏠
-            </div>
-
-            <div data-i18n="home">
-                首页
-            </div>
-
-        </a>
-
-
-        <a
-            href="restaurants.html"
-            class="nav-item"
-        >
-
-            <div class="nav-icon">
-                🍜
-            </div>
-
-            <div data-i18n="restaurants">
-                餐厅
-            </div>
-
-        </a>
-
-
-        <a
-            href="orders.html"
-            class="nav-item"
-        >
-
-            <div class="nav-icon">
-                📦
-            </div>
-
-            <div data-i18n="orders">
-                订单
-            </div>
-
-        </a>
-
-
-        <a
-            href="profile.html"
-            class="nav-item"
-        >
-
-            <div class="nav-icon">
-                👤
-            </div>
-
-            <div data-i18n="profile">
-                我的
-            </div>
-
-        </a>
-
-    </div>
-
+  <div class="bottom-inner">
+    <a href="index.html" class="nav-item active"><div class="nav-icon">🏠</div><div data-i18n="home">首页</div></a>
+    <a href="restaurants.html" class="nav-item"><div class="nav-icon">🍜</div><div data-i18n="restaurants">餐厅</div></a>
+    <a href="orders.html" class="nav-item"><div class="nav-icon">📦</div><div data-i18n="orders">订单</div></a>
+    <a href="profile.html" class="nav-item"><div class="nav-icon">👤</div><div data-i18n="profile">我的</div></a>
+  </div>
 </nav>
 
-
-<!-- =========================================================
-     Firebase + 页面逻辑
-========================================================= -->
-
 <script>
+const firebaseConfig={
+ apiKey:"AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+ authDomain:"mdy-food.firebaseapp.com",
+ projectId:"mdy-food",
+ storageBucket:"mdy-food.firebasestorage.app",
+ messagingSenderId:"498327590625",
+ appId:"1:498327590625:web:cceafb7febb689e7ad09a0",
+ measurementId:"G-6Q5G2862XQ"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+const auth=firebase.auth();
 
+let currentCategory="all";
+let allFoods=[];
+let allRestaurants=[];
+let ratingMap={};
+let reviewsUnsubscribe=null;
+let favoriteRestaurantIds=new Set();
+let currentUser=null;
 
-/* =========================================================
-   Firebase
-========================================================= */
+function t(key,fallback){
+ if(window.MDYLanguage&&typeof window.MDYLanguage.t==="function") return window.MDYLanguage.t(key,fallback);
+ return fallback||key;
+}
 
-const firebaseConfig = {
+function getCategoryCode(category){
+ const v=String(category||"").trim().toLowerCase();
+ if(v.includes("川")||v.includes("四川")||v.includes("sichuan")) return "sichuan";
+ if(v.includes("缅甸")||v.includes("myanmar")||v.includes("burmese")) return "myanmar";
+ if(v.includes("烧烤")||v.includes("夜宵")||v.includes("bbq")||v.includes("barbecue")) return "bbq";
+ return "other";
+}
 
-    apiKey:
-        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+function getCategoryDisplayName(category){
+ const c=getCategoryCode(category);
+ if(c==="sichuan") return t("categorySichuan","川菜");
+ if(c==="myanmar") return t("categoryMyanmar","缅甸菜");
+ if(c==="bbq") return t("categoryBBQ","烧烤");
+ return t("categoryOther","其他");
+}
 
-    authDomain:
-        "mdy-food.firebaseapp.com",
+function getRestaurantIcon(category){
+ const c=getCategoryCode(category);
+ if(c==="sichuan") return "🌶️";
+ if(c==="myanmar") return "🇲🇲";
+ if(c==="bbq") return "🔥";
+ return "🍜";
+}
 
-    projectId:
-        "mdy-food",
-
-    storageBucket:
-        "mdy-food.firebasestorage.app",
-
-    messagingSenderId:
-        "498327590625",
-
-    appId:
-        "1:498327590625:web:cceafb7febb689e7ad09a0",
-
-    measurementId:
-        "G-6Q5G2862XQ"
-
+const defaultImages={
+ sichuan:"https://images.unsplash.com/photo-1582450871972-ab5ca641643d?auto=format&fit=crop&w=1200&q=80",
+ myanmar:"",
+ bbq:"",
+ other:""
 };
 
-
-firebase.initializeApp(
-    firebaseConfig
-);
-
-
-const db =
-    firebase.firestore();
-
-
-const auth =
-    firebase.auth();
-
-
-/* =========================================================
-   全局数据
-========================================================= */
-
-let currentCategory =
-    "all";
-
-let allFoods = [];
-
-let allRestaurants = [];
-
-let reviewsUnsubscribe =
-    null;
-
-
-/*
-   当前用户收藏的餐厅 ID
-*/
-let favoriteRestaurantIds =
-    new Set();
-
-
-/*
-   当前登录用户
-*/
-let currentUser =
-    null;
-
-
-/* =========================================================
-   统一语言
-========================================================= */
-
-function t(key, fallback) {
-
-    if (
-        window.MDYLanguage &&
-        typeof window.MDYLanguage.t === "function"
-    ) {
-
-        return window.MDYLanguage.t(
-            key,
-            fallback
-        );
-
-    }
-
-    return fallback || key;
+function getRestaurantImage(r){
+ if(r&&r.image) return r.image;
+ return defaultImages[getCategoryCode(r.category||r.restaurantType||"")]||"";
 }
 
-
-/* =========================================================
-   分类内部代码
-========================================================= */
-
-function getCategoryCode(category) {
-
-    if (!category) {
-        return "other";
-    }
-
-    const value =
-        String(category)
-            .trim()
-            .toLowerCase();
-
-
-    if (
-        value.includes("川") ||
-        value.includes("四川") ||
-        value.includes("sichuan")
-    ) {
-
-        return "sichuan";
-
-    }
-
-
-    if (
-        value.includes("缅甸") ||
-        value.includes("myanmar") ||
-        value.includes("burmese")
-    ) {
-
-        return "myanmar";
-
-    }
-
-
-    if (
-        value.includes("烧烤") ||
-        value.includes("夜宵") ||
-        value.includes("bbq") ||
-        value.includes("barbecue")
-    ) {
-
-        return "bbq";
-
-    }
-
-
-    return "other";
+function escapeHtml(value){
+ return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
 
-
-/* =========================================================
-   分类显示名称
-========================================================= */
-
-function getCategoryDisplayName(category) {
-
-    const code =
-        getCategoryCode(category);
-
-
-    if (code === "sichuan") {
-
-        return t(
-            "categorySichuan",
-            "川菜"
-        );
-
-    }
-
-
-    if (code === "myanmar") {
-
-        return t(
-            "categoryMyanmar",
-            "缅甸菜"
-        );
-
-    }
-
-
-    if (code === "bbq") {
-
-        return t(
-            "categoryBBQ",
-            "烧烤"
-        );
-
-    }
-
-
-    return t(
-        "categoryOther",
-        "其他"
-    );
+function escapeJs(value){
+ return String(value??"").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
 }
 
-
-/* =========================================================
-   餐厅图标
-========================================================= */
-
-function getRestaurantIcon(category) {
-
-    const code =
-        getCategoryCode(category);
-
-
-    if (code === "sichuan") {
-        return "🌶️";
-    }
-
-
-    if (code === "myanmar") {
-        return "🇲🇲";
-    }
-
-
-    if (code === "bbq") {
-        return "🔥";
-    }
-
-
-    return "🍜";
+function getRestaurantStatus(r){
+ if(r&&r.status) return String(r.status).trim();
+ if(r&&r.enabled===false) return "休息中";
+ return "营业中";
 }
 
+function isRestaurantOpen(r){return getRestaurantStatus(r)==="营业中"}
 
-/* =========================================================
-   默认图片
-========================================================= */
+function isRestaurantFavorite(id){return id?favoriteRestaurantIds.has(String(id)):false}
 
-const defaultImages = {
-
-    sichuan:
-        "https://images.unsplash.com/photo-1582450871972-ab5ca641643d",
-
-    myanmar:
-        "",
-
-    bbq:
-        "",
-
-    other:
-        ""
-
-};
-
-
-/* =========================================================
-   餐厅图片
-========================================================= */
-
-function getRestaurantImage(restaurant) {
-
-    if (
-        restaurant &&
-        restaurant.image
-    ) {
-
-        return restaurant.image;
-
-    }
-
-
-    const category =
-        getCategoryCode(
-            restaurant.category ||
-            restaurant.restaurantType ||
-            ""
-        );
-
-
-    return (
-        defaultImages[category] ||
-        ""
-    );
-
+function toggleFavorite(event,id){
+ if(event) event.stopPropagation();
+ if(!id) return;
+ const user=auth.currentUser;
+ if(!user){alert(t("pleaseLogin","请先登录"));return}
+ const button=document.querySelector('.favorite-button[data-restaurant-id="'+CSS.escape(String(id))+'"]');
+ if(button) button.classList.add("loading");
+ const fav=isRestaurantFavorite(id);
+ const ref=db.collection("customers").doc(user.uid);
+ const op=fav
+  ?ref.set({favorites:firebase.firestore.FieldValue.arrayRemove(String(id))},{merge:true})
+  :ref.set({favorites:firebase.firestore.FieldValue.arrayUnion(String(id))},{merge:true});
+ op.then(()=>{
+   if(fav) favoriteRestaurantIds.delete(String(id)); else favoriteRestaurantIds.add(String(id));
+   updateFavoriteButton(id);
+ }).catch(e=>{
+   console.error("收藏操作失败:",e);
+   alert(t("operationError","操作失败，请稍后再试"));
+ }).finally(()=>{
+   if(button) button.classList.remove("loading");
+ });
 }
 
-
-/* =========================================================
-   HTML 转义
-========================================================= */
-
-function escapeHtml(value) {
-
-    return String(
-        value || ""
-    )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
+function updateFavoriteButton(id){
+ document.querySelectorAll('.favorite-button[data-restaurant-id="'+CSS.escape(String(id))+'"]').forEach(btn=>{
+   const active=isRestaurantFavorite(id);
+   btn.classList.toggle("active",active);
+   btn.innerHTML=active?"♥":"♡";
+   btn.setAttribute("aria-pressed",active?"true":"false");
+ });
 }
 
-
-/* =========================================================
-   JS 转义
-========================================================= */
-
-function escapeJs(value) {
-
-    return String(
-        value || ""
-    )
-        .replace(
-            /\\/g,
-            "\\\\"
-        )
-        .replace(
-            /'/g,
-            "\\'"
-        );
-
+function updateAllFavoriteButtons(){
+ document.querySelectorAll(".favorite-button").forEach(btn=>{
+   if(btn.dataset.restaurantId) updateFavoriteButton(btn.dataset.restaurantId);
+ });
 }
 
-
-/* =========================================================
-   餐厅状态
-========================================================= */
-
-function getRestaurantStatus(restaurant) {
-
-    if (
-        restaurant &&
-        restaurant.status
-    ) {
-
-        return String(
-            restaurant.status
-        ).trim();
-
-    }
-
-
-    if (
-        restaurant &&
-        restaurant.enabled === false
-    ) {
-
-        return "休息中";
-
-    }
-
-
-    return "营业中";
-
+async function loadFavoritesForUser(user){
+ favoriteRestaurantIds=new Set();
+ if(!user){updateAllFavoriteButtons();return}
+ try{
+   const doc=await db.collection("customers").doc(user.uid).get();
+   if(doc.exists){
+     const data=doc.data()||{};
+     (Array.isArray(data.favorites)?data.favorites:[]).forEach(id=>favoriteRestaurantIds.add(String(id)));
+   }
+ }catch(e){console.error("读取收藏失败:",e)}
+ updateAllFavoriteButtons();
 }
 
-
-function isRestaurantOpen(restaurant) {
-
-    return (
-        getRestaurantStatus(restaurant)
-            === "营业中"
-    );
-
+function getTimestampMillis(v){
+ if(!v)return 0;
+ if(v&&typeof v.toMillis==="function")return v.toMillis();
+ if(v&&v.seconds)return Number(v.seconds)*1000;
+ const d=new Date(v); return isNaN(d.getTime())?0:d.getTime();
 }
 
-
-/* =========================================================
-   收藏状态
-========================================================= */
-
-function isRestaurantFavorite(id) {
-
-    if (!id) {
-        return false;
-    }
-
-    return favoriteRestaurantIds.has(
-        String(id)
-    );
-
+function getRating(id){
+ const x=ratingMap[String(id)];
+ if(!x||!x.count)return null;
+ return x.total/x.count;
 }
 
-
-/* =========================================================
-   收藏按钮文字
-   现在只显示爱心，不再显示“收藏”
-========================================================= */
-
-function getFavoriteButtonText(id) {
-
-    const active =
-        isRestaurantFavorite(id);
-
-    return active
-        ? "♥"
-        : "♡";
-
+function getFoodCount(id){
+ return allFoods.filter(food=>{
+   return String(food.restaurantId||"")===String(id)&&String(food.status||"")!=="下架";
+ }).length;
 }
 
+function createRestaurantCard(r,id){
+ const name=r.name||r.restaurantName||t("defaultRestaurantName","MDY FOOD 餐厅");
+ const rawCategory=r.category||r.restaurantType||"";
+ const categoryName=getCategoryDisplayName(rawCategory);
+ const code=getCategoryCode(rawCategory);
+ const description=r.description||r.restaurantDescription||t("welcome","欢迎光临");
+ const status=getRestaurantStatus(r);
+ const open=status==="营业中";
+ const image=getRestaurantImage(r);
+ const icon=getRestaurantIcon(rawCategory);
+ const fav=isRestaurantFavorite(id);
+ const rating=getRating(id);
+ const foodCount=getFoodCount(id);
 
-/* =========================================================
-   收藏按钮
-========================================================= */
+ const card=document.createElement("div");
+ card.className="restaurant";
+ card.dataset.category=code;
+ card.dataset.restaurantId=id;
+ card.dataset.name=String(name).toLowerCase();
+ card.dataset.description=String(description).toLowerCase();
+ card.dataset.rawCategory=String(rawCategory).toLowerCase();
 
-function toggleFavorite(
-    event,
-    restaurantId
-) {
-
-    if (event) {
-        event.stopPropagation();
-    }
-
-
-    if (!restaurantId) {
-        return;
-    }
-
-
-    const user =
-        auth.currentUser;
-
-
-    if (!user) {
-
-        alert(
-            t(
-                "pleaseLogin",
-                "请先登录"
-            )
-        );
-
-        return;
-
-    }
-
-
-    const button =
-        document.querySelector(
-            '.favorite-button[data-restaurant-id="' +
-            CSS.escape(String(restaurantId)) +
-            '"]'
-        );
-
-
-    if (button) {
-        button.classList.add("loading");
-    }
-
-
-    const isFavorite =
-        isRestaurantFavorite(
-            restaurantId
-        );
-
-
-    const customerRef =
-        db
-            .collection("customers")
-            .doc(user.uid);
-
-
-    let operation;
-
-
-    if (isFavorite) {
-
-        operation =
-            customerRef.set(
-                {
-                    favorites:
-                        firebase.firestore.FieldValue
-                            .arrayRemove(
-                                String(restaurantId)
-                            )
-                },
-                {
-                    merge: true
-                }
-            );
-
-    } else {
-
-        operation =
-            customerRef.set(
-                {
-                    favorites:
-                        firebase.firestore.FieldValue
-                            .arrayUnion(
-                                String(restaurantId)
-                            )
-                },
-                {
-                    merge: true
-                }
-            );
-
-    }
-
-
-    operation
-        .then(
-            function() {
-
-                if (isFavorite) {
-
-                    favoriteRestaurantIds.delete(
-                        String(restaurantId)
-                    );
-
-                } else {
-
-                    favoriteRestaurantIds.add(
-                        String(restaurantId)
-                    );
-
-                }
-
-
-                updateFavoriteButton(
-                    restaurantId
-                );
-
-            }
-        )
-        .catch(
-            function(error) {
-
-                console.error(
-                    "收藏操作失败:",
-                    error
-                );
-
-                alert(
-                    t(
-                        "operationError",
-                        "操作失败，请稍后再试"
-                    )
-                );
-
-            }
-        )
-        .finally(
-            function() {
-
-                const currentButton =
-                    document.querySelector(
-                        '.favorite-button[data-restaurant-id="' +
-                        CSS.escape(String(restaurantId)) +
-                        '"]'
-                    );
-
-                if (currentButton) {
-
-                    currentButton.classList.remove(
-                        "loading"
-                    );
-
-                }
-
-            }
-        );
-
+ card.innerHTML=`
+  <div class="restaurant-image-box">
+   ${image
+    ?`<img class="restaurant-image" src="${escapeHtml(image)}" alt="${escapeHtml(name)}"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+       <div class="image-placeholder" style="display:none">${icon}</div>`
+    :`<div class="image-placeholder">${icon}</div>`}
+   <div class="status-badge ${open?"open":"closed"}">
+    ${open?"🟢 ":"🔴 "}${escapeHtml(open?t("open","营业中"):t("closed","休息中"))}
+   </div>
+   <button type="button" class="favorite-button ${fav?"active":""}" data-restaurant-id="${escapeHtml(id)}"
+    onclick="toggleFavorite(event,'${escapeJs(id)}')" aria-label="${escapeHtml(t("favorites","收藏"))}"
+    aria-pressed="${fav?"true":"false"}">${fav?"♥":"♡"}</button>
+  </div>
+  <div class="restaurant-content">
+   <div class="restaurant-top">
+    <div>
+     <h2>${escapeHtml(name)}</h2>
+     <div class="category">${escapeHtml(categoryName)}</div>
+    </div>
+   </div>
+   <div class="description">${escapeHtml(description)}</div>
+   <div class="restaurant-info">
+    <span class="restaurant-rating">⭐ ${rating===null?t("noReviews","暂无评价"):rating.toFixed(1)}</span>
+    <span>${rating===null?"":(ratingMap[String(id)].count+" "+t("reviewCountSuffix","条评价"))}</span>
+    <span>🍽️ ${foodCount} ${escapeHtml(t("foodCountSuffix","道菜品"))}</span>
+   </div>
+   <div class="food-match" id="food-match-${escapeHtml(id)}"></div>
+   <button class="restaurant-button ${open?"":"closed"}" onclick="openRestaurant('${escapeJs(id)}')">
+    ${escapeHtml(open?t("viewMenuArrow","进入餐厅 →"):t("closed","休息中"))}
+   </button>
+  </div>`;
+ return card;
 }
 
-
-/* =========================================================
-   更新单个收藏按钮
-========================================================= */
-
-function updateFavoriteButton(
-    restaurantId
-) {
-
-    const buttons =
-        document.querySelectorAll(
-            '.favorite-button[data-restaurant-id="' +
-            CSS.escape(String(restaurantId)) +
-            '"]'
-        );
-
-
-    buttons.forEach(
-        function(button) {
-
-            const active =
-                isRestaurantFavorite(
-                    restaurantId
-                );
-
-
-            button.classList.toggle(
-                "active",
-                active
-            );
-
-
-            button.innerHTML =
-                '<span class="favorite-icon">' +
-                escapeHtml(
-                    getFavoriteButtonText(
-                        restaurantId
-                    )
-                ) +
-                '</span>';
-
-
-            button.setAttribute(
-                "aria-pressed",
-                active
-                    ? "true"
-                    : "false"
-            );
-
-        }
-    );
-
+function renderRestaurants(){
+ const list=document.getElementById("restaurantList");
+ list.innerHTML="";
+ if(!allRestaurants.length){
+   list.innerHTML=`<div class="error-box"><div style="font-size:40px">🍜</div><div style="font-size:16px;font-weight:800;margin:9px 0">${escapeHtml(t("noOpenRestaurants","暂时还没有营业餐厅"))}</div><div>${escapeHtml(t("comeBackLater","请稍后再来看看"))}</div></div>`;
+   return;
+ }
+ allRestaurants.forEach(r=>list.appendChild(createRestaurantCard(r,r.id)));
+ updateAllFavoriteButtons();
+ searchRestaurants();
+ renderFeatured();
 }
 
-
-/* =========================================================
-   读取当前用户收藏
-========================================================= */
-
-async function loadFavoritesForUser(
-    user
-) {
-
-    favoriteRestaurantIds =
-        new Set();
-
-
-    if (!user) {
-
-        updateAllFavoriteButtons();
-
-        return;
-
-    }
-
-
-    try {
-
-        const doc =
-            await db
-                .collection("customers")
-                .doc(user.uid)
-                .get();
-
-
-        if (doc.exists) {
-
-            const data =
-                doc.data() || {};
-
-
-            const favorites =
-                Array.isArray(
-                    data.favorites
-                )
-                    ? data.favorites
-                    : [];
-
-
-            favorites.forEach(
-                function(id) {
-
-                    if (
-                        id !== null &&
-                        id !== undefined
-                    ) {
-
-                        favoriteRestaurantIds.add(
-                            String(id)
-                        );
-
-                    }
-
-                }
-            );
-
-        }
-
-
-        updateAllFavoriteButtons();
-
-
-    } catch (error) {
-
-        console.error(
-            "读取收藏失败:",
-            error
-        );
-
-        updateAllFavoriteButtons();
-
-    }
-
+async function loadRestaurants(){
+ const list=document.getElementById("restaurantList");
+ list.innerHTML=`<div class="loading"><div class="loading-icon">🍜</div><span>${escapeHtml(t("loadingRestaurants","正在读取餐厅..."))}</span></div>`;
+ try{
+   const snap=await db.collection("restaurants").get();
+   allRestaurants=[];
+   snap.forEach(doc=>{
+     const r=doc.data()||{};
+     const approval=String(r.approvalStatus||"").toLowerCase();
+     const approved=r.approved===true||approval==="approved";
+     const enabled=r.enabled!==false;
+     const shouldShow=enabled&&(approved||(!r.approvalStatus&&r.enabled!==false));
+     if(shouldShow) allRestaurants.push({id:doc.id,...r});
+   });
+   allRestaurants.sort((a,b)=>getTimestampMillis(b.createdAt||b.approvedAt)-getTimestampMillis(a.createdAt||a.approvedAt));
+   renderRestaurants();
+ }catch(e){
+   console.error("读取餐厅失败:",e);
+   list.innerHTML=`<div class="error-box"><div style="font-size:40px">⚠️</div><div style="font-size:16px;font-weight:800;margin:9px 0">${escapeHtml(t("restaurantLoadFailed","餐厅读取失败"))}</div><div>${escapeHtml(e.message||t("networkError","请检查网络连接"))}</div></div>`;
+ }
 }
 
-
-/* =========================================================
-   更新页面全部收藏按钮
-========================================================= */
-
-function updateAllFavoriteButtons() {
-
-    document
-        .querySelectorAll(
-            ".favorite-button"
-        )
-        .forEach(
-            function(button) {
-
-                const id =
-                    button.dataset.restaurantId;
-
-                if (id) {
-
-                    updateFavoriteButton(
-                        id
-                    );
-
-                }
-
-            }
-        );
-
+async function loadFoods(){
+ try{
+   const snap=await db.collection("foods").get();
+   allFoods=[];
+   snap.forEach(doc=>allFoods.push({id:doc.id,...(doc.data()||{})}));
+   searchRestaurants();
+   renderFeatured();
+ }catch(e){console.error("读取菜品失败:",e)}
 }
 
-
-/* =========================================================
-   创建餐厅卡片
-========================================================= */
-
-function createRestaurantCard(
-    restaurant,
-    id
-) {
-
-    const name =
-        restaurant.name ||
-        restaurant.restaurantName ||
-        t(
-            "defaultRestaurantName",
-            "MDY FOOD 餐厅"
-        );
-
-
-    const rawCategory =
-        restaurant.category ||
-        restaurant.restaurantType ||
-        "";
-
-
-    const categoryCode =
-        getCategoryCode(
-            rawCategory
-        );
-
-
-    const categoryName =
-        getCategoryDisplayName(
-            rawCategory
-        );
-
-
-    const description =
-        restaurant.description ||
-        restaurant.restaurantDescription ||
-        t(
-            "welcome",
-            "欢迎光临"
-        );
-
-
-    const status =
-        getRestaurantStatus(
-            restaurant
-        );
-
-
-    const open =
-        status === "营业中";
-
-
-    const image =
-        getRestaurantImage(
-            restaurant
-        );
-
-
-    const icon =
-        getRestaurantIcon(
-            rawCategory
-        );
-
-
-    const card =
-        document.createElement(
-            "div"
-        );
-
-
-    card.className =
-        "restaurant";
-
-
-    card.dataset.category =
-        categoryCode;
-
-
-    card.dataset.restaurantId =
-        id;
-
-
-    /*
-       搜索数据单独保存。
-       不从 innerText 搜索，
-       避免切换语言后搜索逻辑受到影响。
-    */
-
-    card.dataset.name =
-        String(name)
-            .toLowerCase();
-
-
-    card.dataset.description =
-        String(description)
-            .toLowerCase();
-
-
-    card.dataset.rawCategory =
-        String(rawCategory)
-            .toLowerCase();
-
-
-    const favoriteButtonText =
-        getFavoriteButtonText(
-            id
-        );
-
-
-    const favoriteActive =
-        isRestaurantFavorite(
-            id
-        );
-
-
-    card.innerHTML = `
-
-        <div class="restaurant-image-box">
-
-            ${
-                image
-                ?
-                `
-                <img
-                    class="restaurant-image"
-                    src="${escapeHtml(image)}"
-                    alt="${escapeHtml(name)}"
-                    onerror="
-                        this.style.display='none';
-                        this.nextElementSibling.style.display='flex';
-                    "
-                >
-
-                <div
-                    class="image-placeholder"
-                    style="display:none;"
-                >
-                    ${icon}
-                </div>
-                `
-                :
-                `
-                <div class="image-placeholder">
-                    ${icon}
-                </div>
-                `
-            }
-
-
-            <div
-                class="status-badge ${open ? "open" : "closed"}"
-            >
-
-                ${
-                    open
-                    ?
-                    "🟢 " +
-                    escapeHtml(
-                        t(
-                            "open",
-                            "营业中"
-                        )
-                    )
-                    :
-                    "🔴 " +
-                    escapeHtml(
-                        t(
-                            "closed",
-                            "休息中"
-                        )
-                    )
-                }
-
-            </div>
-
-
-            <!-- 收藏按钮 -->
-
-            <button
-                type="button"
-                class="favorite-button ${favoriteActive ? "active" : ""}"
-                data-restaurant-id="${escapeHtml(id)}"
-                onclick="toggleFavorite(event, '${escapeJs(id)}')"
-                aria-label="${escapeHtml(
-                    t(
-                        "favorites",
-                        "收藏"
-                    )
-                )}"
-                aria-pressed="${favoriteActive ? "true" : "false"}"
-            >
-
-                <span class="favorite-icon">
-                    ${escapeHtml(favoriteButtonText)}
-                </span>
-
-            </button>
-
-        </div>
-
-
-        <div class="restaurant-content">
-
-            <h2>
-                ${escapeHtml(name)}
-            </h2>
-
-
-            <div class="category">
-                ${escapeHtml(categoryName)}
-            </div>
-
-
-            <div class="description">
-                ${escapeHtml(description)}
-            </div>
-
-
-            <div class="restaurant-info">
-
-                <span
-                    class="restaurant-rating"
-                    id="rating-${escapeHtml(id)}"
-                >
-                    ⭐ ${escapeHtml(
-                        t(
-                            "loadingReviews",
-                            "读取评价中"
-                        )
-                    )}
-                </span>
-
-
-                <span
-                    class="food-count"
-                    id="food-count-${escapeHtml(id)}"
-                >
-                    🍽️ ${escapeHtml(
-                        t(
-                            "loadingFoods",
-                            "菜品读取中"
-                        )
-                    )}
-                </span>
-
-            </div>
-
-
-            <div
-                class="food-match"
-                id="food-match-${escapeHtml(id)}"
-            >
-            </div>
-
-
-            <button
-                class="restaurant-button ${open ? "" : "closed"}"
-                onclick="openRestaurant('${escapeJs(id)}')"
-            >
-
-                ${
-                    open
-                    ?
-                    escapeHtml(
-                        t(
-                            "viewMenuArrow",
-                            "查看菜单 →"
-                        )
-                    )
-                    :
-                    escapeHtml(
-                        t(
-                            "closed",
-                            "休息中"
-                        )
-                    )
-                }
-
-            </button>
-
-        </div>
-
-    `;
-
-
-    return card;
-
+function loadAllRestaurantRatings(){
+ if(reviewsUnsubscribe) reviewsUnsubscribe();
+ reviewsUnsubscribe=db.collection("reviews").onSnapshot(snap=>{
+   ratingMap={};
+   snap.forEach(doc=>{
+     const review=doc.data()||{};
+     const id=String(review.restaurantId||"");
+     const rating=Number(review.rating||review.star||review.stars||review.score||0);
+     if(!id||rating<1||rating>5)return;
+     if(!ratingMap[id])ratingMap[id]={total:0,count:0};
+     ratingMap[id].total+=rating;
+     ratingMap[id].count++;
+   });
+   if(allRestaurants.length) renderRestaurants();
+ },e=>console.error("读取评价失败:",e));
 }
 
+function renderFeatured(){
+ const section=document.getElementById("featuredSection");
+ const list=document.getElementById("featuredList");
+ if(!allRestaurants.length){section.style.display="none";return}
 
-/* =========================================================
-   更新时间
-========================================================= */
+ const featured=[...allRestaurants]
+  .filter(r=>isRestaurantOpen(r))
+  .sort((a,b)=>{
+    const ar=getRating(a.id), br=getRating(b.id);
+    if(br!==null&&ar===null)return 1;
+    if(ar!==null&&br===null)return -1;
+    if(ar!==null&&br!==null&&br!==ar)return br-ar;
+    return getTimestampMillis(b.createdAt||b.approvedAt)-getTimestampMillis(a.createdAt||a.approvedAt);
+  }).slice(0,5);
 
-function getTimestampMillis(value) {
-
-    if (!value) {
-        return 0;
-    }
-
-
-    if (
-        value &&
-        typeof value.toMillis ===
-        "function"
-    ) {
-
-        return value.toMillis();
-
-    }
-
-
-    if (
-        value &&
-        value.seconds
-    ) {
-
-        return (
-            value.seconds *
-            1000
-        );
-
-    }
-
-
-    const date =
-        new Date(value);
-
-
-    if (
-        !isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return date.getTime();
-
-    }
-
-
-    return 0;
-
+ if(!featured.length){section.style.display="none";return}
+ section.style.display="block";
+ list.innerHTML=featured.map(r=>{
+   const name=r.name||r.restaurantName||"MDY FOOD";
+   const img=getRestaurantImage(r);
+   const rating=getRating(r.id);
+   const icon=getRestaurantIcon(r.category||r.restaurantType);
+   return `<div class="featured-card" onclick="openRestaurant('${escapeJs(r.id)}')">
+     ${img?`<img src="${escapeHtml(img)}" alt="${escapeHtml(name)}" onerror="this.style.display='none'">`:``}
+     <div class="featured-shade"></div>
+     <div class="featured-badge">🔥 ${escapeHtml(t("recommended","推荐"))}</div>
+     <div class="featured-info">
+       <div class="featured-name">${escapeHtml(name)}</div>
+       <div class="featured-meta">${rating===null?"⭐ "+escapeHtml(t("noReviews","暂无评价")):"⭐ "+rating.toFixed(1)} · ${icon} ${escapeHtml(getCategoryDisplayName(r.category||r.restaurantType))}</div>
+     </div>
+   </div>`;
+ }).join("");
 }
 
-
-/* =========================================================
-   读取餐厅
-========================================================= */
-
-async function loadRestaurants() {
-
-    const restaurantList =
-        document.getElementById(
-            "restaurantList"
-        );
-
-
-    restaurantList.innerHTML = `
-
-        <div class="loading">
-
-            <div class="loading-icon">
-                🍜
-            </div>
-
-            <span>
-                ${escapeHtml(
-                    t(
-                        "loadingRestaurants",
-                        "正在读取餐厅..."
-                    )
-                )}
-            </span>
-
-        </div>
-
-    `;
-
-
-    try {
-
-        const snapshot =
-            await db
-                .collection("restaurants")
-                .get();
-
-
-        allRestaurants = [];
-
-
-        snapshot.forEach(
-            function(doc) {
-
-                const restaurant =
-                    doc.data() || {};
-
-
-                const approvalStatus =
-                    String(
-                        restaurant.approvalStatus ||
-                        ""
-                    )
-                    .toLowerCase();
-
-
-                const approved =
-                    restaurant.approved === true ||
-                    approvalStatus ===
-                    "approved";
-
-
-                const enabled =
-                    restaurant.enabled !== false;
-
-
-                const shouldShow =
-                    enabled &&
-                    (
-                        approved ||
-                        (
-                            !restaurant.approvalStatus &&
-                            restaurant.enabled !== false
-                        )
-                    );
-
-
-                if (!shouldShow) {
-                    return;
-                }
-
-
-                allRestaurants.push({
-
-                    id: doc.id,
-
-                    ...restaurant
-
-                });
-
-            }
-        );
-
-
-        allRestaurants.sort(
-            function(a, b) {
-
-                const timeA =
-                    getTimestampMillis(
-                        a.createdAt ||
-                        a.approvedAt
-                    );
-
-
-                const timeB =
-                    getTimestampMillis(
-                        b.createdAt ||
-                        b.approvedAt
-                    );
-
-
-                return timeB - timeA;
-
-            }
-        );
-
-
-        restaurantList.innerHTML =
-            "";
-
-
-        if (
-            allRestaurants.length === 0
-        ) {
-
-            restaurantList.innerHTML = `
-
-                <div
-                    class="error-box"
-                    style="display:block;"
-                >
-
-                    <div
-                        style="font-size:40px;"
-                    >
-                        🍜
-                    </div>
-
-
-                    <div
-                        style="
-                            font-size:17px;
-                            font-weight:bold;
-                            margin:10px 0;
-                        "
-                    >
-
-                        ${escapeHtml(
-                            t(
-                                "noOpenRestaurants",
-                                "暂时还没有营业餐厅"
-                            )
-                        )}
-
-                    </div>
-
-
-                    <div>
-
-                        ${escapeHtml(
-                            t(
-                                "comeBackLater",
-                                "请稍后再来看看"
-                            )
-                        )}
-
-                    </div>
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        allRestaurants.forEach(
-            function(restaurant) {
-
-                const card =
-                    createRestaurantCard(
-                        restaurant,
-                        restaurant.id
-                    );
-
-
-                restaurantList.appendChild(
-                    card
-                );
-
-
-                updateFoodCount(
-                    restaurant.id
-                );
-
-            }
-        );
-
-
-        loadAllRestaurantRatings();
-
-
-        searchRestaurants();
-
-
-        /*
-           餐厅加载完成后，
-           再同步一次收藏状态。
-        */
-
-        updateAllFavoriteButtons();
-
-
-    } catch (error) {
-
-        console.error(
-            "读取餐厅失败:",
-            error
-        );
-
-
-        restaurantList.innerHTML = `
-
-            <div
-                class="error-box"
-                style="display:block;"
-            >
-
-                <div
-                    style="font-size:40px;"
-                >
-                    ⚠️
-                </div>
-
-
-                <div
-                    style="
-                        font-size:17px;
-                        font-weight:bold;
-                        margin:10px 0;
-                    "
-                >
-
-                    ${escapeHtml(
-                        t(
-                            "restaurantLoadFailed",
-                            "餐厅读取失败"
-                        )
-                    )}
-
-                </div>
-
-
-                <div>
-
-                    ${escapeHtml(
-                        error.message ||
-                        t(
-                            "networkError",
-                            "请检查网络连接"
-                        )
-                    )}
-
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
+function findFoodMatches(restaurantId,keyword){
+ if(!keyword)return[];
+ return allFoods.filter(food=>{
+   if(String(food.restaurantId||"")!==String(restaurantId))return false;
+   if(String(food.status||"")==="下架")return false;
+   const n=String(food.name||"").toLowerCase();
+   const d=String(food.description||"").toLowerCase();
+   return n.includes(keyword)||d.includes(keyword);
+ });
 }
 
-
-/* =========================================================
-   评价
-========================================================= */
-
-function loadAllRestaurantRatings() {
-
-    if (
-        reviewsUnsubscribe
-    ) {
-
-        reviewsUnsubscribe();
-
-        reviewsUnsubscribe =
-            null;
-
-    }
-
-
-    reviewsUnsubscribe =
-        db
-            .collection("reviews")
-            .onSnapshot(
-
-                function(snapshot) {
-
-                    const ratingMap =
-                        {};
-
-
-                    snapshot.forEach(
-                        function(doc) {
-
-                            const review =
-                                doc.data() ||
-                                {};
-
-
-                            const restaurantId =
-                                String(
-                                    review.restaurantId ||
-                                    ""
-                                );
-
-
-                            if (
-                                !restaurantId
-                            ) {
-
-                                return;
-
-                            }
-
-
-                            const rating =
-                                Number(
-                                    review.rating ||
-                                    review.star ||
-                                    review.stars ||
-                                    review.score ||
-                                    0
-                                );
-
-
-                            if (
-                                rating < 1 ||
-                                rating > 5
-                            ) {
-
-                                return;
-
-                            }
-
-
-                            if (
-                                !ratingMap[
-                                    restaurantId
-                                ]
-                            ) {
-
-                                ratingMap[
-                                    restaurantId
-                                ] = {
-
-                                    total: 0,
-
-                                    count: 0
-
-                                };
-
-                            }
-
-
-                            ratingMap[
-                                restaurantId
-                            ].total +=
-                                rating;
-
-
-                            ratingMap[
-                                restaurantId
-                            ].count +=
-                                1;
-
-                        }
-                    );
-
-
-                    allRestaurants.forEach(
-                        function(restaurant) {
-
-                            const data =
-                                ratingMap[
-                                    restaurant.id
-                                ];
-
-
-                            const element =
-                                document.getElementById(
-                                    "rating-" +
-                                    restaurant.id
-                                );
-
-
-                            if (!element) {
-                                return;
-                            }
-
-
-                            if (
-                                !data ||
-                                data.count === 0
-                            ) {
-
-                                element.innerText =
-                                    "⭐ " +
-                                    t(
-                                        "noReviews",
-                                        "暂无评价"
-                                    );
-
-                                return;
-
-                            }
-
-
-                            const average =
-                                data.total /
-                                data.count;
-
-
-                            element.innerText =
-                                "⭐ " +
-                                average.toFixed(1) +
-                                " · " +
-                                data.count +
-                                t(
-                                    "reviewCountSuffix",
-                                    "条评价"
-                                );
-
-                        }
-                    );
-
-                },
-
-
-                function(error) {
-
-                    console.error(
-                        "读取评价失败:",
-                        error
-                    );
-
-
-                    allRestaurants.forEach(
-                        function(restaurant) {
-
-                            const element =
-                                document.getElementById(
-                                    "rating-" +
-                                    restaurant.id
-                                );
-
-
-                            if (element) {
-
-                                element.innerText =
-                                    "⭐ " +
-                                    t(
-                                        "noReviews",
-                                        "暂无评价"
-                                    );
-
-                            }
-
-                        }
-                    );
-
-                }
-
-            );
-
+function searchRestaurants(){
+ const input=document.getElementById("searchInput");
+ const keyword=input.value.trim().toLowerCase();
+ const clear=document.getElementById("clearSearch");
+ clear.style.display=keyword?"block":"none";
+ let visible=0;
+ document.querySelectorAll(".restaurant").forEach(card=>{
+   const name=card.dataset.name||"";
+   const desc=card.dataset.description||"";
+   const raw=card.dataset.rawCategory||"";
+   const category=card.dataset.category||"other";
+   const id=card.dataset.restaurantId||"";
+   const matches=findFoodMatches(id,keyword);
+   const show=(!keyword||name.includes(keyword)||desc.includes(keyword)||raw.includes(keyword)||matches.length>0)
+     &&(currentCategory==="all"||category===currentCategory);
+   card.style.display=show?"":"none";
+   if(show)visible++;
+   const matchEl=document.getElementById("food-match-"+id);
+   if(matchEl){
+     if(keyword&&matches.length){
+       const names=matches.slice(0,3).map(x=>x.name||t("food","菜品"));
+       matchEl.textContent="🍽️ "+t("foundFoods","找到菜品：")+names.join("、")+(matches.length>3?" "+t("andMore","等"):"");
+       matchEl.style.display="block";
+     }else matchEl.style.display="none";
+   }
+ });
+ document.getElementById("noResult").style.display=(visible===0&&allRestaurants.length)?"block":"none";
 }
 
-
-/* =========================================================
-   菜品数量
-========================================================= */
-
-async function updateFoodCount(
-    restaurantId
-) {
-
-    const element =
-        document.getElementById(
-            "food-count-" +
-            restaurantId
-        );
-
-
-    if (!element) {
-        return;
-    }
-
-
-    try {
-
-        const snapshot =
-            await db
-                .collection("foods")
-                .where(
-                    "restaurantId",
-                    "==",
-                    restaurantId
-                )
-                .get();
-
-
-        let count = 0;
-
-
-        snapshot.forEach(
-            function(doc) {
-
-                const food =
-                    doc.data() || {};
-
-
-                if (
-                    food.status !==
-                    "下架"
-                ) {
-
-                    count++;
-
-                }
-
-            }
-        );
-
-
-        element.innerText =
-            "🍽️ " +
-            count +
-            " " +
-            t(
-                "foodCountSuffix",
-                "道菜品"
-            );
-
-
-    } catch (error) {
-
-        console.error(
-            "菜品数量读取失败:",
-            error
-        );
-
-
-        element.innerText =
-            "🍽️ " +
-            t(
-                "food",
-                "菜品"
-            );
-
-    }
-
+function clearSearch(){
+ const input=document.getElementById("searchInput");
+ input.value="";
+ searchRestaurants();
+ input.focus();
 }
 
-
-/* =========================================================
-   查找菜品
-========================================================= */
-
-function findFoodMatches(
-    restaurantId,
-    keyword
-) {
-
-    if (!keyword) {
-        return [];
-    }
-
-
-    return allFoods.filter(
-        function(food) {
-
-            const foodRestaurantId =
-                food.restaurantId ||
-                "";
-
-
-            const foodName =
-                String(
-                    food.name ||
-                    ""
-                )
-                .toLowerCase();
-
-
-            const foodDescription =
-                String(
-                    food.description ||
-                    ""
-                )
-                .toLowerCase();
-
-
-            const foodStatus =
-                food.status ||
-                "营业中";
-
-
-            if (
-                foodStatus ===
-                "下架"
-            ) {
-
-                return false;
-
-            }
-
-
-            return (
-
-                foodRestaurantId ===
-                restaurantId
-
-                &&
-
-                (
-
-                    foodName.includes(
-                        keyword
-                    )
-
-                    ||
-
-                    foodDescription.includes(
-                        keyword
-                    )
-
-                )
-
-            );
-
-        }
-    );
-
+function filterCategory(category,button){
+ currentCategory=category;
+ document.querySelectorAll(".category-btn").forEach(b=>b.classList.remove("active"));
+ if(button)button.classList.add("active");
+ searchRestaurants();
 }
 
-
-/* =========================================================
-   搜索
-========================================================= */
-
-function searchRestaurants() {
-
-    const input =
-        document.getElementById(
-            "searchInput"
-        );
-
-
-    if (!input) {
-        return;
-    }
-
-
-    const keyword =
-        input.value
-            .trim()
-            .toLowerCase();
-
-
-    const restaurants =
-        document.querySelectorAll(
-            ".restaurant"
-        );
-
-
-    let visibleCount = 0;
-
-
-    restaurants.forEach(
-        function(restaurant) {
-
-            const name =
-                (
-                    restaurant.dataset.name ||
-                    ""
-                )
-                .toLowerCase();
-
-
-            const description =
-                (
-                    restaurant.dataset.description ||
-                    ""
-                )
-                .toLowerCase();
-
-
-            const rawCategory =
-                (
-                    restaurant.dataset.rawCategory ||
-                    ""
-                )
-                .toLowerCase();
-
-
-            const category =
-                restaurant.dataset.category ||
-                "other";
-
-
-            const restaurantId =
-                restaurant.dataset.restaurantId ||
-                "";
-
-
-            const foodMatches =
-                findFoodMatches(
-                    restaurantId,
-                    keyword
-                );
-
-
-            const foodMatch =
-                foodMatches.length > 0;
-
-
-            const keywordMatch =
-                !keyword ||
-
-                name.includes(
-                    keyword
-                ) ||
-
-                description.includes(
-                    keyword
-                ) ||
-
-                rawCategory.includes(
-                    keyword
-                ) ||
-
-                foodMatch;
-
-
-            const categoryMatch =
-                currentCategory ===
-                "all" ||
-
-                category ===
-                currentCategory;
-
-
-            const show =
-                keywordMatch &&
-                categoryMatch;
-
-
-            if (show) {
-
-                restaurant.style.display =
-                    "";
-
-                visibleCount++;
-
-            } else {
-
-                restaurant.style.display =
-                    "none";
-
-            }
-
-
-            const foodMatchElement =
-                document.getElementById(
-                    "food-match-" +
-                    restaurantId
-                );
-
-
-            if (
-                foodMatchElement
-            ) {
-
-                if (
-                    keyword &&
-                    foodMatches.length > 0
-                ) {
-
-                    const names =
-                        foodMatches
-                            .slice(0, 3)
-                            .map(
-                                function(food) {
-
-                                    return (
-                                        food.name ||
-                                        t(
-                                            "food",
-                                            "菜品"
-                                        )
-                                    );
-
-                                }
-                            );
-
-
-                    foodMatchElement.innerText =
-                        "🍽️ " +
-                        t(
-                            "foundFoods",
-                            "找到菜品："
-                        ) +
-                        names.join("、");
-
-
-                    if (
-                        foodMatches.length > 3
-                    ) {
-
-                        foodMatchElement.innerText +=
-                            " " +
-                            t(
-                                "andMore",
-                                "等"
-                            );
-
-                    }
-
-
-                    foodMatchElement.style.display =
-                        "block";
-
-
-                } else {
-
-                    foodMatchElement.style.display =
-                        "none";
-
-                }
-
-            }
-
-        }
-    );
-
-
-    const noResult =
-        document.getElementById(
-            "noResult"
-        );
-
-
-    if (
-        visibleCount === 0 &&
-        allRestaurants.length > 0
-    ) {
-
-        noResult.style.display =
-            "block";
-
-    } else {
-
-        noResult.style.display =
-            "none";
-
-    }
-
+function openRestaurant(id){
+ if(!id){alert(t("menuPreparing","这家餐厅的菜单还在准备中"));return}
+ const r=allRestaurants.find(x=>x.id===id);
+ if(r&&!isRestaurantOpen(r)){alert(t("restaurantClosedMessage","这家餐厅目前休息中，请稍后再来"));return}
+ location.href="menu.html?id="+encodeURIComponent(id);
 }
 
-
-/* =========================================================
-   分类
-========================================================= */
-
-function filterCategory(
-    category,
-    button
-) {
-
-    currentCategory =
-        category;
-
-
-    const buttons =
-        document.querySelectorAll(
-            ".category-btn"
-        );
-
-
-    buttons.forEach(
-        function(btn) {
-
-            btn.classList.remove(
-                "active"
-            );
-
-        }
-    );
-
-
-    if (button) {
-
-        button.classList.add(
-            "active"
-        );
-
-    }
-
-
-    searchRestaurants();
-
+function refreshPageLanguage(){
+ if(!allRestaurants.length)return;
+ renderRestaurants();
+ document.querySelectorAll(".category-btn").forEach(btn=>{
+   btn.classList.toggle("active",btn.dataset.categoryCode===currentCategory);
+ });
 }
 
+document.addEventListener("mdyLanguageChanged",refreshPageLanguage);
 
-/* =========================================================
-   打开餐厅
-========================================================= */
+auth.onAuthStateChanged(async user=>{
+ currentUser=user;
+ const banner=document.getElementById("loginBanner");
+ if(user){
+   banner.style.display="none";
+   await loadFavoritesForUser(user);
+ }else{
+   banner.style.display="block";
+   favoriteRestaurantIds=new Set();
+   updateAllFavoriteButtons();
+ }
+});
 
-function openRestaurant(id) {
+function goToProfile(){location.href="profile.html"}
 
-    if (!id) {
-
-        alert(
-            t(
-                "menuPreparing",
-                "这家餐厅的菜单还在准备中"
-            )
-        );
-
-        return;
-
-    }
-
-
-    const restaurant =
-        allRestaurants.find(
-            function(item) {
-
-                return (
-                    item.id === id
-                );
-
-            }
-        );
-
-
-    if (restaurant) {
-
-        if (
-            !isRestaurantOpen(
-                restaurant
-            )
-        ) {
-
-            alert(
-                t(
-                    "restaurantClosedMessage",
-                    "这家餐厅目前休息中，请稍后再来"
-                )
-            );
-
-            return;
-
-        }
-
-    }
-
-
-    window.location.href =
-        "menu.html?id=" +
-        encodeURIComponent(id);
-
+async function init(){
+ if(window.MDYLanguage&&typeof window.MDYLanguage.apply==="function")window.MDYLanguage.apply();
+ await Promise.all([loadRestaurants(),loadFoods()]);
+ loadAllRestaurantRatings();
 }
-
-
-/* =========================================================
-   读取所有菜品
-========================================================= */
-
-async function loadFoods() {
-
-    try {
-
-        const snapshot =
-            await db
-                .collection("foods")
-                .get();
-
-
-        allFoods = [];
-
-
-        snapshot.forEach(
-            function(doc) {
-
-                const food =
-                    doc.data() || {};
-
-
-                allFoods.push({
-
-                    id: doc.id,
-
-                    ...food
-
-                });
-
-            }
-        );
-
-
-        searchRestaurants();
-
-
-    } catch (error) {
-
-        console.error(
-            "读取菜品失败:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   语言切换后重新渲染动态内容
-========================================================= */
-
-function refreshPageLanguage() {
-
-    /*
-       静态 data-i18n 内容由 language.js
-       自动处理。
-
-       餐厅卡片属于 JS 动态生成内容，
-       所以语言切换后重新生成卡片。
-    */
-
-    const restaurantList =
-        document.getElementById(
-            "restaurantList"
-        );
-
-
-    if (
-        allRestaurants.length > 0 &&
-        restaurantList
-    ) {
-
-        restaurantList.innerHTML =
-            "";
-
-
-        allRestaurants.forEach(
-            function(restaurant) {
-
-                const card =
-                    createRestaurantCard(
-                        restaurant,
-                        restaurant.id
-                    );
-
-
-                restaurantList.appendChild(
-                    card
-                );
-
-
-                updateFoodCount(
-                    restaurant.id
-                );
-
-            }
-        );
-
-
-        loadAllRestaurantRatings();
-
-
-        searchRestaurants();
-
-
-        /*
-           重新渲染以后恢复收藏状态。
-        */
-
-        updateAllFavoriteButtons();
-
-    }
-
-
-    /*
-       保持当前分类按钮状态。
-    */
-
-    document
-        .querySelectorAll(
-            ".category-btn"
-        )
-        .forEach(
-            function(btn) {
-
-                const code =
-                    btn.dataset.categoryCode;
-
-
-                if (
-                    code ===
-                    currentCategory
-                ) {
-
-                    btn.classList.add(
-                        "active"
-                    );
-
-                } else {
-
-                    btn.classList.remove(
-                        "active"
-                    );
-
-                }
-
-            }
-        );
-
-}
-
-
-/* =========================================================
-   监听统一语言系统
-========================================================= */
-
-document.addEventListener(
-    "mdyLanguageChanged",
-    function() {
-
-        refreshPageLanguage();
-
-    }
-);
-
-
-/* =========================================================
-   登录状态
-   保持原来的登录逻辑，不修改
-========================================================= */
-
-auth.onAuthStateChanged(
-    async function(user) {
-
-        currentUser =
-            user;
-
-
-        const loginBanner =
-            document.getElementById(
-                "loginBanner"
-            );
-
-
-        if (!loginBanner) {
-            return;
-        }
-
-
-        if (user) {
-
-            loginBanner.style.display =
-                "none";
-
-
-            /*
-               登录后读取该用户收藏。
-            */
-
-            await loadFavoritesForUser(
-                user
-            );
-
-
-        } else {
-
-            loginBanner.style.display =
-                "block";
-
-
-            favoriteRestaurantIds =
-                new Set();
-
-
-            updateAllFavoriteButtons();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   进入个人中心
-========================================================= */
-
-function goToProfile() {
-
-    window.location.href =
-        "profile.html";
-
-}
-
-
-/* =========================================================
-   初始化
-========================================================= */
-
-async function init() {
-
-    /*
-       确保 language.js
-       已经应用当前语言。
-    */
-
-    if (
-        window.MDYLanguage &&
-        typeof window.MDYLanguage.apply ===
-        "function"
-    ) {
-
-        window.MDYLanguage.apply();
-
-    }
-
-
-    await Promise.all([
-
-        loadRestaurants(),
-
-        loadFoods()
-
-    ]);
-
-}
-
-
-/* =========================================================
-   启动
-========================================================= */
 
 init();
-
 </script>
-
-
 </body>
-
 </html>
