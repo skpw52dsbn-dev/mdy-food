@@ -7,7 +7,7 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     >
 
     <title>确认订单 - MDY FOOD</title>
@@ -38,6 +38,8 @@
 
             margin: 0;
 
+            padding-bottom: 30px;
+
             font-family:
                 Arial,
                 "Microsoft YaHei",
@@ -52,11 +54,16 @@
 
         header {
 
-            background: #ff5a1f;
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff6a2a,
+                    #ff4d1f
+                );
 
             color: white;
 
-            padding: 16px 20px;
+            padding: 17px 20px 20px;
 
             font-weight: bold;
 
@@ -75,7 +82,7 @@
 
             font-weight: normal;
 
-            margin-bottom: 10px;
+            margin-bottom: 11px;
 
             opacity: 0.95;
 
@@ -91,7 +98,7 @@
 
         .header-title {
 
-            font-size: 20px;
+            font-size: 21px;
 
             font-weight: bold;
 
@@ -102,9 +109,9 @@
 
             max-width: 700px;
 
-            margin: 25px auto;
+            margin: 20px auto;
 
-            padding: 0 20px;
+            padding: 0 15px;
 
         }
 
@@ -113,22 +120,24 @@
 
             background: white;
 
-            padding: 20px;
+            padding: 19px;
 
-            border-radius: 12px;
+            border-radius: 16px;
 
-            margin-bottom: 20px;
+            margin-bottom: 16px;
 
             box-shadow:
-                0 2px 8px
-                rgba(0,0,0,0.05);
+                0 3px 12px
+                rgba(0,0,0,0.06);
 
         }
 
 
         h2 {
 
-            margin-top: 0;
+            margin: 0 0 16px;
+
+            font-size: 18px;
 
         }
 
@@ -137,11 +146,11 @@
 
             color: #ff5a1f;
 
-            font-size: 18px;
+            font-size: 17px;
 
             font-weight: bold;
 
-            margin-bottom: 15px;
+            margin-bottom: 12px;
 
         }
 
@@ -157,9 +166,9 @@
 
             padding: 15px;
 
-            border-radius: 10px;
+            border-radius: 12px;
 
-            margin-bottom: 20px;
+            margin-bottom: 16px;
 
             line-height: 1.7;
 
@@ -187,12 +196,43 @@
 
             justify-content: space-between;
 
+            align-items: center;
+
             gap: 10px;
 
             padding: 12px 0;
 
             border-bottom:
                 1px solid #eee;
+
+            font-size: 14px;
+
+        }
+
+
+        .item:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .item-name {
+
+            flex: 1;
+
+            color: #444;
+
+        }
+
+
+        .item-price {
+
+            flex-shrink: 0;
+
+            font-weight: bold;
+
+            color: #333;
 
         }
 
@@ -203,6 +243,21 @@
 
             margin-top: 12px;
 
+            color: #666;
+
+            font-size: 14px;
+
+        }
+
+
+        .summary-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
         }
 
 
@@ -211,6 +266,8 @@
             display: flex;
 
             justify-content: space-between;
+
+            align-items: center;
 
             font-size: 20px;
 
@@ -228,7 +285,7 @@
         }
 
 
-        label {
+        label.field-label {
 
             display: block;
 
@@ -236,10 +293,15 @@
 
             margin-top: 8px;
 
+            margin-bottom: 0;
+
+            font-size: 14px;
+
         }
 
 
-        input,
+        input[type="text"],
+        input[type="tel"],
         textarea {
 
             width: 100%;
@@ -253,19 +315,26 @@
             border:
                 1px solid #ddd;
 
-            border-radius: 8px;
+            border-radius: 9px;
 
             font-size: 16px;
 
             outline: none;
 
+            background: #fff;
+
         }
 
 
-        input:focus,
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
         textarea:focus {
 
             border-color: #ff5a1f;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(255,90,31,0.08);
 
         }
 
@@ -279,71 +348,333 @@
         }
 
 
-        .payment {
+        /* =====================================================
+           支付方式
+        ===================================================== */
+
+        .payment-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
 
             margin-bottom: 15px;
 
         }
 
 
-        .payment label {
+        .payment-option {
 
-            display: block;
+            position: relative;
 
-            padding: 12px;
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            width: 100%;
+
+            padding: 14px;
 
             border:
-                1px solid #ddd;
+                1.5px solid #e5e5e5;
 
-            border-radius: 8px;
+            border-radius: 13px;
 
-            margin-bottom: 8px;
+            background: white;
 
             cursor: pointer;
 
-            font-weight: normal;
+            transition:
+                border-color .15s,
+                background .15s,
+                box-shadow .15s,
+                transform .12s;
 
         }
 
 
-        .payment input {
+        .payment-option:active {
 
-            width: auto;
-
-            margin: 0 8px 0 0;
+            transform: scale(.99);
 
         }
 
 
-        button {
+        .payment-option.selected {
+
+            border-color: #ff5a1f;
+
+            background: #fff8f5;
+
+            box-shadow:
+                0 3px 12px
+                rgba(255,90,31,0.10);
+
+        }
+
+
+        .payment-radio {
+
+            width: 20px;
+
+            height: 20px;
+
+            margin: 0;
+
+            flex-shrink: 0;
+
+            accent-color: #ff5a1f;
+
+        }
+
+
+        .payment-icon {
+
+            width: 43px;
+
+            height: 43px;
+
+            flex-shrink: 0;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+
+            background: #f5f5f5;
+
+        }
+
+
+        .payment-option.selected .payment-icon {
+
+            background: #fff0e9;
+
+        }
+
+
+        .payment-info {
+
+            flex: 1;
+
+            min-width: 0;
+
+        }
+
+
+        .payment-name {
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            color: #333;
+
+        }
+
+
+        .payment-description {
+
+            font-size: 12px;
+
+            color: #999;
+
+            margin-top: 4px;
+
+            line-height: 1.4;
+
+        }
+
+
+        .payment-check {
+
+            width: 22px;
+
+            height: 22px;
+
+            border-radius: 50%;
+
+            border: 2px solid #ddd;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: white;
+
+            font-size: 12px;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .payment-option.selected .payment-check {
+
+            background: #ff5a1f;
+
+            border-color: #ff5a1f;
+
+        }
+
+
+        /* =====================================================
+           在线支付提示
+        ===================================================== */
+
+        .online-payment-box {
+
+            display: none;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff8f4,
+                    #fff3ed
+                );
+
+            border:
+                1px solid #ffd8c8;
+
+            border-radius: 13px;
+
+            padding: 14px;
+
+            margin-top: 5px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .online-payment-box.show {
+
+            display: block;
+
+        }
+
+
+        .online-payment-title {
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            color: #d94a20;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        .online-payment-text {
+
+            font-size: 12px;
+
+            line-height: 1.7;
+
+            color: #777;
+
+        }
+
+
+        .online-payment-amount {
+
+            margin-top: 10px;
+
+            padding-top: 10px;
+
+            border-top:
+                1px dashed #ffc8b5;
+
+            font-size: 14px;
+
+            color: #555;
+
+        }
+
+
+        .online-payment-amount strong {
+
+            color: #ff5a1f;
+
+            font-size: 17px;
+
+        }
+
+
+        /* =====================================================
+           提交按钮
+        ===================================================== */
+
+        #submitButton {
 
             width: 100%;
 
             padding: 15px;
 
-            background: #ff5a1f;
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff6a2a,
+                    #ff4d1f
+                );
 
             color: white;
 
             border: none;
 
-            border-radius: 8px;
+            border-radius: 11px;
 
             font-size: 17px;
 
+            font-weight: bold;
+
             cursor: pointer;
+
+            box-shadow:
+                0 5px 13px
+                rgba(255,90,31,0.20);
+
+            transition:
+                transform .12s,
+                opacity .12s;
 
         }
 
 
-        button:disabled {
+        #submitButton:active {
+
+            transform: scale(.99);
+
+        }
+
+
+        #submitButton:disabled {
 
             background: #aaa;
+
+            box-shadow: none;
 
             cursor: not-allowed;
 
         }
 
+
+        /* =====================================================
+           空购物车
+        ===================================================== */
 
         .empty {
 
@@ -354,6 +685,25 @@
             color: #777;
 
             line-height: 1.8;
+
+        }
+
+
+        /* =====================================================
+           小提示
+        ===================================================== */
+
+        .payment-note {
+
+            font-size: 11px;
+
+            color: #999;
+
+            line-height: 1.6;
+
+            margin-top: 10px;
+
+            text-align: center;
 
         }
 
@@ -378,7 +728,10 @@
 
             header {
 
-                padding: 15px 16px;
+                padding:
+                    15px
+                    16px
+                    18px;
 
             }
 
@@ -386,6 +739,22 @@
             .header-title {
 
                 font-size: 19px;
+
+            }
+
+
+            .payment-option {
+
+                padding: 13px;
+
+            }
+
+
+            .payment-icon {
+
+                width: 40px;
+
+                height: 40px;
 
             }
 
@@ -400,7 +769,6 @@
 
 
 <header>
-
 
     <a
         href="cart.html"
@@ -435,7 +803,9 @@
 <div class="container">
 
 
-    <!-- 登录提醒 -->
+    <!-- =====================================================
+         登录提醒
+    ====================================================== -->
 
     <div
         id="loginWarning"
@@ -468,7 +838,9 @@
     </div>
 
 
-    <!-- 订单内容 -->
+    <!-- =====================================================
+         订单内容
+    ====================================================== -->
 
     <div class="box">
 
@@ -496,13 +868,11 @@
 
         <div class="summary">
 
-            <div>
+            <div class="summary-row">
 
                 <span data-i18n="subtotal">
                     小计
                 </span>
-
-                ：
 
                 <span id="subtotal">
                     0 Ks
@@ -511,13 +881,11 @@
             </div>
 
 
-            <div>
+            <div class="summary-row">
 
                 <span data-i18n="deliveryFee">
                     配送费
                 </span>
-
-                ：
 
                 <span id="deliveryFee">
                     2,000 Ks
@@ -543,7 +911,9 @@
     </div>
 
 
-    <!-- 配送信息 -->
+    <!-- =====================================================
+         配送信息
+    ====================================================== -->
 
     <div class="box">
 
@@ -558,7 +928,10 @@
         </h2>
 
 
-        <label data-i18n="name">
+        <label
+            class="field-label"
+            data-i18n="name"
+        >
             姓名
         </label>
 
@@ -571,7 +944,10 @@
         >
 
 
-        <label data-i18n="phone">
+        <label
+            class="field-label"
+            data-i18n="phone"
+        >
             电话
         </label>
 
@@ -584,7 +960,10 @@
         >
 
 
-        <label data-i18n="address">
+        <label
+            class="field-label"
+            data-i18n="address"
+        >
             地址
         </label>
 
@@ -598,7 +977,9 @@
     </div>
 
 
-    <!-- 付款方式 -->
+    <!-- =====================================================
+         支付方式
+    ====================================================== -->
 
     <div class="box">
 
@@ -613,58 +994,194 @@
         </h2>
 
 
-        <div class="payment">
+        <div class="payment-list">
 
-            <label>
+
+            <!-- 现金 -->
+
+            <label
+                class="payment-option selected"
+                data-payment-option="cash"
+            >
 
                 <input
+                    class="payment-radio"
                     type="radio"
                     name="payment"
                     value="现金"
                     checked
                 >
 
-                💵
 
-                <span data-i18n="cash">
-                    现金
-                </span>
+                <div class="payment-icon">
+                    💵
+                </div>
+
+
+                <div class="payment-info">
+
+                    <div class="payment-name">
+
+                        <span data-i18n="cash">
+                            现金
+                        </span>
+
+                    </div>
+
+
+                    <div class="payment-description">
+
+                        <span data-i18n="cashPaymentDescription">
+                            收到外卖时现金支付
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="payment-check">
+                    ✓
+                </div>
 
             </label>
 
 
-            <label>
+            <!-- KBZPay -->
+
+            <label
+                class="payment-option"
+                data-payment-option="kbzpay"
+            >
 
                 <input
+                    class="payment-radio"
                     type="radio"
                     name="payment"
                     value="KBZPay"
                 >
 
-                📱
 
-                <span data-i18n="kbzPay">
-                    KBZPay
-                </span>
+                <div class="payment-icon">
+                    📱
+                </div>
+
+
+                <div class="payment-info">
+
+                    <div class="payment-name">
+
+                        <span data-i18n="kbzPay">
+                            KBZPay
+                        </span>
+
+                    </div>
+
+
+                    <div class="payment-description">
+
+                        <span data-i18n="kbzPayDescription">
+                            使用 KBZPay 在线支付
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="payment-check">
+                    ✓
+                </div>
 
             </label>
 
 
-            <label>
+            <!-- Wave Money -->
+
+            <label
+                class="payment-option"
+                data-payment-option="wave"
+            >
 
                 <input
+                    class="payment-radio"
                     type="radio"
                     name="payment"
                     value="Wave Money"
                 >
 
-                📱
 
-                <span data-i18n="waveMoney">
-                    Wave Money
-                </span>
+                <div class="payment-icon">
+                    📱
+                </div>
+
+
+                <div class="payment-info">
+
+                    <div class="payment-name">
+
+                        <span data-i18n="waveMoney">
+                            Wave Money
+                        </span>
+
+                    </div>
+
+
+                    <div class="payment-description">
+
+                        <span data-i18n="waveMoneyDescription">
+                            使用 Wave Money 在线支付
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="payment-check">
+                    ✓
+                </div>
 
             </label>
+
+
+        </div>
+
+
+        <!-- 在线支付说明 -->
+
+        <div
+            id="onlinePaymentBox"
+            class="online-payment-box"
+        >
+
+            <div
+                id="onlinePaymentTitle"
+                class="online-payment-title"
+            >
+                📱 在线支付
+            </div>
+
+
+            <div
+                id="onlinePaymentText"
+                class="online-payment-text"
+            >
+                当前在线支付通道正在准备中。
+            </div>
+
+
+            <div class="online-payment-amount">
+
+                <span data-i18n="paymentAmount">
+                    应付金额：
+                </span>
+
+                <strong id="onlinePaymentAmount">
+                    0 Ks
+                </strong>
+
+            </div>
 
         </div>
 
@@ -677,6 +1194,14 @@
             提交订单
         </button>
 
+
+        <div
+            class="payment-note"
+            data-i18n="paymentSecurityNote"
+        >
+            支付信息将与本次订单一起保存。
+        </div>
+
     </div>
 
 </div>
@@ -685,9 +1210,9 @@
 <script>
 
 
-/* ========================================
+/* =========================================================
    Firebase
-======================================== */
+========================================================= */
 
 const firebaseConfig = {
 
@@ -732,9 +1257,9 @@ const auth =
     firebase.auth();
 
 
-/* ========================================
+/* =========================================================
    语言
-======================================== */
+========================================================= */
 
 function t(key, fallback) {
 
@@ -750,6 +1275,7 @@ function t(key, fallback) {
                 fallback
             );
 
+
         if (
             result &&
             result !== key
@@ -761,23 +1287,26 @@ function t(key, fallback) {
 
     }
 
+
     return fallback || key;
 
 }
 
 
-/* ========================================
+/* =========================================================
    当前用户
-======================================== */
+========================================================= */
 
-let currentUser = null;
+let currentUser =
+    null;
 
 
-/* ========================================
+/* =========================================================
    购物车
-======================================== */
+========================================================= */
 
 let cart = [];
+
 
 try {
 
@@ -786,13 +1315,15 @@ try {
             localStorage.getItem("cart")
         ) || [];
 
+
     if (!Array.isArray(cart)) {
 
         cart = [];
 
     }
 
-} catch (error) {
+}
+catch (error) {
 
     console.error(
         "读取购物车失败:",
@@ -804,9 +1335,9 @@ try {
 }
 
 
-/* ========================================
+/* =========================================================
    餐厅
-======================================== */
+========================================================= */
 
 let restaurantId =
     null;
@@ -828,16 +1359,27 @@ if (cart.length > 0) {
 }
 
 
-/* ========================================
+/* =========================================================
+   配送费
+========================================================= */
+
+const DELIVERY_FEE =
+    2000;
+
+
+/* =========================================================
+   当前支付方式
+========================================================= */
+
+let selectedPayment =
+    "现金";
+
+
+/* =========================================================
    页面语言
-======================================== */
+========================================================= */
 
 function updateCheckoutLanguage() {
-
-    /*
-     * 不再调用 MDYLanguage.apply()
-     * 防止语言事件递归。
-     */
 
     document.title =
         t(
@@ -846,22 +1388,8 @@ function updateCheckoutLanguage() {
         );
 
 
-    /*
-     * 静态 data-i18n 内容由 language.js
-     * 自己处理。
-     *
-     * 这里只重新生成动态订单文字。
-     */
-
     showOrder();
 
-
-    /*
-     * 餐厅名称已经读取过时，
-     * 不需要因为语言变化再次读取 Firestore。
-     *
-     * 只更新错误状态/默认状态。
-     */
 
     const nameElement =
         document.getElementById(
@@ -882,6 +1410,9 @@ function updateCheckoutLanguage() {
             );
 
     }
+
+
+    updatePaymentUI();
 
 
     const submitButton =
@@ -906,9 +1437,9 @@ function updateCheckoutLanguage() {
 }
 
 
-/* ========================================
+/* =========================================================
    读取餐厅
-======================================== */
+========================================================= */
 
 async function loadRestaurant() {
 
@@ -951,7 +1482,7 @@ async function loadRestaurant() {
         if (doc.exists) {
 
             const data =
-                doc.data();
+                doc.data() || {};
 
 
             restaurantName =
@@ -979,8 +1510,8 @@ async function loadRestaurant() {
 
         }
 
-
-    } catch (error) {
+    }
+    catch (error) {
 
         console.error(
             "读取餐厅失败:",
@@ -1000,9 +1531,9 @@ async function loadRestaurant() {
 }
 
 
-/* ========================================
+/* =========================================================
    显示订单
-======================================== */
+========================================================= */
 
 function showOrder() {
 
@@ -1027,11 +1558,14 @@ function showOrder() {
 
                 🛒
 
-                <br><br>
+                <br>
+                <br>
 
-                ${t(
-                    "emptyCartCheckout",
-                    "购物车是空的"
+                ${escapeHtml(
+                    t(
+                        "emptyCartCheckout",
+                        "购物车是空的"
+                    )
                 )}
 
             </div>
@@ -1057,15 +1591,23 @@ function showOrder() {
             "2,000 Ks";
 
 
+        document.getElementById(
+            "onlinePaymentAmount"
+        ).innerText =
+            "2,000 Ks";
+
+
         return;
 
     }
 
 
-    let subtotal = 0;
+    let subtotal =
+        0;
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     cart.forEach(
@@ -1099,7 +1641,7 @@ function showOrder() {
 
             div.innerHTML = `
 
-                <span>
+                <span class="item-name">
 
                     ${escapeHtml(
                         item.name || ""
@@ -1110,10 +1652,9 @@ function showOrder() {
                 </span>
 
 
-                <span>
+                <span class="item-price">
 
-                    ${itemTotal
-                        .toLocaleString()}
+                    ${itemTotal.toLocaleString()}
                     Ks
 
                 </span>
@@ -1129,6 +1670,11 @@ function showOrder() {
     );
 
 
+    const total =
+        subtotal +
+        DELIVERY_FEE;
+
+
     document.getElementById(
         "subtotal"
     ).innerText =
@@ -1139,23 +1685,29 @@ function showOrder() {
     document.getElementById(
         "deliveryFee"
     ).innerText =
-        "2,000 Ks";
+        DELIVERY_FEE.toLocaleString() +
+        " Ks";
 
 
     document.getElementById(
         "total"
     ).innerText =
-        (
-            subtotal + 2000
-        ).toLocaleString() +
+        total.toLocaleString() +
+        " Ks";
+
+
+    document.getElementById(
+        "onlinePaymentAmount"
+    ).innerText =
+        total.toLocaleString() +
         " Ks";
 
 }
 
 
-/* ========================================
+/* =========================================================
    HTML 安全处理
-======================================== */
+========================================================= */
 
 function escapeHtml(value) {
 
@@ -1199,9 +1751,9 @@ function escapeHtml(value) {
 }
 
 
-/* ========================================
+/* =========================================================
    自动读取顾客资料
-======================================== */
+========================================================= */
 
 async function loadCustomerProfile(
     user
@@ -1231,7 +1783,7 @@ async function loadCustomerProfile(
 
 
         const customer =
-            doc.data();
+            doc.data() || {};
 
 
         document.getElementById(
@@ -1255,7 +1807,6 @@ async function loadCustomerProfile(
             "";
 
     }
-
     catch (error) {
 
         console.error(
@@ -1268,9 +1819,171 @@ async function loadCustomerProfile(
 }
 
 
-/* ========================================
+/* =========================================================
+   支付 UI
+========================================================= */
+
+function updatePaymentUI() {
+
+    const options =
+        document.querySelectorAll(
+            ".payment-option"
+        );
+
+
+    options.forEach(
+        function(option) {
+
+            const radio =
+                option.querySelector(
+                    'input[name="payment"]'
+                );
+
+
+            if (!radio) {
+                return;
+            }
+
+
+            option.classList.toggle(
+                "selected",
+                radio.checked
+            );
+
+        }
+    );
+
+
+    const onlineBox =
+        document.getElementById(
+            "onlinePaymentBox"
+        );
+
+
+    const onlineTitle =
+        document.getElementById(
+            "onlinePaymentTitle"
+        );
+
+
+    const onlineText =
+        document.getElementById(
+            "onlinePaymentText"
+        );
+
+
+    const totalElement =
+        document.getElementById(
+            "total"
+        );
+
+
+    const onlineAmount =
+        document.getElementById(
+            "onlinePaymentAmount"
+        );
+
+
+    if (!onlineBox) {
+        return;
+    }
+
+
+    if (totalElement && onlineAmount) {
+
+        onlineAmount.innerText =
+            totalElement.innerText;
+
+    }
+
+
+    if (
+        selectedPayment ===
+        "KBZPay"
+    ) {
+
+        onlineBox.classList.add(
+            "show"
+        );
+
+
+        onlineTitle.innerText =
+            "📱 KBZPay";
+
+
+        onlineText.innerText =
+            t(
+                "kbzPayPreparing",
+                "KBZPay 在线支付通道正在准备中。当前订单会先保存为待支付状态，接入正式支付接口后即可完成在线支付。"
+            );
+
+    }
+
+    else if (
+        selectedPayment ===
+        "Wave Money"
+    ) {
+
+        onlineBox.classList.add(
+            "show"
+        );
+
+
+        onlineTitle.innerText =
+            "📱 Wave Money";
+
+
+        onlineText.innerText =
+            t(
+                "waveMoneyPreparing",
+                "Wave Money 在线支付通道正在准备中。当前订单会先保存为待支付状态，接入正式支付接口后即可完成在线支付。"
+            );
+
+    }
+
+    else {
+
+        onlineBox.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   支付方式监听
+========================================================= */
+
+document.addEventListener(
+    "change",
+    function(event) {
+
+        if (
+            !event.target.matches(
+                'input[name="payment"]'
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        selectedPayment =
+            event.target.value;
+
+
+        updatePaymentUI();
+
+    }
+);
+
+
+/* =========================================================
    登录状态
-======================================== */
+========================================================= */
 
 auth.onAuthStateChanged(
     async function(user) {
@@ -1289,6 +2002,13 @@ auth.onAuthStateChanged(
             document.getElementById(
                 "submitButton"
             );
+
+
+        if (!warning || !submitButton) {
+
+            return;
+
+        }
 
 
         if (user) {
@@ -1336,12 +2056,11 @@ auth.onAuthStateChanged(
 );
 
 
-/* ========================================
+/* =========================================================
    提交订单
-======================================== */
+========================================================= */
 
 async function submitOrder() {
-
 
     if (!currentUser) {
 
@@ -1419,14 +2138,14 @@ async function submitOrder() {
         );
 
 
-    /*
-     * Firestore 中继续保存原来的内部值。
-     */
-
     const payment =
         paymentElement
             ? paymentElement.value
             : "现金";
+
+
+    selectedPayment =
+        payment;
 
 
     if (!name) {
@@ -1498,11 +2217,13 @@ async function submitOrder() {
                 return sum +
 
                     (
-                        Number(item.price) || 0
+                        Number(item.price) ||
+                        0
                     ) *
 
                     (
-                        Number(item.quantity) || 0
+                        Number(item.quantity) ||
+                        0
                     );
 
             },
@@ -1511,7 +2232,8 @@ async function submitOrder() {
 
 
     const total =
-        subtotal + 2000;
+        subtotal +
+        DELIVERY_FEE;
 
 
     const orderNumber =
@@ -1519,11 +2241,59 @@ async function submitOrder() {
         Date.now();
 
 
+    /*
+       =====================================================
+       支付状态
+
+       现金：
+       unpaid
+
+       KBZPay / Wave Money：
+       pending
+
+       后面接真实支付接口时，
+       支付成功再改成 paid。
+       =====================================================
+    */
+
+    let paymentStatus =
+        "unpaid";
+
+
+    if (
+        payment === "KBZPay" ||
+        payment === "Wave Money"
+    ) {
+
+        paymentStatus =
+            "pending";
+
+    }
+
+
+    /*
+       当前阶段还没有真实支付交易号。
+    */
+
+    const paymentTransactionId =
+        "";
+
+
     try {
+
+        /*
+           =================================================
+           写入 Firestore
+        =================================================
+        */
 
         await db
             .collection("orders")
             .add({
+
+                /*
+                   原有订单字段
+                */
 
                 order_number:
                     orderNumber,
@@ -1568,14 +2338,38 @@ async function submitOrder() {
                 created_at:
                     firebase.firestore
                         .FieldValue
-                        .serverTimestamp()
+                        .serverTimestamp(),
+
+
+                /*
+                   =================================================
+                   新支付字段
+                =================================================
+                */
+
+                paymentMethod:
+                    payment,
+
+                paymentStatus:
+                    paymentStatus,
+
+                paymentAmount:
+                    total,
+
+                paymentTransactionId:
+                    paymentTransactionId,
+
+                paidAt:
+                    null
 
             });
 
 
         /*
-         * 本地订单记录
-         */
+           =================================================
+           本地订单记录
+        =================================================
+        */
 
         const order = {
 
@@ -1606,6 +2400,21 @@ async function submitOrder() {
 
             payment:
                 payment,
+
+            paymentMethod:
+                payment,
+
+            paymentStatus:
+                paymentStatus,
+
+            paymentAmount:
+                total,
+
+            paymentTransactionId:
+                paymentTransactionId,
+
+            paidAt:
+                null,
 
             items:
                 cart,
@@ -1643,7 +2452,6 @@ async function submitOrder() {
             }
 
         }
-
         catch (error) {
 
             orders = [];
@@ -1673,8 +2481,10 @@ async function submitOrder() {
 
 
         /*
-         * 清空购物车
-         */
+           =================================================
+           清空购物车
+        =================================================
+        */
 
         localStorage.removeItem(
             "cart"
@@ -1682,14 +2492,15 @@ async function submitOrder() {
 
 
         /*
-         * 成功
-         */
+           =================================================
+           成功
+        =================================================
+        */
 
         window.location.href =
             "success.html";
 
     }
-
     catch (error) {
 
         console.error(
@@ -1723,9 +2534,9 @@ async function submitOrder() {
 }
 
 
-/* ========================================
+/* =========================================================
    监听语言变化
-======================================== */
+========================================================= */
 
 window.addEventListener(
     "mdyLanguageChanged",
@@ -1737,20 +2548,35 @@ window.addEventListener(
 );
 
 
-/* ========================================
+/* =========================================================
    页面启动
-======================================== */
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
     function() {
 
         /*
-         * language.js 自动初始化语言。
-         * 不再手动调用 apply()。
-         */
+           language.js 自动初始化语言。
+        */
 
         updateCheckoutLanguage();
+
+
+        /*
+           默认支付方式
+        */
+
+        selectedPayment =
+            "现金";
+
+
+        updatePaymentUI();
+
+
+        /*
+           读取餐厅
+        */
 
         loadRestaurant();
 
