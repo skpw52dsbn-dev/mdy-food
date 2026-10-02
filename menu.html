@@ -355,12 +355,11 @@ function escapeHtml(text){
 
 function escapeJs(text){
   return String(text===null||text===undefined?"":text)
-    .replace(/\/g,"\\").replace(/'/g,"\'")
-    .replace(/
-/g,"\r").replace(/
-/g,"\n");
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/\r/g,"\\r")
+    .replace(/\n/g,"\\n");
 }
-
 function translateCategory(category){
   const value=String(category||"").trim();
   if(!value) return "";
