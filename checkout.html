@@ -1,1218 +1,672 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 
 <head>
 
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    >
-
-    <title>确认订单 - MDY FOOD</title>
-
-
-    <!-- Firebase -->
-
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
-
-    <!-- MDY FOOD 全站语言系统 -->
-
-    <script src="language.js"></script>
-
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        body {
-
-            margin: 0;
-
-            padding-bottom: 30px;
-
-            font-family:
-                Arial,
-                "Microsoft YaHei",
-                sans-serif;
-
-            background: #f5f5f5;
-
-            color: #333;
-
-        }
-
-
-        header {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #ff6a2a,
-                    #ff4d1f
-                );
-
-            color: white;
-
-            padding: 17px 20px 20px;
-
-            font-weight: bold;
-
-        }
-
-
-        .back-button {
-
-            display: inline-block;
-
-            color: white;
-
-            text-decoration: none;
-
-            font-size: 15px;
-
-            font-weight: normal;
-
-            margin-bottom: 11px;
-
-            opacity: 0.95;
-
-        }
-
-
-        .back-button:hover {
-
-            opacity: 0.8;
-
-        }
-
-
-        .header-title {
-
-            font-size: 21px;
-
-            font-weight: bold;
-
-        }
-
-
-        .container {
-
-            max-width: 700px;
-
-            margin: 20px auto;
-
-            padding: 0 15px;
-
-        }
-
-
-        .box {
-
-            background: white;
-
-            padding: 19px;
-
-            border-radius: 16px;
-
-            margin-bottom: 16px;
-
-            box-shadow:
-                0 3px 12px
-                rgba(0,0,0,0.06);
-
-        }
-
-
-        h2 {
-
-            margin: 0 0 16px;
-
-            font-size: 18px;
-
-        }
-
-
-        .restaurant-name {
-
-            color: #ff5a1f;
-
-            font-size: 17px;
-
-            font-weight: bold;
-
-            margin-bottom: 12px;
-
-        }
-
-
-        .login-warning {
-
-            background: #fff4ef;
-
-            border:
-                1px solid #ffcfbf;
-
-            color: #d94a20;
-
-            padding: 15px;
-
-            border-radius: 12px;
-
-            margin-bottom: 16px;
-
-            line-height: 1.7;
-
-        }
-
-
-        .login-warning a {
-
-            display: inline-block;
-
-            margin-top: 8px;
-
-            color: #ff5a1f;
-
-            font-weight: bold;
-
-            text-decoration: none;
-
-        }
-
-
-        .item {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            gap: 10px;
-
-            padding: 12px 0;
-
-            border-bottom:
-                1px solid #eee;
-
-            font-size: 14px;
-
-        }
-
-
-        .item:last-child {
-
-            border-bottom: none;
-
-        }
-
-
-        .item-name {
-
-            flex: 1;
-
-            color: #444;
-
-        }
-
-
-        .item-price {
-
-            flex-shrink: 0;
-
-            font-weight: bold;
-
-            color: #333;
-
-        }
-
-
-        .summary {
-
-            line-height: 2;
-
-            margin-top: 12px;
-
-            color: #666;
-
-            font-size: 14px;
-
-        }
-
-
-        .summary-row {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-        }
-
-
-        .total {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            font-size: 20px;
-
-            font-weight: bold;
-
-            margin-top: 15px;
-
-            padding-top: 15px;
-
-            border-top:
-                1px solid #eee;
-
-            color: #ff5a1f;
-
-        }
-
-
-        label.field-label {
-
-            display: block;
-
-            font-weight: bold;
-
-            margin-top: 8px;
-
-            margin-bottom: 0;
-
-            font-size: 14px;
-
-        }
-
-
-        input[type="text"],
-        input[type="tel"],
-        textarea {
-
-            width: 100%;
-
-            padding: 13px;
-
-            margin-top: 8px;
-
-            margin-bottom: 15px;
-
-            border:
-                1px solid #ddd;
-
-            border-radius: 9px;
-
-            font-size: 16px;
-
-            outline: none;
-
-            background: #fff;
-
-        }
-
-
-        input[type="text"]:focus,
-        input[type="tel"]:focus,
-        textarea:focus {
-
-            border-color: #ff5a1f;
-
-            box-shadow:
-                0 0 0 2px
-                rgba(255,90,31,0.08);
-
-        }
-
-
-        textarea {
-
-            min-height: 100px;
-
-            resize: vertical;
-
-        }
-
-
-        /* =====================================================
-           支付方式
-        ===================================================== */
-
-        .payment-list {
-
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 10px;
-
-            margin-bottom: 15px;
-
-        }
-
-
-        .payment-option {
-
-            position: relative;
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-
-            width: 100%;
-
-            padding: 14px;
-
-            border:
-                1.5px solid #e5e5e5;
-
-            border-radius: 13px;
-
-            background: white;
-
-            cursor: pointer;
-
-            transition:
-                border-color .15s,
-                background .15s,
-                box-shadow .15s,
-                transform .12s;
-
-        }
-
-
-        .payment-option:active {
-
-            transform: scale(.99);
-
-        }
-
-
-        .payment-option.selected {
-
-            border-color: #ff5a1f;
-
-            background: #fff8f5;
-
-            box-shadow:
-                0 3px 12px
-                rgba(255,90,31,0.10);
-
-        }
-
-
-        .payment-radio {
-
-            width: 20px;
-
-            height: 20px;
-
-            margin: 0;
-
-            flex-shrink: 0;
-
-            accent-color: #ff5a1f;
-
-        }
-
-
-        .payment-icon {
-
-            width: 43px;
-
-            height: 43px;
-
-            flex-shrink: 0;
-
-            border-radius: 12px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-size: 22px;
-
-            background: #f5f5f5;
-
-        }
-
-
-        .payment-option.selected .payment-icon {
-
-            background: #fff0e9;
-
-        }
-
-
-        .payment-info {
-
-            flex: 1;
-
-            min-width: 0;
-
-        }
-
-
-        .payment-name {
-
-            font-size: 15px;
-
-            font-weight: bold;
-
-            color: #333;
-
-        }
-
-
-        .payment-description {
-
-            font-size: 12px;
-
-            color: #999;
-
-            margin-top: 4px;
-
-            line-height: 1.4;
-
-        }
-
-
-        .payment-check {
-
-            width: 22px;
-
-            height: 22px;
-
-            border-radius: 50%;
-
-            border: 2px solid #ddd;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            color: white;
-
-            font-size: 12px;
-
-            flex-shrink: 0;
-
-        }
-
-
-        .payment-option.selected .payment-check {
-
-            background: #ff5a1f;
-
-            border-color: #ff5a1f;
-
-        }
-
-
-        /* =====================================================
-           在线支付提示
-        ===================================================== */
-
-        .online-payment-box {
-
-            display: none;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #fff8f4,
-                    #fff3ed
-                );
-
-            border:
-                1px solid #ffd8c8;
-
-            border-radius: 13px;
-
-            padding: 14px;
-
-            margin-top: 5px;
-
-            margin-bottom: 15px;
-
-        }
-
-
-        .online-payment-box.show {
-
-            display: block;
-
-        }
-
-
-        .online-payment-title {
-
-            font-size: 14px;
-
-            font-weight: bold;
-
-            color: #d94a20;
-
-            margin-bottom: 7px;
-
-        }
-
-
-        .online-payment-text {
-
-            font-size: 12px;
-
-            line-height: 1.7;
-
-            color: #777;
-
-        }
-
-
-        .online-payment-amount {
-
-            margin-top: 10px;
-
-            padding-top: 10px;
-
-            border-top:
-                1px dashed #ffc8b5;
-
-            font-size: 14px;
-
-            color: #555;
-
-        }
-
-
-        .online-payment-amount strong {
-
-            color: #ff5a1f;
-
-            font-size: 17px;
-
-        }
-
-
-        /* =====================================================
-           提交按钮
-        ===================================================== */
-
-        #submitButton {
-
-            width: 100%;
-
-            padding: 15px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #ff6a2a,
-                    #ff4d1f
-                );
-
-            color: white;
-
-            border: none;
-
-            border-radius: 11px;
-
-            font-size: 17px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            box-shadow:
-                0 5px 13px
-                rgba(255,90,31,0.20);
-
-            transition:
-                transform .12s,
-                opacity .12s;
-
-        }
-
-
-        #submitButton:active {
-
-            transform: scale(.99);
-
-        }
-
-
-        #submitButton:disabled {
-
-            background: #aaa;
-
-            box-shadow: none;
-
-            cursor: not-allowed;
-
-        }
-
-
-        /* =====================================================
-           空购物车
-        ===================================================== */
-
-        .empty {
-
-            text-align: center;
-
-            padding: 50px 20px;
-
-            color: #777;
-
-            line-height: 1.8;
-
-        }
-
-
-        /* =====================================================
-           小提示
-        ===================================================== */
-
-        .payment-note {
-
-            font-size: 11px;
-
-            color: #999;
-
-            line-height: 1.6;
-
-            margin-top: 10px;
-
-            text-align: center;
-
-        }
-
-
-        @media (max-width: 600px) {
-
-            .container {
-
-                padding: 0 12px;
-
-                margin-top: 15px;
-
-            }
-
-
-            .box {
-
-                padding: 16px;
-
-            }
-
-
-            header {
-
-                padding:
-                    15px
-                    16px
-                    18px;
-
-            }
-
-
-            .header-title {
-
-                font-size: 19px;
-
-            }
-
-
-            .payment-option {
-
-                padding: 13px;
-
-            }
-
-
-            .payment-icon {
-
-                width: 40px;
-
-                height: 40px;
-
-            }
-
-        }
-
-    </style>
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+<title>确认订单 - MDY FOOD</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="language.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    background: #f5f5f5;
+    color: #333;
+}
+
+header {
+    background: #ff5a1f;
+    color: white;
+    padding: 16px 20px;
+    font-weight: bold;
+}
+
+.back-button {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: normal;
+    margin-bottom: 10px;
+    opacity: 0.95;
+}
+
+.back-button:hover {
+    opacity: 0.8;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 700px;
+    margin: 25px auto;
+    padding: 0 20px;
+}
+
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.restaurant-name {
+    color: #ff5a1f;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.login-warning {
+    background: #fff4ef;
+    border: 1px solid #ffcfbf;
+    color: #d94a20;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    line-height: 1.7;
+}
+
+.login-warning a {
+    display: inline-block;
+    margin-top: 8px;
+    color: #ff5a1f;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.summary {
+    line-height: 2;
+    margin-top: 12px;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    color: #ff5a1f;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #ff5a1f;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.payment {
+    margin-bottom: 15px;
+}
+
+.payment-option {
+    position: relative;
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    padding: 14px !important;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 10px !important;
+    cursor: pointer;
+    font-weight: normal !important;
+    transition: 0.2s;
+}
+
+.payment-option:hover {
+    border-color: #ff5a1f;
+    background: #fff8f5;
+}
+
+.payment-option.selected {
+    border-color: #ff5a1f;
+    background: #fff4ef;
+}
+
+.payment-option input {
+    width: auto;
+    margin: 0;
+}
+
+.payment-icon {
+    font-size: 24px;
+    width: 34px;
+    text-align: center;
+}
+
+.payment-text {
+    flex: 1;
+}
+
+.payment-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.payment-desc {
+    font-size: 12px;
+    color: #888;
+    margin-top: 3px;
+}
+
+.kbz-pay-button {
+    display: none;
+    width: 100%;
+    padding: 14px;
+    margin: 5px 0 12px;
+    background: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.kbz-pay-button:hover {
+    opacity: 0.9;
+}
+
+.kbz-pay-info {
+    display: none;
+    background: #f0fff5;
+    border: 1px solid #b7ebc6;
+    border-radius: 9px;
+    padding: 12px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #276749;
+}
+
+.payment-note {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    background: #ff5a1f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+.empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: #777;
+    line-height: 1.8;
+}
+
+.status-box {
+    display: none;
+    background: #fff8e8;
+    border: 1px solid #f3d58a;
+    color: #795900;
+    padding: 13px;
+    border-radius: 9px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+
+    .container {
+        padding: 0 12px;
+        margin-top: 15px;
+    }
+
+    .box {
+        padding: 16px;
+    }
+
+    header {
+        padding: 15px 16px;
+    }
+
+    .header-title {
+        font-size: 19px;
+    }
+
+}
+
+</style>
 
 </head>
 
-
 <body>
-
 
 <header>
 
-    <a
-        href="cart.html"
-        class="back-button"
-    >
+<a href="cart.html" class="back-button">
 
-        ←
+←
 
-        <span
-            id="backToCartText"
-            data-i18n="back"
-        >
-            返回购物车
-        </span>
+<span
+id="backToCartText"
+data-i18n="back"
 
-    </a>
+>
 
+```
+返回购物车
+```
 
-    <div class="header-title">
+</span>
 
-        🛒
+</a>
 
-        <span data-i18n="checkoutTitle">
-            确认订单
-        </span>
+<div class="header-title">
 
-    </div>
+🛒
 
-</header>
-
-
-<div class="container">
-
-
-    <!-- =====================================================
-         登录提醒
-    ====================================================== -->
-
-    <div
-        id="loginWarning"
-        class="login-warning"
-        style="display:none;"
-    >
-
-        <span data-i18n="notLoggedIn">
-            ⚠️ 你还没有登录。
-        </span>
-
-        <br>
-
-        <span data-i18n="loginRequiredDesc">
-            登录后才能提交订单，并且你的订单会自动保存到你的账号。
-        </span>
-
-        <br>
-
-        <a href="login.html">
-
-            👉
-
-            <span data-i18n="goLogin">
-                去登录 / 注册
-            </span>
-
-        </a>
-
-    </div>
-
-
-    <!-- =====================================================
-         订单内容
-    ====================================================== -->
-
-    <div class="box">
-
-        <h2>
-
-            🍜
-
-            <span data-i18n="orderContent">
-                订单内容
-            </span>
-
-        </h2>
-
-
-        <div
-            id="restaurantName"
-            class="restaurant-name"
-        >
-            正在确认餐厅...
-        </div>
-
-
-        <div id="orderItems"></div>
-
-
-        <div class="summary">
-
-            <div class="summary-row">
-
-                <span data-i18n="subtotal">
-                    小计
-                </span>
-
-                <span id="subtotal">
-                    0 Ks
-                </span>
-
-            </div>
-
-
-            <div class="summary-row">
-
-                <span data-i18n="deliveryFee">
-                    配送费
-                </span>
-
-                <span id="deliveryFee">
-                    2,000 Ks
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <div class="total">
-
-            <span data-i18n="total">
-                总计
-            </span>
-
-            <span id="total">
-                2,000 Ks
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         配送信息
-    ====================================================== -->
-
-    <div class="box">
-
-        <h2>
-
-            📍
-
-            <span data-i18n="deliveryInfo">
-                配送信息
-            </span>
-
-        </h2>
-
-
-        <label
-            class="field-label"
-            data-i18n="name"
-        >
-            姓名
-        </label>
-
-
-        <input
-            id="name"
-            type="text"
-            data-i18n-placeholder="namePlaceholder"
-            placeholder="请输入姓名"
-        >
-
-
-        <label
-            class="field-label"
-            data-i18n="phone"
-        >
-            电话
-        </label>
-
-
-        <input
-            id="phone"
-            type="tel"
-            data-i18n-placeholder="phonePlaceholder"
-            placeholder="请输入电话号码"
-        >
-
-
-        <label
-            class="field-label"
-            data-i18n="address"
-        >
-            地址
-        </label>
-
-
-        <textarea
-            id="address"
-            data-i18n-placeholder="addressPlaceholder"
-            placeholder="请输入详细配送地址"
-        ></textarea>
-
-    </div>
-
-
-    <!-- =====================================================
-         支付方式
-    ====================================================== -->
-
-    <div class="box">
-
-        <h2>
-
-            💳
-
-            <span data-i18n="paymentMethod">
-                付款方式
-            </span>
-
-        </h2>
-
-
-        <div class="payment-list">
-
-
-            <!-- 现金 -->
-
-            <label
-                class="payment-option selected"
-                data-payment-option="cash"
-            >
-
-                <input
-                    class="payment-radio"
-                    type="radio"
-                    name="payment"
-                    value="现金"
-                    checked
-                >
-
-
-                <div class="payment-icon">
-                    💵
-                </div>
-
-
-                <div class="payment-info">
-
-                    <div class="payment-name">
-
-                        <span data-i18n="cash">
-                            现金
-                        </span>
-
-                    </div>
-
-
-                    <div class="payment-description">
-
-                        <span data-i18n="cashPaymentDescription">
-                            收到外卖时现金支付
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="payment-check">
-                    ✓
-                </div>
-
-            </label>
-
-
-            <!-- KBZPay -->
-
-            <label
-                class="payment-option"
-                data-payment-option="kbzpay"
-            >
-
-                <input
-                    class="payment-radio"
-                    type="radio"
-                    name="payment"
-                    value="KBZPay"
-                >
-
-
-                <div class="payment-icon">
-                    📱
-                </div>
-
-
-                <div class="payment-info">
-
-                    <div class="payment-name">
-
-                        <span data-i18n="kbzPay">
-                            KBZPay
-                        </span>
-
-                    </div>
-
-
-                    <div class="payment-description">
-
-                        <span data-i18n="kbzPayDescription">
-                            使用 KBZPay 在线支付
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="payment-check">
-                    ✓
-                </div>
-
-            </label>
-
-
-            <!-- Wave Money -->
-
-            <label
-                class="payment-option"
-                data-payment-option="wave"
-            >
-
-                <input
-                    class="payment-radio"
-                    type="radio"
-                    name="payment"
-                    value="Wave Money"
-                >
-
-
-                <div class="payment-icon">
-                    📱
-                </div>
-
-
-                <div class="payment-info">
-
-                    <div class="payment-name">
-
-                        <span data-i18n="waveMoney">
-                            Wave Money
-                        </span>
-
-                    </div>
-
-
-                    <div class="payment-description">
-
-                        <span data-i18n="waveMoneyDescription">
-                            使用 Wave Money 在线支付
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="payment-check">
-                    ✓
-                </div>
-
-            </label>
-
-
-        </div>
-
-
-        <!-- 在线支付说明 -->
-
-        <div
-            id="onlinePaymentBox"
-            class="online-payment-box"
-        >
-
-            <div
-                id="onlinePaymentTitle"
-                class="online-payment-title"
-            >
-                📱 在线支付
-            </div>
-
-
-            <div
-                id="onlinePaymentText"
-                class="online-payment-text"
-            >
-                当前在线支付通道正在准备中。
-            </div>
-
-
-            <div class="online-payment-amount">
-
-                <span data-i18n="paymentAmount">
-                    应付金额：
-                </span>
-
-                <strong id="onlinePaymentAmount">
-                    0 Ks
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <button
-            id="submitButton"
-            onclick="submitOrder()"
-            data-i18n="placeOrder"
-        >
-            提交订单
-        </button>
-
-
-        <div
-            class="payment-note"
-            data-i18n="paymentSecurityNote"
-        >
-            支付信息将与本次订单一起保存。
-        </div>
-
-    </div>
+<span data-i18n="checkoutTitle">
+    确认订单
+</span>
 
 </div>
 
+</header>
+
+<div class="container">
+
+<div
+    id="loginWarning"
+    class="login-warning"
+    style="display:none;"
+>
+
+<span data-i18n="notLoggedIn">
+    ⚠️ 你还没有登录。
+</span>
+
+<br>
+
+<span data-i18n="loginRequiredDesc">
+    登录后才能提交订单，并且你的订单会自动保存到你的账号。
+</span>
+
+<br>
+
+<a href="login.html">
+
+👉
+
+<span data-i18n="goLogin">
+    去登录 / 注册
+</span>
+
+</a>
+
+</div>
+
+<div class="box">
+
+<h2>
+
+🍜
+
+<span data-i18n="orderContent">
+    订单内容
+</span>
+
+</h2>
+
+<div
+    id="restaurantName"
+    class="restaurant-name"
+>
+    正在确认餐厅...
+</div>
+
+<div id="orderItems"></div>
+
+<div class="summary">
+
+<div>
+
+<span data-i18n="subtotal">
+    小计
+</span>
+
+：
+
+<span id="subtotal">
+    0 Ks
+</span>
+
+</div>
+
+<div>
+
+<span data-i18n="deliveryFee">
+    配送费
+</span>
+
+：
+
+<span id="deliveryFee">
+    2,000 Ks
+</span>
+
+</div>
+
+</div>
+
+<div class="total">
+
+<span data-i18n="total">
+    总计
+</span>
+
+<span id="total">
+    2,000 Ks
+</span>
+
+</div>
+
+</div>
+
+<div class="box">
+
+<h2>
+
+📍
+
+<span data-i18n="deliveryInfo">
+    配送信息
+</span>
+
+</h2>
+
+<label data-i18n="name">
+    姓名
+</label>
+
+<input
+id="name"
+type="text"
+data-i18n-placeholder="namePlaceholder"
+placeholder="请输入姓名"
+
+>
+
+<label data-i18n="phone">
+    电话
+</label>
+
+<input
+id="phone"
+type="tel"
+data-i18n-placeholder="phonePlaceholder"
+placeholder="请输入电话号码"
+
+>
+
+<label data-i18n="address">
+    地址
+</label>
+
+<textarea
+    id="address"
+    data-i18n-placeholder="addressPlaceholder"
+    placeholder="请输入详细配送地址"
+></textarea>
+
+</div>
+
+<div class="box">
+
+<h2>
+
+💳
+
+<span data-i18n="paymentMethod">
+    付款方式
+</span>
+
+</h2>
+
+<div class="payment">
+
+<label
+class="payment-option selected"
+onclick="selectPayment('现金')"
+
+>
+
+<input
+type="radio"
+name="payment"
+value="现金"
+checked
+
+>
+
+<div class="payment-icon">
+💵
+</div>
+
+<div class="payment-text">
+
+<div class="payment-title">
+现金
+</div>
+
+<div class="payment-desc">
+下单后配送员送达时付款
+</div>
+
+</div>
+
+</label>
+
+<label
+class="payment-option"
+onclick="selectPayment('KBZPay')"
+
+>
+
+<input
+type="radio"
+name="payment"
+value="KBZPay"
+
+>
+
+<div class="payment-icon">
+📱
+</div>
+
+<div class="payment-text">
+
+<div class="payment-title">
+KBZPay
+</div>
+
+<div class="payment-desc">
+尝试打开 KBZPay App 进行支付
+</div>
+
+</div>
+
+</label>
+
+<label
+class="payment-option"
+onclick="selectPayment('Wave Money')"
+
+>
+
+<input
+type="radio"
+name="payment"
+value="Wave Money"
+
+>
+
+<div class="payment-icon">
+📱
+</div>
+
+<div class="payment-text">
+
+<div class="payment-title">
+Wave Money
+</div>
+
+<div class="payment-desc">
+暂时使用其他方式完成付款
+</div>
+
+</div>
+
+</label>
+
+</div>
+
+<div
+    id="kbzPayInfo"
+    class="kbz-pay-info"
+>
+
+📱
+
+<b>KBZPay 支付测试</b>
+
+<br>
+
+点击下面按钮后，系统会尝试打开 KBZPay App。
+
+<br>
+
+如果你的手机或浏览器不支持 App 跳转，会自动提示你。
+
+<br>
+
+⚠️ 当前只是“打开 App”测试，不能把成功打开 App 当成支付成功。
+
+</div>
+
+<button
+id="kbzPayButton"
+class="kbz-pay-button"
+type="button"
+onclick="openKBZPay()"
+
+>
+
+📱 打开 KBZPay 支付
+
+</button>
+
+<div
+    id="paymentStatus"
+    class="status-box"
+></div>
+
+<div class="payment-note">
+
+💡 KBZPay 正式自动扣款及支付成功回调，需要接入 KBZPay 官方商户支付服务。
+
+</div>
+
+<button
+id="submitButton"
+onclick="submitOrder()"
+data-i18n="placeOrder"
+
+>
+
+提交订单
+
+</button>
+
+</div>
+
+</div>
 
 <script>
 
-
-/* =========================================================
+/* ========================================
    Firebase
-========================================================= */
+======================================== */
 
 const firebaseConfig = {
 
@@ -1239,7 +693,6 @@ const firebaseConfig = {
 
 };
 
-
 if (!firebase.apps.length) {
 
     firebase.initializeApp(
@@ -1248,18 +701,16 @@ if (!firebase.apps.length) {
 
 }
 
-
 const db =
     firebase.firestore();
-
 
 const auth =
     firebase.auth();
 
 
-/* =========================================================
+/* ========================================
    语言
-========================================================= */
+======================================== */
 
 function t(key, fallback) {
 
@@ -1275,7 +726,6 @@ function t(key, fallback) {
                 fallback
             );
 
-
         if (
             result &&
             result !== key
@@ -1287,26 +737,23 @@ function t(key, fallback) {
 
     }
 
-
     return fallback || key;
 
 }
 
 
-/* =========================================================
+/* ========================================
    当前用户
-========================================================= */
+======================================== */
 
-let currentUser =
-    null;
+let currentUser = null;
 
 
-/* =========================================================
+/* ========================================
    购物车
-========================================================= */
+======================================== */
 
 let cart = [];
-
 
 try {
 
@@ -1315,15 +762,13 @@ try {
             localStorage.getItem("cart")
         ) || [];
 
-
     if (!Array.isArray(cart)) {
 
         cart = [];
 
     }
 
-}
-catch (error) {
+} catch (error) {
 
     console.error(
         "读取购物车失败:",
@@ -1335,20 +780,18 @@ catch (error) {
 }
 
 
-/* =========================================================
+/* ========================================
    餐厅
-========================================================= */
+======================================== */
 
 let restaurantId =
     null;
-
 
 let restaurantName =
     t(
         "unknownRestaurant",
         "未知餐厅"
     );
-
 
 if (cart.length > 0) {
 
@@ -1359,25 +802,258 @@ if (cart.length > 0) {
 }
 
 
-/* =========================================================
-   配送费
-========================================================= */
+/* ========================================
+   KBZPay 测试配置
+======================================== */
 
-const DELIVERY_FEE =
-    2000;
+/*
+ * 注意：
+ * 这里使用的是“尝试唤起 App”的测试方式。
+ *
+ * 由于 KBZPay 官方没有在公开网页上给出
+ * 一个可以直接给普通网页使用的通用
+ * web -> app 支付 Deep Link，
+ * 所以这里先尝试常见 App Scheme。
+ *
+ * 如果手机上无法打开 KBZPay，
+ * 不代表支付失败，只代表该设备/浏览器
+ * 不支持这个 Scheme。
+ */
+
+const KBZPAY_SCHEME =
+    "kbzpay://";
 
 
-/* =========================================================
-   当前支付方式
-========================================================= */
+/* ========================================
+   当前付款方式
+======================================== */
 
 let selectedPayment =
     "现金";
 
 
-/* =========================================================
+/* ========================================
+   选择付款方式
+======================================== */
+
+function selectPayment(payment) {
+
+    selectedPayment =
+        payment;
+
+    const options =
+        document.querySelectorAll(
+            ".payment-option"
+        );
+
+    options.forEach(
+        function(option) {
+
+            option.classList.remove(
+                "selected"
+            );
+
+        }
+    );
+
+    const radio =
+        document.querySelector(
+            'input[name="payment"][value="' +
+            payment +
+            '"]'
+        );
+
+    if (radio) {
+
+        radio.checked =
+            true;
+
+        const parent =
+            radio.closest(
+                ".payment-option"
+            );
+
+        if (parent) {
+
+            parent.classList.add(
+                "selected"
+            );
+
+        }
+
+    }
+
+
+    const kbzButton =
+        document.getElementById(
+            "kbzPayButton"
+        );
+
+    const kbzInfo =
+        document.getElementById(
+            "kbzPayInfo"
+        );
+
+    const paymentStatus =
+        document.getElementById(
+            "paymentStatus"
+        );
+
+
+    if (payment === "KBZPay") {
+
+        kbzButton.style.display =
+            "block";
+
+        kbzInfo.style.display =
+            "block";
+
+        paymentStatus.style.display =
+            "none";
+
+    }
+
+    else {
+
+        kbzButton.style.display =
+            "none";
+
+        kbzInfo.style.display =
+            "none";
+
+        paymentStatus.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* ========================================
+   打开 KBZPay
+======================================== */
+
+function openKBZPay() {
+
+    const paymentStatus =
+        document.getElementById(
+            "paymentStatus"
+        );
+
+    paymentStatus.style.display =
+        "block";
+
+    paymentStatus.innerHTML =
+        "📱 正在尝试打开 KBZPay App...";
+
+    /*
+     * 记录一次尝试。
+     *
+     * 注意：
+     * 这里只代表用户点击了支付，
+     * 不能代表 KBZPay 已经付款成功。
+     */
+
+    try {
+
+        localStorage.setItem(
+            "kbzPayLastAttempt",
+            JSON.stringify({
+
+                time:
+                    new Date().toISOString(),
+
+                payment:
+                    "KBZPay"
+
+            })
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "保存 KBZPay 测试记录失败:",
+            error
+        );
+
+    }
+
+
+    /*
+     * 尝试打开 KBZPay。
+     */
+
+    let opened =
+        false;
+
+
+    const startTime =
+        Date.now();
+
+
+    const handleVisibility =
+        function() {
+
+            if (
+                document.hidden
+            ) {
+
+                opened =
+                    true;
+
+                paymentStatus.innerHTML =
+                    "📱 已尝试打开 KBZPay。<br>" +
+                    "请在 KBZPay 中完成付款，然后返回 MDY FOOD。";
+
+            }
+
+        };
+
+
+    document.addEventListener(
+        "visibilitychange",
+        handleVisibility
+    );
+
+
+    window.location.href =
+        KBZPAY_SCHEME;
+
+
+    /*
+     * 如果没有离开网页，
+     * 说明浏览器可能不支持该 Scheme。
+     */
+
+    setTimeout(
+        function() {
+
+            document.removeEventListener(
+                "visibilitychange",
+                handleVisibility
+            );
+
+
+            if (!opened) {
+
+                paymentStatus.innerHTML =
+                    "⚠️ 当前浏览器没有成功打开 KBZPay App。<br>" +
+                    "请确认手机已经安装 KBZPay，并使用手机浏览器打开 MDY FOOD。";
+
+            }
+
+        },
+        1800
+    );
+
+}
+
+
+/* ========================================
    页面语言
-========================================================= */
+======================================== */
 
 function updateCheckoutLanguage() {
 
@@ -1387,15 +1063,12 @@ function updateCheckoutLanguage() {
             "确认订单 - MDY FOOD"
         );
 
-
     showOrder();
-
 
     const nameElement =
         document.getElementById(
             "restaurantName"
         );
-
 
     if (
         nameElement &&
@@ -1411,15 +1084,10 @@ function updateCheckoutLanguage() {
 
     }
 
-
-    updatePaymentUI();
-
-
     const submitButton =
         document.getElementById(
             "submitButton"
         );
-
 
     if (
         submitButton &&
@@ -1437,9 +1105,9 @@ function updateCheckoutLanguage() {
 }
 
 
-/* =========================================================
+/* ========================================
    读取餐厅
-========================================================= */
+======================================== */
 
 async function loadRestaurant() {
 
@@ -1448,13 +1116,11 @@ async function loadRestaurant() {
             "restaurantName"
         );
 
-
     if (!nameElement) {
 
         return;
 
     }
-
 
     if (!restaurantId) {
 
@@ -1469,7 +1135,6 @@ async function loadRestaurant() {
 
     }
 
-
     try {
 
         const doc =
@@ -1478,12 +1143,10 @@ async function loadRestaurant() {
                 .doc(restaurantId)
                 .get();
 
-
         if (doc.exists) {
 
             const data =
-                doc.data() || {};
-
+                doc.data();
 
             restaurantName =
                 data.name ||
@@ -1491,7 +1154,6 @@ async function loadRestaurant() {
                     "unknownRestaurant",
                     "未知餐厅"
                 );
-
 
             nameElement.innerText =
                 "🏪 " +
@@ -1511,13 +1173,13 @@ async function loadRestaurant() {
         }
 
     }
+
     catch (error) {
 
         console.error(
             "读取餐厅失败:",
             error
         );
-
 
         nameElement.innerText =
             "⚠️ " +
@@ -1531,9 +1193,9 @@ async function loadRestaurant() {
 }
 
 
-/* =========================================================
+/* ========================================
    显示订单
-========================================================= */
+======================================== */
 
 function showOrder() {
 
@@ -1542,13 +1204,11 @@ function showOrder() {
             "orderItems"
         );
 
-
     if (!container) {
 
         return;
 
     }
-
 
     if (cart.length === 0) {
 
@@ -1558,57 +1218,41 @@ function showOrder() {
 
                 🛒
 
-                <br>
-                <br>
+                <br><br>
 
-                ${escapeHtml(
-                    t(
-                        "emptyCartCheckout",
-                        "购物车是空的"
-                    )
+                ${t(
+                    "emptyCartCheckout",
+                    "购物车是空的"
                 )}
 
             </div>
 
         `;
 
-
         document.getElementById(
             "subtotal"
         ).innerText =
             "0 Ks";
-
 
         document.getElementById(
             "deliveryFee"
         ).innerText =
             "2,000 Ks";
 
-
         document.getElementById(
             "total"
         ).innerText =
             "2,000 Ks";
 
-
-        document.getElementById(
-            "onlinePaymentAmount"
-        ).innerText =
-            "2,000 Ks";
-
-
         return;
 
     }
 
-
     let subtotal =
         0;
 
-
     container.innerHTML =
         "";
-
 
     cart.forEach(
         function(item) {
@@ -1616,32 +1260,26 @@ function showOrder() {
             const price =
                 Number(item.price) || 0;
 
-
             const quantity =
                 Number(item.quantity) || 0;
-
 
             const itemTotal =
                 price * quantity;
 
-
             subtotal +=
                 itemTotal;
-
 
             const div =
                 document.createElement(
                     "div"
                 );
 
-
             div.className =
                 "item";
 
-
             div.innerHTML = `
 
-                <span class="item-name">
+                <span>
 
                     ${escapeHtml(
                         item.name || ""
@@ -1651,8 +1289,7 @@ function showOrder() {
 
                 </span>
 
-
-                <span class="item-price">
+                <span>
 
                     ${itemTotal.toLocaleString()}
                     Ks
@@ -1661,7 +1298,6 @@ function showOrder() {
 
             `;
 
-
             container.appendChild(
                 div
             );
@@ -1669,45 +1305,31 @@ function showOrder() {
         }
     );
 
-
-    const total =
-        subtotal +
-        DELIVERY_FEE;
-
-
     document.getElementById(
         "subtotal"
     ).innerText =
         subtotal.toLocaleString() +
         " Ks";
 
-
     document.getElementById(
         "deliveryFee"
     ).innerText =
-        DELIVERY_FEE.toLocaleString() +
-        " Ks";
-
+        "2,000 Ks";
 
     document.getElementById(
         "total"
     ).innerText =
-        total.toLocaleString() +
-        " Ks";
-
-
-    document.getElementById(
-        "onlinePaymentAmount"
-    ).innerText =
-        total.toLocaleString() +
+        (
+            subtotal + 2000
+        ).toLocaleString() +
         " Ks";
 
 }
 
 
-/* =========================================================
+/* ========================================
    HTML 安全处理
-========================================================= */
+======================================== */
 
 function escapeHtml(value) {
 
@@ -1719,7 +1341,6 @@ function escapeHtml(value) {
         return "";
 
     }
-
 
     return String(value)
 
@@ -1751,9 +1372,9 @@ function escapeHtml(value) {
 }
 
 
-/* =========================================================
+/* ========================================
    自动读取顾客资料
-========================================================= */
+======================================== */
 
 async function loadCustomerProfile(
     user
@@ -1765,7 +1386,6 @@ async function loadCustomerProfile(
 
     }
 
-
     try {
 
         const doc =
@@ -1774,17 +1394,14 @@ async function loadCustomerProfile(
                 .doc(user.uid)
                 .get();
 
-
         if (!doc.exists) {
 
             return;
 
         }
 
-
         const customer =
-            doc.data() || {};
-
+            doc.data();
 
         document.getElementById(
             "name"
@@ -1792,13 +1409,11 @@ async function loadCustomerProfile(
             customer.name ||
             "";
 
-
         document.getElementById(
             "phone"
         ).value =
             customer.phone ||
             "";
-
 
         document.getElementById(
             "address"
@@ -1807,6 +1422,7 @@ async function loadCustomerProfile(
             "";
 
     }
+
     catch (error) {
 
         console.error(
@@ -1819,171 +1435,9 @@ async function loadCustomerProfile(
 }
 
 
-/* =========================================================
-   支付 UI
-========================================================= */
-
-function updatePaymentUI() {
-
-    const options =
-        document.querySelectorAll(
-            ".payment-option"
-        );
-
-
-    options.forEach(
-        function(option) {
-
-            const radio =
-                option.querySelector(
-                    'input[name="payment"]'
-                );
-
-
-            if (!radio) {
-                return;
-            }
-
-
-            option.classList.toggle(
-                "selected",
-                radio.checked
-            );
-
-        }
-    );
-
-
-    const onlineBox =
-        document.getElementById(
-            "onlinePaymentBox"
-        );
-
-
-    const onlineTitle =
-        document.getElementById(
-            "onlinePaymentTitle"
-        );
-
-
-    const onlineText =
-        document.getElementById(
-            "onlinePaymentText"
-        );
-
-
-    const totalElement =
-        document.getElementById(
-            "total"
-        );
-
-
-    const onlineAmount =
-        document.getElementById(
-            "onlinePaymentAmount"
-        );
-
-
-    if (!onlineBox) {
-        return;
-    }
-
-
-    if (totalElement && onlineAmount) {
-
-        onlineAmount.innerText =
-            totalElement.innerText;
-
-    }
-
-
-    if (
-        selectedPayment ===
-        "KBZPay"
-    ) {
-
-        onlineBox.classList.add(
-            "show"
-        );
-
-
-        onlineTitle.innerText =
-            "📱 KBZPay";
-
-
-        onlineText.innerText =
-            t(
-                "kbzPayPreparing",
-                "KBZPay 在线支付通道正在准备中。当前订单会先保存为待支付状态，接入正式支付接口后即可完成在线支付。"
-            );
-
-    }
-
-    else if (
-        selectedPayment ===
-        "Wave Money"
-    ) {
-
-        onlineBox.classList.add(
-            "show"
-        );
-
-
-        onlineTitle.innerText =
-            "📱 Wave Money";
-
-
-        onlineText.innerText =
-            t(
-                "waveMoneyPreparing",
-                "Wave Money 在线支付通道正在准备中。当前订单会先保存为待支付状态，接入正式支付接口后即可完成在线支付。"
-            );
-
-    }
-
-    else {
-
-        onlineBox.classList.remove(
-            "show"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   支付方式监听
-========================================================= */
-
-document.addEventListener(
-    "change",
-    function(event) {
-
-        if (
-            !event.target.matches(
-                'input[name="payment"]'
-            )
-        ) {
-
-            return;
-
-        }
-
-
-        selectedPayment =
-            event.target.value;
-
-
-        updatePaymentUI();
-
-    }
-);
-
-
-/* =========================================================
+/* ========================================
    登录状态
-========================================================= */
+======================================== */
 
 auth.onAuthStateChanged(
     async function(user) {
@@ -1991,42 +1445,29 @@ auth.onAuthStateChanged(
         currentUser =
             user;
 
-
         const warning =
             document.getElementById(
                 "loginWarning"
             );
-
 
         const submitButton =
             document.getElementById(
                 "submitButton"
             );
 
-
-        if (!warning || !submitButton) {
-
-            return;
-
-        }
-
-
         if (user) {
 
             warning.style.display =
                 "none";
 
-
             submitButton.disabled =
                 false;
-
 
             submitButton.innerText =
                 t(
                     "placeOrder",
                     "提交订单"
                 );
-
 
             await loadCustomerProfile(
                 user
@@ -2039,10 +1480,8 @@ auth.onAuthStateChanged(
             warning.style.display =
                 "block";
 
-
             submitButton.disabled =
                 false;
-
 
             submitButton.innerText =
                 t(
@@ -2056,9 +1495,9 @@ auth.onAuthStateChanged(
 );
 
 
-/* =========================================================
+/* ========================================
    提交订单
-========================================================= */
+======================================== */
 
 async function submitOrder() {
 
@@ -2071,15 +1510,12 @@ async function submitOrder() {
             )
         );
 
-
         window.location.href =
             "login.html";
-
 
         return;
 
     }
-
 
     if (cart.length === 0) {
 
@@ -2090,11 +1526,9 @@ async function submitOrder() {
             )
         );
 
-
         return;
 
     }
-
 
     if (!restaurantId) {
 
@@ -2105,11 +1539,9 @@ async function submitOrder() {
             )
         );
 
-
         return;
 
     }
-
 
     const name =
         document
@@ -2117,13 +1549,11 @@ async function submitOrder() {
             .value
             .trim();
 
-
     const phone =
         document
             .getElementById("phone")
             .value
             .trim();
-
 
     const address =
         document
@@ -2131,22 +1561,18 @@ async function submitOrder() {
             .value
             .trim();
 
-
     const paymentElement =
         document.querySelector(
             'input[name="payment"]:checked'
         );
-
 
     const payment =
         paymentElement
             ? paymentElement.value
             : "现金";
 
-
     selectedPayment =
         payment;
-
 
     if (!name) {
 
@@ -2157,11 +1583,9 @@ async function submitOrder() {
             )
         );
 
-
         return;
 
     }
-
 
     if (!phone) {
 
@@ -2172,11 +1596,9 @@ async function submitOrder() {
             )
         );
 
-
         return;
 
     }
-
 
     if (!address) {
 
@@ -2187,8 +1609,36 @@ async function submitOrder() {
             )
         );
 
-
         return;
+
+    }
+
+
+    /*
+     * 如果选择 KBZPay：
+     *
+     * 目前先进行 App 跳转测试。
+     *
+     * 不把“点击按钮”当成支付成功。
+     */
+
+    if (
+        payment === "KBZPay"
+    ) {
+
+        const continueOrder =
+            confirm(
+                "你选择了 KBZPay。\n\n" +
+                "请先点击“打开 KBZPay 支付”尝试打开 App。\n\n" +
+                "目前这是支付跳转测试版，尚未接入 KBZPay 官方支付成功回调。\n\n" +
+                "是否继续创建订单？"
+            );
+
+        if (!continueOrder) {
+
+            return;
+
+        }
 
     }
 
@@ -2198,10 +1648,8 @@ async function submitOrder() {
             "submitButton"
         );
 
-
     submitButton.disabled =
         true;
-
 
     submitButton.innerText =
         t(
@@ -2217,23 +1665,19 @@ async function submitOrder() {
                 return sum +
 
                     (
-                        Number(item.price) ||
-                        0
+                        Number(item.price) || 0
                     ) *
 
                     (
-                        Number(item.quantity) ||
-                        0
+                        Number(item.quantity) || 0
                     );
 
             },
             0
         );
 
-
     const total =
-        subtotal +
-        DELIVERY_FEE;
+        subtotal + 2000;
 
 
     const orderNumber =
@@ -2242,26 +1686,31 @@ async function submitOrder() {
 
 
     /*
-       =====================================================
-       支付状态
-
-       现金：
-       unpaid
-
-       KBZPay / Wave Money：
-       pending
-
-       后面接真实支付接口时，
-       支付成功再改成 paid。
-       =====================================================
-    */
+     * 当前测试版支付状态
+     */
 
     let paymentStatus =
         "unpaid";
 
-
     if (
-        payment === "KBZPay" ||
+        payment === "现金"
+    ) {
+
+        paymentStatus =
+            "cash_on_delivery";
+
+    }
+
+    else if (
+        payment === "KBZPay"
+    ) {
+
+        paymentStatus =
+            "pending";
+
+    }
+
+    else if (
         payment === "Wave Money"
     ) {
 
@@ -2271,29 +1720,11 @@ async function submitOrder() {
     }
 
 
-    /*
-       当前阶段还没有真实支付交易号。
-    */
-
-    const paymentTransactionId =
-        "";
-
-
     try {
-
-        /*
-           =================================================
-           写入 Firestore
-        =================================================
-        */
 
         await db
             .collection("orders")
             .add({
-
-                /*
-                   原有订单字段
-                */
 
                 order_number:
                     orderNumber,
@@ -2329,6 +1760,9 @@ async function submitOrder() {
                 payment:
                     payment,
 
+                paymentStatus:
+                    paymentStatus,
+
                 method:
                     "网站",
 
@@ -2338,38 +1772,14 @@ async function submitOrder() {
                 created_at:
                     firebase.firestore
                         .FieldValue
-                        .serverTimestamp(),
-
-
-                /*
-                   =================================================
-                   新支付字段
-                =================================================
-                */
-
-                paymentMethod:
-                    payment,
-
-                paymentStatus:
-                    paymentStatus,
-
-                paymentAmount:
-                    total,
-
-                paymentTransactionId:
-                    paymentTransactionId,
-
-                paidAt:
-                    null
+                        .serverTimestamp()
 
             });
 
 
         /*
-           =================================================
-           本地订单记录
-        =================================================
-        */
+         * 本地订单记录
+         */
 
         const order = {
 
@@ -2401,20 +1811,8 @@ async function submitOrder() {
             payment:
                 payment,
 
-            paymentMethod:
-                payment,
-
             paymentStatus:
                 paymentStatus,
-
-            paymentAmount:
-                total,
-
-            paymentTransactionId:
-                paymentTransactionId,
-
-            paidAt:
-                null,
 
             items:
                 cart,
@@ -2434,7 +1832,6 @@ async function submitOrder() {
 
         let orders = [];
 
-
         try {
 
             orders =
@@ -2444,7 +1841,6 @@ async function submitOrder() {
                     )
                 ) || [];
 
-
             if (!Array.isArray(orders)) {
 
                 orders = [];
@@ -2452,6 +1848,7 @@ async function submitOrder() {
             }
 
         }
+
         catch (error) {
 
             orders = [];
@@ -2481,10 +1878,8 @@ async function submitOrder() {
 
 
         /*
-           =================================================
-           清空购物车
-        =================================================
-        */
+         * 清空购物车
+         */
 
         localStorage.removeItem(
             "cart"
@@ -2492,22 +1887,20 @@ async function submitOrder() {
 
 
         /*
-           =================================================
-           成功
-        =================================================
-        */
+         * 成功
+         */
 
         window.location.href =
             "success.html";
 
     }
+
     catch (error) {
 
         console.error(
             "Firebase 订单错误:",
             error
         );
-
 
         alert(
             t(
@@ -2518,10 +1911,8 @@ async function submitOrder() {
             error.message
         );
 
-
         submitButton.disabled =
             false;
-
 
         submitButton.innerText =
             t(
@@ -2534,9 +1925,9 @@ async function submitOrder() {
 }
 
 
-/* =========================================================
+/* ========================================
    监听语言变化
-========================================================= */
+======================================== */
 
 window.addEventListener(
     "mdyLanguageChanged",
@@ -2548,43 +1939,30 @@ window.addEventListener(
 );
 
 
-/* =========================================================
+/* ========================================
    页面启动
-========================================================= */
+======================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
     function() {
 
-        /*
-           language.js 自动初始化语言。
-        */
-
         updateCheckoutLanguage();
 
-
-        /*
-           默认支付方式
-        */
-
-        selectedPayment =
-            "现金";
-
-
-        updatePaymentUI();
-
-
-        /*
-           读取餐厅
-        */
-
         loadRestaurant();
+
+        /*
+         * 默认选中现金
+         */
+
+        selectPayment(
+            "现金"
+        );
 
     }
 );
 
 </script>
-
 
 </body>
 
