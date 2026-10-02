@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>MDY FOOD - 我的地址</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="language.js"></script>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0 0 85px;
+    font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    background: #f6f6f6;
+    color: #222;
+}
+
+button,
+input,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.header {
+    background:
+        linear-gradient(
+            135deg,
+            #ff6a2a,
+            #ff4d1f
+        );
+
+    color: white;
+
+    padding:
+        20px
+        16px
+        30px;
+
+    border-radius:
+        0
+        0
+        28px
+        28px;
+}
+
+.header-top {
+    max-width: 900px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.back-button {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,0.18);
+
+    color: white;
+
+    font-size: 21px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-title {
+    flex: 1;
+
+    text-align: center;
+
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.header-placeholder {
+    width: 40px;
+}
+
+.language-box {
+    min-width: 105px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
+}
+
+
+/* =========================
+   登录提示
+========================= */
+
+.login-card {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 28px 20px;
+
+    margin-top: -20px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.08);
+
+    text-align: center;
+}
+
+.login-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.login-title {
+    font-size: 18px;
+    font-weight: 800;
+
+    margin-bottom: 7px;
+}
+
+.login-sub {
+    color: #999;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    margin-bottom: 18px;
+}
+
+.login-button {
+
+    display: inline-block;
+
+    background: #ff5a1f;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding:
+        12px
+        28px;
+
+    border-radius: 11px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   页面内容
+========================= */
+
+.address-page {
+    display: none;
+}
+
+.page-intro {
+
+    margin-top: -20px;
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 17px;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,0.07);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.intro-icon {
+
+    width: 45px;
+    height: 45px;
+
+    flex-shrink: 0;
+
+    border-radius: 13px;
+
+    background: #fff2ec;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 23px;
+}
+
+.intro-content {
+    flex: 1;
+}
+
+.intro-title {
+    font-size: 15px;
+    font-weight: 800;
+
+    margin-bottom: 4px;
+}
+
+.intro-sub {
+    font-size: 11px;
+    color: #999;
+}
+
+
+/* =========================
+   地址列表
+========================= */
+
+.address-list {
+    margin-top: 15px;
+}
+
+.address-card {
+
+    background: white;
+
+    border-radius: 17px;
+
+    padding: 17px;
+
+    margin-bottom: 12px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.06);
+
+    position: relative;
+}
+
+.address-main {
+
+    padding-right: 5px;
+}
+
+.address-person {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 8px;
+}
+
+.address-name {
+
+    font-size: 16px;
+
+    font-weight: 800;
+}
+
+.address-phone {
+
+    font-size: 13px;
+
+    color: #777;
+}
+
+.default-badge {
+
+    display: none;
+
+    background: #fff0e8;
+
+    color: #ff5a1f;
+
+    border-radius: 6px;
+
+    padding:
+        3px
+        7px;
+
+    font-size: 10px;
+
+    font-weight: bold;
+}
+
+.address-text {
+
+    color: #555;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    word-break: break-all;
+}
+
+.address-detail {
+
+    margin-top: 2px;
+
+    color: #888;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+.address-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: 13px;
+
+    padding-top: 12px;
+
+    border-top:
+        1px solid #f1f1f1;
+}
+
+.address-action {
+
+    border: none;
+
+    background: #f7f7f7;
+
+    color: #666;
+
+    padding:
+        7px
+        11px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+}
+
+.address-action.default-action {
+
+    background: #fff2ec;
+
+    color: #ff5a1f;
+}
+
+.address-action.delete-action {
+
+    color: #e53935;
+}
+
+
+/* =========================
+   空状态
+========================= */
+
+.empty-card {
+
+    display: none;
+
+    background: white;
+
+    border-radius: 17px;
+
+    padding: 35px 20px;
+
+    text-align: center;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.05);
+}
+
+.empty-icon {
+    font-size: 46px;
+    margin-bottom: 10px;
+}
+
+.empty-title {
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    margin-bottom: 6px;
+}
+
+.empty-sub {
+
+    color: #aaa;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   新增地址按钮
+========================= */
+
+.add-address-button {
+
+    width: 100%;
+
+    border: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff6a2a,
+            #ff4d1f
+        );
+
+    color: white;
+
+    padding: 14px;
+
+    border-radius: 13px;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    margin-top: 5px;
+
+    box-shadow:
+        0 5px 14px
+        rgba(255,90,31,0.2);
+}
+
+
+/* =========================
+   弹窗
+========================= */
+
+.modal-overlay {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    background:
+        rgba(0,0,0,0.45);
+
+    padding:
+        20px;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal {
+
+    width: 100%;
+
+    max-width: 500px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 10px 35px
+        rgba(0,0,0,0.2);
+}
+
+.modal-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.modal-title {
+
+    font-size: 18px;
+
+    font-weight: 800;
+}
+
+.modal-close {
+
+    width: 34px;
+    height: 34px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #f5f5f5;
+
+    color: #666;
+
+    font-size: 20px;
+}
+
+.form-group {
+
+    margin-bottom: 14px;
+}
+
+.form-label {
+
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-bottom: 7px;
+}
+
+.form-input {
+
+    width: 100%;
+
+    border:
+        1px solid #e5e5e5;
+
+    background: #fafafa;
+
+    border-radius: 10px;
+
+    padding:
+        12px;
+
+    outline: none;
+
+    font-size: 13px;
+
+    color: #222;
+
+    transition: 0.2s;
+}
+
+.form-input:focus {
+
+    border-color: #ff6a2a;
+
+    background: white;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(255,90,31,0.08);
+}
+
+textarea.form-input {
+
+    min-height: 80px;
+
+    resize: vertical;
+}
+
+.default-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin:
+        3px
+        0
+        17px;
+}
+
+.default-row input {
+
+    width: 17px;
+    height: 17px;
+
+    accent-color: #ff5a1f;
+}
+
+.default-row label {
+
+    font-size: 13px;
+
+    color: #555;
+}
+
+.modal-actions {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 10px;
+}
+
+.modal-button {
+
+    border: none;
+
+    padding: 13px;
+
+    border-radius: 11px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+.cancel-button {
+
+    background: #f3f3f3;
+
+    color: #666;
+}
+
+.save-button {
+
+    background: #ff5a1f;
+
+    color: white;
+}
+
+
+/* =========================
+   加载
+========================= */
+
+.loading {
+
+    text-align: center;
+
+    color: #aaa;
+
+    font-size: 13px;
+
+    padding: 30px 0;
+}
+
+
+/* =========================
+   底部导航
+========================= */
+
+.bottom-nav {
+
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 9999;
+
+    height: 68px;
+
+    background:
+        rgba(255,255,255,0.97);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    border-top:
+        1px solid #eee;
+
+    box-shadow:
+        0 -3px 15px
+        rgba(0,0,0,0.08);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.bottom-nav-inner {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    height: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+}
+
+.nav-item {
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 3px;
+
+    text-decoration: none;
+
+    color: #888;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.nav-icon {
+
+    font-size: 21px;
+
+    line-height: 1;
+}
+
+.nav-item.active {
+
+    color: #ff5a1f;
+}
+
+.nav-item.active::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 28px;
+    height: 3px;
+
+    background: #ff5a1f;
+
+    border-radius:
+        0
+        0
+        5px
+        5px;
+}
+
+
+/* =========================
+   手机适配
+========================= */
+
+@media (max-width: 500px) {
+
+    body {
+        padding-bottom: 78px;
+    }
+
+    .header {
+
+        padding:
+            17px
+            13px
+            28px;
+    }
+
+    .container {
+
+        padding:
+            13px;
+    }
+
+    .header-title {
+
+        font-size: 19px;
+    }
+
+    .address-card {
+
+        padding: 15px;
+    }
+
+    .modal {
+
+        padding: 18px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+    <div class="header-top">
+
+        <button
+            class="back-button"
+            onclick="goBack()"
+            aria-label="返回"
+        >
+            ←
+        </button>
+
+        <div
+            class="header-title"
+            data-i18n="addresses"
+        >
+            我的地址
+        </div>
+
+        <div
+            id="languageSelector"
+            class="language-box"
+        ></div>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- =========================
+     未登录
+========================= -->
+
+<div
+    id="loginCard"
+    class="login-card"
+>
+
+    <div class="login-icon">
+        📍
+    </div>
+
+    <div
+        class="login-title"
+        data-i18n="loginTitle"
+    >
+        登录 MDY FOOD
+    </div>
+
+    <div
+        class="login-sub"
+        data-i18n="loginAddressSub"
+    >
+        登录后可以管理你的收货地址
+    </div>
+
+    <a
+        href="login.html"
+        class="login-button"
+        data-i18n="loginRegister"
+    >
+        登录 / 注册
+    </a>
+
+</div>
+
+
+<!-- =========================
+     已登录内容
+========================= -->
+
+<div
+    id="addressPage"
+    class="address-page"
+>
+
+
+<div class="page-intro">
+
+    <div class="intro-icon">
+        📍
+    </div>
+
+    <div class="intro-content">
+
+        <div
+            class="intro-title"
+            data-i18n="addressManageTitle"
+        >
+            收货地址
+        </div>
+
+        <div
+            class="intro-sub"
+            data-i18n="addressManageSub"
+        >
+            管理你的送餐地址，默认地址会优先用于下单
+        </div>
+
+    </div>
+
+</div>
+
+
+<div
+    id="loading"
+    class="loading"
+>
+    正在读取地址...
+</div>
+
+
+<div
+    id="addressList"
+    class="address-list"
+></div>
+
+
+<div
+    id="emptyCard"
+    class="empty-card"
+>
+
+    <div class="empty-icon">
+        📍
+    </div>
+
+    <div
+        class="empty-title"
+        data-i18n="noAddress"
+    >
+        还没有收货地址
+    </div>
+
+    <div
+        class="empty-sub"
+        data-i18n="noAddressSub"
+    >
+        添加一个常用地址，下单时会更加方便
+    </div>
+
+</div>
+
+
+<button
+    class="add-address-button"
+    onclick="openAddAddress()"
+    data-i18n="addAddress"
+>
+    ＋ 添加收货地址
+</button>
+
+
+</div>
+
+
+</div>
+
+
+<!-- =========================
+     地址编辑弹窗
+========================= -->
+
+<div
+    id="addressModal"
+    class="modal-overlay"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div
+                id="modalTitle"
+                class="modal-title"
+            >
+                添加收货地址
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closeAddressModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label
+                class="form-label"
+                for="nameInput"
+            >
+                收货人
+            </label>
+
+            <input
+                id="nameInput"
+                class="form-input"
+                type="text"
+                maxlength="50"
+                placeholder="请输入收货人姓名"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label
+                class="form-label"
+                for="phoneInput"
+            >
+                手机号码
+            </label>
+
+            <input
+                id="phoneInput"
+                class="form-input"
+                type="tel"
+                maxlength="30"
+                placeholder="请输入手机号码"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label
+                class="form-label"
+                for="addressInput"
+            >
+                地址
+            </label>
+
+            <input
+                id="addressInput"
+                class="form-input"
+                type="text"
+                maxlength="200"
+                placeholder="例如：Mandalay Chanayethazan"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label
+                class="form-label"
+                for="detailInput"
+            >
+                详细地址
+            </label>
+
+            <textarea
+                id="detailInput"
+                class="form-input"
+                maxlength="300"
+                placeholder="例如：XX路 XX号 XX楼"
+            ></textarea>
+
+        </div>
+
+
+        <div class="default-row">
+
+            <input
+                id="defaultInput"
+                type="checkbox"
+            >
+
+            <label
+                for="defaultInput"
+            >
+                设为默认地址
+            </label>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="modal-button cancel-button"
+                onclick="closeAddressModal()"
+                data-i18n="cancel"
+            >
+                取消
+            </button>
+
+            <button
+                class="modal-button save-button"
+                onclick="saveAddress()"
+                data-i18n="save"
+            >
+                保存
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     底部导航
+========================= -->
+
+<nav class="bottom-nav">
+
+    <div class="bottom-nav-inner">
+
+        <a
+            href="index.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                🏠
+            </div>
+
+            <div data-i18n="home">
+                首页
+            </div>
+
+        </a>
+
+
+        <a
+            href="restaurants.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                🍜
+            </div>
+
+            <div data-i18n="restaurants">
+                餐厅
+            </div>
+
+        </a>
+
+
+        <a
+            href="orders.html"
+            class="nav-item"
+        >
+
+            <div class="nav-icon">
+                📦
+            </div>
+
+            <div data-i18n="orders">
+                订单
+            </div>
+
+        </a>
+
+
+        <a
+            href="profile.html"
+            class="nav-item active"
+        >
+
+            <div class="nav-icon">
+                👤
+            </div>
+
+            <div data-i18n="profile">
+                我的
+            </div>
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+<script>
+
+/* =========================================================
+   Firebase 配置
+========================================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDR8dxsbDYA3a6pLaXcJTngzFhNfWPUlv0",
+
+    authDomain:
+        "mdy-food.firebaseapp.com",
+
+    projectId:
+        "mdy-food",
+
+    storageBucket:
+        "mdy-food.firebasestorage.app",
+
+    messagingSenderId:
+        "498327590625",
+
+    appId:
+        "1:498327590625:web:cceafb7febb689e7ad09a0",
+
+    measurementId:
+        "G-6Q5G2862XQ"
+
+};
+
+
+/* =========================================================
+   Firebase 初始化
+========================================================= */
+
+if (!firebase.apps.length) {
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+}
+
+const db =
+    firebase.firestore();
+
+const auth =
+    firebase.auth();
+
+
+/* =========================================================
+   Firebase 登录持久化
+========================================================= */
+
+auth.setPersistence(
+    firebase.auth.Auth.Persistence.LOCAL
+)
+.catch(function(error) {
+
+    console.warn(
+        "Firebase 登录持久化设置失败:",
+        error
+    );
+
+});
+
+
+/* =========================================================
+   当前用户
+========================================================= */
+
+let currentUser = null;
+
+let authReady = false;
+
+let addresses = [];
+
+let editingAddressId = null;
+
+
+/* =========================================================
+   翻译
+========================================================= */
+
+function t(
+    key,
+    fallback
+) {
+
+    if (
+        window.MDYLanguage &&
+        typeof window.MDYLanguage.t ===
+            "function"
+    ) {
+
+        return window.MDYLanguage.t(
+            key,
+            {},
+            fallback
+        );
+
+    }
+
+    return fallback || key;
+
+}
+
+
+/* =========================================================
+   返回
+========================================================= */
+
+function goBack() {
+
+    if (
+        document.referrer &&
+        document.referrer.indexOf(
+            window.location.host
+        ) !== -1
+    ) {
+
+        window.history.back();
+
+    }
+
+    else {
+
+        window.location.href =
+            "profile.html";
+
+    }
+
+}
+
+
+/* =========================================================
+   登录状态
+========================================================= */
+
+auth.onAuthStateChanged(
+    async function(user) {
+
+        currentUser =
+            user || null;
+
+        authReady =
+            true;
+
+        updateLoginUI();
+
+        if (currentUser) {
+
+            await loadAddresses();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   更新登录界面
+========================================================= */
+
+function updateLoginUI() {
+
+    const loginCard =
+        document.getElementById(
+            "loginCard"
+        );
+
+    const addressPage =
+        document.getElementById(
+            "addressPage"
+        );
+
+    if (!loginCard || !addressPage) {
+        return;
+    }
+
+    if (!authReady) {
+
+        loginCard.style.display =
+            "none";
+
+        addressPage.style.display =
+            "none";
+
+        return;
+
+    }
+
+    if (currentUser) {
+
+        loginCard.style.display =
+            "none";
+
+        addressPage.style.display =
+            "block";
+
+    }
+
+    else {
+
+        loginCard.style.display =
+            "block";
+
+        addressPage.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   获取用户地址
+========================================================= */
+
+async function loadAddresses() {
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+    const list =
+        document.getElementById(
+            "addressList"
+        );
+
+    const empty =
+        document.getElementById(
+            "emptyCard"
+        );
+
+    if (!currentUser) {
+        return;
+    }
+
+    loading.style.display =
+        "block";
+
+    list.innerHTML = "";
+
+    empty.style.display =
+        "none";
+
+    try {
+
+        const userRef =
+            db
+                .collection("customers")
+                .doc(currentUser.uid);
+
+        const snapshot =
+            await userRef.get();
+
+        if (!snapshot.exists) {
+
+            addresses = [];
+
+        }
+
+        else {
+
+            const data =
+                snapshot.data() || {};
+
+            addresses =
+                Array.isArray(data.addresses)
+                    ? data.addresses
+                    : [];
+
+        }
+
+        loading.style.display =
+            "none";
+
+        renderAddresses();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "读取地址失败:",
+            error
+        );
+
+        loading.style.display =
+            "none";
+
+        list.innerHTML = "";
+
+        empty.style.display =
+            "block";
+
+        empty.querySelector(
+            ".empty-title"
+        ).innerText =
+            "读取地址失败";
+
+        empty.querySelector(
+            ".empty-sub"
+        ).innerText =
+            error.message ||
+            "请稍后再试";
+
+    }
+
+}
+
+
+/* =========================================================
+   显示地址
+========================================================= */
+
+function renderAddresses() {
+
+    const list =
+        document.getElementById(
+            "addressList"
+        );
+
+    const empty =
+        document.getElementById(
+            "emptyCard"
+        );
+
+    list.innerHTML = "";
+
+    if (!addresses.length) {
+
+        empty.style.display =
+            "block";
+
+        return;
+
+    }
+
+    empty.style.display =
+        "none";
+
+
+    addresses.forEach(
+        function(address) {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "address-card";
+
+
+            const person =
+                document.createElement(
+                    "div"
+                );
+
+            person.className =
+                "address-person";
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+            name.className =
+                "address-name";
+
+            name.innerText =
+                address.name ||
+                "收货人";
+
+
+            const phone =
+                document.createElement(
+                    "div"
+                );
+
+            phone.className =
+                "address-phone";
+
+            phone.innerText =
+                address.phone ||
+                "";
+
+
+            const badge =
+                document.createElement(
+                    "div"
+                );
+
+            badge.className =
+                "default-badge";
+
+            badge.innerText =
+                "默认";
+
+
+            if (address.isDefault) {
+
+                badge.style.display =
+                    "inline-block";
+
+            }
+
+
+            person.appendChild(name);
+
+            person.appendChild(phone);
+
+            person.appendChild(badge);
+
+
+            const addressText =
+                document.createElement(
+                    "div"
+                );
+
+            addressText.className =
+                "address-text";
+
+            addressText.innerText =
+                address.address ||
+                "";
+
+
+            const detail =
+                document.createElement(
+                    "div"
+                );
+
+            detail.className =
+                "address-detail";
+
+            detail.innerText =
+                address.detail ||
+                "";
+
+
+            const actions =
+                document.createElement(
+                    "div"
+                );
+
+            actions.className =
+                "address-actions";
+
+
+            if (!address.isDefault) {
+
+                const defaultButton =
+                    document.createElement(
+                        "button"
+                    );
+
+                defaultButton.className =
+                    "address-action default-action";
+
+                defaultButton.innerText =
+                    "设为默认";
+
+                defaultButton.onclick =
+                    function() {
+
+                        setDefaultAddress(
+                            address.id
+                        );
+
+                    };
+
+                actions.appendChild(
+                    defaultButton
+                );
+
+            }
+
+
+            const editButton =
+                document.createElement(
+                    "button"
+                );
+
+            editButton.className =
+                "address-action";
+
+            editButton.innerText =
+                "编辑";
+
+            editButton.onclick =
+                function() {
+
+                    openEditAddress(
+                        address.id
+                    );
+
+                };
+
+
+            const deleteButton =
+                document.createElement(
+                    "button"
+                );
+
+            deleteButton.className =
+                "address-action delete-action";
+
+            deleteButton.innerText =
+                "删除";
+
+            deleteButton.onclick =
+                function() {
+
+                    deleteAddress(
+                        address.id
+                    );
+
+                };
+
+
+            actions.appendChild(
+                editButton
+            );
+
+            actions.appendChild(
+                deleteButton
+            );
+
+
+            card.appendChild(person);
+
+            card.appendChild(addressText);
+
+            if (address.detail) {
+
+                card.appendChild(detail);
+
+            }
+
+            card.appendChild(actions);
+
+            list.appendChild(card);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   打开新增地址
+========================================================= */
+
+function openAddAddress() {
+
+    editingAddressId =
+        null;
+
+    document.getElementById(
+        "modalTitle"
+    ).innerText =
+        "添加收货地址";
+
+    document.getElementById(
+        "nameInput"
+    ).value = "";
+
+    document.getElementById(
+        "phoneInput"
+    ).value = "";
+
+    document.getElementById(
+        "addressInput"
+    ).value = "";
+
+    document.getElementById(
+        "detailInput"
+    ).value = "";
+
+    document.getElementById(
+        "defaultInput"
+    ).checked =
+        addresses.length === 0;
+
+    document.getElementById(
+        "addressModal"
+    ).classList.add("show");
+
+}
+
+
+/* =========================================================
+   打开编辑地址
+========================================================= */
+
+function openEditAddress(id) {
+
+    const address =
+        addresses.find(
+            function(item) {
+
+                return item.id === id;
+
+            }
+        );
+
+    if (!address) {
+        return;
+    }
+
+    editingAddressId =
+        id;
+
+    document.getElementById(
+        "modalTitle"
+    ).innerText =
+        "编辑收货地址";
+
+    document.getElementById(
+        "nameInput"
+    ).value =
+        address.name || "";
+
+    document.getElementById(
+        "phoneInput"
+    ).value =
+        address.phone || "";
+
+    document.getElementById(
+        "addressInput"
+    ).value =
+        address.address || "";
+
+    document.getElementById(
+        "detailInput"
+    ).value =
+        address.detail || "";
+
+    document.getElementById(
+        "defaultInput"
+    ).checked =
+        !!address.isDefault;
+
+    document.getElementById(
+        "addressModal"
+    ).classList.add("show");
+
+}
+
+
+/* =========================================================
+   关闭弹窗
+========================================================= */
+
+function closeAddressModal() {
+
+    document.getElementById(
+        "addressModal"
+    ).classList.remove("show");
+
+}
+
+
+/* =========================================================
+   保存地址
+========================================================= */
+
+async function saveAddress() {
+
+    if (!currentUser) {
+
+        alert(
+            "请先登录"
+        );
+
+        return;
+
+    }
+
+
+    const name =
+        document.getElementById(
+            "nameInput"
+        ).value.trim();
+
+    const phone =
+        document.getElementById(
+            "phoneInput"
+        ).value.trim();
+
+    const address =
+        document.getElementById(
+            "addressInput"
+        ).value.trim();
+
+    const detail =
+        document.getElementById(
+            "detailInput"
+        ).value.trim();
+
+    const isDefault =
+        document.getElementById(
+            "defaultInput"
+        ).checked;
+
+
+    if (!name) {
+
+        alert(
+            "请输入收货人姓名"
+        );
+
+        return;
+
+    }
+
+    if (!phone) {
+
+        alert(
+            "请输入手机号码"
+        );
+
+        return;
+
+    }
+
+    if (!address) {
+
+        alert(
+            "请输入地址"
+        );
+
+        return;
+
+    }
+
+
+    const saveButton =
+        document.querySelector(
+            ".save-button"
+        );
+
+    saveButton.disabled =
+        true;
+
+    saveButton.innerText =
+        "保存中...";
+
+
+    try {
+
+        let newAddresses =
+            Array.isArray(addresses)
+                ? [...addresses]
+                : [];
+
+
+        /*
+         * 如果设置为默认，
+         * 先取消其他地址的默认状态
+         */
+
+        if (isDefault) {
+
+            newAddresses =
+                newAddresses.map(
+                    function(item) {
+
+                        return {
+                            ...item,
+                            isDefault: false
+                        };
+
+                    }
+                );
+
+        }
+
+
+        if (editingAddressId) {
+
+            newAddresses =
+                newAddresses.map(
+                    function(item) {
+
+                        if (
+                            item.id ===
+                            editingAddressId
+                        ) {
+
+                            return {
+
+                                ...item,
+
+                                name:
+                                    name,
+
+                                phone:
+                                    phone,
+
+                                address:
+                                    address,
+
+                                detail:
+                                    detail,
+
+                                isDefault:
+                                    isDefault
+
+                            };
+
+                        }
+
+                        return item;
+
+                    }
+                );
+
+        }
+
+        else {
+
+            const newAddress = {
+
+                id:
+                    "addr_" +
+                    Date.now() +
+                    "_" +
+                    Math.random()
+                        .toString(36)
+                        .substring(2, 8),
+
+                name:
+                    name,
+
+                phone:
+                    phone,
+
+                address:
+                    address,
+
+                detail:
+                    detail,
+
+                isDefault:
+                    isDefault,
+
+                createdAt:
+                    new Date().toISOString()
+
+            };
+
+
+            newAddresses.push(
+                newAddress
+            );
+
+        }
+
+
+        /*
+         * 如果没有任何默认地址，
+         * 自动把第一个设为默认
+         */
+
+        if (
+            newAddresses.length > 0 &&
+            !newAddresses.some(
+                function(item) {
+
+                    return item.isDefault;
+
+                }
+            )
+        ) {
+
+            newAddresses[0] =
+                {
+                    ...newAddresses[0],
+                    isDefault: true
+                };
+
+        }
+
+
+        await db
+            .collection("customers")
+            .doc(currentUser.uid)
+            .set(
+                {
+                    addresses:
+                        newAddresses,
+
+                    updatedAt:
+                        firebase.firestore.FieldValue.serverTimestamp()
+                },
+                {
+                    merge: true
+                }
+            );
+
+
+        addresses =
+            newAddresses;
+
+
+        closeAddressModal();
+
+        renderAddresses();
+
+
+        alert(
+            editingAddressId
+                ? "地址修改成功"
+                : "地址添加成功"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "保存地址失败:",
+            error
+        );
+
+        alert(
+            "保存失败：" +
+            (
+                error.message ||
+                "请稍后再试"
+            )
+        );
+
+    }
+
+    finally {
+
+        saveButton.disabled =
+            false;
+
+        saveButton.innerText =
+            "保存";
+
+    }
+
+}
+
+
+/* =========================================================
+   设置默认地址
+========================================================= */
+
+async function setDefaultAddress(id) {
+
+    if (!currentUser) {
+        return;
+    }
+
+
+    try {
+
+        const newAddresses =
+            addresses.map(
+                function(item) {
+
+                    return {
+
+                        ...item,
+
+                        isDefault:
+                            item.id === id
+
+                    };
+
+                }
+            );
+
+
+        await db
+            .collection("customers")
+            .doc(currentUser.uid)
+            .set(
+                {
+                    addresses:
+                        newAddresses,
+
+                    updatedAt:
+                        firebase.firestore.FieldValue.serverTimestamp()
+                },
+                {
+                    merge: true
+                }
+            );
+
+
+        addresses =
+            newAddresses;
+
+        renderAddresses();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "设置默认地址失败:",
+            error
+        );
+
+        alert(
+            "设置失败：" +
+            (
+                error.message ||
+                "请稍后再试"
+            )
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   删除地址
+========================================================= */
+
+async function deleteAddress(id) {
+
+    if (!currentUser) {
+        return;
+    }
+
+
+    const confirmed =
+        window.confirm(
+            "确定要删除这个收货地址吗？"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        let newAddresses =
+            addresses.filter(
+                function(item) {
+
+                    return item.id !== id;
+
+                }
+            );
+
+
+        /*
+         * 如果删除的是默认地址，
+         * 自动把第一个剩余地址设为默认
+         */
+
+        if (
+            newAddresses.length > 0 &&
+            !newAddresses.some(
+                function(item) {
+
+                    return item.isDefault;
+
+                }
+            )
+        ) {
+
+            newAddresses[0] =
+                {
+                    ...newAddresses[0],
+                    isDefault: true
+                };
+
+        }
+
+
+        await db
+            .collection("customers")
+            .doc(currentUser.uid)
+            .set(
+                {
+                    addresses:
+                        newAddresses,
+
+                    updatedAt:
+                        firebase.firestore.FieldValue.serverTimestamp()
+                },
+                {
+                    merge: true
+                }
+            );
+
+
+        addresses =
+            newAddresses;
+
+        renderAddresses();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "删除地址失败:",
+            error
+        );
+
+        alert(
+            "删除失败：" +
+            (
+                error.message ||
+                "请稍后再试"
+            )
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   语言选择器
+========================================================= */
+
+function renderLanguageSelector() {
+
+    if (
+        !window.MDYLanguage ||
+        typeof window.MDYLanguage.renderLanguageSelector !==
+            "function"
+    ) {
+
+        return;
+
+    }
+
+
+    const selector =
+        document.getElementById(
+            "languageSelector"
+        );
+
+    if (!selector) {
+        return;
+    }
+
+
+    window.MDYLanguage.renderLanguageSelector(
+        selector
+    );
+
+}
+
+
+/* =========================================================
+   页面翻译
+========================================================= */
+
+function applyPageTranslations() {
+
+    document
+        .querySelectorAll(
+            "[data-i18n]"
+        )
+        .forEach(
+            function(element) {
+
+                const key =
+                    element.dataset.i18n;
+
+                const fallback =
+                    element.innerText;
+
+                element.innerText =
+                    t(
+                        key,
+                        fallback
+                    );
+
+            }
+        );
+
+
+    document.title =
+        "MDY FOOD - " +
+        t(
+            "addresses",
+            "我的地址"
+        );
+
+}
+
+
+/* =========================================================
+   语言变化
+========================================================= */
+
+window.addEventListener(
+    "mdyLanguageChanged",
+    function() {
+
+        applyPageTranslations();
+
+        renderLanguageSelector();
+
+    }
+);
+
+
+/* =========================================================
+   点击弹窗外部关闭
+========================================================= */
+
+document
+    .getElementById("addressModal")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                this
+            ) {
+
+                closeAddressModal();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   初始化
+========================================================= */
+
+applyPageTranslations();
+
+renderLanguageSelector();
+
+</script>
+
+</body>
+
+</html>
