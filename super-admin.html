@@ -708,6 +708,27 @@ th {
 
 }
 
+
+
+/* =========================
+   运营后台升级 UI
+========================= */
+.ops-dashboard{margin-bottom:24px}
+.ops-dashboard-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:16px}
+.ops-kpi{background:#fff;border:1px solid #eee;border-radius:16px;padding:18px;box-shadow:0 5px 18px rgba(0,0,0,.05);position:relative;overflow:hidden}
+.ops-kpi:after{content:"";position:absolute;right:-22px;top:-22px;width:70px;height:70px;border-radius:50%;background:rgba(255,90,31,.07)}
+.ops-kpi-label{font-size:13px;color:#777;margin-bottom:8px}.ops-kpi-value{font-size:25px;font-weight:800;color:#222}.ops-kpi-sub{font-size:12px;color:#999;margin-top:6px}
+.ops-two-col{display:grid;grid-template-columns:1.35fr .65fr;gap:16px;margin-top:16px}
+.ops-panel{background:#fff;border:1px solid #eee;border-radius:16px;padding:18px;box-shadow:0 5px 18px rgba(0,0,0,.05)}
+.ops-panel-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.ops-panel-title h3{margin:0;font-size:16px}.ops-panel-title span{font-size:12px;color:#999}
+.ops-bars{display:flex;align-items:flex-end;gap:9px;height:150px;padding:10px 2px 0}.ops-bar-item{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px}.ops-bar{width:100%;max-width:38px;min-height:5px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#ff7a3d,#ff5a1f)}.ops-bar-label{font-size:11px;color:#888}.ops-bar-value{font-size:10px;color:#666;white-space:nowrap}
+.ops-alert-list,.ops-order-list{display:flex;flex-direction:column;gap:10px}.ops-alert,.ops-order{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;background:#fafafa;border:1px solid #f0f0f0}.ops-alert-main,.ops-order-main{min-width:0}.ops-alert-title,.ops-order-title{font-weight:700;font-size:13px}.ops-alert-sub,.ops-order-sub{font-size:11px;color:#888;margin-top:3px}.ops-alert-count{font-weight:800;font-size:18px;color:#ff5a1f}.ops-status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#22c55e;margin-right:6px}
+.ops-section-note{font-size:12px;color:#999;margin-top:4px}.ops-refresh-time{font-size:11px;color:#999}
+.ops-coupon-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}.ops-coupon-field{display:flex;flex-direction:column;gap:6px}.ops-coupon-field label{font-size:12px;color:#666}.ops-coupon-field input,.ops-coupon-field select{height:40px;border:1px solid #ddd;border-radius:9px;padding:0 10px;background:#fff;outline:none}.ops-coupon-field input:focus,.ops-coupon-field select:focus{border-color:#ff5a1f}.ops-coupon-actions{display:flex;align-items:flex-end;gap:8px}.ops-primary-btn{height:40px;border:0;border-radius:9px;padding:0 16px;background:#ff5a1f;color:#fff;font-weight:700;cursor:pointer}.ops-secondary-btn{height:40px;border:1px solid #ddd;border-radius:9px;padding:0 14px;background:#fff;color:#555;cursor:pointer}.ops-coupon-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ops-coupon-card{border:1px solid #eee;border-radius:14px;padding:15px;background:#fff}.ops-coupon-head{display:flex;justify-content:space-between;gap:10px}.ops-coupon-name{font-size:16px;font-weight:800}.ops-coupon-badge{font-size:11px;padding:4px 8px;border-radius:20px;background:#ecfdf3;color:#15803d}.ops-coupon-badge.off{background:#fef2f2;color:#b91c1c}.ops-coupon-money{font-size:23px;font-weight:800;color:#ff5a1f;margin:10px 0}.ops-coupon-meta{font-size:12px;color:#777;line-height:1.8}.ops-coupon-card-actions{display:flex;gap:8px;margin-top:10px}.ops-coupon-card-actions button{height:34px;border-radius:8px;padding:0 11px;border:1px solid #ddd;background:#fff;cursor:pointer}.ops-danger-btn{color:#dc2626!important;border-color:#fecaca!important}
+.ops-log-list{display:flex;flex-direction:column;gap:9px}.ops-log-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f1f1f1}.ops-log-item:last-child{border-bottom:0}.ops-log-icon{width:30px;height:30px;border-radius:9px;background:#fff4ef;display:flex;align-items:center;justify-content:center}.ops-log-text{font-size:13px;font-weight:600}.ops-log-time{font-size:11px;color:#999;margin-top:3px}
+@media(max-width:1100px){.ops-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ops-two-col{grid-template-columns:1fr}.ops-coupon-form{grid-template-columns:repeat(2,minmax(0,1fr))}.ops-coupon-list{grid-template-columns:1fr}}
+@media(max-width:650px){.ops-dashboard-grid{grid-template-columns:1fr}.ops-coupon-form{grid-template-columns:1fr}.ops-kpi-value{font-size:22px}}
+
 </style>
 
 </head>
@@ -823,39 +844,80 @@ th {
 
     </section>
 
-
-    <!-- =========================
-         用户管理
-    ========================== -->
-
-    <section class="section">
-
-        <div class="section-title">
-            <div>
-                <h2>👥 用户管理</h2>
-                <p>查看平台注册顾客资料与注册时间</p>
-            </div>
+<!-- =========================
+     运营驾驶舱（新增，不影响原有功能）
+========================= -->
+<section class="section ops-dashboard">
+    <div class="section-title">
+        <div>
+            <h2>🚀 平台运营驾驶舱</h2>
+            <p>实时查看 MDY FOOD 当前运营状态、订单趋势与待处理事项</p>
         </div>
+        <div class="ops-refresh-time" id="opsLastRefreshTime">数据加载中...</div>
+    </div>
 
-        <div class="delivery-summary">
-            <div class="delivery-summary-card">
-                <div class="label">全部用户</div>
-                <div class="value" id="customerCount">0</div>
-            </div>
+    <div class="ops-dashboard-grid">
+        <div class="ops-kpi"><div class="ops-kpi-label">今日订单</div><div class="ops-kpi-value" id="opsTodayOrders">0</div><div class="ops-kpi-sub">今日新增订单</div></div>
+        <div class="ops-kpi"><div class="ops-kpi-label">今日成交额</div><div class="ops-kpi-value" id="opsTodayGMV">0 Ks</div><div class="ops-kpi-sub">按订单金额统计</div></div>
+        <div class="ops-kpi"><div class="ops-kpi-label">今日平台收入</div><div class="ops-kpi-value" id="opsTodayPlatformIncome">0 Ks</div><div class="ops-kpi-sub">按当前抽成比例估算</div></div>
+        <div class="ops-kpi"><div class="ops-kpi-label">当前配送中</div><div class="ops-kpi-value" id="opsDeliveringOrders">0</div><div class="ops-kpi-sub">正在配送订单</div></div>
+    </div>
+
+    <div class="ops-two-col">
+        <div class="ops-panel">
+            <div class="ops-panel-title"><h3>📈 最近 7 天订单趋势</h3><span id="opsSevenDayTotal">0 单</span></div>
+            <div class="ops-bars" id="opsSevenDayBars"></div>
         </div>
-
-        <input
-            type="text"
-            id="customerSearch"
-            class="search-box"
-            placeholder="搜索姓名、电话、邮箱或 UID..."
-        >
-
-        <div class="table-wrap" id="customerTableWrap">
-            <div class="empty">正在加载用户...</div>
+        <div class="ops-panel">
+            <div class="ops-panel-title"><h3>🔔 待处理事项</h3><span>实时统计</span></div>
+            <div class="ops-alert-list" id="opsAlertList"></div>
         </div>
+    </div>
 
-    </section>
+    <div class="ops-panel" style="margin-top:16px;">
+        <div class="ops-panel-title"><h3>🧾 最近订单动态</h3><span>最新 6 条</span></div>
+        <div class="ops-order-list" id="opsRecentOrders"></div>
+    </div>
+</section>
+
+<!-- =========================
+     优惠券中心（新增）
+========================= -->
+<section class="section">
+    <div class="section-title">
+        <div>
+            <h2>🎟️ 优惠券中心</h2>
+            <p>创建和管理平台优惠券；不会修改现有订单、商家和配送员逻辑</p>
+        </div>
+    </div>
+
+    <div class="ops-panel" style="box-shadow:none;padding:0;border:0;">
+        <div class="ops-coupon-form">
+            <div class="ops-coupon-field"><label>优惠券名称</label><input id="couponName" placeholder="例如：新用户优惠券"></div>
+            <div class="ops-coupon-field"><label>类型</label><select id="couponType"><option value="fixed">满减</option><option value="discount">折扣</option><option value="delivery">配送费减免</option></select></div>
+            <div class="ops-coupon-field"><label>门槛金额（Ks）</label><input id="couponMinAmount" type="number" min="0" value="0"></div>
+            <div class="ops-coupon-field"><label>优惠金额 / 折扣</label><input id="couponValue" type="number" min="0" value="2000"></div>
+            <div class="ops-coupon-field"><label>发放数量</label><input id="couponQuantity" type="number" min="1" value="100"></div>
+            <div class="ops-coupon-field"><label>开始时间</label><input id="couponStartAt" type="datetime-local"></div>
+            <div class="ops-coupon-field"><label>结束时间</label><input id="couponEndAt" type="datetime-local"></div>
+            <div class="ops-coupon-actions"><button class="ops-primary-btn" onclick="createPlatformCoupon()">＋ 创建优惠券</button></div>
+        </div>
+        <div class="ops-coupon-list" id="platformCouponList"><div class="empty">正在加载优惠券...</div></div>
+    </div>
+</section>
+
+<!-- =========================
+     操作日志（新增）
+========================= -->
+<section class="section">
+    <div class="section-title">
+        <div><h2>📝 后台操作日志</h2><p>记录本后台新增的重要运营操作</p></div>
+    </div>
+    <div class="ops-panel" style="box-shadow:none;">
+        <div class="ops-log-list" id="opsActivityLogList"><div class="empty">暂无操作日志</div></div>
+    </div>
+</section>
+
 
 
     <!-- =========================
@@ -1337,59 +1399,6 @@ th {
 
     </section>
         <!-- =========================
-         配送员申请审核
-    ========================== -->
-
-    <section class="section">
-
-        <div class="section-title">
-            <div>
-                <h2>📋 配送员申请审核</h2>
-                <p>配送员提交申请后先在这里审核，通过后才进入正式配送员管理</p>
-            </div>
-        </div>
-
-        <div class="delivery-summary">
-            <div class="delivery-summary-card">
-                <div class="label">全部申请</div>
-                <div class="value" id="deliveryApplicationTotal">0</div>
-            </div>
-            <div class="delivery-summary-card">
-                <div class="label">待审核</div>
-                <div class="value" id="deliveryApplicationPending">0</div>
-            </div>
-            <div class="delivery-summary-card">
-                <div class="label">已通过</div>
-                <div class="value" id="deliveryApplicationApproved">0</div>
-            </div>
-            <div class="delivery-summary-card">
-                <div class="label">已拒绝</div>
-                <div class="value" id="deliveryApplicationRejected">0</div>
-            </div>
-        </div>
-
-        <input
-            type="text"
-            id="deliveryApplicationSearch"
-            class="search-box"
-            placeholder="搜索配送员姓名、电话、邮箱、身份证号或配送区域..."
-        >
-
-        <div class="filters">
-            <button class="filter-btn active" onclick="setDeliveryApplicationFilter('all')" id="deliveryApplicationFilterAll">全部</button>
-            <button class="filter-btn" onclick="setDeliveryApplicationFilter('pending')" id="deliveryApplicationFilterPending">待审核</button>
-            <button class="filter-btn" onclick="setDeliveryApplicationFilter('approved')" id="deliveryApplicationFilterApproved">已通过</button>
-            <button class="filter-btn" onclick="setDeliveryApplicationFilter('rejected')" id="deliveryApplicationFilterRejected">已拒绝</button>
-        </div>
-
-        <div class="table-wrap" id="deliveryApplicationTableWrap">
-            <div class="empty">正在加载配送员申请...</div>
-        </div>
-
-    </section>
-
-
-    <!-- =========================
          商家申请审核
     ========================== -->
 
@@ -1648,17 +1657,17 @@ let allOrders = [];
 
 let allReviews = [];
 
-let allCustomers = [];
-
 let allApplications = [];
 
 let allRestaurants = [];
 
 let allDeliveries = [];
 
+let allDeliveryRiders = [];
+
 let allDeliveryApplications = [];
 
-let allDeliveryRiders = [];
+let deliveryApplicationFilter = "all";
 
 let allSettlements = {};
 
@@ -1669,8 +1678,6 @@ let applicationFilter = "all";
 let orderFilter = "all";
 
 let deliveryFilter = "all";
-
-let deliveryApplicationFilter = "all";
 
 let commissionRate = 10;
 
@@ -1804,8 +1811,7 @@ function getWeekStart() {
     const day =
         now.getDay();
 
-    const diff =
-        day === 0
+    const diff =        day === 0
             ? 6
             : day - 1;
 
@@ -2402,223 +2408,6 @@ async function loadReviews() {
 
 
 /* =========================
-   用户管理
-========================= */
-
-async function loadCustomers() {
-
-    try {
-
-        const snapshot =
-            await db
-                .collection("customers")
-                .get();
-
-        allCustomers = [];
-
-        snapshot.forEach(doc => {
-
-            allCustomers.push({
-                id: doc.id,
-                ...doc.data()
-            });
-
-        });
-
-        allCustomers.sort((a, b) => {
-
-            const dateA = getDateValue(
-                a.createdAt ||
-                a.created_at ||
-                a.registeredAt ||
-                a.registered_at
-            );
-
-            const dateB = getDateValue(
-                b.createdAt ||
-                b.created_at ||
-                b.registeredAt ||
-                b.registered_at
-            );
-
-            return (
-                (dateB ? dateB.getTime() : 0) -
-                (dateA ? dateA.getTime() : 0)
-            );
-
-        });
-
-        renderCustomers();
-
-    } catch (error) {
-
-        console.error(
-            "加载用户失败:",
-            error
-        );
-
-        const wrap =
-            document.getElementById(
-                "customerTableWrap"
-            );
-
-        if (wrap) {
-            wrap.innerHTML = `
-                <div class="empty">
-                    用户数据加载失败：${escapeHtml(error.message || "未知错误")}
-                </div>
-            `;
-        }
-
-    }
-
-}
-
-
-function renderCustomers() {
-
-    const wrap =
-        document.getElementById(
-            "customerTableWrap"
-        );
-
-    if (!wrap) {
-        return;
-    }
-
-    const searchInput =
-        document.getElementById(
-            "customerSearch"
-        );
-
-    const keyword =
-        String(
-            searchInput
-                ? searchInput.value
-                : ""
-        )
-        .trim()
-        .toLowerCase();
-
-    let customers =
-        [...allCustomers];
-
-    if (keyword) {
-
-        customers =
-            customers.filter(
-                customer => {
-
-                    const text = [
-                        customer.name,
-                        customer.phone,
-                        customer.email,
-                        customer.uid,
-                        customer.id
-                    ]
-                    .filter(Boolean)
-                    .join(" ")
-                    .toLowerCase();
-
-                    return text.includes(
-                        keyword
-                    );
-
-                }
-            );
-
-    }
-
-    const count =
-        document.getElementById(
-            "customerCount"
-        );
-
-    if (count) {
-        count.textContent =
-            allCustomers.length;
-    }
-
-    if (!customers.length) {
-
-        wrap.innerHTML = `
-            <div class="empty">
-                暂无符合条件的用户
-            </div>
-        `;
-
-        return;
-    }
-
-    wrap.innerHTML = `
-        <table>
-            <thead>
-                <tr>
-                    <th>用户</th>
-                    <th>电话</th>
-                    <th>邮箱</th>
-                    <th>UID</th>
-                    <th>注册时间</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${customers.map(customer => {
-
-                    const name =
-                        customer.name ||
-                        customer.customername ||
-                        customer.customerName ||
-                        "未填写姓名";
-
-                    const email =
-                        customer.email ||
-                        customer.customerEmail ||
-                        "-";
-
-                    const phone =
-                        customer.phone ||
-                        "-";
-
-                    const uid =
-                        customer.uid ||
-                        customer.id ||
-                        "-";
-
-                    const createdAt =
-                        customer.createdAt ||
-                        customer.created_at ||
-                        customer.registeredAt ||
-                        customer.registered_at;
-
-                    return `
-                        <tr>
-                            <td>
-                                ${escapeHtml(name)}
-                            </td>
-                            <td>
-                                ${escapeHtml(phone)}
-                            </td>
-                            <td>
-                                ${escapeHtml(email)}
-                            </td>
-                            <td style="word-break:break-all;">
-                                ${escapeHtml(uid)}
-                            </td>
-                            <td>
-                                ${formatDate(createdAt)}
-                            </td>
-                        </tr>
-                    `;
-
-                }).join("")}
-            </tbody>
-        </table>
-    `;
-
-}
-
-
-/* =========================
    商家申请
 ========================= */
 
@@ -2753,43 +2542,6 @@ async function loadRestaurants() {
    配送员数据
 ========================= */
 
-async function loadDeliveryApplications() {
-
-    try {
-
-        const snapshot =
-            await db
-                .collection("deliveryApplications")
-                .get();
-
-        allDeliveryApplications = [];
-
-        snapshot.forEach(doc => {
-
-            allDeliveryApplications.push({
-                id: doc.id,
-                ...doc.data()
-            });
-
-        });
-
-        allDeliveryApplications.sort((a, b) => {
-            const dateA = getDateValue(a.createdAt);
-            const dateB = getDateValue(b.createdAt);
-            return (dateB ? dateB.getTime() : 0) - (dateA ? dateA.getTime() : 0);
-        });
-
-        renderDeliveryApplications();
-
-    } catch (error) {
-
-        console.error("加载配送员申请失败:", error);
-
-    }
-
-}
-
-
 async function loadDeliveries() {
 
     try {
@@ -2824,6 +2576,53 @@ async function loadDeliveries() {
             "加载配送员失败:",
             error
         );
+
+    }
+
+}
+
+
+async function loadDeliveryApplications() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("deliveryApplications")
+                .get();
+
+        allDeliveryApplications = [];
+
+        snapshot.forEach(doc => {
+
+            allDeliveryApplications.push({
+
+                id: doc.id,
+
+                ...doc.data()
+
+            });
+
+        });
+
+        allDeliveryApplications.sort((a, b) => {
+
+            const dateA = getDateValue(a.createdAt);
+            const dateB = getDateValue(b.createdAt);
+
+            return (dateB ? dateB.getTime() : 0) -
+                   (dateA ? dateA.getTime() : 0);
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "加载配送员申请失败:",
+            error
+        );
+
+        allDeliveryApplications = [];
 
     }
 
@@ -3593,6 +3392,8 @@ async function settleDelivery(deliveryId) {
         renderDeliveryFinance();
 
 
+        await writeOpsLog("💰", "完成配送员结算", deliveryName + " · " + formatMoney(settlementAmount));
+
         alert(
             "结算成功！\n\n" +
             "配送员：" +
@@ -3822,7 +3623,6 @@ function renderMerchantFinance() {
                     allSettlements[
                         restaurantId
                     ] || {};
-
 
                 const settledAmount =
                     Number(
@@ -4240,6 +4040,8 @@ async function settleMerchant(
         renderMerchantFinance();
 
 
+        await writeOpsLog("💰", "完成商家结算", (restaurant.name || restaurantId) + " · " + formatMoney(pendingAmount));
+
         alert(
             "商家结算成功！\n\n" +
             "商家：" +
@@ -4354,7 +4156,11 @@ function updatePlatformStats() {
     if (totalDeliveries) {
 
         totalDeliveries.textContent =
-            allDeliveries.length;
+            allDeliveries.filter(
+                item =>
+                    item.status ===
+                    "approved"
+            ).length;
 
     }
 
@@ -4368,9 +4174,9 @@ function updatePlatformStats() {
     if (pendingDeliveries) {
 
         pendingDeliveries.textContent =
-            allDeliveryApplications.filter(
+            allDeliveries.filter(
                 item =>
-                    String(item.status || "pending") ===
+                    item.status ===
                     "pending"
             ).length;
 
@@ -4399,29 +4205,35 @@ function updatePlatformStats() {
 
 function updateDeliveryStats() {
 
-    const activeDeliveries =
+    const approved =
         allDeliveries.filter(
             delivery =>
-                delivery.enabled !== false
+                delivery.status ===
+                "approved"
         );
 
+
     const online =
-        activeDeliveries.filter(
+        approved.filter(
             delivery =>
                 delivery.online === true
         );
 
+
     const available =
-        activeDeliveries.filter(
+        approved.filter(
             delivery =>
-                delivery.available === true
+                delivery.available === true &&
+                delivery.enabled !== false
         );
+
 
     const disabled =
         allDeliveries.filter(
             delivery =>
                 delivery.enabled === false
         );
+
 
     const deliveryCount =
         document.getElementById(
@@ -4443,28 +4255,39 @@ function updateDeliveryStats() {
             "disabledDeliveryCount"
         );
 
+
     if (deliveryCount) {
+
         deliveryCount.textContent =
-            activeDeliveries.length;
+            approved.length;
+
     }
+
 
     if (onlineCount) {
+
         onlineCount.textContent =
             online.length;
+
     }
+
 
     if (availableCount) {
+
         availableCount.textContent =
             available.length;
+
     }
 
+
     if (disabledCount) {
+
         disabledCount.textContent =
             disabled.length;
+
     }
 
 }
-
 
 
 /* =========================
@@ -4576,11 +4399,9 @@ function renderDeliveries() {
                 ) {
 
                     return (
-                        delivery.enabled !== false &&
-                        (
-                            !delivery.status ||
-                            delivery.status === "approved"
-                        )
+                        delivery.status ===
+                        "approved" &&
+                        delivery.enabled !== false
                     );
 
                 }
@@ -4605,9 +4426,10 @@ function renderDeliveries() {
                 ) {
 
                     return (
+                        delivery.status ===
+                        "approved" &&
                         delivery.online ===
-                        true &&
-                        delivery.enabled !== false
+                        true
                     );
 
                 }
@@ -4721,7 +4543,7 @@ function renderDeliveries() {
 
                             const status =
                                 delivery.status ||
-                                "approved";
+                                "pending";
 
 
                             const statusText =
@@ -4972,136 +4794,28 @@ function renderDeliveries() {
 }
 
 
-/* =========================
-   配送员申请筛选
-========================= */
+/* ========================
 
-function setDeliveryApplicationFilter(filter) {
+                                    <td>
 
-    deliveryApplicationFilter = filter;
+                                        ${actions}
 
-    [
-        "deliveryApplicationFilterAll",
-        "deliveryApplicationFilterPending",
-        "deliveryApplicationFilterApproved",
-        "deliveryApplicationFilterRejected"
-    ].forEach(id => {
-        const button = document.getElementById(id);
-        if (button) button.classList.remove("active");
-    });
+                                    </td>
 
-    const activeMap = {
-        all: "deliveryApplicationFilterAll",
-        pending: "deliveryApplicationFilterPending",
-        approved: "deliveryApplicationFilterApproved",
-        rejected: "deliveryApplicationFilterRejected"
-    };
+                                </tr>
 
-    const active = document.getElementById(activeMap[filter]);
-    if (active) active.classList.add("active");
+                            `;
 
-    renderDeliveryApplications();
-}
+                        }
+                    ).join("")
+                }
 
-
-/* =========================
-   配送员申请列表
-========================= */
-
-function renderDeliveryApplications() {
-
-    const wrap = document.getElementById("deliveryApplicationTableWrap");
-    if (!wrap) return;
-
-    const searchInput = document.getElementById("deliveryApplicationSearch");
-    const keyword = String(searchInput ? searchInput.value : "").trim().toLowerCase();
-
-    const total = allDeliveryApplications.length;
-    const pending = allDeliveryApplications.filter(item => String(item.status || "pending") === "pending").length;
-    const approved = allDeliveryApplications.filter(item => String(item.status || "pending") === "approved").length;
-    const rejected = allDeliveryApplications.filter(item => String(item.status || "pending") === "rejected").length;
-
-    const totalEl = document.getElementById("deliveryApplicationTotal");
-    const pendingEl = document.getElementById("deliveryApplicationPending");
-    const approvedEl = document.getElementById("deliveryApplicationApproved");
-    const rejectedEl = document.getElementById("deliveryApplicationRejected");
-
-    if (totalEl) totalEl.textContent = total;
-    if (pendingEl) pendingEl.textContent = pending;
-    if (approvedEl) approvedEl.textContent = approved;
-    if (rejectedEl) rejectedEl.textContent = rejected;
-
-    let applications = [...allDeliveryApplications];
-
-    if (deliveryApplicationFilter !== "all") {
-        applications = applications.filter(item => String(item.status || "pending") === deliveryApplicationFilter);
-    }
-
-    if (keyword) {
-        applications = applications.filter(item => {
-            const text = [
-                item.name, item.phone, item.email, item.idNumber,
-                item.id, item.uid, item.deliveryArea,
-                item.vehicleType, item.vehicleNumber
-            ].filter(Boolean).join(" ").toLowerCase();
-            return text.includes(keyword);
-        });
-    }
-
-    if (!applications.length) {
-        wrap.innerHTML = `<div class="empty">暂无符合条件的配送员申请</div>`;
-        return;
-    }
-
-    wrap.innerHTML = `
-        <table>
-            <thead>
-                <tr>
-                    <th>配送员</th>
-                    <th>联系方式</th>
-                    <th>配送区域</th>
-                    <th>车辆</th>
-                    <th>状态</th>
-                    <th>申请时间</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${applications.map(application => {
-                    const status = String(application.status || "pending");
-                    const statusClass = status === "approved" ? "approved" : status === "rejected" ? "rejected" : "pending";
-                    const statusText = status === "approved" ? "已通过" : status === "rejected" ? "已拒绝" : "待审核";
-                    let actions = "";
-                    if (status === "pending") {
-                        actions = `
-                            <button class="action-btn approve-btn" onclick="approveDelivery('${escapeHtml(application.id)}')">通过</button>
-                            <button class="action-btn reject-btn" onclick="rejectDelivery('${escapeHtml(application.id)}')">拒绝</button>
-                        `;
-                    }
-                    return `
-                        <tr>
-                            <td>
-                                <strong>${escapeHtml(application.name || "未命名")}</strong>
-                                <div style="color:#999;font-size:11px;margin-top:4px;">ID：${escapeHtml(application.id)}</div>
-                            </td>
-                            <td>
-                                <div>${escapeHtml(application.phone || "-")}</div>
-                                <div style="color:#888;font-size:12px;">${escapeHtml(application.email || "")}</div>
-                            </td>
-                            <td>${escapeHtml(application.deliveryArea || "-")}</td>
-                            <td>
-                                <div>${escapeHtml(application.vehicleType || "-")}</div>
-                                <div style="color:#888;font-size:12px;">${escapeHtml(application.vehicleNumber || "")}</div>
-                            </td>
-                            <td><span class="status ${statusClass}">${statusText}</span></td>
-                            <td>${formatDate(application.createdAt)}</td>
-                            <td>${actions || "-"}</td>
-                        </tr>
-                    `;
-                }).join("")}
             </tbody>
+
         </table>
+
     `;
+
 }
 
 
@@ -5114,7 +4828,7 @@ async function approveDelivery(
 ) {
 
     const application =
-        allDeliveryApplications.find(
+        allDeliveries.find(
             item =>
                 item.id === id
         );
@@ -5195,6 +4909,8 @@ async function approveDelivery(
             });
 
 
+        await writeOpsLog("🛵", "通过配送员审核", application.name || id);
+
         alert(
             "配送员审核通过。"
         );
@@ -5251,6 +4967,8 @@ async function rejectDelivery(
 
             });
 
+
+        await writeOpsLog("🛵", "拒绝配送员申请", id);
 
         alert(
             "配送员申请已拒绝。"
@@ -5991,6 +5709,8 @@ async function approveRestaurant(
             });
 
 
+        await writeOpsLog("🏪", "通过商家审核", application.restaurantName || id);
+
         alert(
             "商家审核通过。"
         );
@@ -6047,6 +5767,8 @@ async function rejectRestaurant(
 
             });
 
+
+        await writeOpsLog("🏪", "拒绝商家申请", id);
 
         alert(
             "商家申请已拒绝。"
@@ -7205,14 +6927,13 @@ async function refreshAll() {
 
         await loadDeliveryApplications();
 
+        await loadPlatformCoupons();
 
         await Promise.all([
 
             loadOrders(),
 
             loadReviews(),
-
-            loadCustomers(),
 
             loadApplications(),
 
@@ -7236,6 +6957,9 @@ async function refreshAll() {
         updatePlatformStats();
 
         updateDeliveryStats();
+        updateOperationsDashboard();
+        renderDeliverySettlementHistory();
+        await loadOpsLogs();
 
 
     } catch (error) {
@@ -7290,33 +7014,6 @@ if (deliverySettlementHistorySearch) {
             renderDeliverySettlementHistory
         );
 }
-
-const deliveryApplicationSearch =
-    document.getElementById(
-        "deliveryApplicationSearch"
-    );
-
-if (deliveryApplicationSearch) {
-    deliveryApplicationSearch.addEventListener(
-        "input",
-        renderDeliveryApplications
-    );
-}
-
-
-const customerSearch =
-    document.getElementById(
-        "customerSearch"
-    );
-
-if (customerSearch) {
-    customerSearch
-        .addEventListener(
-            "input",
-            renderCustomers
-        );
-}
-
 
 const deliverySearch =
     document.getElementById(
@@ -7413,10 +7110,141 @@ if (
 }
 
 
+
+/* =========================================================
+   运营驾驶舱 / 优惠券 / 操作日志（新增）
+   不修改原有数据结构与业务流程
+========================================================= */
+
+let allPlatformCoupons = [];
+
+function getLocalDayKey(date) {
+    const d = new Date(date);
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+
+function getOrderDate(order) {
+    return getDateValue(order.completedAt || order.completed_at || order.created_at || order.createdAt);
+}
+
+function updateOperationsDashboard() {
+    const todayStart = getTodayStart();
+    let todayOrders = 0, todayGMV = 0, todayCompletedGMV = 0, delivering = 0;
+    const daily = {};
+    const now = new Date();
+    for (let i=6;i>=0;i--) {
+        const d = new Date(now.getFullYear(), now.getMonth(), now.getDate()-i);
+        daily[getLocalDayKey(d)] = {date:d,count:0};
+    }
+    allOrders.forEach(order => {
+        const created = getDateValue(order.created_at || order.createdAt);
+        const amount = Number(order.total) || 0;
+        if (created && created >= todayStart) { todayOrders++; todayGMV += amount; }
+        const key = created ? getLocalDayKey(created) : "";
+        if (daily[key]) daily[key].count++;
+        if (String(order.status || "") === "配送中") delivering++;
+        if (created && created >= todayStart && isCompletedOrder(order)) todayCompletedGMV += amount;
+    });
+    const todayPlatformIncome = todayCompletedGMV * commissionRate / 100;
+    const setText = (id,val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+    setText("opsTodayOrders", todayOrders);
+    setText("opsTodayGMV", formatMoney(todayGMV));
+    setText("opsTodayPlatformIncome", formatMoney(todayPlatformIncome));
+    setText("opsDeliveringOrders", delivering);
+    const total7 = Object.values(daily).reduce((sum,x)=>sum+x.count,0);
+    setText("opsSevenDayTotal", total7 + " 单");
+    const max = Math.max(1,...Object.values(daily).map(x=>x.count));
+    const bars = document.getElementById("opsSevenDayBars");
+    if (bars) bars.innerHTML = Object.values(daily).map(x=>`<div class="ops-bar-item"><div class="ops-bar-value">${x.count}</div><div class="ops-bar" style="height:${Math.max(5,Math.round(x.count/max*105))}px"></div><div class="ops-bar-label">${x.date.getMonth()+1}/${x.date.getDate()}</div></div>`).join("");
+    const alerts=[];
+    const pendingMerchant=allApplications.filter(x=>String(x.status||"pending")==="pending").length;
+    const pendingDelivery=allDeliveryApplications.filter(x=>String(x.status||"pending")==="pending").length;
+    const pendingOrders=allOrders.filter(x=>String(x.status||"")==="待接单").length;
+    const pendingMerchantSettlement=allRestaurants.reduce((sum,r)=>{const rid=r.id;let amount=0;allOrders.forEach(o=>{if(o.restaurantId===rid&&isCompletedOrder(o)) amount+=Number(o.total)||0;});const income=amount-(amount*commissionRate/100);const settled=Number((allSettlements[rid]||{}).settledAmount)||0;return sum+Math.max(0,income-settled);},0);
+    const pendingRiderSettlement=allDeliveryRiders.reduce((sum,r)=>sum+getDeliveryFinanceData(r.id).pendingAmount,0);
+    if(pendingMerchant) alerts.push(["🏪","商家申请待审核",pendingMerchant,"前往商家申请审核"]);
+    if(pendingDelivery) alerts.push(["🛵","配送员申请待审核",pendingDelivery,"前往配送员审核"]);
+    if(pendingOrders) alerts.push(["📦","待接单订单",pendingOrders,"当前订单池"]);
+    if(pendingMerchantSettlement>0) alerts.push(["💰","商家待结算",formatMoney(pendingMerchantSettlement),"财务中心"]);
+    if(pendingRiderSettlement>0) alerts.push(["🛵","配送员待结算",formatMoney(pendingRiderSettlement),"配送员财务"]);
+    const alertList=document.getElementById("opsAlertList");
+    if(alertList) alertList.innerHTML=alerts.length?alerts.map(a=>`<div class="ops-alert"><div class="ops-alert-main"><div class="ops-alert-title">${a[0]} ${escapeHtml(a[1])}</div><div class="ops-alert-sub">${escapeHtml(a[3])}</div></div><div class="ops-alert-count">${escapeHtml(a[2])}</div></div>`).join(""):"<div class=\"empty\">🎉 当前没有需要处理的事项</div>";
+    const recent=document.getElementById("opsRecentOrders");
+    if(recent){const list=allOrders.slice(0,6);recent.innerHTML=list.length?list.map(o=>`<div class="ops-order"><div class="ops-order-main"><div class="ops-order-title"><span class="ops-status-dot"></span>${escapeHtml(o.order_number||o.id)}</div><div class="ops-order-sub">${escapeHtml(o.restaurantName||"未知餐厅")} · ${escapeHtml(o.customername||o.customerName||"未知客户")}</div></div><strong>${formatMoney(Number(o.total)||0)}</strong><span class="status pending">${escapeHtml(o.status||"-")}</span></div>`).join(""):"<div class=\"empty\">暂无订单</div>";}
+    setText("opsLastRefreshTime", "最后刷新：" + new Date().toLocaleTimeString("zh-CN"));
+}
+
+async function loadPlatformCoupons() {
+    try {
+        const snapshot=await db.collection("platformCoupons").get();
+        allPlatformCoupons=[];
+        snapshot.forEach(doc=>allPlatformCoupons.push({id:doc.id,...doc.data()}));
+        allPlatformCoupons.sort((a,b)=>{const da=getDateValue(a.createdAt),db=getDateValue(b.createdAt);return (db?db.getTime():0)-(da?da.getTime():0);});
+        renderPlatformCoupons();
+    } catch(error) { console.error("加载优惠券失败:",error); const el=document.getElementById("platformCouponList"); if(el) el.innerHTML=`<div class="empty">优惠券加载失败：${escapeHtml(error.message)}</div>`; }
+}
+
+function renderPlatformCoupons() {
+    const list=document.getElementById("platformCouponList"); if(!list)return;
+    if(!allPlatformCoupons.length){list.innerHTML='<div class="empty">暂无优惠券，可以创建第一张优惠券</div>';return;}
+    list.innerHTML=allPlatformCoupons.map(c=>{
+        const active=c.enabled!==false;
+        const type=c.type||"fixed";
+        const value=Number(c.value)||0;
+        const min=Number(c.minAmount)||0;
+        const quantity=Number(c.quantity)||0;
+        const used=Number(c.usedCount)||0;
+        const remaining=Math.max(0,quantity-used);
+        const valueText=type==="discount"?value+"% OFF":type==="delivery"?"免配送费":formatMoney(value);
+        return `<div class="ops-coupon-card"><div class="ops-coupon-head"><div class="ops-coupon-name">🎟️ ${escapeHtml(c.name||"未命名优惠券")}</div><span class="ops-coupon-badge ${active?"":"off"}">${active?"启用中":"已停用"}</span></div><div class="ops-coupon-money">${valueText}</div><div class="ops-coupon-meta">门槛：${formatMoney(min)}<br>发放：${quantity} 张 · 已使用：${used} 张 · 剩余：${remaining} 张<br>有效期：${formatDate(c.startAt)} ～ ${formatDate(c.endAt)}</div><div class="ops-coupon-card-actions"><button onclick="togglePlatformCoupon('${escapeHtml(c.id)}',${active?'false':'true'})">${active?'停用':'启用'}</button><button class="ops-danger-btn" onclick="deletePlatformCoupon('${escapeHtml(c.id)}')">删除</button></div></div>`;
+    }).join("");
+}
+
+async function createPlatformCoupon() {
+    const name=(document.getElementById("couponName")?.value||"").trim();
+    const type=document.getElementById("couponType")?.value||"fixed";
+    const minAmount=Number(document.getElementById("couponMinAmount")?.value)||0;
+    const value=Number(document.getElementById("couponValue")?.value)||0;
+    const quantity=Number(document.getElementById("couponQuantity")?.value)||0;
+    const startValue=document.getElementById("couponStartAt")?.value||"";
+    const endValue=document.getElementById("couponEndAt")?.value||"";
+    if(!name){alert("请输入优惠券名称。");return;}
+    if(value<=0){alert("请输入有效的优惠金额或折扣。");return;}
+    if(quantity<=0){alert("请输入有效的发放数量。");return;}
+    if(type==="discount"&&(value<=0||value>=100)){alert("折扣请输入 1 到 99 之间的百分比。");return;}
+    if(startValue&&endValue&&new Date(startValue)>=new Date(endValue)){alert("结束时间必须晚于开始时间。");return;}
+    try{
+        await db.collection("platformCoupons").add({name,type,minAmount,value,quantity,usedCount:0,enabled:true,startAt:startValue?firebase.firestore.Timestamp.fromDate(new Date(startValue)):null,endAt:endValue?firebase.firestore.Timestamp.fromDate(new Date(endValue)):null,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+        await writeOpsLog("🎟️","创建优惠券",name+" · "+value+(type==="discount"?"%":" Ks"));
+        ["couponName","couponStartAt","couponEndAt"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+        alert("优惠券创建成功。"); await loadPlatformCoupons(); await loadOpsLogs();
+    }catch(error){console.error("创建优惠券失败:",error);alert("创建失败：\n"+error.message);}
+}
+
+async function togglePlatformCoupon(id,enabled){
+    try{await db.collection("platformCoupons").doc(id).update({enabled:enabled,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});const c=allPlatformCoupons.find(x=>x.id===id);if(c)c.enabled=enabled;await writeOpsLog(enabled?"🟢":"⏸️",enabled?"启用优惠券":"停用优惠券",c?.name||id);renderPlatformCoupons();await loadOpsLogs();}catch(error){console.error("更新优惠券失败:",error);alert("操作失败：\n"+error.message);}
+}
+
+async function deletePlatformCoupon(id){
+    const c=allPlatformCoupons.find(x=>x.id===id);if(!confirm("确定删除优惠券「"+(c?.name||id)+"」吗？"))return;
+    try{await db.collection("platformCoupons").doc(id).delete();await writeOpsLog("🗑️","删除优惠券",c?.name||id);allPlatformCoupons=allPlatformCoupons.filter(x=>x.id!==id);renderPlatformCoupons();await loadOpsLogs();}catch(error){console.error("删除优惠券失败:",error);alert("删除失败：\n"+error.message);}
+}
+
+async function writeOpsLog(icon,action,detail){
+    try{await db.collection("adminActivityLogs").add({icon:icon||"📝",action:action||"操作",detail:detail||"",createdAt:firebase.firestore.FieldValue.serverTimestamp(),type:"superadmin"});}catch(error){console.warn("操作日志写入失败:",error);}
+}
+
+async function loadOpsLogs(){
+    const list=document.getElementById("opsActivityLogList");if(!list)return;
+    try{const snapshot=await db.collection("adminActivityLogs").where("type","==","superadmin").limit(30).get();const logs=[];snapshot.forEach(doc=>logs.push({id:doc.id,...doc.data()}));logs.sort((a,b)=>{const da=getDateValue(a.createdAt),db=getDateValue(b.createdAt);return (db?db.getTime():0)-(da?da.getTime():0);});list.innerHTML=logs.length?logs.slice(0,12).map(x=>`<div class="ops-log-item"><div class="ops-log-icon">${escapeHtml(x.icon||"📝")}</div><div><div class="ops-log-text">${escapeHtml(x.action||"操作")} ${x.detail?"· "+escapeHtml(x.detail):""}</div><div class="ops-log-time">${formatDate(x.createdAt)}</div></div></div>`).join(""):"<div class=\"empty\">暂无操作日志</div>";}catch(error){console.warn("加载操作日志失败:",error);list.innerHTML='<div class="empty">暂无操作日志</div>';}
+}
+
 /* =========================
    启动
 ========================= */
 
+loadPlatformCoupons();
+loadOpsLogs();
 refreshAll();
 
 </script>
